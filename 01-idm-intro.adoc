@@ -1,0 +1,31 @@
+== Understanding Identity and Access Management
+
+[quote, Frank Herbert]
+The beginning of knowledge is the discovery of something we do not understand.
+
+TODO
+
+=== Directory Services and Other User Databases
+
+TODO
+
+
+.A piece of XML
+[source,xml]
+----
+<role oid="8ebab0bc-7e7e-11e6-a7bc-57de1cd45ecc"> 
+    <name>Basic User</name> 
+    <description>Basic user role. Almost all users have it.</description>
+    <requestable>true</requestable>
+    <inducement>
+        <targetRef oid="f92e67c2-7e7e-11e6-a306-7bf6aa2e8c61" type="RoleType"/> 
+    </inducement>
+</role>
+----
+
+Another list:
+
+* One
+* Two
+* Three
+

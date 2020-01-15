@@ -1,0 +1,27 @@
+[preface]
+== Introduction
+
+[quote, Bilbo Baggins, 'The Lord of the Rings by J.R.R. Tolkien']
+It's a dangerous business, Frodo, going out your door. You step onto the road, and if you don't keep your feet, there's no knowing where you might be swept off to.
+
+Many years ago we started a project.
+Because we had to.
+Back then we didn't think too much about business and markets and things like that.
+We were focused on the technology.
+And the project simply went on.
+It had its ups and downs – but all the time there was pure engineering passion.
+The effort brought fruits and now there is a product like no other: midPoint.
+
+MidPoint is an identity management and governance system.
+We built it from scratch.
+It is a comprehensive and feature-rich system.
+MidPoint can handle complete identity lifecycle management and some parts of identity governance and compliance.
+It can speed up the process that create accounts for new employee.
+MidPoint can automatically disable accounts of an employee after his contract has expired.
+MidPoint manages assignment of roles and privileges to employees, partners, agents, contractors, customers or students.
+MidPoint keeps an eye that the policies are continually maintained and enforced.
+It governs the processes of access reviews. It provides auditing and reporting based on the identity data.
+And recent midPoint versions are heading towards the field of compliance: management of new and changed policies, evaluation how compliant is your setup according to those policies and governing smooth adoption of the policies.
+
+// TODO
+
