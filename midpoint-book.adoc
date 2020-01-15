@@ -1,0 +1,104 @@
+= Practical Identity Management With MidPoint
+Radovan Semančík et al.
+2.1-DRAFT, 2020-01-15
+:doctype: book
+:reproducible:
+:sectnums:
+:sectnumlevels: 1
+:source-highlighter: rouge
+
+[colophon]
+Practical Identity Management With MidPoint
+
+by Radovan Semančík et al. +
+Evolveum
+
+Book revision: 2.1-DRAFT +
+Publication date: #TODO# January 2020 +
+Corresponding midPoint version: 4.0
+
+*© 2015-2020 Radovan Semančík and Evolveum, s.r.o. All rights reserved.*
+
+This work is licensed under a http://creativecommons.org/licenses/by-nc-nd/4.0/[Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License].
+
+Major sponsoring for this book was provided by:
+
+// TODO: replace by SVG
+image::pictures/evolveum.png[Evolveum, scaledwidth="50%"]
+
+// TODO: TOC
+
+[preface]
+== Introduction
+
+[quote, Bilbo Baggins, 'The Lord of the Rings by J.R.R. Tolkien']
+It's a dangerous business, Frodo, going out your door. You step onto the road, and if you don't keep your feet, there's no knowing where you might be swept off to.
+
+Many years ago we started a project.
+Because we had to.
+Back then we didn't think too much about business and markets and things like that.
+We were focused on the technology.
+And the project simply went on.
+It had its ups and downs – but all the time there was pure engineering passion.
+The effort brought fruits and now there is a product like no other: midPoint.
+
+MidPoint is an identity management and governance system.
+We built it from scratch.
+It is a comprehensive and feature-rich system.
+MidPoint can handle complete identity lifecycle management and some parts of identity governance and compliance.
+It can speed up the process that create accounts for new employee.
+MidPoint can automatically disable accounts of an employee after his contract has expired.
+MidPoint manages assignment of roles and privileges to employees, partners, agents, contractors, customers or students.
+MidPoint keeps an eye that the policies are continually maintained and enforced.
+It governs the processes of access reviews. It provides auditing and reporting based on the identity data.
+And recent midPoint versions are heading towards the field of compliance: management of new and changed policies, evaluation how compliant is your setup according to those policies and governing smooth adoption of the policies.
+
+// TODO
+
+== Understanding Identity and Access Management
+
+[quote, Frank Herbert]
+The beginning of knowledge is the discovery of something we do not understand.
+
+TODO
+
+=== Directory Services and Other User Databases
+
+TODO
+
+
+.A piece of XML
+[source,xml]
+----
+<role oid="8ebab0bc-7e7e-11e6-a7bc-57de1cd45ecc"> 
+    <name>Basic User</name> 
+    <description>Basic user role. Almost all users have it.</description>
+    <requestable>true</requestable>
+    <inducement>
+        <targetRef oid="f92e67c2-7e7e-11e6-a306-7bf6aa2e8c61" type="RoleType"/> 
+    </inducement>
+</role>
+----
+
+Another list:
+
+* One
+* Two
+* Three
+
+== MidPoint Overview
+
+The story goes on.
+
+NOTE: Beware!
+Hic sunt leones!
+
+On and on ...
+
+== Installation and Configuration Principles
+
+:sectnums!:
+
+== Conclusion
+
+That's all, folks!
