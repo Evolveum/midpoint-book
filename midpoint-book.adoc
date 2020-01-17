@@ -6,6 +6,7 @@ Radovan Semančík et al.
 :sectnums:
 :sectnumlevels: 1
 :source-highlighter: rouge
+:toc: macro
 
 [colophon]
 Practical Identity Management With MidPoint
@@ -26,7 +27,7 @@ Major sponsoring for this book was provided by:
 // TODO: replace by SVG
 image::pictures/evolveum.png[Evolveum, scaledwidth="50%"]
 
-// TODO: TOC
+toc::[]
 
 include::00-introduction.adoc[]
 

@@ -235,7 +235,7 @@ The user usually does not even realize that he was redirected when accessing app
 There is no interaction between the redirects and the redirects and the processing on the access management server is usually very fast.
 It looks like the user was logged into the application B all the time.
 
-image::pictures/1-4-web-sso-flow.png[Web SSO flow]
+image::pictures/01-04-web-sso-flow.png[Web SSO flow]
 
 
 === Authorization in Access Management
@@ -306,7 +306,7 @@ Some traditions are just worth maintaining.
 Now there are two protocols that are using the same principle and do almost the same thing.
 The principle is illustrated in the following diagram.
 
-image::pictures/1-5-saml-oidc-flow.png[SAML/OIDC flow]
+image::pictures/01-05-saml-oidc-flow.png[SAML/OIDC flow]
 
 The interaction goes like this:
 
@@ -1631,3 +1631,4 @@ We consider identity management to be heart and brain of any IAM solution.
 This is one of the reasons why we have started midPoint project.
 The rest of this book will focus almost exclusively on identity management and the use of midPoint as the IDM component.
 This is the place where theory ends and practice begins.
+do
