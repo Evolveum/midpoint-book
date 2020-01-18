@@ -1,4 +1,34 @@
 == Conclusion
 
-That's all, folks!
+[quote, Steven Wright]
+A conclusion is the place where you get tired of thinking.
 
+This book is not finished yet.
+In fact it is just a beginning.
+The books is written continually in an incremental and iterative fashion as fast as time an money allow.
+
+Your contributions and donations will surely speed up completion of this book.
+Also consider getting midPoint subscription.
+That is the source of funding for midPoint development.
+Evolveum is no mega-corporation that can fund open source development from huge profits in other areas.
+There are no other areas.
+Evolveum is open-source-only company.
+Everything we do is focused on open source projects.
+Evolveum is not a start-up either.
+We are not funded by venture capital and we do not have millions to spend.
+Evolveum is a self-funded company.
+We can spend only what we earn on subscriptions, sponsored features and services.
+There is no other income.
+MidPoint development can only go as fast as the money allow.
+The same principle applies to midPoint documentation and this book.
+It will grow proportionally to the Evolveum income.
+Therefore if you liked this book please consider supporting us.
+Both money and your time are more than appreciated.
+
+We hope that you have enjoyed reading this book at least as much as we have enjoyed writing it – and as we have enjoyed creating midPoint in the first place.
+MidPoint is quite a unique software project and it would not be possible without you.
+The whole Evolveum team would like to thank all past, present and future midPoint supporters for making this exciting project a reality.
+Together we have created interesting and useful software product.
+We hope that together we can make midPoint even better.
+
+Thank you all.

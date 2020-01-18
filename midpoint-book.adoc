@@ -39,10 +39,24 @@ include::03-installation.adoc[]
 
 include::04-resources-and-mappings.adoc[]
 
+include::05-synchronization.adoc[]
+
+include::06-schema.adoc[]
+
+include::07-rbac.adoc[]
+
+include::08-object-templates.adoc[]
+
+include::09-orgstruct.adoc[]
+
 include::90-troubleshooting.adoc[]
+
+include::91-devel.adoc[]
 
 include::92-additional-information.adoc[]
 
 :sectnums!:
+
+include::98-to-be-continued.adoc[]
 
 include::99-conclusion.adoc[]

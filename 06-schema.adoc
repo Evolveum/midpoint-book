@@ -1,7 +1,7 @@
-== Installation and Configuration Principles
+== Schema
 
-[quote, The Hitchhiker's Guide to the Galaxy, "The Restaurant at the End of the Universe by Douglas Adams"]
-The _Guide_ is definitive. Reality is frequently inaccurate.
+[quote, Henry David Thoreau]
+If you have built castles in the air, your work need not be lost, that is where they should be. Now put the foundations under them.
 
 TODO
 

@@ -341,11 +341,9 @@ The target site finally provides the content.
 
 Following table compares the terminology and technologies used in SAML and OIDC worlds.
 
-[cols=3*,options=header]
+[cols="h,1,1"]
 |===
-|
-|SAML World
-|OpenID Connect World
+| |SAML World |OpenID Connect World
 
 |Source site
 |Identity Provider (IdP)
