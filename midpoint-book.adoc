@@ -37,6 +37,10 @@ include::02-midpoint-overview.adoc[]
 
 include::03-installation.adoc[]
 
+include::04-resources-and-mappings.adoc[]
+
+include::90-troubleshooting.adoc[]
+
 include::92-additional-information.adoc[]
 
 :sectnums!:
