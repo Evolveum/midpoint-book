@@ -3,7 +3,7 @@
 [quote, William Arthur Ward]
 The pessimist complains about the wind; the optimist expects it to change; the realist adjusts the sails.
 
-Reading and writing resource objects, attribute synchronization, mapping of attribute values, their transformation using scripts – these are the basic midPoint features.
+Reading an&lt; writing resource objects, attribute synchronization, mapping of attribute values, their transformation using scripts – these are the basic midPoint features.
 These features are absolutely essential for any self-respecting IDM deployment and all IDM engineers should be more than familiar with them.
 And this is exactly the purpose of this chapter: describe necessary configuration to use midPoint as a provisioning engine.
 
@@ -804,4 +804,669 @@ If you are not sure what you are doing then _normal_ mappings will probably work
 
 === Expressions
 
-TODO
+Expression is the most flexible part of the mapping.
+There are approximately dozen different type of expressions ranging from the simplest _as is_ expression through the _scripting expressions_ all the way to a special purpose expressions that search through midPoint repository.
+Expression type is determined by the element that is used inside the `expression` section of the mapping.
+We refer to those elements as _expression evaluators_.
+You can find detailed description of expression evaluators in midPoint Wiki.
+We are going to deal only with few types that are most frequently used now:
+
+
+|===
+|Expression Evaluator |Element |Description
+
+|As is
+|`asIs`
+|Copies the value without any transformation.
+
+|Literal
+|`value`
+|Stores literal (constant) value in the target.
+
+|Generate
+|`generate`
+|Generates a random value.
+
+|Script
+|`script`
+|Executes a script, stores script output in the target.
+|===
+
+The simplest expression evaluator is `asIs`.
+It simply takes the source and copies that to the target.
+It obviously works only if there is just one source.
+It is also the default expression evaluator.
+If no expression is specified in the mapping then `asIs` is assumed.
+It is used like this:
+
+[source,xml]
+----
+<attribute>
+    <ref>ri:sn</ref>
+    <outbound>
+        <source>
+             <path>familyName</path>
+        </source>
+        <expression>
+            <asIs/>
+        </expression>
+    </outbound>
+</attribute>
+----
+
+Literal expression evaluator is used to place a constant value in the target.
+This expression does not need any source at all.
+It always produces the same value.
+It looks like this:
+
+[source,xml]
+----
+<attribute>
+    <ref>ri:o</ref>
+    <outbound>
+        <expression>
+            <value>ExAmPLE, Inc.</value>
+        </expression>
+    </outbound>
+</attribute>
+----
+
+The `generate` expression evaluator is used to generate a random value.
+As such it is used almost exclusively to generate passwords.
+We will deal with that expression later when we will be dealing with credentials.
+
+=== Script Expressions
+
+The most interesting expression evaluator is undoubtedly the `script` expression evaluator.
+It allows to execute arbitrary scripting code to transform the value.
+Basic principle is simple: values from source properties are stored in the script variables.
+Script is executed and it produces an output.
+The output is stored in the target.
+
+We have already seen a mapping that has a scripting expression:
+
+[source,xml]
+----
+<mapping>
+    <source>
+        <path>givenName</path>
+    </source>
+    <source>
+        <path>familyName</path>
+    </source>
+    <expression>
+        <script>
+            <code>givenName + ' ' + familyName</code>
+        </script>
+    </expression>
+    <target>
+        <path>fullName</path>
+    </target>
+</mapping>
+----
+
+There are two sources: `givenName` and `familyName`.
+The values of these user properties are placed in variables used by the script.
+The variables that have the same names: `givenName` and `familyName`.
+Then the script may do whatever it does with the variables.
+At the end the script has to return a value.
+The script above is written in Groovy, therefore the return value is the value of the last evaluated expression.
+In this case it is the only expression in the script which concatenates the two variables with a space in between.
+Script return value is placed in the output, which in this case is `fullName` user property.
+
+Scripts are often used to transform the values before they are stored in account attributes.
+One very common case is construction of LDAP distinguished name (DN).
+The DN is a complex value in the form of `uid=foobar,ou=people,dc=example,dc=com`.
+However it is easy to construct such value using a simple script:
+
+[source,xml]
+----
+<attribute>
+    <ref>ri:dn</ref>
+    <outbound>
+        <source>
+             <path>name</path>
+        </source>
+        <expression>
+            <script>
+                <code>
+                    'uid=' + name + ',ou=people,dc=example,dc=com'
+                </code>
+            </script>
+        <expression>
+    </outbound>
+</attribute>
+----
+
+(A clever reader surely has a suspicious look on his face now.
+Of course, this is not entirely correct way how to compose LDAP DN. But please bear with us.
+We will correct that later.)
+
+Midpoint supports three scripting languages:
+
+* *Groovy:* This is the default scripting language.
+* *JavaScript* (ECMAscript)
+* *Python*
+
+All three languages can be arbitrarily mixed even in a single midPoint deployment.
+Although quite understandably such a practice is not recommended.
+The language can be selected for each individual expression by using language URI:
+
+[source,xml]
+----
+<expression>
+    <script>
+        <language>http://midpoint.evolveum.com/xml/ns/public/expression/language#python</language>
+        <code>
+            "Python is %s, name is %s" % ("king", name)
+        </code>
+    </script>
+<expression>
+----
+
+When writing scripting expression, please keep in mind that some characters must be properly escaped in the text format that you are using (XML, JSON or YAML).
+E.g. the ampersand character (`&`) so frequently used for logical operations needs to be escaped as `&amp;amp;` in XML.
+
+Scripting expressions can do almost anything.
+And there is still more to them that meets the eye.
+This section provides only the very basic description to get you started.
+Will get back to the scripting expressions many times in this book.
+
+=== Activation
+
+The term _activation_ is used in midPoint to denote a set of properties that describe whether an object is active.
+This includes properties that describe whether the user is enabled, disabled, archived, since when he should be enabled, to what date he should be active and so on.
+The simple enabled/disabled flag might have been sufficient in 1990s.
+But that was a long time ago.
+We need much more than that.
+Therefore the _activation_ is quite a rich data structure in midPoint.
+We are going to describe just the basic idea now, the details will follow later.
+
+The most important activation concept is _administrative status_.
+Administrative status defines "administrative state" of the object (user).
+I.e. the explicit decision of an administrator whether the user is enabled or disabled.
+Except for administrative status there are also validity times, lockout status, various timestamps and metadata.
+But we will get to that later.
+
+The important thing to realize is that both user and the accounts have activation properties - and they are almost the same.
+The user and account activation are using the same property names, meaning and data formats.
+This is important, because you would probably want account activation to follow user activation.
+E.g. if user is disabled then also all his accounts should be disabled.
+This is very easy to do in midPoint because the user and account activation are compatible.
+Therefore all it takes is a very simple mapping.
+There is a special place in the resource schema handling section for that:
+
+[source,xml]
+----
+<resource oid="b4101662-7902-11e6-9f14-53e18426fe81">
+    <name>My LDAP Server</name>
+    ...
+    <schemaHandling>
+        <objectType>
+            <kind>account</kind>
+            <default>true</default>
+            <objectClass>ri:inetOrgPerson</objectClass>
+            <!-- attribute handling comes here --->
+            <activation>
+                <administrativeStatus>
+                    <outbound/>
+                </administrativeStatus>
+            </activation>
+        </objectType>
+    </schemaHandling>
+</resource>
+----
+
+It is as simple as that.
+Just an empty mapping represented by empty `outbount` element.
+User has `administrativeStatus` property, account has `administrativeStatus` property, therefore midPoint knows what is the source and target of the mapping.
+The values of the `administrativeStatus` property has the same type and meaning on both sides.
+Therefore the default `asIs` mapping is just fine.
+All that midPoint needs to know is that the mapping exists at all.
+That we want to map the value.
+That is a reason for having empty `outbound` element there.
+MidPoint will fill in all the details.
+
+When this mapping is in place and the user gets disabled, the account will be disabled as well.
+When the user gets enabled, the account will follow suit.
+
+=== Credentials
+
+Credential management is important part of identity management.
+MidPoint is built to easily synchronize credentials to many accounts.
+Similarly to activation, credential data structures of user and accounts are aligned.
+Therefore all that is needed to synchronize password to an account is a simple empty mapping:
+
+[source,xml]
+----
+<resource oid="b4101662-7902-11e6-9f14-53e18426fe81">
+    <name>My LDAP Server</name>
+    ...
+    <schemaHandling>
+        <objectType>
+            <kind>account</kind>
+            <default>true</default>
+            <objectClass>ri:inetOrgPerson</objectClass>
+            <!-- attribute handling comes here --->
+            <credentials>
+                <password>
+                    <outbound/>
+                </password>
+            </credentials>
+        </objectType>
+    </schemaHandling>
+</resource>
+----
+
+When the user password in midPoint is changed the changed password will be propagated to all the resources that have a mapping like this.
+
+=== Complete Provisioning Example
+
+This section describes a complete working example of connection to the LDAP directory.
+The configuration below is used to automatically create accounts in OpenLDAP server.
+Entire configuration is contained in a single resource definition file.
+Following paragraphs explain individual parts of the file.
+Simplified XML notation is used for clarity.
+Complete file in a form directly usable in midPoint can be found at the same place as all the other samples in this book (see <<additional-information>> chapter for details).
+
+Resource definition begins with object type, OID, name and description.
+These are self-explanatory:
+
+[source,xml]
+----
+<resource oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c">
+
+    <name>OpenLDAP</name>
+
+    <description>
+        LDAP resource using a ConnId LDAP connector. It contains configuration
+        for use with OpenLDAP servers.
+        This is a sample used in the "Practical Identity Management with MidPoint"
+        book, chapter 4.
+    </description>
+    ...
+----
+
+Connector reference comes next.
+We want to point to the LDAP connector.
+Here we use dynamic reference that is using search filter to locate the connector:
+
+[source,xml]
+----
+    ...
+    <connectorRef type="ConnectorType">
+        <filter>
+            <q:equal>
+                <q:path>c:connectorType</q:path>
+                <q:value>com.evolveum.polygon.connector.ldap.LdapConnector</q:value>
+            </q:equal>
+        </filter>
+    </connectorRef>
+    ...
+----
+
+The reference is resolved when this object is imported to midPoint.
+The resolution process takes the search filter and it looks for connector object with the `connectorType` specified in the filter.
+
+Connector configuration goes next.
+This block specifies connector configuration properties such as hostname, port, passwords and so on.
+
+[source,xml]
+----
+    <connectorConfiguration>
+        <icfc:configurationProperties>
+            <icfcldap:port>389</icfcldap:port>
+            <icfcldap:host>localhost</icfcldap:host>
+            <icfcldap:baseContext>dc=example,dc=com</icfcldap:baseContext>
+            <icfcldap:bindDn>cn=idm,ou=Administrators,dc=example,dc=com</icfcldap:bindDn>
+            <icfcldap:bindPassword><t:clearValue>secret</t:clearValue></icfcldap:bindPassword>
+            <icfcldap:passwordHashAlgorithm>SSHA</icfcldap:passwordHashAlgorithm>
+            <icfcldap:vlvSortAttribute>uid,cn,ou,dc</icfcldap:vlvSortAttribute>
+            <icfcldap:vlvSortOrderingRule>2.5.13.3</icfcldap:vlvSortOrderingRule>
+            <icfcldap:operationalAttributes>memberOf</icfcldap:operationalAttributes>
+            <icfcldap:operationalAttributes>createTimestamp</icfcldap:operationalAttributes>
+        </icfc:configurationProperties>
+        <icfc:resultsHandlerConfiguration>
+            <icfc:enableNormalizingResultsHandler>false</icfc:enableNormalizingResultsHandler>
+            <icfc:enableFilteredResultsHandler>false</icfc:enableFilteredResultsHandler>
+            <icfc:enableAttributesToGetSearchResultsHandler>false</icfc:enableAttributesToGetSearchResultsHandler>
+        </icfc:resultsHandlerConfiguration>
+    </connectorConfiguration>
+----
+
+The last part of this block defines that the ConnId framework result handlers should be disabled.
+ConnId result filtering is a legacy mechanism and most connectors do not need that any more.
+It may even be harmful in many cases.
+Unfortunately this mechanism is turned on by default.
+Therefore most resource configurations contain this part to explicitly turn all the handlers off.
+
+These parts alone should already define a minimal resource.
+If you define just the name, connector reference and connector configuration you should be able to import the resource to midPoint.
+The connection test should pass and you should be able to browse resource content.
+However there is absolutely no IDM logic or automation yet.
+That is what we are going to add next.
+
+Element that usually follows connector configuration is schema.
+However if you look at almost any file that contains resource definition you will find no such element.
+The schema element is automatically generated by midPoint when midPoint connects to the resource for the first time.
+Therefore there is no need to include it in the definition.
+
+What we have to include in the definition is the way how midPoint handles the schema.
+This is defined in `schemaHandling` section.
+Our `schemaHandling` section contains just one `objectType` definition.
+We are going to define how to handle ordinary user accounts on our OpenLDAP server.
+
+[source,xml]
+----
+    ...
+    <schemaHandling>
+        <objectType>
+            <kind>account</kind>
+            <displayName>Normal Account</displayName>
+            <default>true</default>
+            <objectClass>ri:inetOrgPerson</objectClass>
+            ...
+----
+
+This is the place where we define the _kind_ of objects that we are going to handle.
+In this case it is `account`.
+This object is _default_ account.
+Which means that it will be used in case that the account type is not explicitly specified.
+There is also specification of a display name.
+Display name is not used in automation logic.
+It is used by the user interface when referring to this definition.
+And finally, there is specification of the _object class_.
+The `inetOrgPerson` object class will be used to create new accounts.
+The object class specification determines what attributes the account can have.
+
+The `objectType` definition also includes a specification of attribute handling.
+There is one section for each attribute that we want to handle in automated or special way.
+It starts with the most important attribute: LDAP distinguished name (DN):
+
+[source,xml]
+----
+            ...
+            <attribute>
+                <ref>ri:dn</ref>
+                <displayName>Distinguished Name</displayName>
+                <limitations>
+                    <minOccurs>0</minOccurs>
+                </limitations>
+                <outbound>
+                    <source>
+                        <path>$focus/name</path>
+                    </source>
+                    <expression>
+                        <script>
+                            <code>
+                                basic.composeDnWithSuffix('uid', name, 'ou=people,dc=example,dc=com')
+                            </code>
+                        </script>
+                    </expression>
+                </outbound>
+            </attribute>
+            ...
+----
+
+The `ref` element specifies name of the attribute that we are going to work with.
+In fact this is a reference to automatically-generated schema part of resource definition.
+Definition of display name follows.
+Display name is used by the user interface as a label for the user interface elements (fields) that work with this attribute.
+This definition sets a nice "Distinguished Name" label instead of cryptic "dn" which would be used by default.
+
+Let's skip the limitation definition now.
+We will come back to that later.
+
+The outbound mapping definition follows.
+This is where the automation logic is specified.
+This is the place where the DN value is computed.
+The name property of the user object is the source for this mapping.
+The name property usually contains username (login name).
+This value is used by scripting expression in this mapping.
+The expression is supposed to create a DN in the form:
+
+`uid=_username_,ou=people,dc=example,dc=com`
+
+The expression here is a clever one.
+It does not do the work all by itself.
+It invokes a library function to compose the DN.
+It may look like a good idea to use simple string concatenation to construct a DN.
+However, that will fail in case that the DN components contain certain characters that need to be escaped in the final DN.
+The `composeDnWithSuffix` library function takes care of that and creates a proper DN.
+
+The outbound mapping will be evaluated whenever we need to construct a DN. This obviously happens when a new object is created.
+But the same mapping is used when a user is renamed (i.e. his username changes).
+This is the reason that the mapping needs specification of source.
+Rename is often quite tricky and complicated operation.
+It may not be cheap and in some applications it may not be entirely reversible.
+We definitely do not want to trigger DN changes unless they are really needed.
+The specification of the mapping source tells us _when_ the DN change is needed.
+In this case it tells us to change the DN in the name property of the user object changes.
+
+Now it is the right time to go back to the `limitations` section.
+The dn attribute is defines as mandatory attribute by the schema.
+And that is perfectly correct: LDAP object cannot be created without a DN. MidPoint is using schema for everything.
+Therefore when midPoint displays a form to edit this LDAP account it will check that DN has a value because it is a mandatory attribute.
+However, normally we do not want users to enter the DN in the user interface forms.
+We want to compute DN automatically.
+And that is exactly the point of the outbound mapping.
+Yet midPoint does not know when the expression computes a value and when it does not.
+The expression is a generic piece of Groovy code.
+As far as midPoint can see the expression can produce any value, including empty one.
+Therefore even if there is an expression, midPoint sticks to the schema and it still requires that DN value is entered by the user.
+However we have written the expression and we know that it will produce a value for any (reasonable) input.
+Therefore we want to tell midPoint that the DN is no longer mandatory – that it is OK for user to enter no DN value in user interface forms.
+And that is exactly what the `limitations` section does.
+This section overrides the automatically generated schema and it turns the dn attribute from mandatory to optional.
+
+And that is all.
+Now we have defined the behavior of the dn attribute.
+We can use similar approach to define the behavior of other attributes as well.
+E.g. the handling of the `cn` attribute has similar definition:
+
+[source,xml]
+----
+            ...
+            <attribute>
+                <ref>ri:cn</ref>
+                <displayName>Common Name</displayName>
+                <limitations>
+                    <minOccurs>0</minOccurs>
+                </limitations>
+                <outbound>
+                    <source>
+                        <path>$focus/fullName</path>
+                    </source>
+                </outbound>
+            </attribute>
+            ...
+----
+
+In this case there is outbound mapping, but it has no explicit expression.
+Which means that the value is taken from the source without any change ("as is").
+Therefore the attribute cn will have the same value as user property `fullName`.
+
+It is also possible to define an attribute without any mapping:
+
+[source,xml]
+----
+            ...
+            <attribute>
+                <ref>ri:entryUUID</ref>
+                <displayName>Entry UUID</displayName>
+            </attribute>
+            ...
+----
+
+This means that midPoint will not provide any automatic handling for the `entryUUID` attribute.
+This definition is used just to set a user-friendly display name for the attribute.
+
+Mappings and expressions have almost unlimited flexibility.
+E.g. the following definition sets a static value for the `description` attribute:
+
+[source,xml]
+----
+            ...
+            <attribute>
+                <ref>ri:description</ref>
+                <outbound>
+                    <strength>weak</strength>
+                    <expression>
+                        <value>Created by midPoint</value>
+                    </expression>
+                </outbound>
+            </attribute>
+            ...
+----
+
+This mapping has no source because the source does not make any sense for static value.
+Static values are always the same.
+You can also notice that this mapping is _weak_.
+It will be used to set the `description` attribute only if that attribute does not have any value already.
+It will not overwrite existing values.
+
+The `inetOrgPerson` object class has much more attributes than those defined in the `schemaHandling` section.
+Those attributes will be automatically displayed in the user interface.
+MidPoint will use the generated resource schema to determine their names and types.
+MidPoint will display these attributes, the user can change them and midPoint will execute those changes.
+But apart from that midPoint will not do any special handling on those attributes.
+It is all right not to enumerate all the attributes in `schemaHandling` section.
+You only need to define those attributes which you want to handle in a special way.
+
+There are two more definitions to describe before our example is complete.
+First definition is the `activation` definition.
+It is very simple:
+
+[source,xml]
+----
+            ...
+            <activation>
+                <administrativeStatus>
+                    <outbound/>
+                </administrativeStatus>
+            </activation>
+            ...
+----
+
+This is a definition that specifies handling of the activation administrative status.
+This status property specifies whether account is enabled or disabled.
+Activation properties are somehow special in midPoint.
+MidPoint understands the meaning and the values of activation properties.
+MidPoint also expects that user activation and account activation will be usually mapped together.
+Therefore it is enough to tell midPoint that you want such mapping.
+MidPoint already knows the source (user activation) and the target (account activation).
+If the user is disabled then the account will get disabled.
+If the user is enabled than the account will get enabled.
+
+NOTE: Clever reader is surely scratching his head now.
+There is no LDAP standard that specifies how to enable or disable accounts.
+In addition to this, OpenLDAP does not even have a concept of disabled account at all!
+Therefore how does midPoint know how to disable an LDAP account?
+To tell the truth, midPoint does not know it.
+We have taken a bit of a poetic license here as we wanted to demonstrate a simple activation mapping.
+But in this case it will not work just by itself.
+OpenLDAP resource simply does not have this _capability_.
+However there is a way.
+Activation capability can be simulated.
+We will deal with that later.
+For now let's just marvel in the beauty of this very elegant activation mapping that does absolutely nothing.
+
+The last thing that we need for the resource to work well is to define a mapping for _credentials_.
+In this case it is a password mapping:
+
+[source,xml]
+----
+            ...
+            <credentials>
+                <password>
+                    <outbound/>
+                </password>
+            </credentials>
+            ...
+----
+
+Similarly to activation, the credentials are handled in a special way in midPoint.
+MidPoint understands how credentials work, what are their values and how they are used.
+MidPoint also expects that user credentials such as passwords will be usually mapped to the account credentials.
+Therefore all that midPoint needs to know is that you want to do that mapping.
+It can automatically determine the source and target.
+The account will have the same password as the user.
+User's password is used when a new account is created.
+And when user changes his password the change is also propagated to the account.
+
+That is it.
+Now you have your first (almost) working resource.
+You can import the definition to midPoint and test it.
+Simply assign the resource to a user.
+The OpenLDAP account will be created - the DN and all the essential attributes will be automatically computed.
+When midPoint creates an account for a user remembers who is the owner of that account.
+Therefore it can be easily delete the account when needed.
+Unassign the resource and the account will get deleted.
+This is how automated provisioning and deprovisioning works.
+No real programming is needed.
+Just a declarative specification and a line or two of very simple scripting.
+Such configuration can be done in a couple of minutes.
+And it is essentially the same process for all the applications.
+Just the connector is different.
+The connector has different configuration properties, the attribute names are different - but the principles and the tools are the same.
+It is easy to connect many heterogeneous applications in this way.
+The connectors and the mappings are hiding the differences.
+In the end all the "resources" look the same to midPoint.
+The same principles are used to manage them.
+Therefore the management can be done efficiently even at a large scale.
+
+Yet this configuration is still extremely simple.
+We are just scratching the surface of what midPoint can do.
+There is much more to see in next chapters.
+But we need to explain more of the fundamental midPoint concepts before getting there.
+
+=== Shadows
+
+Linking users and accounts is one of the basic principle of any decent identity management system.
+However it is surprisingly difficult to implement such link.
+There are numerous methods how to reliably identify accounts and they vary from system to system.
+Some systems identify accounts only by username - which makes reliable detection of renames quite difficult.
+Other systems improve on that by introducing another identifier, an identifier that is persistent.
+Identifier value is assigned by the resource and it never changes.
+However, username is still used as secondary identifier and it has to be unique.
+Yet another system has compound identifiers that consist of two or more values.
+Some system have globally-unique identifiers while other systems have identifiers that are only unique in their own object class.
+Some systems have hierarchical structured identifiers, others have flat unstructured identifiers.
+Some identifiers are case-sensitive strings, others are case-insensitive, some identifiers follow complex normalization rules and yet another identifiers are binary and completely opaque.
+To make long story short: reliable identification is really complicated.
+
+We do not want to pollute user object with all the delicate details of account identification.
+Therefore we have created a separate midPoint object that hides all the resource-related details and identification complexities.
+We call it simply _shadow_ because it behaves as a shadow of the real account.
+When midPoint detects new account a _shadow_ is automatically created to represent the account in midPoint repository.
+When midPoint detects that account has changed (e.g. it was renamed) then midPoint automatically updates the shadow.
+When the account is deleted midPoint also deletes the shadow.
+Technically, shadow is still an ordinary midPoint object.
+Therefore shadow has object identifier (OID).
+Other objects can simply point to the shadow using ordinary object reference.
+And that is exactly how user-account links are implemented:
+
+image::pictures/04-10-user-shadow-account.png[User-shadow-account]
+
+The _shadow_ objects contain all the data that are needed to reliably identify an account - or any other resource object such as group or organizational unit.
+Shadow also points to the corresponding resource definition to make the identification complete.
+Shadows are multi-purpose objects and they have many uses in midPoint.
+Shadows record meta-data about resource objects.
+They are used to hold cached values of the attributes (this functionality is still experimental in midPoint 4.0).
+Shadows can be used to hold the state of the resource objects for which midPoint does not have on-line communication channel and the operations are executed manually (a.k.a. "manual resources").
+Therefore shadows are quite complex objects.
+Following picture provides more substantial example of a shadow.
+
+image::pictures/04-11-user-shadow-resource.png[User-shadow-resource]
+
+Do not worry if that picture looks a bit scary.
+Shadows may be complex, but they are almost always invisible to midPoint users.
+Shadows are automatically and transparently maintained by midPoint core.
+Under normal circumstances, MidPoint takes all that is needed to maintain the shadow and no special configuration is needed for that.
+We describe the mechanics of the shadow objects here mostly for the sake of completeness.
+But there may be situations when this knowledge may be useful.
+These are usually situations when midPoint was mis-configured and the shadows were created incorrectly.
+In that case you may need to purge all shadows and start over.
+But beware: shadows are used to link users and accounts therefore if you purge the shadows you will lose the links.
+Yet, even that is usually not that painful.
+The synchronization methods described in the next chapter may be used to easily re-create the links.
