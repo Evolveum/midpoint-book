@@ -1,8 +1,303 @@
 == Installation and Configuration Principles
 
-TODO
+[quote, The Hitchhiker's Guide to the Galaxy, "The Restaurant at the End of the Universe by Douglas Adams"]
+The _Guide_ is definitive. Reality is frequently inaccurate.
 
-.A piece of XML
+This chapter provides instructions for installation and initial configuration of a midPoint system.
+The instructions describe installation on Linux system because that is by far the most common operating environment for midPoint deployments.
+However, midPoint is platform-independent and it can run on any environment where Java is running.
+Any experienced engineer will have no trouble adapting these instructions to fit a different operating system.
+
+MidPoint installation described in this chapter is a very basic one.
+It is ideal for initial exploration of midPoint, development of midPoint configurations, demonstrations and similar purposes.
+It is a very convenient installation and we use it every day for development work.
+However, to use midPoint in a production deployment the installation need to be slightly adjusted.
+The adjustments are mentioned in this chapter, but the full description of the production-ready installation is provided in later chapters.
+This chapter gives you midPoint installation that is ideal to get you started.
+
+=== Requirements
+
+MidPoint will run on almost any machine.
+All you need is approximately 4GB RAM. That’s perhaps the only real limiting factor.
+If you look for more formal system requirements definition then you will find that in midPoint wiki (see chapter <<additional-information>> at the end of the book).
+
+From the software side you will need:
+
+* *Java 11* runtime environment (JRE) or development environment (JDK).
+Any JRE or JDK should work.
+You can use the packages from your operating system distribution.
+Or you can download Java and install it as a standalone package.
+Both should work well.
+Just do not forget to set your `PATH` and `JAVA_HOME` environment variables to point to the Java installation.
+
+* *MidPoint distribution package.* Download the latest version of midPoint from the Evolveum website.
+You are looking for an archive that looks like `midpoint-4.0-dist.zip`.
+This archive contains everything that you will need to run midPoint.
+
+We recommend to use the latest available versions of all software packages when dealing with midPoint.
+We are trying really hard to always keep midPoint up-to-date with the rest of the technologies.
+
+=== Installation
+
+MidPoint is Java web application distributed in a stand-alone package.
+The distribution package contains everything that midPoint needs to run – except for Java platform itself.
+Therefore as long as the Java platform is installed all that is needed to run midPoint is to start it:
+
+. Extract the files from the distribution package to a location where you want to install midPoint.
+
+. Locate `start.sh` (Unix) or `start.bat` (Windows) script in midPoint distribution package.
+It should be located in bin directory.
+
+. Execute the start script
+
+And that is pretty much it.
+MidPoint will start.
+It will initialize the embedded web container, database and all the other midPoint components.
+That can take a minute or two.
+After the application is initialized you can access it by connecting to midPoint HTTP port, which defaults to 8080. You can start working with midPoint now.
+
+=== MidPoint User Interface
+
+Use the following URL to access midPoint user interface:
+
+`http://hostname:8080/midpoint`
+
+Log in with the following credentials:
+
+Username: `administrator` +
+Password: `5ecr3t`
+
+Now you are logged-in as the `administrator`.
+This user has superuser privileges therefore you can see everything and you can do anything in the midPoint user interface.
+
+MidPoint user interface is structured. It has the same layout and controls for all the user interface areas:
+
+image::pictures/03-01-gui-controls.png[GUI controls]
+
+Primary tool for user interface interaction is the menu.
+MidPoint user interface is functionally divided into three parts, therefore there are also three parts of the menu:
+
+* *Self-service* user interface deals with the things that the user can do for oneself: displaying list of account, changing password, requesting a role and so on.
+This is relatively simple part of the user interface.
+It is often accessible to all the users.
+
+* *Administration* user interface deals with management of other users, roles, organizational structures and similar midPoint objects.
+This is a very comprehensive and considerably complex part of the user interface.
+Usually only privileged users have access to this part of the user interface.
+This part of user interface is often used to support delegated administration and role management therefore it is also meant for security officers, resource owners, role engineers and similar expert users.
+
+* *Configuration* user interface deals with configuration of midPoint system itself.
+It is used to customize midPoint behavior, set fundamental policies and rules that form the foundation of midPoint deployments.
+This part of user interface is usually used only by identity management engineers.
+
+The menu can be hidden by clicking on the button at the top of the screen.
+The top bar also contains the title of the current user interface page and breadcrumbs.
+Breadcrumbs show where you currently are in the user interface and how you got there.
+The breadcrumbs can be used to “find your way home” and back to the previous page.
+The use of browser _Back_ button is not recommended.
+Please use the _Back_ buttons that are present in midPoint user interface or use breadcrumbs.
+
+=== User Interface Areas
+
+MidPoint user interface is quite rich.
+Following list provides short description of the most important parts of the user interface.
+
+* *Home* page gives a brief status about users own accounts, requests, work items and so on.
+This is a page designed to be the first page that will be displayed to the end user after log in to midPoint.
+
+* *Profile* page allows users to see or edit their own profile.
+
+* *Credentials* page allows users to change their own credentials, such as password.
+
+* *Role request* page allows users to select the roles that they need and then request assignment of the roles.
+
+* *Dashboard* pages shows a couple of dashboards designed to provide a lot of useful information at the first sight.
+The built-in system dashboard shows statistics about midPoint installation.
+
+* *User* pages list users in midPoint, allows to create and edit users.
+
+* *Organizational structure* pages show the organizational structure trees.
+Many parallel organizational structures can be managed here, such as tree-like functional organizational structure, flat project-oriented structure, role catalogs and so on.
+
+* *Role* pages allow to list and manage roles.
+Roles can be created and defined in this part of the user interface.
+
+* *Service* pages allow to list and define services, such as devices, servers, applications and so on.
+
+* *Archetype* pages define specific object types that can be used to customize behavior of midPoint objects.
+
+* *Resource* pages list and manage resources.
+New resource can be defined here, associated with the connector, tested, etc.
+
+* *Cases* pages list the things that the users have to do.
+Work items are created if user has to approve something or if there is some manual step in the process.
+
+* *Certification* pages deal with access certification (re-certification, attestation).
+Certification campaigns can be created and managed here.
+
+* *Server task* pages show the tasks that are running on midPoint servers.
+These may be scheduled synchronization tasks, import tasks, running user requests – everything that runs on the servers and cannot be executed immediately in a synchronous way.
+
+* *Report* pages allow to define and run reports.
+These pages typically deal with scheduled printable reports.
+
+* *Configuration* area contains many pages that manage midPoint configuration: system default configuration, repository objects, logging, bulk actions and so on.
+
+=== User Interface Concepts
+
+MidPoint user interface is using the same concepts and controls in all its parts.
+For example all the lists of all the objects (users, roles, ...) look like this:
+
+image::pictures/03-02-list-controls.png[GUI list controls]
+
+Each row represents one object: user, roles, service, task, etc.
+There is also a color-coded object icon.
+The search bar at the top can be used to look for a specific object or to filter the object view.
+Left side is reserved for action buttons.
+Buttons in the table header trigger actions that apply to all selected objects.
+Buttons in each table row trigger actions that apply only to that individual object.
+The buttons in the bottom-left corner execute global actions, such as creating or importing new object, exporting objects and refreshing the view.
+The _Import_ button is especially useful.
+It allows to import new object in XML/JSON/YAML form.
+Paging controls are in the bottom-right corner.
+
+MidPoint has a unified color-code that makes the navigation easier.
+Users, roles and other object types have their specific color and icon.
+This indicates the object type and it is used whenever possible: menu, information boxes, lists, box title accents and so on.
+The primary colors and icons are shown in the dashboard:
+
+image::pictures/03-03-dashboard-object-types.png[Dashboarad object types]
+
+All user-related controls are red, all controls that deal with organizational structure are yellow.
+Roles are green.
+And so on.
+This color code is applied consistently through the midPoint user interface.
+
+Similar color code applies to object icons when displayed in user lists.
+However, the color that is used there does not indicate object type but rather an _archetype_.
+Archetypes are sub-types that are often used to distinguish similar objects.
+For example archetypes can be used to sort users to employees, contractors, customers and so on.
+Look and behavior of "archetyped" objects is configurable.
+Default midPoint configuration contains just a couple of archetypes.
+Those archetypes apply red color to system users and roles.
+Objects that do have any archetype behave in a different way.
+Their color indicate status of the object:
+
+* Black icons indicate normal state.
+It suggests that there is nothing special to see here.
+
+* Gray icons indicate non-active state.
+It suggests that the object is disabled, archived or there is another reason why the object is not active.
+
+* Blue icons indicate typical end-user access.
+It suggests that the object has an access, but the access is limited only to safe, non-privileges operations. E.g. users with end-user role.
+
+* Yellow icons indicate management capabilities. E.g. users that are managers of organizational units.
+
+TIP: All objects are equal in midPoint.
+MidPoint will handle users, roles, organizational units and services in the same way.
+The lists used to display these objects are the same, the pages that display object details are the same.
+All the objects have properties, they can be enabled/disabled in the same way, they are subject to authorizations in the same way and so on.
+It is a midPoint philosophy to design several powerful principles and then apply them over and over again.
+
+=== Object Details Page
+
+When a user clicks on a name of any object in the object list then object details page appears.
+The detail pages for common midPoint objects such as user or role are very similar to each other.
+They have the same layout and controls. E.g. user details page looks like this:
+
+image::pictures/03-04-user-details.png[User details]
+
+There is an information area at the top of the page.
+That area shows user photo (or icon) and provides some basic information such as user name and identifier.
+It also shows where the object belongs in the organizational structure.
+There is also a couple of "tags" that show interesting details about the object: whether the object is enabled, whether it has special privileges and so on.
+
+The screen below the information area is divided into several tabs.
+Each tab shows one aspect of the object.
+There are tabs that show projections, assignments, inducements – we will come to that later in this book.
+The first tab is perhaps the most interesting right now.
+It contains a dialog that shows basic object properties: the attributes of the object.
+Properties are displayed and they can be edited – depending on the authorizations of currently logged-in user.
+In addition to the basic properties there are also other sections. E.g. activation section shows whether the object is enabled or disabled, it shows the activation dates and other activation details.
+The credentials section allows to change password and other credentials.
+There are several little buttons at the top of each section.
+One of them can be used to change the ordering in which the properties are shown.
+The other button toggles the display of metadata.
+There may be additional buttons depending on the situation.
+
+Operation options and buttons are located at the bottom of the details page.
+The buttons initiate the operations.
+The most common operation is just to save the changes and that’s what the _Save_ button is for.
+Saving the changes is a universal way how to start almost any operation: change of user properties, assignment of roles, change of password, user disable, etc.
+When you make edits in any of the tabs on the details page then nothing really happens yet.
+MidPoint just remembers what you are editing.
+The operation is executed only when you click the Save button.
+This is our method how to execute several changes in one operation.
+It may require some time to get used to it.
+Just do not forget to click the save Button.
+
+Operation options are used to modify the behavior of the operation.
+These options may force to execute operations that fail to pass midPoint internal checks.
+There is an option to reconcile the data even if midPoint thinks that reconciliation is not needed.
+And so on.
+Checking or unchecking these options influences the way how midPoint executes the operation.
+
+MidPoint user interface often needs to present objects that are internally quite complex.
+It does not make sense to present all the details at once.
+These objects need to be presented in quite a compact form that can be expanded to show the details.
+This applies to list of user’s accounts, assignments, role inducements, etc.
+The objects are initially displayed as in a form of a simple list, displaying only the basic data:
+
+image::pictures/03-05-user-projections.png[User projections]
+
+The list above shows user’s _projections_.
+Those are usually accounts that are linked to user object.
+Click on account name shows account details:
+
+image::pictures/03-06-user-projection-details.png[Projection details]
+
+Account details display is shown in place of user details.
+This may be slightly confusing.
+But account details can be often complex, therefore all the available screen space is needed to display them.
+The _Cancel_ and _Done_ buttons at the bottom can be used to return back to _Projections_ tab.
+Click on _Done_ button will not start the operation yet, it only changes the view.
+Therefore do not confuse those buttons with _Back_ and _Save_ buttons on the very bottom on the page.
+The operation starts when _Save_ button is clicked.
+
+=== MidPoint Configuration Basics
+
+The principle of midPoint configuration is quite different from what would a typical system administrator expect.
+There are almost no configuration files in midPoint.
+MidPoint is storing vast majority of its configuration in its configuration database.
+There are several reasons for this:
+
+* MidPoint configuration is *complex*.
+MidPoint configuration is not what a typical system administrator would think of like a "configuration".
+It contains numerous resource definitions that in turn contains mappings that in turn may contain scripts.
+There are roles, policies, templates, ... and these objects are too complex to be expressed in simple configuration files.
+
+* MidPoint configuration is *scalable*.
+It is no exception that a midPoint deployment has thousands of role definitions or organizational units, tens of resource definitions and a significant number of templates and policies.
+All of that needs to be stored efficiently, so midPoint can handle deployments that manage millions of identities.
+The configuration also needs to be searchable.
+Managing thousands of roles in plain text files simply won’t work.
+
+* MidPoint configuration needs to be *available*.
+There are midPoint deployments with several nodes working together in a cluster.
+Configuration change done on one node has to be seem by other nodes.
+Simple configuration files would not work here.
+
+Therefore midPoint has a completely different approach to configuration.
+The configuration is stored in a form of well-defined structured objects in the midPoint database.
+We call that database _midPoint repository_.
+
+=== Configuration Objects
+
+Everything is an object in midPoint.
+Every piece of configuration is represented as a structured object and stored in midPoint repository.
+Object may look like this:
+
 [source,xml]
 ----
 <role oid="8ebab0bc-7e7e-11e6-a7bc-57de1cd45ecc">
@@ -14,3 +309,209 @@ TODO
     </inducement>
 </role>
 ----
+
+Every object has its identifier.
+We call that identifier _OID_ which stands for "object identifier" (it has nothing to do with LDAP or ASN.1 OIDs).
+OID is usually randomly-generated universally unique identifier (UUID).
+OID value has to be unique in a whole system.
+This identifier is _persistent_ – it is assigned to the object and it should never change.
+OID is used for internal purposes and it is almost never displayed to midPoint user.
+
+Every object has a _name_.
+Name is human-readable and it can change any time.
+The value of name is usually displayed to users.
+This is the values that ordinary users understand as an identifier.
+
+And then there are other object properties.
+Or rather _items_.
+Each type of midPoint object has a slightly different set of these items.
+That’s what we call _schema_.
+The items may be simple properties such as string, integer or boolean values.
+But there also may be complex structures and references between objects.
+MidPoint data model is quite rich.
+It is in fact so rich that its description will take better part of this book, because description of the data model is also description of midPoint features.
+
+You can see midPoint configuration objects in midPoint user interface by navigating to _Configuration > Repository Objects_ and selecting object type.
+The following picture shows objects of type "Role":
+
+image::pictures/03-07-repository-objects.png[Repository objects]
+
+=== XML, JSON and YAML
+
+The objects are stored in the midPoint repository in a native form which is hidden from midPoint users.
+However, the objects also have a human-readable representation.
+They can be represented in XML, JSON and YAML forms.
+All the objects can be imported into midPoint in any of those forms.
+They can be exported from midPoint in any of those forms.
+They can be even edited directly in midPoint using embedded editor.
+Just click on any object in the _Repository objects_ page:
+
+image::pictures/03-08-repository-object-edit.png[Repository object details]
+
+The ability to export, import and edit objects in XML/JSON/YAML form is absolutely essential, because:
+
+* It is *human-readable* (or rather administrator-readable).
+The configuration can be created, edited and maintained in your favorite editor and then imported into midPoint.
+It can be reviewed.
+It can be copied and pasted.
+Especially that.
+No system administrator can live efficiently without an ability to copy and paste.
+
+* It is *transferable*.
+It can be exported from one system (e.g. development environment) and easily transferred to another system (e.g. testing environment).
+It can be easily backed-up and restored.
+It can be easily shared, e.g. in a form of configuration samples.
+
+* It is *versionable*.
+The exported configuration can be easily put under any ordinary version control system.
+This is essential for deployment projects and configuration management.
+
+Therefore the midPoint configuration has the best of both worlds.
+It is stored in database, so it can be processed efficiently, it can be made available and so on.
+But it also has a text form, so it can be easily managed.
+
+The XML, JSON and YAML forms are considered to be equivalent.
+Objects can be written in any of these forms.
+
+.XML form of role object
+[source,xml]
+----
+<role oid="8ebab0bc-7e7e-11e6-a7bc-57de1cd45ecc">
+    <name>Basic User</name>
+    <description>Basic user role. Almost all users have it.</description>
+    <requestable>true</requestable>
+    <inducement>
+        <targetRef oid="f92e67c2-7e7e-11e6-a306-7bf6aa2e8c61" type="RoleType"/>
+    </inducement>
+</role>
+----
+
+.JSON form of role object
+[source,json]
+----
+{
+    "role" : {
+        "oid" : "8ebab0bc-7e7e-11e6-a7bc-57de1cd45ecc",
+        "name" : "Basic User",
+        "description" : "Basic user role. Almost all users have it.",
+        "requestable" : true,
+        "inducement" : {
+            "targetRef" : {
+                "oid" : "f92e67c2-7e7e-11e6-a306-7bf6aa2e8c61",
+                "type" : "RoleType"
+            }
+        }
+    }
+}
+----
+
+.YAML form of role object
+[source,yaml]
+----
+role:
+    oid: "8ebab0bc-7e7e-11e6-a7bc-57de1cd45ecc"
+    name: "Basic User"
+    description: "Basic user role. Almost all users have it."
+    requestable: true
+    inducement:
+      - targetRef:
+            oid: "f92e67c2-7e7e-11e6-a306-7bf6aa2e8c61"
+            type: "RoleType"
+----
+
+Most of the examples in this book are in XML notation.
+The XML form is almost always simplified for clarity: there are no namespace definitions, no namespace prefixes and so on.
+The complete files with all the details can be found in midPoint distribution package, midPoint source code or in other places.
+See <<additional-information>> chapter for more details.
+
+=== Maintaining MidPoint Configuration
+
+When it comes to maintenance of midPoint configuration there are two practical methods how to do that.
+
+First method is to maintain the configuration in midPoint: use midPoint wizards and user interface tools to create new objects and modify them.
+Export the objects in regular intervals so they are backed up, placed under version control and so on.
+This is an easy method to start with.
+But sooner or later you will probably figure out that you need the ability to copy and paste parts of the configuration.
+That you need to share the configuration with other team members.
+And that no user interface is ever as efficient as an experienced engineer with a good text editor.
+
+Then there is a second method: maintain the configuration files in text form outside of midPoint.
+Import them to midPoint as needed.
+The objects can be imported in midPoint user interface by going to _Configuration > Import object_ page.
+There are also import buttons in almost all the object list tables that also lead to that page.
+
+It is much easier to maintain a proper version control and a good teamwork using the import method.
+It also seems to be more efficient once you get used to midPoint: pieces of configuration can be copied from samples, documentation or from other projects.
+This makes the work efficient.
+Although work with midPoint is "just" configuration and there is usually almost no programming, this method of work is quite close to the methods that software developers use.
+And we know that these methods work quite efficiently.
+
+If you maintain the configuration files out of midPoint you can import them individually using midPoint user interface.
+This may seem like quite an uncomfortable way.
+But it works surprisingly well even for a mid-size projects.
+However, there is also a much better way.
+MidPoint has a plug-in into Eclipse IDE environment that allows you to maintain the configuration files in form of Eclipse projects.
+The plug-in allows easy download and upload of changed configuration files.
+As Eclipse also has good integration for version control systems and other development tools this seems like an ideal approach for large and complex projects.
+
+=== Looking Around MidPoint Installation
+
+Now we have a running midPoint installation and you should have some understanding of how to configure it.
+But before we plunge into the details about configuration let’s have a look at midPoint installation.
+There are few things that need to be understood before going on.
+It will save a lot of time later on.
+
+MidPoint needs its own database to work.
+We call that database _midPoint repository_.
+The database is used to store the configuration, users, resource definitions, account links, audit trails and a lot of other things.
+Proper relational database (PostgreSQL, MySQL/MariaDB, Microsoft SQL or Oracle) is strongly recommended for production deployment.
+But for development and demonstration purposes midPoint contains an embedded database engine (H2 database).
+This embedded database is initialized by default when midPoint is installed.
+And it is that embedded database that is used to store the configuration objects right now in your fresh midPoint deployment.
+This database does not need any special configuration, the database schema is applied automatically and it is started and stopped together with midPoint.
+Therefore it is ideal for demonstration and development purposes.
+
+Vast majority of midPoint configuration is stored in the database.
+But there are few things that cannot be stored there.
+Such as connection parameters to the database itself.
+For that purpose midPoint has a small configuration file called `config.xml`.
+MidPoint also needs a place where to store other data that cannot be in the database, such as cryptographic keys, connector binaries and so on.
+
+MidPoint needs a special directory on a filesystem for that purpose.
+We call it midPoint home directory.
+New directory with the name var is created in directory where midPoint distribution package was installed, i.e. at the same level as the bin directory where midPoint start start scripts are located.
+Assuming that midPoint was installed in `/opt/midpoint` directory then midPoint home will be located in `/opt/midpoint/var` directory.
+
+The location of midPoint home directory can be changed by using the midpoint.home Java system property.
+This is done by specifying `-Dmidpoint.home` in the JVM command-line.
+Or in case that the default midPoint start scripts are used `MIDPOINT_HOME` environment variable can be used to set the location of midPoint home directory.
+
+When midPoint starts for the first time it starts with an empty database.
+MidPoint populates the database with a minimal set of configuration objects.
+This set contains objects such as the `Superuser` role and user `administrator`.
+These objects get imported automatically because if they are not there you will not be able to log into the new midPoint instance.
+These objects are imported only if they are not already present in the database.
+If you modify them later then midPoint will not overwrite them.
+
+=== Logging
+
+Logging is perhaps the most important mechanism to diagnose any issues with midPoint.
+Logging should be _the_ thing that comes to your mind anytime you cast a puzzled look at midPoint user interface.
+We try to make midPoint user interface convenient to use and we pay a lot of attention to good error reporting.
+But there are always some limits.
+The error that the user interface displays may be just a result of a long chain of causes and effects.
+Error messages in the user interface may not directly point to the primary cause.
+Or maybe there is no error at all, just midPoint does not do what it is supposed to do.
+That is the point where logging comes to the rescue.
+
+MidPoint is using Java logging facilities to log its messages.
+MidPoint log file name is `midpoint.log` and it is stored in the log subdirectory in midPoint home directory (`/opt/midpoint/var/log/midpoint.log`).
+The default logging level is set up more-or-less to suit normal midPoint operation.
+This means that the messages on level `INFO` and above are logged while the finer levels are not logged.
+If you want to diagnose midPoint issues you will need to switch the logging levels to `DEBUG`, or in extreme cases even to `TRACE`. The logging levels can be adjusted in midPoint user interface.
+Navigate to _Configuration > System > Logging_.
+
+MidPoint is not a simple system.
+There are complex interactions, there is usually a lot of custom configuration, customizations, expressions and so on.
+Diagnostics of midPoint issues is in itself no easy task.
+Therefore there is a dedicated <<troubleshooting>> chapter down below.

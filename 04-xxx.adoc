@@ -1,0 +1,19 @@
+== Installation and Configuration Principles
+
+[quote, The Hitchhiker's Guide to the Galaxy, "The Restaurant at the End of the Universe by Douglas Adams"]
+The _Guide_ is definitive. Reality is frequently inaccurate.
+
+TODO
+
+.A piece of XML
+[source,xml]
+----
+<role oid="8ebab0bc-7e7e-11e6-a7bc-57de1cd45ecc">
+    <name>Basic User</name>
+    <description>Basic user role. Almost all users have it.</description>
+    <requestable>true</requestable>
+    <inducement>
+        <targetRef oid="f92e67c2-7e7e-11e6-a306-7bf6aa2e8c61" type="RoleType"/>
+    </inducement>
+</role>
+----
