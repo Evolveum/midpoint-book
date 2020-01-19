@@ -1,5 +1,5 @@
 [preface]
-== Introduction
+= Introduction
 
 [quote,Bilbo Baggins,'The Lord of the Rings by J.R.R. Tolkien']
 It's a dangerous business, Frodo, going out your door.

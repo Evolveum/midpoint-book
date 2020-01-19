@@ -1,4 +1,7 @@
-== Role-Based Access Control [[rbac]]
+[#07-rbac]
+= Role-Based Access Control
+
+include::chapter-include.adoc[]
 
 [quote, TODO]
 TODO

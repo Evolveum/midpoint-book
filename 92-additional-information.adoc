@@ -1,4 +1,7 @@
-== Additional Information [[additional-information]]
+[#92-additional-information]
+= Additional Information
+
+include::chapter-include.adoc[]
 
 [quote, TODO]
 TODO

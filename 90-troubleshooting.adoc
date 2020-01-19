@@ -1,4 +1,7 @@
-== Troubleshooting [[troubleshooting]]
+[#90-troubleshooting]
+= Troubleshooting
+
+include::chapter-include.adoc[]
 
 [quote, TODO]
 TODO

@@ -1,4 +1,6 @@
-== Conclusion
+= Conclusion
+
+include::chapter-include.adoc[]
 
 [quote, Steven Wright]
 A conclusion is the place where you get tired of thinking.

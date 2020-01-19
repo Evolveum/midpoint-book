@@ -1,0 +1,21 @@
+[colophon]
+= Colophon
+:imagesdir: images
+
+{booktitle} +
+by {author} +
+{producer}
+
+Book revision: {revnumber} +
+Publication date: {revdate} +
+Corresponding midPoint version: 4.0
+
+*© 2015-2020 Radovan Semančík and Evolveum, s.r.o. All rights reserved.*
+
+This work is licensed under a +
+http://creativecommons.org/licenses/by-nc-nd/4.0/[Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License].
+
+Major sponsoring for this book was provided by:
+
+// TODO: replace by SVG
+image::evolveum.png[Evolveum, scaledwidth="50%"]

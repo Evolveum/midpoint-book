@@ -1,4 +1,7 @@
-== Object Templates
+[#08-obhject-templates]
+= Object Templates
+
+include::chapter-include.adoc[]
 
 [quote, TODO]
 TODO

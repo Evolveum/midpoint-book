@@ -1,0 +1,4 @@
+// Images dir declaration needed for the IDEA preview to work well
+ifeval::[{env}==idea]
+:imagesdir: images
+endif::[]

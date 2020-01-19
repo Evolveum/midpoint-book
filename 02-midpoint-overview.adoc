@@ -1,4 +1,7 @@
-== MidPoint Overview
+[#02-midpoint-overview]
+= MidPoint Overview
+
+include::chapter-include.adoc[]
 
 [quote, Henry Adams]
 Chaos was the law of nature; Order was the dream of man.
@@ -46,7 +49,7 @@ There are many mechanisms that support this approach.
 Some are based in midPoint design, some originate from midPoint development practices and some are even supported by the Evolveum business model.
 But more about that later.
 
-=== How MidPoint Works
+== How MidPoint Works
 
 MidPoint does what any identity management system is supposed to do: it manages identities.
 The very basic functionality of midPoint is the synchronization of identity data that are stored in various applications, databases, directory servers, text files and so on.
@@ -55,13 +58,13 @@ MidPoint is using _connectors_ to reach the resources.
 MidPoint can propagate change that happened in one resource to other resources. E.g. an employee record appears in the HR system, it is picked up by midPoint, processed, transformed and then new Active Directory and CRM accounts are created.
 This is the process that we call _synchronization_.
 
-image::pictures/02-01-midpoint.png[midPoint]
+image::02-01-midpoint.png[midPoint]
 
 MidPoint has a rich graphical user interface (GUI) that can be used to manage the identities.
 Changes made by system administrators are automatically propagated to all affected resources. E.g. security officer disables a user by clicking on disable button in midPoint user interface.
 Then MidPoint makes sure that all accounts that belong to the user are immediately disabled.
 
-image::pictures/02-02-midpoint-gui.png[midPoint GUI]
+image::02-02-midpoint-gui.png[midPoint GUI]
 
 This is the essence of midPoint operation.
 This may sound simple, but this description is extremely simplified.
@@ -128,7 +131,7 @@ And more work in that direction is planned in future midPoint versions.
 We fully understand that it is not enough to simply apply the policies.
 Policies are living things and they need to evolve.
 
-=== Case Study
+== Case Study
 
 This book is about practical identity management.
 Therefore we will get very close to a practice by demonstrating midPoint features using a case study.
@@ -145,7 +148,7 @@ He downloads midPoint distribution package and follows the installation instruct
 Couple of minutes later midPoint instance starts up.
 Eric logs in to the midPoint user interface.
 
-image::pictures/02-03-dashboard.png[Dashboard]
+image::02-03-dashboard.png[Dashboard]
 
 MidPoint instance is almost empty after fresh installation.
 It contains only a couple of essential objects.
@@ -158,7 +161,7 @@ The HR system is quite big piece of software and it is not easy to connect to th
 Fortunately, it is quite easy to get a text export of the employee data in comma-separated (CSV) format.
 Eric plans to use this file to get employee data to midPoint.
 
-=== Connectors and Resources
+== Connectors and Resources
 
 MidPoint communicates with all the source and target systems by the means of connectors.
 Connectors are relatively small Java components that are plugged into midPoint.
@@ -182,7 +185,7 @@ A handful of frequently used connectors is bundled into midPoint distribution.
 These connectors do not need to be deployed.
 They are automatically available.
 
-image::pictures/02-04-connectors-resources.png[Connectors and resources]
+image::02-04-connectors-resources.png[Connectors and resources]
 
 Connector of a specific type works for all the systems that communicate by the protocol supported by connector.
 E.g. LDAP connector works for all the LDAP-compliant servers.
@@ -223,7 +226,7 @@ The XML file that Eric creates looks approximately like this (simplified for cla
 
 TIP: If you are a hands-on type of an engineer you probably want to follow what Eric is doing in your own midPoint instance.
 All the files that Eric is using are provided in a form of ready-to-use samples.
-Please see <<additional-information>> chapter at the end of this book for the details.
+Please see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter at the end of this book for the details.
 
 Then Eric goes to _Configuration_ section of midPoint user interface and imports the XML file into midPoint.
 Import operation creates new resource definition in midPoint.
@@ -231,7 +234,7 @@ Eric now navigates to _Resources_ section of the midPoint user interface.
 The new CSV resource is there.
 When Eric clicks on the resource name a resource details screen appears.
 
-image::pictures/02-05-resource-hr.png[HR resource]
+image::02-05-resource-hr.png[HR resource]
 
 Eric can click on the button at the bottom of the screen to test connection to the resource.
 As this is a local CSV file there is no real connection.
@@ -243,7 +246,7 @@ The resource is now prepared for use.
 There is not much that Eric can do with the resource yet.
 We need to explain a couple of essential midPoint concepts before moving forward with our case study.
 
-=== User and Accounts
+== User and Accounts
 
 The concept of user is perhaps the most important concept in the entire IDM field.
 The term _user_ represents physical person: an employee, support engineer, temporary worker, student, customer, etc.
@@ -251,7 +254,7 @@ On the other hand the term _account_ refers to the data structure that allows th
 This may be an account in the operating system, LDAP entry, row in the database table and so on.
 Typically, one user has many accounts – usually one account for each resource.
 
-image::pictures/02-06-user-account.png[User and accounts]
+image::02-06-user-account.png[User and accounts]
 
 The data that represent users are stored directly in midPoint.
 While the data that represent accounts are stored "on the resource side".
@@ -290,14 +293,14 @@ Yet midPoint must be able to synchronize all the accounts from any kind of resou
 In this case the _user schema_ works as a unified data model.
 The schema of each account is mapped to the user schema.
 
-image::pictures/02-07-user-account-mapping.png[User-account mapping]
+image::02-07-user-account-mapping.png[User-account mapping]
 
 Getting back to our ExAmPLE story, Eric has a HR resource configured.
 Therefore he can see the "accounts" that the users have in the HR system.
 Eric opens the resource detail page in the midPoint GUI, cliks on _Accounts_ tab and then on the _Resource_ button (we'll explain that later).
 The list of accounts appears:
 
-image::pictures/02-08-resource-hr-accounts.png[Resource HR accounts]
+image::02-08-resource-hr-accounts.png[Resource HR accounts]
 
 All that can be seen in this list are just employee numbers, because employee number is set as the primary identifier for the HR system.
 Clicking on the link will display more details.
@@ -306,7 +309,7 @@ These are lines in the CSV file exported from the HR database.
 But they describe some aspects of _identity_ and therefore midPoint interprets them as accounts.
 For midPoint "account" is a generic term used to describe any resource-side data structure that represents the user.
 
-=== Initial Import
+== Initial Import
 
 The _user_ is a central concept for any IDM system and midPoint is no exception.
 MidPoint needs reliable information about users to work correctly it.
@@ -351,11 +354,11 @@ Eric clicks on that button and creates a new import task.
 The task is started and it runs for a couple of seconds.
 After the task is done Eric can look at users in midPoint:
 
-image::pictures/02-09-users.png[Users]
+image::02-09-users.png[Users]
 
 Eric can see details about the user by clicking on the username:
 
-image::pictures/02-10-user-details.png[User details]
+image::02-10-user-details.png[User details]
 
 This page shows all the details about the user that midPoint knows about.
 The details are sorted to several tabs and we are going to explain all of that later in this book.
@@ -367,13 +370,13 @@ The "name", given name and family name were imported from the HR resource and th
 
 Let's have a look at the second tab now:
 
-image::pictures/02-11-user-projections.png[User projections]
+image::02-11-user-projections.png[User projections]
 
 The _Projections_ tab shows user's accounts.
 Currently there is only one account and it is the HR account that was used to import the data.
 Account details are displayed by clicking on account identifier:
 
-image::pictures/02-12-user-projection-hr.png[User HR projection]
+image::02-12-user-projection-hr.png[User HR projection]
 
 The data that are displayed here are really fresh.
 Account details were retrieved from the resource at the very moment that the account was displayed.
@@ -385,7 +388,7 @@ If the HR account is modified then the change is synchronized and applied to the
 The mappings are not just for the import.
 They can work continually and keep the account and user data synchronized all the time.
 
-=== Assignments and Projections
+== Assignments and Projections
 
 The concepts of an account is all about the reality: it shows the data that are there at this very moment.
 It shows what _is_ there.
@@ -408,7 +411,7 @@ This tab shows the policy.
 This tab shows what accounts, roles, organizations, or services are assigned to the user.
 This tab shows what user should have.
 
-image::pictures/02-13-assignments-empty.png[Assignments]
+image::02-13-assignments-empty.png[Assignments]
 
 To demonstrate how the assignments work we need a new resource.
 Therefore let Eric connect a new resource to midPoint.
@@ -421,14 +424,14 @@ But this time these will be _outbound_ mappings as Eric wants to propagate data 
 We will cover the details of mapping configuration later, so now let's just see the results.
 We have two resources now:
 
-image::pictures/02-14-resources.png[Resources]
+image::02-14-resources.png[Resources]
 
 But how do we create an account on that LDAP resource?
 The right way to do this is to let midPoint know that a user _should have_ an account on that resource.
 In midPoint terminology we say, that we are _assigning_ the resource to the user.
 All that Eric needs to do is to navigate to user details page, click on the _Assignments_ tab, use _New assignment_ button to add an assignment for the LDAP resource and click _Save_:
 
-image::pictures/02-15-assign-ldap.png[Assign LDAP account]
+image::02-15-assign-ldap.png[Assign LDAP account]
 
 After the click on _Save_ button a lot of complex things happen.
 But simply speaking midPoint recomputes what the user should have and what the user has.
@@ -438,12 +441,12 @@ Therefore midPoint creates the account.
 
 When Eric opens the user details again and navigates to the _Projections_ tab he can see that there are two accounts now:
 
-image::pictures/02-16-user-projections-2.png[User projections]
+image::02-16-user-projections-2.png[User projections]
 
 There is an HR account that was used to create the user in the first place.
 And there is also LDAP account that was created as a reaction to a new assignment.
 
-image::pictures/02-17-user-projection-ldap.png[User LDAP projection]
+image::02-17-user-projection-ldap.png[User LDAP projection]
 
 TIP: Careful reader may have noticed that the two accounts have vastly different attributes.
 That's right.
@@ -468,7 +471,7 @@ We can keep the HR account linked to the user by using this method.
 We can see the data that were used to create the user.
 This improves overall visibility and it greatly helps with diagnostics of configuration issues.
 
-=== Roles
+== Roles
 
 It would be a daunting task if Eric had to assign every individual account for every individual resource to every user.
 Typical IDM deployment has thousands of users and dozens of resources.
@@ -518,17 +521,17 @@ Inducements give access to the users that have this role.
 So they are kind of indirect assignments.
 Eric clicks on _New inducement_ button and adds inducements for the two resources into the role:
 
-image::pictures/02-18-role-employee-inducements.png[Role Employee inducements]
+image::02-18-role-employee-inducements.png[Role Employee inducements]
 
 Eric clicks on _Save_ button and the new role is created.
 Now it is ready to be assigned to the users.
 Eric goes on and assigns `Employee` role to user Bob:
 
-image::pictures/02-19-user-bob-employee.png[Employee Bob]
+image::02-19-user-bob-employee.png[Employee Bob]
 
 MidPoint automatically creates all the accounts given by the role:
 
-image::pictures/02-20-user-bob-accounts.png[Employee Bob accounts]
+image::02-20-user-bob-accounts.png[Employee Bob accounts]
 
 There is the HR account that was used to create the Bob user record in the first place.
 And then there are the two accounts that were created because Bob has the `Employee` role.
@@ -562,7 +565,7 @@ Of course, there is much more that the roles can do:
 Roles are really the essence of identity management.
 We will be dealing with roles in almost all the parts of this book.
 
-=== There Is Much More
+== There Is Much More
 
 Eric the Engineer has done a few basic steps to configure midPoint as an identity management system for his company.
 But this is still a very basic configuration.
@@ -577,7 +580,7 @@ New functionality will be administered to the ExAmPLE solution in small doses in
 MidPoint is a very flexible and comprehensive system and there are still a lot of things to learn.
 This chapter covered only a minuscule part of midPoint functionality.
 
-=== What MidPoint Is Not
+== What MidPoint Is Not
 
 Now you probably have some idea what midPoint is.
 However, it is also very important to understand what midPoint is not.

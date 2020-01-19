@@ -1,4 +1,7 @@
-== Organizational Structures
+[#09-orgstruct]
+= Organizational Structures
+
+include::chapter-include.adoc[]
 
 [quote, TODO]
 TODO

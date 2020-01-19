@@ -1,4 +1,7 @@
-== Synchronization
+[#05-synchronization]
+= Synchronization
+
+include::chapter-include.adoc[]
 
 [quote, Sherlock Holmes, "The Adventures of Sherlock Holmes by Arthur Conan Doyle"]
 It is a capital mistake to theorize before one has data.
@@ -86,7 +89,7 @@ Policies are changing.
 It is no easy task to reliably synchronize the data in such environment.
 Therefore there is a special breed of systems that specialize in synchronization of identity data: identity management systems.
 
-=== Synchronization in MidPoint
+== Synchronization in MidPoint
 
 Synchronization is one of the basic mechanisms of midPoint.
 Synchronization mechanisms are integral part of midPoint design from its very beginning.
@@ -157,7 +160,7 @@ This unifying approach significantly simplifies the configuration of midPoint sy
 And that is also a reason why the boundaries of individual synchronization mechanisms are quite fuzzy.
 In fact this is just a single big mechanism with several facets.
 
-=== Sources, Targets And Other Creatures
+== Sources, Targets And Other Creatures
 
 The tale of idealistic identity management deployment starts with a human resources (HR) system.
 The HR system is supposed to have records for all the identities therefore it is _authoritative source_ resource.
@@ -196,7 +199,7 @@ Therefore midPoint does not bother to define a concept of "source" or "target" r
 All resources can be both sources and targets and the authoritativeness of each attribute can be controlled on a very fine level.
 Almost every real-world situation can easily fit into this model.
 
-=== Inbound and Outbound Mappings
+== Inbound and Outbound Mappings
 
 MidPoint is firmly based on the principle of reuse.
 Previous chapter explained that behavior of attributes during provisioning is controlled by _mappings_.
@@ -204,7 +207,7 @@ Therefor is is perhaps no big surprise that the behavior of attributes during sy
 In fact, provisioning is just a special case of synchronization.
 Following picture explains the combined mechanism.
 
-image::pictures/05-01-sync-source-target.png[Synchronization]
+image::05-01-sync-source-target.png[Synchronization]
 
 There are two types of mappings:
 
@@ -217,7 +220,6 @@ These mappings take user properties, transform them and apply the result to acco
 The mappings themselves are almost the same regardless whether they are inbound or outbound.
 They have sources, targets, expressions, conditions, etc.
 Just the sources and targets are reversed:
-
 
 [cols="h,1,1"]
 |===
@@ -322,7 +324,7 @@ As explained before, midPoint follows start topology (a.k.a. "hub and spoke").
 Therefore the synchronization is either from account to user (inbound) or from user to account (outbound).
 The effect of account-account synchronization is achieved by combing inbound and outbound synchronization mechanisms.
 
-=== Correlation
+== Correlation
 
 It is all quite easy to import all HR records into an empty midPoint.
 Set up inbound mappings, start import task, wait a bit and all is done.
@@ -383,7 +385,7 @@ The correlation expression must be a search filter because that is the only effi
 We cannot scan the accounts one-by-one.
 We need to utilize the search power of the database for this.
 
-=== Synchronization Situations and Reactions
+== Synchronization Situations and Reactions
 
 Correlation expression can be used to find an owner for a new account.
 That is a part of the solution but not entire solution.
@@ -530,7 +532,7 @@ Hence the `synchronize` property.
 This property can be used to force midPoint to do full synchronization even if there is no explicit action configured.
 And it can also be used to avoid full synchronization even if explicit action is configured.
 
-image::pictures/05-02-synchronization-flow.png[Synchronization flow]
+image::05-02-synchronization-flow.png[Synchronization flow]
 
 The figure above illustrates the usual sequence of events during inbound synchronization:
 
@@ -567,7 +569,7 @@ However, existing midPoint customers had so far prioritized other features.
 MidPoint subscribers and sponsors are funding the development therefore midPoint development must follow their priorities.
 Therefore if you are interested in full synchronization reaction extensibility (or any other feature) please consider purchasing midPoint subscription or sponsoring the feature.
 
-=== Synchronization Tasks
+== Synchronization Tasks
 
 Now we know how the inbound synchronization works: midPoint reads the account, then correlation is applied, situation determined and reaction executed.
 However, we have not yet discussed the details of the very first step: how does midPoint actually read the account?
@@ -636,11 +638,11 @@ Which means that both resource and all the necessary synchronization tasks can b
 Synchronization tasks can also be created from midPoint user user interface.
 They are usually created by using special-purpose buttons in resource detail pages.
 
-image::pictures/05-03-synchronization-tasks.png[Synchronization tasks]
+image::05-03-synchronization-tasks.png[Synchronization tasks]
 
 Once the synchronization tasks are created they can be managed in the same way as other tasks are managed: in the _Server tasks_ part of the midPoint user interface.
 
-=== Synchronization Example: HR Feed
+== Synchronization Example: HR Feed
 
 This section describes complete working example that feeds HR data into midPoint.
 The ExAmPLE company HR system is an old and complex system.
@@ -659,7 +661,8 @@ The core of the configuration is contained in a single resource definition file.
 Following paragraphs explain individual parts of the file.
 There are few additional configuration files for reconciliation and live synchronization tasks.
 Simplified XML notation is used for clarity.
-The complete file in a form that is directly usable in midPoint can be found at the same place as all the other samples in this book (see <<additional-information>> chapter for details).
+The complete file in a form that is directly usable in midPoint can be found at the same place as all the other samples in this book
+(see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for details).
 
 This HR resource is a data source.
 It will be used to "pull" the data inside midPoint.
@@ -1053,7 +1056,7 @@ Therefore most deployments need to generate more convenient usernames.
 This is easy to do with midPoint and we will also address that later.
 There is still a lot of things to learn before we get to a complete synchronization set up.
 
-=== HR Feed Recommendations
+== HR Feed Recommendations
 
 All resources are created equal in midPoint.
 However, source resources almost always have slightly special standing.
@@ -1094,7 +1097,7 @@ However, this is unlikely to happen of first few couple of attempts.
 
 . You will probably need to have a look into system logs to learn the details of individual import failures.
 MidPoint heavily relies on logs for detailed error analysis.
-See the <<troubleshooting>> chapter of this book to learn how to adjust log levels and how to get understand the log messages.
+See the <<90-troubleshooting.adoc#90-troubleshooting,Troubleshooting>> chapter of this book to learn how to adjust log levels and how to get understand the log messages.
 
 . Some errors are likely to be caused by the errors in your mappings and policies.
 Those are usually easy to fix.
@@ -1139,7 +1142,7 @@ And in fact there are specialized connectors that are taking data directly from 
 For example there is a connector for Oracle HCM system.
 Unfortunately, there is no connector that can take data from SAP HR system yet.
 
-=== Synchronization and Provisioning
+== Synchronization and Provisioning
 
 Synchronization and provisioning are intimately connected.
 Everything that we have explained about provisioning in the previous chapter also applies to synchronization.
@@ -1252,7 +1255,7 @@ We are not going to dwell on old mistakes for too long.
 These two section will be reunited once there is a proper time to make incompatible changes.
 Which will probably happen in the future when the time comes to release midPoint 5.0.
 
-=== Mapping and Expression Tips and Tricks
+== Mapping and Expression Tips and Tricks
 
 Mappings and expressions form a very powerful mechanism.
 In fact most of midPoint configuration is about setting up correct mappings.
@@ -1361,9 +1364,9 @@ Arbitrary messages may be logged by script expression code:
 
 Generally speaking, troubleshooting of mappings may be quite difficult as it is often intertwined with midPoint internal algorithms.
 But there are ways how to do it.
-The <<troubleshooting>> chapter provides much more details on this.
+The <<90-troubleshooting.adoc#90-troubleshooting,Troubleshooting>> chapter provides much more details on this.
 
-=== Expression Functions
+== Expression Functions
 
 Expressions in general and scripting expressions in particular are the place where most midPoint customization takes place.
 Scripting expressions are able to execute any code in a general-purpose programming language.
@@ -1619,7 +1622,7 @@ Therefore it is always strongly recommended to explicitly turn off the handler w
 NOTE: The XML example above, as all other examples in this book, is simplified and shortened for clarity.
 You will not be able to import the example in this form into midPoint.
 For a full importable examples see the files that are supposed to accompany this book.
-Please see <<additional-information>> chapter.
+Please see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter.
 
 The basic resource configuration above is sufficient to connect to the resource.
 Therefore the test connection operation on resource details page should be successful.
@@ -1742,7 +1745,7 @@ Therefore we will go just with this one synchronization reaction for now.
 Now it is the right time to start import or reconciliation task.
 After the task is finished the situation may look like this:
 
-image::pictures/05-04-reconciliation-ldap-unmatched.png[OpenLDAP accounts]
+image::05-04-reconciliation-ldap-unmatched.png[OpenLDAP accounts]
 
 It looks like we had quite a good data in the LDAP server.
 Most of the accounts were successfully correlated and linked to their owners.
@@ -1873,7 +1876,7 @@ One way would be to create the assignments together with the links.
 Those that are interested in this method should look up keyword "legalize" in midPoint wiki.
 But there are much better methods how to handle this.
 Perhaps the best approach would be to utilize the roles (RBAC).
-Which is the topic of the <<rbac>> chapter below.
+Which is the topic of the <<07-rbac.adoc#07-rbac,Role-Based Access Control>> chapter below.
 But there are still more things to learn about synchronization until we get there.
 
 ### Reconciliation
@@ -1980,12 +1983,12 @@ There three types of delta: _add_, _modify_ and _delete_.
 _Add delta_ is quite simple.
 It contains a new object to be created.
 
-image::pictures/05-05-delta-add.png[Add delta]
+image::05-05-delta-add.png[Add delta]
 
 _Delete delta_ is even simpler.
 It contains just object identifier (OID) of an object to be deleted.
 
-image::pictures/05-06-delta-delete.png[Delete delta]
+image::05-06-delta-delete.png[Delete delta]
 
 Last one is _modify delta_.
 This delta contains a description of modified properties of an existing object.
@@ -1994,19 +1997,19 @@ Modify delta contains a list of _item deltas_.
 Each item delta describes how a particular part of an object changes.
 For example following delta describes that a new value `pirate` is added to a user property `employeeType`.
 
-image::pictures/05-07-delta-modify-add.png[Modify delta: add]
+image::05-07-delta-modify-add.png[Modify delta: add]
 
 The item delta may have three modification types: _add_, _delete_ and _replace_.
 _Add modification_ means that new value or values are added to an item.
 _Delete modification_ means that value or values are removed from an item.
 
-image::pictures/05-08-delta-modify-delete.png[Modify delta: delete]
+image::05-08-delta-modify-delete.png[Modify delta: delete]
 
 In both _add_ and _delete_ cases the values that are not mentioned in the delta are not affected.
 However, _replace_ modification is different.
 This means that all existing values of the item are going to be discarded and they are replaced with the value or values from the delta.
 
-image::pictures/05-09-delta-modify-replace.png[Modify delta: replace]
+image::05-09-delta-modify-replace.png[Modify delta: replace]
 
 The deltas are designed to work with both single-valued and multi-valued items.
 In fact _add modification_ and _delete modification_ deltas are specifically designed with multi-value items in mind.

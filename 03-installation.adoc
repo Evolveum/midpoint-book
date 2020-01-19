@@ -1,4 +1,7 @@
-== Installation and Configuration Principles
+[#03-installation]
+= Installation and Configuration Principles
+
+include::chapter-include.adoc[]
 
 [quote, The Hitchhiker's Guide to the Galaxy, "The Restaurant at the End of the Universe by Douglas Adams"]
 The _Guide_ is definitive. Reality is frequently inaccurate.
@@ -15,11 +18,11 @@ However, to use midPoint in a production deployment the installation need to be 
 The adjustments are mentioned in this chapter, but the full description of the production-ready installation is provided in later chapters.
 This chapter gives you midPoint installation that is ideal to get you started.
 
-=== Requirements
+== Requirements
 
 MidPoint will run on almost any machine.
 All you need is approximately 4GB RAM. That’s perhaps the only real limiting factor.
-If you look for more formal system requirements definition then you will find that in midPoint wiki (see chapter <<additional-information>> at the end of the book).
+If you look for more formal system requirements definition then you will find that in midPoint wiki (see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter at the end of the book).
 
 From the software side you will need:
 
@@ -37,7 +40,7 @@ This archive contains everything that you will need to run midPoint.
 We recommend to use the latest available versions of all software packages when dealing with midPoint.
 We are trying really hard to always keep midPoint up-to-date with the rest of the technologies.
 
-=== Installation
+== Installation
 
 MidPoint is Java web application distributed in a stand-alone package.
 The distribution package contains everything that midPoint needs to run – except for Java platform itself.
@@ -56,7 +59,7 @@ It will initialize the embedded web container, database and all the other midPoi
 That can take a minute or two.
 After the application is initialized you can access it by connecting to midPoint HTTP port, which defaults to 8080. You can start working with midPoint now.
 
-=== MidPoint User Interface
+== MidPoint User Interface
 
 Use the following URL to access midPoint user interface:
 
@@ -72,7 +75,7 @@ This user has superuser privileges therefore you can see everything and you can 
 
 MidPoint user interface is structured. It has the same layout and controls for all the user interface areas:
 
-image::pictures/03-01-gui-controls.png[GUI controls]
+image::03-01-gui-controls.png[GUI controls]
 
 Primary tool for user interface interaction is the menu.
 MidPoint user interface is functionally divided into three parts, therefore there are also three parts of the menu:
@@ -97,7 +100,7 @@ The breadcrumbs can be used to “find your way home” and back to the previous
 The use of browser _Back_ button is not recommended.
 Please use the _Back_ buttons that are present in midPoint user interface or use breadcrumbs.
 
-=== User Interface Areas
+== User Interface Areas
 
 MidPoint user interface is quite rich.
 Following list provides short description of the most important parts of the user interface.
@@ -143,12 +146,12 @@ These pages typically deal with scheduled printable reports.
 
 * *Configuration* area contains many pages that manage midPoint configuration: system default configuration, repository objects, logging, bulk actions and so on.
 
-=== User Interface Concepts
+== User Interface Concepts
 
 MidPoint user interface is using the same concepts and controls in all its parts.
 For example all the lists of all the objects (users, roles, ...) look like this:
 
-image::pictures/03-02-list-controls.png[GUI list controls]
+image::03-02-list-controls.png[GUI list controls]
 
 Each row represents one object: user, roles, service, task, etc.
 There is also a color-coded object icon.
@@ -166,7 +169,7 @@ Users, roles and other object types have their specific color and icon.
 This indicates the object type and it is used whenever possible: menu, information boxes, lists, box title accents and so on.
 The primary colors and icons are shown in the dashboard:
 
-image::pictures/03-03-dashboard-object-types.png[Dashboarad object types]
+image::03-03-dashboard-object-types.png[Dashboarad object types]
 
 All user-related controls are red, all controls that deal with organizational structure are yellow.
 Roles are green.
@@ -200,13 +203,13 @@ The lists used to display these objects are the same, the pages that display obj
 All the objects have properties, they can be enabled/disabled in the same way, they are subject to authorizations in the same way and so on.
 It is a midPoint philosophy to design several powerful principles and then apply them over and over again.
 
-=== Object Details Page
+== Object Details Page
 
 When a user clicks on a name of any object in the object list then object details page appears.
 The detail pages for common midPoint objects such as user or role are very similar to each other.
 They have the same layout and controls. E.g. user details page looks like this:
 
-image::pictures/03-04-user-details.png[User details]
+image::03-04-user-details.png[User details]
 
 There is an information area at the top of the page.
 That area shows user photo (or icon) and provides some basic information such as user name and identifier.
@@ -249,13 +252,13 @@ These objects need to be presented in quite a compact form that can be expanded 
 This applies to list of user’s accounts, assignments, role inducements, etc.
 The objects are initially displayed as in a form of a simple list, displaying only the basic data:
 
-image::pictures/03-05-user-projections.png[User projections]
+image::03-05-user-projections.png[User projections]
 
 The list above shows user’s _projections_.
 Those are usually accounts that are linked to user object.
 Click on account name shows account details:
 
-image::pictures/03-06-user-projection-details.png[Projection details]
+image::03-06-user-projection-details.png[Projection details]
 
 Account details display is shown in place of user details.
 This may be slightly confusing.
@@ -265,7 +268,7 @@ Click on _Done_ button will not start the operation yet, it only changes the vie
 Therefore do not confuse those buttons with _Back_ and _Save_ buttons on the very bottom on the page.
 The operation starts when _Save_ button is clicked.
 
-=== MidPoint Configuration Basics
+== MidPoint Configuration Basics
 
 The principle of midPoint configuration is quite different from what would a typical system administrator expect.
 There are almost no configuration files in midPoint.
@@ -292,7 +295,7 @@ Therefore midPoint has a completely different approach to configuration.
 The configuration is stored in a form of well-defined structured objects in the midPoint database.
 We call that database _midPoint repository_.
 
-=== Configuration Objects
+== Configuration Objects
 
 Everything is an object in midPoint.
 Every piece of configuration is represented as a structured object and stored in midPoint repository.
@@ -334,9 +337,9 @@ It is in fact so rich that its description will take better part of this book, b
 You can see midPoint configuration objects in midPoint user interface by navigating to _Configuration > Repository Objects_ and selecting object type.
 The following picture shows objects of type "Role":
 
-image::pictures/03-07-repository-objects.png[Repository objects]
+image::03-07-repository-objects.png[Repository objects]
 
-=== XML, JSON and YAML
+== XML, JSON and YAML
 
 The objects are stored in the midPoint repository in a native form which is hidden from midPoint users.
 However, the objects also have a human-readable representation.
@@ -346,7 +349,7 @@ They can be exported from midPoint in any of those forms.
 They can be even edited directly in midPoint using embedded editor.
 Just click on any object in the _Repository objects_ page:
 
-image::pictures/03-08-repository-object-edit.png[Repository object details]
+image::03-08-repository-object-edit.png[Repository object details]
 
 The ability to export, import and edit objects in XML/JSON/YAML form is absolutely essential, because:
 
@@ -422,9 +425,9 @@ role:
 Most of the examples in this book are in XML notation.
 The XML form is almost always simplified for clarity: there are no namespace definitions, no namespace prefixes and so on.
 The complete files with all the details can be found in midPoint distribution package, midPoint source code or in other places.
-See <<additional-information>> chapter for more details.
+See <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for more details.
 
-=== Maintaining MidPoint Configuration
+== Maintaining MidPoint Configuration
 
 When it comes to maintenance of midPoint configuration there are two practical methods how to do that.
 
@@ -454,7 +457,7 @@ MidPoint has a plug-in into Eclipse IDE environment that allows you to maintain 
 The plug-in allows easy download and upload of changed configuration files.
 As Eclipse also has good integration for version control systems and other development tools this seems like an ideal approach for large and complex projects.
 
-=== Looking Around MidPoint Installation
+== Looking Around MidPoint Installation
 
 Now we have a running midPoint installation and you should have some understanding of how to configure it.
 But before we plunge into the details about configuration let’s have a look at midPoint installation.
@@ -493,7 +496,7 @@ These objects get imported automatically because if they are not there you will 
 These objects are imported only if they are not already present in the database.
 If you modify them later then midPoint will not overwrite them.
 
-=== Logging
+== Logging
 
 Logging is perhaps the most important mechanism to diagnose any issues with midPoint.
 Logging should be _the_ thing that comes to your mind anytime you cast a puzzled look at midPoint user interface.
@@ -514,4 +517,4 @@ Navigate to _Configuration > System > Logging_.
 MidPoint is not a simple system.
 There are complex interactions, there is usually a lot of custom configuration, customizations, expressions and so on.
 Diagnostics of midPoint issues is in itself no easy task.
-Therefore there is a dedicated <<troubleshooting>> chapter down below.
+Therefore there is a dedicated <<90-troubleshooting.adoc#90-troubleshooting,Troubleshooting>> chapter in this book.

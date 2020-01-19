@@ -1,4 +1,7 @@
-== Understanding Identity and Access Management
+[#01-idm-intro]
+= Understanding Identity and Access Management
+
+include::chapter-include.adoc[]
 
 [quote, Frank Herbert]
 The beginning of knowledge is the discovery of something we do not understand.
@@ -30,7 +33,7 @@ Users were able to access many systems and the systems themselves were connected
 Maintaining an isolated user database in each system no longer made much sense.
 And that's where the real story of digital identity begins.
 
-=== Directory Services and Other User Databases
+== Directory Services and Other User Databases
 
 The central concept of identity management is a data record that contains information about a person.
 This concept has many names: user profile, persona, user record, digital identity and many more.
@@ -47,7 +50,7 @@ Most account databases in the past were implemented as an integral part of the m
 This is an obvious choice and it remains very popular even today.
 Therefore many accounts are stored in relational database tables and similar application data stores.
 
-image::pictures/01-01-applications.png[Applications]
+image::01-01-applications.png[Applications]
 
 Application data stores are usually tightly bound to the application.
 Therefore accounts stored in such databases are difficult to share with other applications.
@@ -61,7 +64,7 @@ While databases are built for completely custom data model, directory servers us
 While databases are often heavyweight and expensive to scale, directory servers are lightweight and designed for massive scalability.
 That makes directory servers ideal candidates for shared account database.
 
-image::pictures/01-02-directory-server.png[Directory server]
+image::01-02-directory-server.png[Directory server]
 
 Shared identity store is making user management easier.
 An account needs to be created and managed in one place only.
@@ -90,7 +93,7 @@ Therefore we have been giving the same advice for many years: if you can connect
 The problem is that this usually works only for very simple systems.
 
 
-=== Directory Servers are Databases
+== Directory Servers are Databases
 
 Directory servers are just databases that store information.
 Nothing more.
@@ -109,7 +112,7 @@ But that does not change the fundamental design principles.
 Directory servers are databases, not authentication or authorization servers.
 
 
-=== Single Directory Server Myth
+== Single Directory Server Myth
 
 Shared directory server makes user management easier.
 But this is not a complete solution and there are serious limitations to this approach.
@@ -165,7 +168,7 @@ They are very useful when used properly.
 They just cannot be used alone.
 More components are needed to build a complete solution.
 
-=== Access Management
+== Access Management
 
 While directory systems are not designed to handle complex authentication the _access management_ (AM) systems are built to handle just that.
 They handle all the flavors of authentication and some authorization aspects.
@@ -185,7 +188,7 @@ The redirection usually contains an access token: small piece of information tha
 
 . Application validates the token, creates local session and allows the access.
 
-image::pictures/01-03-am-flow.png[Access management flow]
+image::01-03-am-flow.png[Access management flow]
 
 After that procedure the user works with the application normally.
 So only the first access goes through the AM server.
@@ -205,7 +208,7 @@ We live in an era when passwords are migrated to a stronger authentication mecha
 The flexibility that the AM-based approach brings may play a key part in that migration.
 
 
-=== Web Single Sign-On
+== Web Single Sign-On
 
 Single Sign-On (SSO) systems allow user to authenticate once and then access number of different system.
 There many SSO systems for web applications, however it looks like these systems are all using the same basic principle.
@@ -235,10 +238,10 @@ The user usually does not even realize that he was redirected when accessing app
 There is no interaction between the redirects and the redirects and the processing on the access management server is usually very fast.
 It looks like the user was logged into the application B all the time.
 
-image::pictures/01-04-web-sso-flow.png[Web SSO flow]
+image::01-04-web-sso-flow.png[Web SSO flow]
 
 
-=== Authorization in Access Management
+== Authorization in Access Management
 
 The request of a user accessing an application is directly or indirectly passed through the access management server.
 Therefore the access management server can, in theory, analyze the request and evaluate whether the user request is authorized or not.
@@ -267,7 +270,7 @@ And this may work well during demonstrations and in very simple deployments.
 But in complex practical deployments this capability is extremely limited.
 Vast majority of the authorization decisions is carried out by each individual application and is completely outside of the reach of an AM system.
 
-=== SAML and OpenID Connect
+== SAML and OpenID Connect
 
 Many access management systems use proprietary protocols to communicate with the applications and agents.
 This is obviously an interoperability issue – especially when the AM principles are used in the Internet environment.
@@ -306,7 +309,7 @@ Some traditions are just worth maintaining.
 Now there are two protocols that are using the same principle and do almost the same thing.
 The principle is illustrated in the following diagram.
 
-image::pictures/01-05-saml-oidc-flow.png[SAML/OIDC flow]
+image::01-05-saml-oidc-flow.png[SAML/OIDC flow]
 
 The interaction goes like this:
 
@@ -406,7 +409,7 @@ Although SAML and OIDC are designed primarily for cross-domain use, it is no big
 There is a clear benefit in using an open standardized protocol instead of a proprietary mechanism.
 However, it has to be expected that the SSO system based on SAML or OIDC will have slightly more complicated setup than a simple Web-SSO system.
 
-=== Kerberos, Enterprise SSO and Friends
+== Kerberos, Enterprise SSO and Friends
 
 Many of us would like to think that everything is based on web technologies today and that non-web mechanisms are things of the past.
 But there are still cases that are not web-based and where web-based SSO and AM mechanisms will not work.
@@ -462,7 +465,7 @@ Yet the world is changing, enterprise perimeter has efficiently disappeared and 
 Therefore also ESSO is now mostly a thing of the past.
 
 
-=== Access Management and the Data
+== Access Management and the Data
 
 Access Management servers and Identity Providers need to know the data about users to work properly.
 But it is complicated.
@@ -500,7 +503,7 @@ The AM system cannot work without the data.
 And if it works on data that are not maintained properly it will not take a long time until it fails.
 
 
-=== Advantages and Disadvantages of Access Management Systems
+== Advantages and Disadvantages of Access Management Systems
 
 Access management and web SSO systems have significant advantages.
 Most of the characteristics are given by the AM principle of centralized authentication.
@@ -533,7 +536,7 @@ Make sure that the AM can really bring the promised benefits.
 Starting with IDM and adding AM part later is often much more reasonable strategy.
 
 
-=== Single Access Management Myth
+== Single Access Management Myth
 
 The redirection approach of Access Management systems assumes that the user has something that can display authentication prompts and carry out user interaction.
 Which is usually a web browser.
@@ -553,7 +556,7 @@ Therefore it has to be expected that there will be several AM or SSO systems in 
 And each island needs to be managed.
 
 
-=== Practical Access Management
+== Practical Access Management
 
 Unifying access management system, Single Sign-On, cross-domain identity federation, universally-applicable 2-factor authentication – there are the things that people usually want when they think about Identity and Access Management (IAM).
 And these are all perfectly valid requirements.
@@ -601,7 +604,7 @@ Using the right tool for the job is a good approach in every situation.
 But in IAM program it is absolutely critical for success.
 
 
-=== Identity Management
+== Identity Management
 
 _Identity management_ (IDM) is maybe the most overlooked and underestimated technology in the whole identity and access management (IAM) field.
 Yet IDM is a crucial part of almost every IAM solution.
@@ -656,7 +659,7 @@ But as we have already shown the directories were not ideal tool for the job.
 The directories were not entirely suitable for environment where people though that LDAP is some kind of exotic disease, where usernames and identifiers were assigned quite randomly and where every application insisted that the only authoritative data are those stored in its own database.
 
 
-=== First Generation
+== First Generation
 
 The integration problems motivated the inception of IDM technologies in early 2000s.
 Early IDM systems were just data synchronization engines that were somehow hard-coded to operate with users and accounts.
@@ -700,7 +703,7 @@ Naturally the first generation of IDM system was a huge commercial success.
 But only for the vendors.
 This generation of IDM solutions really worked only for some customers and even there the real long-term benefits were often questionable.
 
-=== Second Generation
+== Second Generation
 
 We can only speculate what were the reasons, but the fact is that around the years 2009-2011 several very interesting new IDM products appeared on the market.
 One interesting thing is that all of them were more-or-less open source.
@@ -736,7 +739,7 @@ The second-generation IDM products are obvious choice for new IDM deployment pro
 The advantages of these products are quite clear and there is a great potential for future development.
 However, as always, you must choose wisely.
 
-=== What is This Identity Management, Anyway?
+== What is This Identity Management, Anyway?
 
 _Identity management_ is a simple term which encompasses a very rich and comprehensive functionality.
 It contains identity provisioning (and reprovisioning and deprovisioning), synchronization, organizational structure management, role-based access control, data consistency, approval processes, auditing and few dozens of other features.
@@ -768,7 +771,7 @@ The role also gives access to the CRM system, therefore CRM account is also auto
 All of that happens in a couple of seconds after the new HR record is detected.
 And it all happens automatically.
 
-image::pictures/01-06-example-idm.png[ExAmPLE IDM system]
+image::01-06-example-idm.png[ExAmPLE IDM system]
 
 Alice starts her career and she is a really efficient employee.
 Therefore she gets more responsibilities.
@@ -785,7 +788,7 @@ They get the notification about the request and they can easily approve or rejec
 Once the request is approved Alice's CRM account will be automatically assigned to appropriate CRM groups.
 Alice may start working on her analysis minutes or hours after she has requested the privileges.
 
-image::pictures/01-07-example-idm-approval.png[ExAmPLE IDM approval]
+image::01-07-example-idm-approval.png[ExAmPLE IDM approval]
 
 Alice lives happily ever after.
 And one day she decides to get married.
@@ -799,7 +802,7 @@ Alice even automatically gets a new e-mail address with her new surname (keeping
 Alice will receive a notification that now she can use her new e-mail address.
 The change is fast, clean and effortless.
 
-image::pictures/01-08-example-idm-rename.png[ExAmPLE IDM rename]
+image::01-08-example-idm-rename.png[ExAmPLE IDM rename]
 
 Later that day Alice discovers that her password is about to expire.
 Changing the password in all the applications would be a huge task.
@@ -821,7 +824,7 @@ But as this incident affects sensitive assets there are some preventive measures
 The security officers use the IDM system to immediately disable all the accounts that Mallory and Oscar have.
 It takes just a few seconds for IDM to disable these accounts in all the affected applications.
 
-image::pictures/01-09-example-idm-disable.png[ExAmPLE IDM disable]
+image::01-09-example-idm-disable.png[ExAmPLE IDM disable]
 
 The investigation later reveals that Oscar is mostly innocent.
 Mallory misused Oscar's trust and tricked him to assign the extra privileges.
@@ -838,7 +841,7 @@ Therefore at midnight of the last Oscar's day at work the IDM system automatical
 Oscar starts a new career as a barman in New York.
 He is very successful.
 
-image::pictures/01-10-example-idm-termination.png[ExAmPLE IDM termination]
+image::01-10-example-idm-termination.png[ExAmPLE IDM termination]
 
 The security office has handled the security incident in a professional way and the IDM system provided crucial data to make the security response quick and efficient.
 They receive praise from the board of directors.
@@ -854,7 +857,7 @@ The security team discovers quite a rich collection of testing accounts that wer
 The IT operations staff obviously forgot about these accounts after the outage.
 The security staff disables the accounts using the IDM tools and sets up an automated process to watch out for such accounts in the future.
 
-image::pictures/01-11-example-idm-orphans.png[ExAmPLE IDM orphan detection]
+image::01-11-example-idm-orphans.png[ExAmPLE IDM orphan detection]
 
 Based on the IDM data the security officers suspect that there are users that have too many privileges.
 This is most likely a consequence of the request-and-approval process and these privileges simply accumulated over time.
@@ -877,7 +880,7 @@ NOTE: Experienced identity management professionals certainly realized that this
 The real world is not a fairy tale and real life with an IDM system is much more complicated that this simple story suggests.
 Even though the real life is harder than a story in a book, the IDM system remains an indispensable tool for automation and information security management.
 
-=== How Does Identity Management Technology Work?
+== How Does Identity Management Technology Work?
 
 Obviously identity management systems have a lot of advantages for business, processes, efficiency and all that stuff.
 But how does it really works on a technological level?
@@ -894,7 +897,7 @@ This does not seem very revolutionary, does it?
 But it is all about the details.
 It is the way how the IDM system gathers the data, how it is processing the data and how it is propagating the changes that make all the difference.
 
-=== Identity Management Connectors
+== Identity Management Connectors
 
 Identity management system must connect to many different applications, databases and information systems.
 Typical IDM deployment has tens or even hundreds of such connections.
@@ -907,7 +910,7 @@ On the end of the connector is the native protocol that the application supports
 Therefore there are connectors for LDAP and various LDAP variants, SQL protocols and dialects, connectors that are file-based, connectors that invoke web services or REST services and so on.
 Every slightly advanced IDM system has tens of different connects.
 
-image::pictures/01-12-connectors.png[Connectors]
+image::01-12-connectors.png[Connectors]
 
 Connector is usually relatively simple piece of code.
 Primary responsibility of a connector is to adapt communication protocols.
@@ -961,7 +964,7 @@ This is typically some web or REST service that are easy to access from a connec
 But even if the application provides only a command-line interface or interactive terminal session there are connectors that can handle that sufficiently well.
 Therefore today the agent-based systems are generally considered to be obsolete.
 
-=== Identity Provisioning
+== Identity Provisioning
 
 Provisioning is perhaps the most frequently used feature in any IDM system.
 In the generic sense _provisioning_ means maintenance of user accounts in applications, databases and other target systems.
@@ -976,7 +979,7 @@ Good IDM system can also manage, provision and synchronize organizational struct
 However, this feature still is still not entirely common.
 
 
-=== Synchronization and Reconciliation
+== Synchronization and Reconciliation
 
 Identity provisioning may be the most important feature of an IDM system.
 But if an IDM system did just the provisioning and nothing else it would be a quick an utter failure.
@@ -1065,7 +1068,7 @@ Therefore these two methods are often used together.
 Synchronization runs all the time and handles vast majority of the changes.
 Reconciliation runs weekly or monthly and it acts as a safety net to catch the changes that might have escaped during synchronization.
 
-=== Identity Management and Role-Based Access Control
+== Identity Management and Role-Based Access Control
 
 Managing permissions for every user individually is a feasible options only if the number of users is very low.
 Individual management of permissions becomes very difficult with populations as small as few hundreds of users.
@@ -1094,7 +1097,7 @@ Or they may contain other roles that are even closer to the underlying technolog
 And so and so on, there are proverbial turtles all the way down.
 Role hierarchy is often a must when the number of permissions and users gets higher.
 
-image::pictures/01-13-role-hierarchy.png[Role hierarchy]
+image::01-13-role-hierarchy.png[Role hierarchy]
 
 No IDM system can be really complete without RBAC mechanism in place.
 Therefore vast majority of IDM systems support roles in one way or another.
@@ -1144,7 +1147,7 @@ That, together with other issues, makes ABAC a very poor choice for an IDM syste
 Therefore whether you like it or not, RBAC is the primary mechanism of any practical IDM solution.
 And it is here to stay.
 
-=== Identity Management and Authorizations
+== Identity Management and Authorizations
 
 The basic principle of authorization in the information security is quite straightforward:
 take the _subject_ (user), _object_ (the things that user is trying to access) and the _operation_.
@@ -1209,7 +1212,7 @@ Someone has to make sure that the application policies are consistent with the o
 Fortunately, the IDM systems are designed especially to handle management and synchronization of data in broad range of systems.
 Therefore the IDM system is the obvious choice when it comes to management of authorization policies.
 
-=== Organizational Structure, Roles, Services and Other Wildlife
+== Organizational Structure, Roles, Services and Other Wildlife
 
 Back in 2000s the IDM was all about managing user accounts.
 It was enough to create, disable and delete an account to a have an successful IDM deployment.
@@ -1256,7 +1259,7 @@ The groups are often bound to workgroups, projects or organizational units. E.g.
 Those groups can be used for authorization.
 Similarly an IDM system can automatically maintain application-level roles, access control lists (ACLs) and other data structures that are usually used for authorization.
 
-image::pictures/01-14-org-sync.png[Organizational tree synchronization]
+image::01-14-org-sync.png[Organizational tree synchronization]
 
 While this functionality provides benefits in almost any deployment, organizational structure management is absolutely crucial for organizations that are based on tree-like functional organizational structures.
 These organizations heavily rely on the information derived from organizational structure. E.g. direct manager of the document author can review an approve the document in the document management system.
@@ -1280,7 +1283,7 @@ Most IDM systems have some support for that, but any practical solution requires
 It is not clear why IDM vendors do not pay attention to features that are required for almost any IDM deployment.
 Therefore when it comes to a comprehensive IDM solution there is one crucial advice that we could give: choose the IDM product wisely.
 
-=== Everybody Needs Identity Management
+== Everybody Needs Identity Management
 
 Such a title may look like a huge exaggeration.
 But it fact it is very close to the truth.
@@ -1315,7 +1318,7 @@ Right now.
 You can thank me later.
 |===
 
-=== Identity Governance and Compliance
+== Identity Governance and Compliance
 
 _Identity governance_ is basically an identity management taken to a higher business level.
 The identity management proper is focused mainly on technical aspects of identity life-cycle such as automatic provisioning, synchronization, evaluation of the roles and computing attributes.
@@ -1475,7 +1478,7 @@ If roles are marked with relative risk levels, IDM system can compute the accumu
 As each role gives access to a particular set of assets, the IDM system may provide data to evaluate asset exposure to users.
 
 
-=== Complete Identity and Access Management Solution
+== Complete Identity and Access Management Solution
 
 A comprehensive Identity and Access Management solution cannot be built by using just a single component.
 There is no single product or solution that will provide all the necessary features.
@@ -1493,7 +1496,7 @@ But there are three basic components that are required for any practical IAM dep
 
 The following diagram shows how all these components fit together.
 
-image::pictures/01-15-iam-arch.png[IAM architecture]
+image::01-15-iam-arch.png[IAM architecture]
 
 This is truly a composite solution.
 There are several components that have vastly different features and characteristics.
@@ -1511,7 +1514,7 @@ Especially the second generation IDM systems are very good at repaying the inves
 Going for open source product will also keep the initial investment down.
 Staring with IDM is usually the best choice to start the IAM program.
 
-=== IAM and Security
+== IAM and Security
 
 Strictly speaking, Identity and Access Management (IAM) does not entirely fit into the information security field.
 The IAM goes far beyond information security.
@@ -1611,7 +1614,7 @@ But it is not feasible in practice.
 The reality is that information security seriously suffers - unless there is and IDM system that brings automation and visibility.
 Good information security without an IDM system is hardly possible.
 
-=== Building Identity and Access Management Solution
+== Building Identity and Access Management Solution
 
 There is no single identity and access management solution that would suit everybody.
 Every deployment has specific needs and characteristics.
@@ -1629,4 +1632,3 @@ We consider identity management to be heart and brain of any IAM solution.
 This is one of the reasons why we have started midPoint project.
 The rest of this book will focus almost exclusively on identity management and the use of midPoint as the IDM component.
 This is the place where theory ends and practice begins.
-do

@@ -1,4 +1,7 @@
+[#98-to-be-continued]
 == To Be Continued
+
+include::chapter-include.adoc[]
 
 [quote, Pierre de Fermat]
 Hanc marginis exiguitas non caperet. +
