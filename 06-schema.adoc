@@ -6,17 +6,1302 @@ include::chapter-include.adoc[]
 [quote, Henry David Thoreau]
 If you have built castles in the air, your work need not be lost, that is where they should be. Now put the foundations under them.
 
-TODO
+So far we have been discussing the things that influence how midPoint interacts with the outside.
+Resource definitions, outbound and inbound mappings, even the roles - the primary purpose of those things is to control how data get into midPoint and out of midPoint.
+But now it is time to discuss how midPoint works _internally_.
 
-.A piece of XML
+Early IDM systems were little more than smart data transformers.
+They took data from data sources, modified them in some way, maybe applied a model such as RBAC and then pushed the data out.
+There was very little crucial information that was stored inside the IDM system itself.
+But that was a long time ago and the world is a different place now.
+The focus of IDM field has shifted towards identity governance.
+It is not enough to transform the data.
+Policies need to be applied.
+Compliance needs to be evaluated.
+There are processes to follow, paperwork to do, reports to compile, notifications, reviews and daily status reports.
+It is perhaps no big surprise that there is a good deal of _management_ in Identity Management.
+
+Many of the chapters that follow will deal with these management concepts.
+But we have to start from the basics.
+And the goal of this chapter is an explanation of the very foundation of midPoint: schema.
+The goal of midPoint is not just a mere data transformation.
+The goal is to _unify_ the data.
+And midPoint schema plays a crucial part in that ambition.
+
+== MidPoint Schema
+
+MidPoint is designed as a schema-aware system.
+For every bit of data that passes through midPoint we have a complete _definition_.
+We know whether this is string, integer or timestamp.
+We know whether it is single-valued or multi-valued.
+We know whether it is optional or mandatory.
+We know whether this is a sensitive piece of data that requires extra protection.
+We know whether it is part of technical meta-data that we usually do not want to show by default.
+And often we also know what label we should use when we are presenting the data and how that label translates to other languages.
+We know quite a lot about the data that we work with.
+All the objects that midPoint works with are completely defined by the schema.
+There is a schema for user, role, org, resource, system configuration and everything else.
+
+Such awareness of the schema brings significant advantages to midPoint.
+The most obvious advantage is in data presentation.
+We know that we need to render a calendar selector because that particular data property is timestamp.
+We know that we need to render a text field with a plus button to add values because that particular property is a multi-valued string.
+And we know that some fields should be disabled because those properties are read-only.
+This behavior is not hard-coded.
+Vast majority of midPoint user interface is rendered by interpreting midPoint schema.
+
+This approach is absolutely crucial for any serious IDM system.
+One of the reasons is that the IDM system works with data that are retrieved from other systems (resources).
+It is just not possible to hard-code midPoint user interface for all the various attributes that all the possible resources could have.
+A different strategy is needed here, a strategy that is much more dynamic.
+
+When midPoint connects to a new resource for the first time it attempts to retrieve _resource schema_.
+The schema specifies what object classes the resource supports, which attributes the object classes have, what types are those and so on.
+MidPoint transforms this schema to its own native format and stores that in the resource definition.
+This means that midPoint has the schema available anytime it is needed for dynamic interpretation.
+That schema is used to display resource data in the most natural and user-friendly way.
+It is also used by automatic data type conversions, which makes mapping configuration easier.
+
+== Data Unification
+
+MidPoint schema is not just a nice way how to create user, role or organizational structure.
+It has a much deeper meaning.
+The primary purpose of a schema is integration, data translation and unification.
+A clever reader would certainly remember that we have already talked about _star topology_ or _hub-and-spoke_ integration pattern.
+MidPoint is like a hub of the wheel and all the resources connect to midPoint as spokes.
+MidPoint is actively discouraging direct resource-to-resource communication.
+Everything in midPoint is built for resource-to-midPoint and midPoint-to-resource communication.
+MidPoint is always the center – and for a good reason.
+All resource data need to be translated to and from a midPoint “data language”.
+Thus midPoint creates a common language that everybody can understand.
+And this is exactly the purpose of midPoint schema.
+The schema of user, role, org and service is designed to contain properties that are often used in identity-related integration scenarios.
+Therefore an engineer who is designing a mapping is quite likely to find a suitable property in midPoint schema that is prepared to be used.
+
+MidPoint schema forms a _lingua franca_, a common language that can be translating to various data dialects used by the resources.
+But it also provides a basic framework that can be reused for many midPoint deployments.
+Therefore an engineer starting a new deployment do not need to start on a completely green field.
+The basic schema will always be there to provide a starting point.
+
+TIP: Ever wondered why midPoint is called midPoint? Clever reader would have figured that out already.
+
+== Basic User Schema
+
+When it comes to identity management field, there is one concept that is at the center of everything: a concept of _user_.
+MidPoint is no exception.
+User is undoubtedly the most important object in the entire midPoint schema.
+Therefore it is worth to have a closer look at how this object looks like.
+This is going to be a really educative lesson, as it will explain several fundamental principles of midPoint.
+
+User is represented by schema datatype identified as `UserType`.
+Adding the Type suffix to datatypes is a common convention in midPoint.
+There is `UserType`, `RoleType`, `OrgType`, `ResourceType` and so on.
+This convention is partially historic, partially given by XML Schema conventions, partially a convenience to developers.
+Regardless of the origins, this convention is used for all the data types in midPoint schemas.
+You will get used to it eventually.
+
+`UserType` is what we call an _object definition_ in midPoint parlance.
+This means that `UserType` data structure specifies a complete midPoint object with all the things that any self-respecting object needs.
+There is object identifier (OID), name that can be presented in different forms and languages, free-form description and so on.
+All midPoint objects have those things.
+
+The `UserType` data structure has many additional _properties_, _containers_ and _references_.
+Property is a primitive data item such as string, integer or a timestamp.
+Container is a complex data structure that contains a bunch of properties or other containers.
+Reference is a pointer to another midPoint object.
+
+NOTE: Properties are primitive.
+However, there may be properties that have internal structure, even quite a complex internal structure.
+This is sometimes given by historic reasons.
+But there are also properties that need to be complex, e.g. properties that require localizable presentation or properties that provide protection of data.
+Yes, this may be confusing.
+And even a clever reader is officially puzzled now.
+However, this distinction is not a big issue for now.
+
+Definition of `UserType` is summarized in the following table:
+
+|===
+|Name |Type |Description
+
+|`name`
+|property
+|Human-readable, mutable name of the object.
+It is typically a username or some kind of application-level identifier.
+The value must be unique among all the users. +
+Example: `jrandom`
+
+|`description`
+|property
+|Free-form textual description of the object.
+This is meant to be displayed in the user interface. +
+Example: `Random account for testing`.
+
+|`extension`
+|container
+|A container for custom schema extensions.
+We will discuss that later.
+
+|`metadata`
+|container
+|Meta-data about object creation, modification, etc.
+
+|`lifecycleState`
+|property
+|Lifecycle state of the object.
+This property defines whether the object represents a draft, proposed definition, whether it is active, deprecated, and so on. +
+Example: `active`
+
+|`assignment`
+|container
+|Set of object's assignments.
+Assignments define the privileges and "features" that this object should have, that this object is entitled to.
+Typical assignment will point to a role or define a construction of an account. +
+Assignments represent what the object should have.
+The assignments represent a policy, a desired state of things.
+
+|`linkRef`
+|referrence
+|Set of shadows (projections) linked to this focal object.
+E.g. a set of accounts linked to a user.
+This is the set of shadows that belongs to the focal object in a sense that these shadows represents the focal object on the resource.
+E.g. The set of accounts that represent the same midPoint user (the same physical person, they are "analogous"). +
+Links define what the object has.
+The links reflect real state of things.
+
+|`activation`
+|container
+|Type that defines activation properties.
+Determines whether something is active (and working) or inactive (e.g. disabled).
+
+|`jpegPhoto`
+|property
+|Photo of a user (in a binary form).
+
+|`costCenter`
+|property
+|The name, identifier or code of the cost center to which the user belongs.
+
+|`locality`
+|property
+|Primary locality of the user, the place where the user usually works, the country, city or building that he belongs to.
+The specific meaning and form of this property is deployment-specific.
+
+|`preferredLanguage`
+|property
+|Indicates user's preferred language, usually for the purpose of localizing user interfaces.
+The format is IETF language tag defined in BCP 47, where underscore is used as a subtag separator.
+This is usually a ISO 639-1 two-letter language code optionally followed by ISO 3166-1 two letter country code separated by underscore. +
+Example: `en_US`
+
+|`locale`
+|property
+|Defines user's preference in displaying currency, dates and other items related to location and culture.
+It has the same format as `preferredLanguage`. +
+Example: `en_US`
+
+|`timezone`
+|property
+|User's preferred timezone.
+It is specified in the "tz database" (a.k.a "Olson") format. +
+Example: `Europe/Bratislava`
+
+|`emailAddress`
+|property
+|E-Mail address of the user, org. unit, etc.
+This is the address supposed to be used for communication with the user. +
+Example: `random@example.com`
+
+|`telephoneNumber`
+|property
+|Primary telephone number of the user. +
+Example: `+421 123 456 789`
+
+|`fullName`
+|property
+|Full name of the user with all the decorations, middle name initials, honorific title and any other structure that is usual in the cultural environment that the system operates in.
+This element is intended to be displayed to a common user of the system.
+Example: `James W. Random, PhD.`
+
+|`givenName`
+|property
+|Given name of the user.
+It is usually the first name of the user, but the order of names may differ in various cultural environments.
+This element will always contain the name that was given to the user at birth or was chosen by the user. +
+Example: `James`
+
+|`familyName`
+|property
+|Family name of the user.
+It is usually the last name of the user, but the order of names may differ in various cultural environments.
+This element will always contain the name that was inherited from the family or was assigned to a user by some other means.
+Example: `Random`
+
+|`additionalName`
+|property
+|Middle name, patronymic, matronymic or any other name of a person.
+It is usually the middle component of the name, however that may be culture-dependent.
+Example: `Walker`
+
+|`nickName`
+|property
+|Familiar or otherwise informal way to address a person.
+Example: `Randy`
+
+|`honorificPrefix`
+|property
+|Honorific titles that go before the name.
+Example: `Sir`
+
+|`honorificSuffix`
+|property
+|Honorific titles that go after the name.
+Example: `PhD.`
+
+|`title`
+|property
+|User's title defining a work position or a primary role in the organization.
+Example: `CEO`
+
+|`employeeNumber`
+|property
+|Unique, business-oriented identifier of the employee.
+Typically used as correlation identifier and for auditing purposes.
+Should be immutable, but the specific properties and usage are deployment-specific.
+
+|`organization`
+|property
+|Name or (preferably) immutable identifier of organization that the user belongs to.
+The format is deployment-specific.
+This property together with organizationalUnit may be used to provide easy-to-use data about organizational membership of the user.
+
+|`organizationalUnit`
+|property
+|Name or (preferably) immutable identifier of organizational unit that the user belongs to.
+The format is deployment-specific.
+This property together with organization may be used to provide easy-to-use data about organizational membership of the user.
+
+|`credentials`
+|container
+|The set of user's credentials (such as passwords).
+|===
+
+This is a basic outline of the schema for `UserType`.
+This description is slightly simplified.
+Not all the items that are defined for `UserType` are shown in the table above.
+Deprecated items are not shown at all.
+Only some operational properties are shown.
+Some items are simplified or entirely omitted for clarity.
+
+Following example illustrates the use of midPoint `UserType` schema:
+
 [source,xml]
 ----
-<role oid="8ebab0bc-7e7e-11e6-a7bc-57de1cd45ecc">
-    <name>Basic User</name>
-    <description>Basic user role. Almost all users have it.</description>
-    <requestable>true</requestable>
-    <inducement>
-        <targetRef oid="f92e67c2-7e7e-11e6-a306-7bf6aa2e8c61" type="RoleType"/>
-    </inducement>
+<user>
+    <name>alice</name>
+    <activation>
+        <administrativeStatus>enabled</administrativeStatus>
+    </activation>
+    <preferredLanguage>en_US</preferredLanguage>
+    <assignment>
+        <targetRef oid="aaa6cde4-0471-11e9-9b50-c743da469067" type="RoleType"/>
+    </assignment>
+    <assignment>
+        <targetRef oid="4e73ed62-aef9-11e9-a7a8-57334ef1f991" type="RoleType"/>
+    </assignment>
+    <emailAddress>alice.anderson@example.com</emailAddress>
+    <fullName>Alice Anderson, PhD.</fullName>
+    <givenName>Alice</givenName>
+    <familyName>Anderson</familyName>
+    <honorificSuffix>PhD.</honorificSuffix>
+    <title>Business Analyst</title>
+    <employeeNumber>001</employeeNumber>
+    <organizationalUnit>10010</organizationalUnit>
+</user>
+----
+
+== Operational, Experimental and Deprecated Items
+
+Most of the items in midPoint schema are quite ordinary and they behave as expected.
+Such as the fullName property.
+The property can be set and changed by using midPoint user interface.
+But then there are some extraordinary items.
+Those are automatically determined and controlled by midPoint core.
+Those items are essential for correct operation of midPoint.
+Therefore they are called _operational_ items.
+Operational items are usually not directly displayed in the user interface.
+They are either completely hidden, displayed indirectly or displayed only when user chooses to displays them.
+
+MidPoint schema has grown and evolved over time.
+And it is still evolving.
+Therefore it is quite expected that the schema will slightly change over time.
+However, we do not affect midPoint deployments by incompatible schema changes.
+Therefore items are usually not removed from midPoint schema without a warning.
+An item that we do not want is marked as _deprecated_ first.
+At that point such item is still working as before.
+However, it is not displayed in the user interface to discourage use of that item.
+Deprecated items are removed in one of the subsequent midPoint releases.
+This gives enough time for midPoint users to adapt to schema changes.
+
+There is also another kind of schema evolution.
+Development of most midPoint features is quick and straightforward.
+But then there are features that are quite complex or features that involve some degree of exploration do implement.
+Those features cannot be implement in a single midPoint release.
+There are also features that are provided to the midPoint community as a "preview" to gather feedback for further development.
+All such features are marked as _experimental_.
+Those features are not officially supported, but you are free to use them at your own risk.
+Most new features require extensions of midPoint schema.
+This is also true for those experimental features.
+But when going experimental, there is a fair chance that something will change in the future.
+Therefore we are explicitly marking parts of the schema as _experimental_.
+This is a warning that those parts are likely to change.
+We are not promising any kind of compatibility for experimental parts of midPoint schema.
+They may change any time, they may even completely disappear.
+And there will be no deprecation or any other warning.
+Simply speaking: if you are dealing with experimental features, you are completely on your own.
+Do not come crying when those things stop working.
+You have been warned.
+
+== Activation
+
+Time is cruel and everything that we do is in some way temporary.
+Except perhaps for stupidity, which seems to be utterly endless.
+But all other things have a beginning and an end.
+Employees have hiring date, contracts have end dates, users can be disabled, roles may get replaced and so on.
+We use the term activation to encompass all those things that deal with the questions of digital life and death of the objects.
+
+The activation in itself is multi-dimensional and quite complex.
+It is composed from several properties that may change in somehow independent and somehow inter-dependent way.
+Following list provides a quick summary of activation properties:
+
+* *Activation status* defines administrative state of the object, often manually set by system administrator.
+
+* *Validity* properties specify when the object should be active.
+There is activation date and deactivation date.
+
+* *Effective status* is a computed operational property that show the current effective status of the user.
+It is computed from other activation properties.
+
+* *Lockout status* is used for temporary inactivation of user, e.g. in case of numerous failed authentication attempts.
+
+* *Additional operational properties* provide (meta) data about the past changes of administrative status.
+
+The best way to explain how activation work is to describe the meaning and behavior of individual properties.
+
+_Administrative status_ defines the "administrative state" of the object (user).
+I.e. the explicit decision of the administrator.
+If administrative status is set, this property overrides any other constraints in the activation type.
+E.g. if this is set to `enabled` and the user is not yet valid (according to _validity_ below), the user should be considered active.
+If set to `disabled` the user is considered inactive regardless of other settings.
+Therefore this property does *not* necessarily define an actual state of the object.
+It is a kind of "manual override".
+In fact the most common setting for this property is to leave it unset and let other properties determine the state.
+If this property is not present then the other constraints in the activation type should be considered (namely validity properties, see below).
+
+|===
+|Administrative Status Value |Description
+
+|_no value_
+|No explicit override.
+Other activation properties determine the resulting status.
+
+|`enabled`
+|The entity is active.
+It is enabled and fully operational.
+
+|`disabled`
+|The entity is inactive.
+It has been disabled by an administrative action.
+
+This indicates *temporary* inactivation and there is an intent to enabled the entity later.
+It is usually used for an employee on parental leave, sabbatical, temporarily disable account for security reasons, etc.
+
+|`archived`
+|The entity is inactive.
+It has been disabled by an administrative action.
+
+This indicates *permanent* inactivation and there is no intent to enabled the entity later.
+
+This state is used to keep the user record or account around for archival purposes.
+E.g. some systems require that the account exists to maintain referential consistency of historical data, audit records, etc.
+It may also be used to "blocks" the user or account identifier to avoid their reuse.
+It is usually used for retired employees and similar cases.
+|===
+
+If the administrative status is not present and there are no other constraints in the activation type or if there is no activation type at all then the object is assumed to be "enabled", i.e. that the user is active.
+
+_Validity_ refers to state when the object is considered legal or otherwise usable.
+In midPoint the validity is currently defined by two dates: the date from which the object is valid (`validFrom`) and the date to which an object is valid (`validTo`).
+When talking about users these dates usually represent the date when the contract with the user started (hiring date) and the date when the contract ends.
+The user is considered _valid_ (active) between these two dates.
+The user is considered inactive before the `validFrom` date or after the `validTo` date.
+
+It is perfectly OK to set just one of the dates or no date at all.
+If any date is not set then it is assumed to extend to infinity.
+E.g. if `validFrom` date is not set the user is considered active from the beginning of the universe to the moment specified by the `validTo` date.
+
+The validity is overridden by the administrative status.
+Therefore if administrative status is set to any non-empty value then the validity dates are not considered at all.
+
+Activation is also influenced by _object lifecycle_.
+Object lifecycle specifies phases of object’s life, such as `draft`, `proposed`, `active` and `deprecated`.
+There are some lifecycle states in which the object is considered to be active.
+And there are other states when the object is considered to be inactive.
+The later states are important, because object lifecycle can completely override activation.
+This makes perfect sense.
+E.g. when an object is in `draft` state, it is just being prepared for use.
+Such object may have validity dates or administrative status that would normally activate it.
+But we do not want draft objects to be active yet.
+Such object may need a review and approval to transition to `active` lifecycle state.
+Only then it will really become active.
+This is just a rough overview of the lifecycle functionality that only scratches the surface.
+We will deal with object lifecycle details later in this book.
+
+Activation is quite a complex matter that is spread out in several dimensions.
+Therefor it may not be entirely obvious which objects are active and which are not.
+Therefore midPoint provides an operational property `effectiveStatus` which shows the computed "effective state" of the object.
+Simply speaking it is a read-only property that tells whether the user should be considered active or inactive.
+The effective status is the result of combining several activation settings (administrative status, validity dates, etc.).
+
+The effective status holds the result of a computation, therefore it is an _operational_ property that is recomputed every time the status changes.
+The effective status should not be set directly.
+The effective status can be changed only indirectly by changing other activation properties.
+
+|===
+|Effective Status Value |Description
+
+|_no value_
+|Not yet computed.
+This should not happen under normal circumstances.
+
+|`enabled`
+|The entity is active.
+
+|`disabled`
+|The entity is inactive (*temporary* inactivation).
+
+|`archived`
+|The entity is inactive (*permanent* inactivation).
+|===
+
+The effective status is the property that is used by majority of midPoint code when determining whether a particular object is active or inactive.
+This property should always have a value in a normal case.
+If this property is not present then the computation haven't taken place yet.
+
+Similarly to effective status, there is yet another operational property `validityStatus`.
+This property reflects the state of validity constraints with respect to current time.
+The values are `before`, `in` and `after`, meaning the states before the validity intervals started, inside the validity interval and after the validity interval ended respectively.
+
+_Lockout status_ defines the state of user or account lock-out.
+Lock-out means that the account was temporarily disabled due to failed login attempts or a similar abuse attempt.
+This mechanism is usually used to avoid brute-force or dictionary password attacks and the lock will usually expire by itself in a matter of minutes.
+
+This value is usually set by the resource or by midpoint internal authentication code.
+This value is mostly used to read the lockout status of a user or an account.
+This value is semi-writable.
+If the object is locked then it can be used to set it to the unlocked state.
+But not the other way around.
+It cannot be used to lock the account.
+Locking is always done by the authentication code.
+
+|===
+|Lockout Status Value |Description
+
+|_no value_
+|No information (generally means unlocked user or account)
+
+|`normal`
+|Unlocked and operational user or account.
+
+|`locked`
+|The user or account has been locked.
+Log-in to the account is temporarily disabled.
+|===
+
+Please note that even if user of account are in the `normal` (unlocked) state they still be disabled by administrative status or validity which will make them efficiently inactive.
+
+There is also an informational property `lockoutExpirationTimestamp` that provides information about the expiration of the lock.
+However not all resources may be able to provide such information.
+
+There are several _operational properties_ in the activation data structure that provide operational data about user activation:
+
+|===
+|Name |Type |Description
+
+|`disableReason`
+|URI
+|URL that identifies a reason for disable.
+This may be indication that that identity was disabled explicitly, that the disable status was computed or other source of the disabled event.
+
+|`disableTimestamp`
+|dateTime
+|Timestamp of last modification of the activation status to the disabled state.
+
+|`enableTimestamp`
+|dateTime
+|Timestamp of last modification of the activation status to the enabled state.
+
+|`archiveTimestamp`
+|dateTime
+|Timestamp of last modification of the activation status to the archived state.
+
+|`validityChangeTimestamp`
+|dateTime
+|Timestamp of last modification of the effective validity state, i.e. last time the validity state was recomputed with result that was different than the previous recomputation.
+It is used to avoid repeated validity change deltas.
+|===
+
+Those properties are _operational_, therefore from the user point of view they are read-only.
+The values are automatically computed by midPoint and stored in the database.
+
+Let’s see how that works on some examples.
+The simplest example is perhaps not even worth mentioning.
+A user without any activation data structure is considered to be active (enabled).
+When such user is stored in midPoint repository, midPoint will automatically compute effective status:
+
+[source,xml]
+----
+<user>
+    <name>alice</name>
+    ...
+    <activation>
+        <effectiveStatus>enabled</effectiveStatus>
+    </activation>
+</user>
+----
+
+Administrator can disable such user by using administrative status property:
+
+[source,xml]
+----
+<user>
+    <name>alice</name>
+    ...
+    <activation>
+        <administrativeStatus>disabled</administrativeStatus>
+    </activation>
+</user>
+----
+
+Once again, when such user object is stored after the modification, midPoint computes the value of effective status:
+
+[source,xml]
+----
+<user>
+    <name>alice</name>
+    ...
+    <activation>
+        <administrativeStatus>disabled</administrativeStatus>
+        <effectiveStatus>disabled</effectiveStatus>
+    </activation>
+</user>
+----
+
+The use of administrative status is usually quite harsh.
+MidPoint deployments are often using validity constraints instead.
+For example, an employee that has employment contract for a year would look like this:
+
+[source,xml]
+----
+<user>
+    <name>bob</name>
+    ...
+    <activation>
+        <validFrom>2019-01-01T00:00:00Z</validFrom>
+        <validTo>2019-12-31T23:59:59Z</validTo>
+        <validityStatus>in</validityStatus>
+        <effectiveStatus>enabled</effectiveStatus>
+    </activation>
+</user>
+----
+
+Given that this chapter was written in 2019, such user will be active.
+It will automatically switched to inactive state after the last day of 2019.
+However, if there is ever a need to explicitly disable the user, administrative status can still be used:
+
+[source,xml]
+----
+<user>
+    <name>bob</name>
+    ...
+    <activation>
+        <administrativeStatus>disabled</administrativeStatus>
+        <validFrom>2019-01-01T00:00:00Z</validFrom>
+        <validTo>2019-12-31T23:59:59Z</validTo>
+        <validityStatus>in</validityStatus>
+        <effectiveStatus>disabled</effectiveStatus>
+    </activation>
+</user>
+----
+
+In this case the user is still in its validity interval.
+Hence the in value of `validityStatus`.
+But the administrative status is explicitly set to `disabled`.
+Therefore the resulting effective status is also `disabled`.
+
+The concept of activation is not limited to users.
+Many midPoint objects have activation.
+Roles can expire, organizational units can be disabled and so on.
+Activation is a concept that has a very broad application in midPoint.
+Even assignments have activation.
+Which is a crucial element in some configuration (e.g. multi-affiliation).
+Assignments are often used to model employment contracts, student affiliations, service contracts and similar concepts that have time boundaries.
+This is usually achieved by a clever use of assignment activation.
+
+== Schema Definition
+
+So far we have talked mostly about the use schema (`UserType` data type).
+However, the entire midPoint schema is quite complex.
+There are many types of objects and there are thousands of data types overall.
+It would be almost impossible to manage such a big schema directly in midPoint code.
+Therefore the schema is defined in special definition files that are used by midPoint in several ways.
+It is used by the user interface to automatically render form fields.
+It is used by midPoint expression engine to automatically convert data types.
+It is even used by midPoint build process (compilation) to make sure that the schema is properly used in midPoint code.
+MidPoint is completely schema-aware system from top to bottom.
+
+Schema obviously plays a crucial role in everything that midPoint does.
+Therefore it may be interesting to have a look at schema definition.
+This can be particularly useful for engineers that are deploying midPoint professionally and that often needs to extend and customize the schema.
+
+MidPoint schema is specified in XML Schema Definition (XSD) format.
+MidPoint schema is defined in several parts, but the most important is the "core" schema definition.
+The schema files reside in midPoint source code in schema component in the `infra` subsystem.
+Therefore schema files can be found in the `resources` part under the `infra/schema` subdirectory of midPoint source code.
+Schema files are are also included in midPoint distribution package for convenience.
+
+TIP: Why XSD?
+Why did we chose to use the XML Schema Definition format for midPoint schema?
+There are historic reasons and there are pragmatic reasons.
+Back in early 2010s when midPoint was born XML was perhaps the only sensible choice to build a complex system.
+Alternatives such as JSON were young and their schema languages ranged from "very limited" through "useless" to "non-existent".
+Therefore XML and XSD were a natural choice.
+However, quite early in midPoint development we have discovered limitations of XSD and especially limitations of Java libraries that work with XML and XSD.
+We had to extend XSD with custom features.
+But fortunately, XSD allowed that.
+We also had to rewrite parts of the XML/XSD-processing code.
+We have also invented a way how to use XSD to describe generic data structures (a.k.a. "Prism objects") that can be represented in XML, JSON and YAML.
+Therefore XSD does not really holds us back that much.
+And despite all the limitations, XSD worked for us quite well during all those years.
+We expect that we will replace XSD with something better in the future.
+The problem is that right now there is nothing that is significantly better.
+And it does not makes any sense for us to switch one buzzword for another only to remain cool.
+Therefore we will stick to XSD as long as it works for us.
+
+Every deployment engineer that takes midPoint deployments seriously should be aware of the schema.
+Hardcore engineer will surely open the XSD files in their favorite text editor in the terminal and analyze the definitions line-by-line.
+Developers could open the XSD files in their IDEs and have a nice organized look at the schema.
+But even an ordinary engineer could benefit from learning the basics of XSD and having a look at a few important data types in midPoint schema.
+
+Schema definition is not just about the properties, containers and data types.
+Crucial part of the schema definition is in-line documentation.
+Most of the data types and items are documented by using XSD in-line documentation mechanism.
+Therefore a huge amount of details about midPoint can be learned by exploring the schema.
+We have tried to make that process easier by developing _schemadoc_ mechanism.
+Schemadoc is a process that takes raw midPoint schema and generates HTML documentation out of that.
+This task is part of midPoint build process and generated documentation is a result of midPoint build.
+Schemadoc is also available online.
+Just search for "schemadoc" in midPoint wiki.
+
+Schema is not just a description how midPoint works.
+MidPoint schema is part of midPoint itself.
+It is used when midPoint is compiled.
+It is parsed when midPoint starts.
+It is used by midPoint core and user interface.
+MidPoint is complex and even the experts can be sometimes wrong.
+MidPoint documentation is quite extensive, therefore it may be misleading or out of date at places.
+But not the schema.
+Schema is always right.
+Otherwise midPoint won’t work.
+Schema is the law.
+
+== Schema Extensibility
+
+MidPoint schema is quite rich.
+Many of the properties that are frequently used in IDM deployments are already part of midPoint schema.
+But reality has always a way to bring unexpected things.
+Therefore midPoint deployments won’t get far if midPoint schema cannot be extended.
+
+Vast majority of midPoint schema is available at _compile-time_.
+This means that such schema is used during compilation (build) of midPoint.
+That "static" part of schema is somehow hardcoded into midPoint itself and it would very difficult to change.
+Therefore we have developed an mechanism to extend the schema at _deployment-time_.
+Small parts of the XSD definition can be provided when midPoint is deployed.
+MidPoint will read those definitions when it starts up.
+The static part of the schema is extended with those definitions.
+From that point on the extensions are part of midPoint schema.
+The extensions will be used by midPoint user interface, expression-processing code and all other parts of midPoint.
+
+Our ExAmPLE company was quite happy with the progress of IDM deployment so far.
+Mappings were used to synchronize values of user names and all other common attributes.
+There is plenty of suitable properties for that in midPoint schema such as `givenName` and `fullName`.
+Even `employeeNumber` came very handy.
+But now they need to customize midPoint schema to better suit their very specific needs.
+The company management decided that the people look really cool in fancy hats.
+Therefore they will provide a hat for every employee.
+Therefore the IDM needs to track hat size for all users.
+Hat size is not used in the IDM deployments very often, therefore it is not a part of standard midPoint schema.
+But fortunately, it is easy to extend the schema.
+
+First step to extend midPoint schema is to prepare a small XSD file:
+
+.example.xsd
+[source,xml]
+----
+<xsd:schema targetNamespace="http://example.com/xml/ns/midpoint/schema">
+    ...
+    <xsd:complexType name="UserTypeExtensionType">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <a:extension ref="c:UserType"/>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="hatSize" type="xsd:string"
+                         minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>
+----
+
+This file defines a new data structure `UserTypeExtensionType`.
+The name of this data structure does not really matter.
+What matters is that it is bound to an extension of `UserType` in the annotation part of the type definition.
+When midPoint reads this file, it will extend the definition of `UserType` with this data type.
+
+The extension data type specifies just a single property: `hatSize`.
+This is an optional single-valued string property.
+Every user in midPoint will have this property.
+User interface will automatically display text input field for this property.
+
+MidPoint administrator puts this XSD content into `example.xsd` file.
+Name of the file can be chosen arbitrarily as long as it has `.xsd` file extension.
+Administrator copies that file to `schema` subdirectory of midPoint home directory and restarts midPoint.
+From that point on the schema extension is active.
+
+The users can now be extended with custom property:
+
+[source,xml]
+----
+<user xmlns:exmpl="http://example.com/xml/ns/midpoint/schema">
+    <name>alice</name>
+    <extension>
+        <exmpl:hatSize>M</exmpl:hatSize>
+    </extension>
+    ...
+</user>
+----
+
+There is a couple of important remarks to be made here.
+Firstly, all the extension properties are always placed in a special `extension` container in the objects.
+Even though the properties are placed inside a container, the user interface will present them in the same way as the static (native) midPoint properties.
+
+Secondly, a clever reader surely noticed that we have used XML namespace here.
+We have omitted XML namespaces from majority of other examples as they are not that important when working with midPoint objects.
+But schema is different.
+Namespaces are handled quite a strict way when working with the schema.
+Namespaces must be declared and namespace prefixes must be properly used in all XSD definitions.
+The most important namespace in this case is the _target namespace_ of the extended schema.
+The URI for this namespace should be chosen in such a way that it is globally unique.
+The use of your DNS domain is the recommended technique.
+
+Namespaces also _should_ be used when working with `extension` container in users and other midPoint objects.
+This requirement is not that strict as midPoint can usually figure out the namespace.
+However, this may be a problem in case that several schema extensions are combined.
+Such combinations are possible in midPoint.
+MidPoint will simply parse all the XSD files in the schema directory and apply all of them as extensions.
+The namespace is used to differentiate between them.
+Therefore if there is an expectations that several schema extensions will be used in the same deployment then the use of namespaces in object extension is more than recommended.
+
+TIP: Why is there an `extension` container?
+Why are not the properties simply mixed among other static properties?
+This is related to the intricacies of XML and XML schema.
+Theoretically, XML is completely extensible.
+However, when XML Schema is applied to XML, some extensibility scenarios do not work very well.
+And that is also the case for mixing of static XML elements and dynamic XML elements.
+We are hitting what is called “Unique Particle Resolution” limitation of XML schema.
+This was further amplified by limitations of Java XML libraries.
+The easiest and perhaps even most correct way to resolve this limitation was to create a dedicated XML element for schema extensions.
+That is what we have done in early midPoint versions.
+The schema processing code in midPoint has significantly improved since and now we are almost at the point where we could remove the `extension` element.
+But we are not yet there.
+And there is still an aspect of compatibility to consider.
+Therefore the `extension` element stays for now.
+But we are trying hard to hide its existence from the end user.
+
+MidPoint schema does not just specify the "core" data model.
+MidPoint schema goes a bit further and it can also specify the details of data _presentation_.
+This means that the schema can specify a label that should be used for particular data item, help text and so on.
+The XML Schema (XSD) cannot do this.
+But fortunately, XSD schema can be extended by _annotations_.
+Those annotations can be used to define the presentation properties of the items:
+
+[source,xml]
+----
+    ...
+    <xsd:element name="hatSize" type="xsd:string"
+                 minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <a:displayName>Hat size</a:displayName>
+                <a:help>
+                    Your hat size in whatever mysterious units the hatters
+                    are using for measuring hats.
+                </a:help>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    ...
+----
+
+This works fine if your system works for just a single localization environment.
+But this is not enough in case that you need more than one language.
+MidPoint was born in Europe and we know quite well all the pain that comes with multi-language environments.
+MidPoint is designed to be localizable.
+Therefore you can simply use localization keys instead of actual text:
+
+[source,xml]
+----
+    ...
+    <xsd:element name="hatSize" type="xsd:string"
+                 minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <a:displayName>UserTypeExtensionType.hatSize.displayName</a:displayName>
+                <a:help>UserTypeExtensionType.hatSize.help</a:help>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    ...
+----
+
+The actual text to be used for label an help text is looked up in the localization catalog.
+However, using localization catalogs is a matter of its own.
+It will be covered by later chapters.
+
+== PolyString and Protected String
+
+Majority of midPoint schema is pretty standard stuff.
+When you walk through the jungle of midPoint schema definition you can see all the usual wildlife: strings, integers, booleans, timestamps and binary values.
+But there are few species that are quite strange.
+However strange they might look, they are immensely useful.
+Their names are _PolyString_ and _Protected String_.
+
+_PolyString_ is the stranger one of those two.
+Its name came from _polymorphic string_, which means a string that can take a variety of forms.
+In its simplest form PolyString is just a simple string that can be _normalized_.
+Normalization means that we convert the original string into some standard form, e.g. we are removing leading and trailing whitespace (trimming), we are converting all letters to lower case, simplifying national characters and so on.
+
+Many ordinary midPoint properties are PolyStrings.
+Object `name` and user’s `givenName`, `familyName` and `fullName` and all PolyStrings.
+And yet not even a clever reader haven’t noticed anything suspicious about them so far.
+The reason for this is that normalization is almost transparent in midPoint PolyStrings.
+But now it is a time to have a peek inside.
+Let’s import a user that looks like this:
+
+[source,xml]
+----
+<user>
+    <name>semančík</name>
+    ...
+    <fullName>Radovan Semančík,  PhD. </fullName>
+    ...
+</user>
+----
+
+What is really stored in midPoint repository is this:
+
+[source,xml]
+----
+<user>
+    <name>
+        <orig>semančík</orig>
+        <norm>semancik</norm>
+    </name>
+    ...
+    <fullName>
+        <orig>Radovan Semančík,  PhD. </orig>
+        <norm>radovan semancik phd</norm>
+    </fullName>
+    ...
+</user>
+----
+
+This all happens in a transparent way.
+PolyStrings are displayed as strings in the user interface.
+They are handled (almost completely) as strings in the mappings.
+Ordinary midPoint user has no idea that the normalization happens at all.
+But why we bother to normalize strings at all?
+PolyString normalization has many practical uses.
+However, two of them are embedded quite deep in the way how midPoint works.
+
+Firstly, normalization is used to provide reliable uniqueness mechanism.
+Usually we do not want a user with username `semancik` and another user with username `Semancik` or even `Semančík`.
+This may lead to confusion.
+As midPoint has uniqueness constraints on both the `orig` and `norm` parts of the name then such situation is completely avoided.
+All those usernames have the same normalized form, therefor the uniqueness constraint on `norm` part of the name will prohibit the use of all those forms at the same time.
+
+Secondly, normalization is simple and elegant way how to conveniently search for objects.
+When PolyStrings are searched, the value from the query is normalized.
+Then the norm part of the PolyString is searched.
+Therefore whether the query contains `semancik`, `Semancik` or `semančík`, it will always find the user entry above.
+
+Default normalization algorithm in midPoint should be a good fit for most environments.
+But there are always deployments that are different.
+For example, characters such as hyphens (`-`) are usually not considered to be significant.
+But some deployments will consider `aliceanderson` and `alice-anderson` to be two different usernames.
+The default midPoint normalization mechanism will remove hyphens, therefore attempt to have two such users will end up with an error.
+But fortunately the normalization algorithm is customizable.
+There are several algorithms to choose from and they can even be parameterized.
+In the extreme case there is a way to develop a completely custom algorithm.
+Therefore the PolyString normalization should fit pretty much every deployment scenario.
+
+But PolyString still has more tricks to do.
+The normalization is not much of a polymorphism yet.
+PolyString becomes a real shape-shifter in fully localized environments.
+PolyString is designed to store values that can have individualized representations in national environments. E.g. in multi-national deployments we may want to provide localized role names.
+Like this:
+
+[source,xml]
+----
+<role>
+    <name>
+        <orig>System administrator</orig>
+        <lang>
+            <en>System administrator</en>
+            <sk>Systémový správca</sk>
+            <cz>Správce systémú</cz>
+        </lang>
+    </name>
+    ...
 </role>
 ----
+
+This is a mechanism to display midPoint to end users in their own language, complete with localized _content_ of midPoint.
+This functionality is only partially implemented in midPoint 4.0 and it is considered to be experimental (i.e. unsupported).
+But this is a glimpse of how the future of midPoint schema may look like.
+
+The other strange animal in the midPoint jungle is _protected string_ (`ProtectedStringType`).
+Identity management systems often work with sensitive data such as user passwords.
+All the identity-related data usually need protection, but those sensitive data items need even better safeguards.
+This usually means that some kind of cryptographic technique needs to be employed. E.g. we do not want to store passwords in the cleartext form.
+Want them to be either hashed or encrypted.
+And that is what protected string is for.
+Protected string is basically just a simple string, but it has extra cryptographic protection.
+
+If you have ever had something to deal with cryptography you will probably know that cryptography is not simple.
+Even such a seemingly simple thing as password hash is quite complex when it comes to all the details. E.g. we do not want simple hash as that would not provide sufficient protection.
+We want _salted_ hash.
+Which means that the salt value needs to be stored together with the string.
+Many algorithms are parametric and the parameters used during the hashing also need to be stored.
+And most importantly, we do not want to hard-wire midPoint to any specific algorithm.
+Cryptographic algorithms often do not age well and they need to be replaced.
+Therefore we also need to store algorithm identifiers with the value.
+If the value is encrypted, we also need to store key identifier, as several keys may be active at the same time.
+And so on.
+The cryptographic devil is in the tiny and often counter-intuitive details.
+
+Protected string is a data structure that is designed to handle all those pesky cryptographic details and still pretend that the content of the data structure is just a string.
+Similarly to PolyString, the basic usage is quite simple.
+Data can be imported into midPoint by using `clearValue` element:
+
+[source,xml]
+----
+<user>
+    <name>alice</name>
+    ...
+    <credentials>
+        <password>
+            <value>
+	          <clearValue>sup3rSECRET</clearValue>
+            </value>
+        </password>
+    </credentials>
+</user>
+----
+
+The data are automatically protected when the object is imported into midPoint:
+
+[source,xml]
+----
+<user>
+    <name>alice</name>
+    ...
+    <credentials>
+        <password>
+            <value>
+                <t:encryptedData>
+                    <t:encryptionMethod>
+                        <t:algorithm>http://www.w3.org/2001/04/xmlenc#aes128-cbc</t:algorithm>
+                    </t:encryptionMethod>
+                    <t:keyInfo>
+                        <t:keyName>1z0N17tv6hNQh5CAJ+jWHWDXeBM=</t:keyName>
+                    </t:keyInfo>
+                    <t:cipherData>
+                        <t:cipherValue>g6Neg3ZEXY/ga00SpEa9w5MlJ9/IR+M1vEjdceni6bM=</t:cipherValue>
+                    </t:cipherData>
+                </t:encryptedData>
+            </value>
+        </password>
+    </credentials>
+</user>
+----
+
+Protected string data type supports cleartext representation, encryption using a symmetric algorithm and hashing.
+However, the data type itself is just a mechanism for storing the data.
+Whether specific protected string in the schema gets encrypted or hashed and at which point that happens is not controlled by the protected string itself.
+It is controlled by midPoint configuration and policies.
+For example, whether user password is encrypted or hashed is determined by midPoint security policy.
+
+== Advanced Schema Concepts
+
+This section describes schema concepts that goes deeper into midPoint mechanisms and implementation.
+Awareness of those concepts will provide insight into how midPoint works.
+However, we have already talked about the schema quite a lot.
+And this chapter was quite low on practical examples.
+Feel free to skip the rest of this chapter if you want to get your hands dirty as soon as possible.
+But please make sure to come back later.
+You will have to learn those schema concepts eventually to get the best of midPoint functionality.
+
+== Type Hierarchy
+
+So far we have presented midPoint schema as a simple set of data types.
+There is `UserType` for users, `RoleType` for roles and so on.
+However, all the midPoint objects have something in common.
+For example all of them have object identifier (OID), name, description and so on.
+We could simply copy definitions of those properties to all the data types.
+But that is not the best way how to do data modeling.
+The proper way is to create a type hierarchy.
+Therefore there is an `ObjectType` data type that specifies all the items that all the object types share.
+However, midPoint schema is substantial and one common ancestor won’t be enough.
+MidPoint type hierarchy was evolving during midPoint development and now it forms quite a rich structure.
+
+image::6-1-type-hierarchy.png[Type hierarchy]
+
+Following table is summarizing midPoint data types and their purpose.
+
+|===
+|Data type |Description
+
+|`ObjectType`
+|Common (abstract) data type for all midPoint objects.
+Specifies basic items that all midPoint objects have: name, description, metadata and so on.
+
+|`AssignmentHolderType`
+|Abstract supertype for all object types that can have assignments.
+
+|`FocusType`
+|Abstract supertype for all object types that can be focus of full midPoint computation.
+This basically means objects that have projections. But focal objects also have activation, they may have personas, etc.
+
+|`UserType`
+|User object represents a physical user of the system.
+Properties of User object typically describe the user as a physical person.
+Therefore the user object defines handful of properties that are commonly used to describe users in the IDM solutions (employees, customers, partners, etc.)
+
+|`AbstractRoleType`
+|Abstract data type that contains the "essence" of a role.
+Roles and other objects that behave like roles are derived from this data type.
+All abstract roles may "grant" accounts on resources, attributes and entitlements for such accounts.
+The role can also imply (induce) organizational units, other roles or various IDM objects that can be assigned directly to user.
+
+|`RoleType`
+|A role in the Role-Based Access Control (RBAC) sense.
+The roles specify privileges that the user (or other object) should have.
+
+Roles are intended to give privileges to users and other objects.
+
+|`OrgType`
+|Organizational unit, division, section, object group, team, project or any other form of organizing things and/or people.
+The OrgType objects are designed to form a hierarchical organizational structure (or rather several parallel organizational structures).
+
+Orgs are intended to group objects.
+But as orgs are abstract roles, they can also behave as roles.
+
+|`ServiceType`
+|This object type represents any kind of abstract or concrete services or devices such as servers, virtual machines, printers, mobile devices, network nodes, application servers, applications or anything similar.
+The "service" is a very abstract concept.
+
+|`ArchetypeType`
+|Archetype definition.
+Archetype defines custom object (sub)type. I.e. it defines specific behavior, look and feel of objects of a particular type, such as "employee", "project", "application", "business role" and so on.
+
+|`ResourceType`
+|Resource represents a system or component external to midPoint system which is managed by midPoint.
+It is sometimes called IT resource, target system, source system, provisioning target or by variety of ther names.
+MidPoint connects to the resource to create accounts, assign accounts to groups, etc.
+But it also may be an authoritative source of data, database that contains organizational structure and so on.
+
+|`ConnectorType`
+|Description of a generic connector.
+Connector in midPoint is any method of connection to the resource.
+This usually describes a ConnId connector.
+
+|`ConnectorHostType`
+|Host definition for remote connector, remote connector framework or a remote "gateway".
+This usually specifies the detail of a ConnId remote connector server.
+
+|`SystemConfigurationType`
+|System configuration object.
+Holds global system configuration setting.
+There is just one object of this type in the system. It has a fixed OID.
+
+|`TaskType`
+|Object that contains information about a task.
+This can represent active running task.
+It may be a scheduled task waiting for execution.
+Or the object may contain a results of a finished task.
+
+|`ObjectTemplateType`
+|An object that contains mappings and other configuration intended to apply to other object types.
+E.g. it may be used as “user template” to set up basic properties of new user objects.
+
+|`LookupTableType`
+|An object that represents lookup table.
+The lookup table can be used for two purposes: value enumerations (e.g. for GUI or validation) and value mapping (translation).
+Simply speaking it is a set of key-value pairs that can be efficiently stored and used in midPoint user interface, mappings and so on.
+
+|`SecurityPolicyType`
+|System that contains definitions of overall security policy.
+It contains configuration of authentication mechanisms, credentials management (such as password resets) and so on.
+
+|`ValuePolicyType`
+|Policy for values of properties.
+This is almost always used to store password policies.
+
+|`FunctionLibraryType`
+|Object that contains a set of reusable functions.
+Those functions can be used in mappings and expressions in all parts of midPoint.
+
+|`ObjectCollectionType`
+|Object that specifies a collection of other objects.
+It is mostly just a named search filter that can be reused in other parts of midPoint.
+But there are also some advanced functions that can be used in dashboards, for compliance purposes and so on.
+
+|`ReportType`
+|Specification of midPoint report.
+This specification defines what the report should contain, how it should look like, output format and so on.
+
+This is a report definition.
+It is a report “template” that can be executed and it produces data.
+The output data are referred to by report output objects.
+
+|`ReportOutputType`
+|Object that refers to specific output of the report.
+It also contains metada, e.g. when the report was created, what defintion was used, etc.
+
+|`SequenceType`
+|Definition of a sequence object that produces unique values.
+The sequence state is persistently stored in the repository, therefore it can efficiently produce unique identifiers in a controlled and predictable manner.
+
+|`FormType`
+|Form definition.
+Forms define how a certain user interface form or dialog is presented in the user interface.
+It is used for user interface customization.
+
+|`DashboardType`
+|Object that specifies a look and a behavior of a dashboard.
+This is used for user interface customization.
+But it can also specify some aspects of midPoint reports.
+
+|`GenericObjectType`
+|Generic type for any other object type that do not fit into any other category.
+However, support for this data type is extremely limited.
+We generally do not recommend to use it at all.
+
+|`ShadowType`
+|Shadow of a resource object.
+Local copy of any object on the provisioning resource that is related to provisioning.
+It may be account, group, role (on the target system), privilege, security label, organizational unit or anything else that is worth managing in identity management.
+
+|`NodeType`
+|Node describes a single installation of midPoint.
+MidPoint installations can work in cluster.
+The Node objects are the way how the nodes in cluster know about each other.
+|===
+
+Type hierarchy is a principle that is used in many software systems.
+This principle will be quite obvious to all software developers, but it may need some time to get used to for other engineers.
+However the basic idea is quite simple. E.g.
+`AbstractRoleType` has all the items that are needed for an object to behave like a role.
+`RoleType`, `OrgType`, `ServiceType` and `ArchetypeType` are subtypes of `AbstractRoleType`.
+Therefore `RoleType`, `OrgType`, `ServiceType` and `ArchetypeType` can all behave like a role.
+
+This may sound quite strange, why would we want an organizational unit to behave like a role.
+But the answer is quite obvious.
+Membership in an organizational unit may imply some privileges.
+Other IDM systems need complex rules in a form "if user belongs to organizational unit A then he will also have role X".
+But that is not needed in midPoint.
+Organizational unit is a role, therefore it can simply include all the roles that are needed.
+This means that the Role-Based Access Control (RBAC) principles can be applied to several object types.
+And this is a very typical trait of a midPoint philosophy: reuse of generic principles.
+We reuse existing principles instead of complicating the system by inventing a new single-purpose mechanism.
+As you will see later, this makes midPoint both elegant and powerful.
+
+== Item Path
+
+MidPoint configuration often need to reference a particular item in a particular object.
+For example mapping sources and target are references to properties and containers.
+However, midPoint data structures can be quite complex.
+For example, password is stored in property value that is located in container password which is in container `credentials` defined in `UserType` data type.
+It may be difficult to find a way in this little maze.
+And there may be even some unambiguous situations.
+For example, user status is controlled by property `administrativeStatus` that is in the `activation` container.
+But assignment also has an `activation` container and there is an assignment `administrativeStatus`.
+Therefore referencing an item by a simple name would not be enough.
+We need something more sophisticated here.
+
+MidPoint is using the concept of _item path_ to reference items in the schema.
+In its simplest form, item path is just a sequence of item names concatenated by slash characters.
+For example the path of user administrative status is
+
+`activation/administrativeStatus`
+
+whereas the path of assignment activation status is
+
+`assignment/activation/administrativeStatus`
+
+Item path provides an unambiguous reference to a specific item in midPoint schema.
+The path can be used in all the places where there is a need to reference a particular item.
+It is often used in mappings to specify sources and target.
+But it is also used in other places that we will mention in later chapters.
+The concept of path is deeply embedded in all midPoint operations.
+For example, modification deltas are using item path to precisely pinpoint the places in the object that are modified.
+
+The path is used to locate a particular item in midPoint schema.
+But it is also used to reference a specific value in midPoint objects.
+In that case the path often looks exactly the same.
+As long as we are dealing only with single-value containers, the path can unambiguously point to a specific item.
+But we may get into trouble in case that multi-valued containers are used.
+And those are used in midPoint quite often.
+Assignment is one of those multi-valued container.
+User can have many assignments.
+If we want to disable one particular assignment, how do we do it?
+If we would use the path above then it is not clear which assignment should be disabled.
+Therefore in case of multi-valued containers the path is extended with a container identifier in square brackets:
+
+`assignment[123]/activation/administrativeStatus`
+
+This path is unambiguously referencing `administrativeStatus` property in an `activation` container in a very specific assignment - an `assignment` container with identifier `123`.
+This form of the path is used mostly in the deltas and user should not need to ever enter those paths manually.
+However, this form is often recorded in midPoint log files and other diagnostic output.
+Therefore it is very useful to be familiar with it.
+
+You might wonder why there is an identifier for `assignment` but there is no identifier for `activation`.
+Both are containers, aren’t they?
+However, the clever reader already knows the answer.
+`assignment` is a multi-valued container.
+Therefore identifier is needed to pinpoint a specific value of that container.
+But `activation` is a single-valued container.
+There is no danger of ambiguity.
+Therefore the identifier is not needed in this case.
+
+This form of item path works fine if need to identity an item in a particular object.
+But sometimes we have a lot of objects and other data structures to choose from.
+For example a mapping can have several sources.
+And then there are expression variables.
+Therefore using simple paths would be ambiguous.
+Therefore the path can start with an optional variable identifier:
+
+`$focus/activation/administrativeStatus`
+
+TODO
