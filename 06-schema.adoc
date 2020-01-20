@@ -1254,11 +1254,13 @@ MidPoint is using the concept of _item path_ to reference items in the schema.
 In its simplest form, item path is just a sequence of item names concatenated by slash characters.
 For example the path of user administrative status is
 
-`activation/administrativeStatus`
+[source]
+activation/administrativeStatus
 
 whereas the path of assignment activation status is
 
-`assignment/activation/administrativeStatus`
+[source]
+assignment/activation/administrativeStatus
 
 Item path provides an unambiguous reference to a specific item in midPoint schema.
 The path can be used in all the places where there is a need to reference a particular item.
@@ -1279,7 +1281,8 @@ If we want to disable one particular assignment, how do we do it?
 If we would use the path above then it is not clear which assignment should be disabled.
 Therefore in case of multi-valued containers the path is extended with a container identifier in square brackets:
 
-`assignment[123]/activation/administrativeStatus`
+[source]
+assignment[123]/activation/administrativeStatus
 
 This path is unambiguously referencing `administrativeStatus` property in an `activation` container in a very specific assignment - an `assignment` container with identifier `123`.
 This form of the path is used mostly in the deltas and user should not need to ever enter those paths manually.
@@ -1302,6 +1305,56 @@ And then there are expression variables.
 Therefore using simple paths would be ambiguous.
 Therefore the path can start with an optional variable identifier:
 
-`$focus/activation/administrativeStatus`
+[source]
+$focus/activation/administrativeStatus
 
-TODO
+The path above explicitly states that is should be applied to the content of variable `focus`.
+Therefore there is no danger that this path could be applied to a shadow object which also has the `activation` container.
+This form of item path is often used in path expression evaluators.
+
+Clever reader is surely wondering about QNames now.
+The XML schema defines the elements in a form of QNames, which basically means "names in a namespace".
+Therefore element names and QNames.
+And path should use QNames as well.
+But so far all the names in the path looks like simple strings.
+Yes, they are simple strings.
+But they point to elements in the schema.
+While the path is correct and unambiguous, midPoint does not need the namespaces.
+Simple string (known as _local part_ of QNames) are enough to navigate through the schema and automatically determine the namespaces.
+This is the same principle used for parsing XML, JSON or YAML document without namespace definitions.
+However, there may be ambiguities in case that several custom schema extensions are used.
+Those extensions may have elements with conflicting local parts.
+In that case an alternative form of item path can be used:
+
+[source]
+declare namespace exmpl="http://example.com/xml/ns/midpoint/schema"; extension/exmpl:foo
+
+NOTE: This alternative form is based on XPath specification, that was used in early midPoint versions and it was an inspiration for the concept of item path.
+
+Clever reader may have also noticed that there are two types of namespaces that are often used in midPoint:
+
+[source]
+http://prism.evolveum.com/xml/ns/public/...
+
+[source]
+http://midpoint.evolveum.com/xml/ns/public/...
+
+Indeed, the schema is divided into two big parts:
+
+* *Prism schema* is used to express basic concepts that deal with objects, deltas, item paths, queries and similar mechanisms.
+Those are concepts of our data representation library that we dubbed Prism.
+Prism concepts are very generic mechanisms that have nothing to do with identity management.
+While currently Prism is an integral part of midPoint, it is supposed to be a general-purpose data representation library that can be reused to build other applications.
+The plan is to separate Prism form midPoint at some point in the future.
+
+* *MidPoint schema* is used to express all the objects and data types that midPoint works with.
+All the concepts specific to identity management are there: user, role, org, assignment and many, many others.
+This is the data model of identity management as it is implemented in midPoint.
+
+== Conclusion
+
+This is all about midPoint schema that you need to know right now.
+There is still much more to learn, as the entire midPoint schema is big and complex.
+And understanding of midPoint schema is absolutely crucial, as the schema is a foundation of everything that midPoint does.
+But the best way to do the learning is to do it on the go.
+You will learn more about midPoint schema as you will explore midPoint functionality.
