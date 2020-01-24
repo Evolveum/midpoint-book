@@ -2170,3 +2170,9 @@ And you have the data to analyze your environment and plan next step of the iden
 You won’t be blind any longer.
 And that is really important.
 It is indeed a capital mistake to theorize before one has data.
+
+////
+Tips for extension:
+* CRM resource, with some rougue accounts, manual correlation, orphan detection
+////
+
