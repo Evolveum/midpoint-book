@@ -757,8 +757,8 @@ The contract is entered into the HR system by the ExAmPLE HR staff.
 The IDM system periodically scans the HR records and it discovers the record of a new hire.
 The IDM systems pulls in the record and analyzes it.
 The IDM system will take user's name and employee number from the HR record, it will generate a unique username and based on that information it creates a user record in the IDM system.
-The IDM system also gets the organization code of `10010` from the HR record.
-The IDM will look inside its organizational tree and discovers that the code `10010` belongs to sales department.
+The IDM system also gets the organization code of `11001` from the HR record.
+The IDM will look inside its organizational tree and discovers that the code `11001` belongs to sales department.
 Therefore IDM will automatically assign the user to the sales department.
 The IDM will also process the work position code of `S007` in the HR record.
 The IDM policies say that the code `S007` means sales agent and that anybody with that code should automatically receive the "Sales Agent" role.
