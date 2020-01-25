@@ -3,8 +3,35 @@
 
 include::chapter-include.adoc[]
 
-[quote, TODO]
-TODO
+[quote, Douglas Adams, "The Restaurant At The End Of The Universe"]
+If life is going to exist in a Universe of this size, then the one thing it cannot afford to have is a sense of proportion.
 
+Todotodotodo
 
-TODO
+== Building Simple Organizational Structures
+
+TODO: simple organizational tree
+
+TODO: Orgs are built for hierarchy (special indexing)
+
+== Multiple Organizational Structures
+
+TODO: trees make a forrest
+
+[ functional, project, ... ] - mention archetypes
+
+== Orgs and Roles
+
+Orgs behave as roles
+
+== Relation
+
+Managers, role owners
+
+== Organizational Structure Synchronization
+
+TODO: generic synchronization
+TODO: kind/intent
+TODO: focus-projection (terminology)
+TODO: automatic assignment of org in inbound mapping
+TODO: simple principles (e.g. roles) reused everytwhere

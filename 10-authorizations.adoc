@@ -1,0 +1,12 @@
+[#10-authorizations]
+= Authorizations
+
+include::chapter-include.adoc[]
+
+[quote, Socrates]
+What you cannot enforce, do not command.
+
+There is a view that all the Identity management systems do is management of identities.
+This view is easy to understand
+
+TODO

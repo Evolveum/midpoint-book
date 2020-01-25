@@ -3,8 +3,1520 @@
 
 include::chapter-include.adoc[]
 
-[quote, TODO]
-TODO
+[quote, Theodore Rubin]
+The problem is not that there are problems. The problem is expecting otherwise and thinking that having problems is a problem.
 
+MidPoint is one big and comprehensive system.
+Generally speaking, identity management systems tend to be big and complex.
+They have a lot of things to do.
+There is a lot of data mapping, synchronization, policies, access control models, expressions and all such stuff.
+While each individual mechanism in itself is relatively simple, the combination of those mechanisms often creates something that would put the famous labyrinth of Knossos to shame.
+Especially junior engineers tend to create configurations that are unnecessarily complex.
+Those configurations may work for common cases.
+But then there comes a corner case and the result is a puzzled look at junior engineer’s face and a mysterious smile of his senior colleagues.
+At that point junior engineers tend to panic and switch to high-energy trial-and-error mode.
+Which usually does even more harm.
+What is really needed here is to stand back, to think about the situation and start to troubleshoot the problem in a systematic way.
 
-TODO
+But even senior engineers often get into trouble.
+This is no weakness.
+MidPoint is really flexible and sometimes it is hard to figure out what exactly is going on.
+In fact, midPoint has surprised even its authors on more than one occasion.
+When midPoint misbehaves then the cause is almost always a configuration problem.
+But there are usually thousands upon thousands of users, roles, policies and expressions.
+There is a lot of places where a little treacherous problem can hide and live happily ever after.
+
+All of that was perfectly clear to midPoint developers even before midPoint project started.
+MidPoint developers are more than just programmers.
+Writing midPoint code takes a good part of developer’s day.
+But there is also testing, diagnostics of bugs and helping our colleagues and partners to figure out what is going on when the things get really tough.
+The developers would be lost without an efficient method to diagnose the behavior of midPoint.
+Therefore diagnostic systems were an integral part of midPoint design.
+
+This chapter will provide an overview of the diagnostics mechanisms in midPoint.
+But even more importantly, it will describe the method that can help to find the problem in a systematic and reliable way.
+That is what every engineer should learn and use every day.
+In fact, troubleshooting is perhaps the most important skill for smooth deployment of any software system.
+
+== Designed for Visibility
+
+MidPoint is designed, developed and maintained by a very unique team.
+What is really unique in midPoint core team is the presence of identity management engineers very early in midPoint design.
+Several key people that took part in midPoint design were involved in IDM project since early 2000s.
+That experience was crucial – especially bad experience from the use of the technologies that were available at the time.
+One of the most important lessons that can be learned from fist-generation IDM systems is a lesson of visibility.
+All those systems were closed, their vendors jealously guarding the all the secrets of inner workings of those systems.
+This made troubleshooting a very demanding task.
+Engineers often had to resort to desperate measures, such as calling vendor’s support help desk.
+But even such a drastic actions usually did not help much.
+It was a real struggle.
+
+When midPoint project started, the team agreed to take a different approach.
+MidPoint is radically open.
+It is an open source project from the day one.
+There is a reasonable documentation, even including architectural documentation and design notes.
+All of that is public.
+And most importantly, the visibility goes deep down in midPoint implementation.
+Great attention was paid for proper logging as that is the primary troubleshooting mechanism.
+There are various diagnostic mechanisms in midPoint user interface, performance metrics and so on.
+And all of that is improved in every midPoint release.
+
+However, the most important thing is to know how to use those mechanisms properly.
+Even the best diagnostics mechanism will not do any good for you if it shows the data that you do not need at the moment.
+It is important to know where to start, where to look and what to look for.
+And that are the questions that this chapter should answer.
+
+== Systematic Approach
+
+Where to start?
+That is a question that troubles most engineers that are new to midPoint.
+Senior engineers would probably think that this is a silly question and that the answer is obvious.
+But it is not.
+And it gets even harder to figure out how to follow the trace of the problem deeper into midPoint configuration.
+
+Start with the obvious.
+Maybe there is an error message right in front of your eyes.
+MidPoint usually provides a lot of details that come with error message.
+Then there are log files.
+MidPoint logs a huge amount of information, it just needs to be enabled.
+
+The usual troubleshooting sequence goes like this:
+
+. *What exactly is the problem?*
+What are the symptoms?
+Does the operation fail?
+Is there an error message?
+Does it crash?
+Did it produce wrong results?
+Or are there no results at all?
+What was the supposed result?
+Can this me an error in the input data?
+
+. If there is an *error message*, what is that message saying?
+Is there any additional information in the message or in the operation result that comes with the message?
+Where is the error coming from?
+It is an error from a connector?
+Or an error from an expression?
+
+. Is there any additional information in the *log file*?
+Are there any errors or warnings in the log file that may cause the problem?
+
+. *What was midPoint doing*, exactly?
+Are there any information about the operation progress when log level is set to DEBUG?
+What are the intermediary results of the processing?
+Are those correct?
+At which point in the operation are data getting wrong?
+
+. *Where exactly is the problem?*
+Which component, configuration, mapping or expression are causing it?
+What are the details of the operation?
+Are there any hints if you set logging level of that component to `TRACE`?
+
+The first step is perhaps obvious – even though too many people fail to see what is right in front of their eyes.
+But once you have opened your eyes and checked for the obvious causes then there is time to go deeper.
+
+Once you have ruled out the obvious cases you will need to have a look at midPoint log files.
+You will need to follow the trace and examine the operations that midPoint was doing.
+The best strategy here is one of _divide and conquer_.
+In other words, start in the middle.
+Find a convenient starting point in the middle of the processing.
+Where exactly that middle is depends on the nature of the problem.
+If the problem is related to a connector then the best starting point is probably a connector framework.
+Does the operation make sense?
+Are the values correct?
+If the answer is "yes" then then problem is probably in the connector.
+If the answer is "no" then the problem is in midPoint configuration.
+Either way you know where you should focus your investigation.
+If that problem is in midPoint, then in which part it is?
+Are data in the user object correct?
+If they are, then the problem is probably in the outbound mappings.
+Have a look at those.
+And so on.
+Start with a big thing.
+And then follow the clues and dive into the details.
+
+== Error Messages and Operation Results
+
+Error messages are the most obvious troubleshooting mechanisms.
+MidPoint error messages usually provide enough information to diagnose and fix trivial problems right away.
+
+MidPoint error messages are in fact part of a more complex system of _operation results_.
+Operation result is a data structure that accompanies every midPoint operation.
+The operation records important points during the processing in the operation result.
+Operation result is hierarchical.
+There is one big operation at the top.
+But that usually consists of smaller operations which in turn consist of even smaller operations.
+Connector operations are somewhere at the bottom.
+If the top-level message does not provide information about the problem then dig deeper.
+Expand the sub-operations until you find the root cause.
+
+image::90-01-operation-result-expanded.png[Operation result]
+
+Operation result can be used to get a rough idea what midPoint was doing and what are the results.
+Each of the operations in the result has a status:
+
+|===
+|Status |Meaning
+
+|`SUCCESS`
+|Operation completed.
+The operation has finished successfully.
+There are no errors.
+
+|`WARNING`
+|Operation completed.
+But there are warnings.
+
+|`PARTIAL_ERROR`
+|Operation completed.
+Some parts of the operation were successful, other parts of the operations resulted in an error.
+However, the operation was not stopped and the execution continued despite the errors.
+
+Partial error is often indicated in case that user modification is successful but account modification fails.
+
+|`FATAL_ERROR`
+|Operation was interrupted due to an error. The error prohibited completion of the operation.
+
+|`HANDLED_ERROR`
+|Operation completed.
+An error was experienced during execution of the operation.
+However, the error was handled and the system was able to compensate the effects of the error.
+The results should be equivalent to a successful operation.
+
+|`NOT_APPLICABLE`
+|Operation was not even started because the operation is not applicable to the inputs.
+
+|`IN_PROGRESS`
+|Operation is in progress.
+The operation was started, but it was not yet finished.
+
+This status is seen for operations that execute “in the background”, in running tasks and so on.
+But it may also be used for operations that are waiting for an external event, such as approval operations or operation retries.
+
+|`UNKNOWN`
+|Status of the operation is not know.
+
+This status code should not be normally seen.
+However, it may happen under special circumstances.
+For example if a bug in midPoint or a connector leaves the operation in an uncertain state or in case that unforeseen error appeared and it was not handled properly.
+This status usually indicates a programming bug.
+|===
+
+Operation result is a very useful data structure.
+It has many purposes.
+For example it is stored in the tasks and provides data for later diagnostics.
+It can summarize the operations, provide performance data and so on.
+But that means that the operation result cannot be too big.
+And therefore the granularity of the operation result is usually quite rough to pinpoint serious issues.
+Issues that are really tricky usually cannot be resolved by examination of operation results.
+For that we need to go deeper still.
+
+== Logging
+
+Logging is the best tool in the troubleshooting toolbox.
+Logging provides information about the important things that happen in the system.
+But it also goes very deep and it can provide very fine details about midPoint operations.
+Logging is universal and very powerful.
+It is the best hope to find the cause even for the trickiest of problems.
+
+As for every other tool, the most important thing is to know how to use it properly.
+This is especially important for midPoint logging.
+The default logging setting logs only a very little information.
+This is a reasonable detail for a production system that has been properly configured and tested.
+But it is not enough in case that you are chasing a configuration.
+In that case the logging system needs to be reconfigured to log more information.
+But beware, if logging system is set to its full power you will get a huge stream of data that is likely to completely overwhelm you.
+The important information will surely be there.
+But they will be lost in the flood of other data.
+Therefore logging need some skill and experience to manage it correctly.
+
+MidPoint is using logging approach that is well established in the industry.
+MidPoint logging principles should be quite familiar to any deployment engineer.
+However, it is perhaps worth to provide a quick overview of those basic principles.
+
+MidPoint log files are located in midPoint home directory.
+This is usually var sub-directory of midPoint installation directory.
+MidPoint home directory contains sub-directory logs and midPoint logfiles are there.
+There are usually several files:
+
+* `midpoint.log` is the primary midPoint log file.
+Almost all of log messages from midPoint will be recorded here.
+This is the right file to examine.
+The truth is in there.
+
+* `midpoint.out` is file where the standard output of midPoint process is recorded.
+Only a very few things are usually logged here.
+Those are the things that happen before midPoint logging system is enabled, therefore midPoint cannot control and redirect logging of those messages.
+Which that the messages usually describe events that happen before midPoint starts and after it stops.
+This file does not need to be inspected routinely.
+However, it is an useful place to look while experiencing startup issues.
+
+Log files are usually rotated.
+Which means that when there is too much data in one log file the file is renamed.
+Oldest files are removed.
+Otherwise the log files would fill all available disk space.
+
+Log messages have a structured format.
+They look like this:
+
+[source]
+----
+2019-08-16 16:40:25,863 [PROVISIONING] [main] INFO (com.evolveum.midpoint.provisioning.impl.ProvisioningServiceImpl): Discovered local connector connector: ConnId com.evolveum.polygon.connector.ldap.LdapConnector v2.3 (OID:268678c0-b5b3-4b13-a399-c2fbd903e51d)
+----
+
+The fields are described in the following table.
+
+|===
+|Field |Description |Example
+
+|Timestamp
+|Timestamp of a moment when the message was generated.
+|`2019-08-16 16:40:25,863`
+
+|Component name
+|Name of the component where the message originated.
+|`[PROVISIONING]`
+
+|Thread name
+|Name of thread in which the message originated.
+|`[main]`
+
+|Log level
+|Severity level of the message.
+|`INFO`
+
+|Logger name
+|This is usually package name or a fully-qualified name of the class that produced the message.
+But there may be special-purpose loggers with special names.
+|`com.evolveum.midpoint.provisioning.impl.ProvisioningServiceImpl`
+
+|Message
+|Content of log message.
+This is usually single-line message.
+But multi-line messages are common on finer log levels.
+|`Discovered local connector connector: ConnId com.evolveum.polygon.connector.ldap.LdapConnector v2.3 (OID:268678c0-b5b3-4b13-a399-c2fbd903e51d)`
+|===
+
+As midPoint takes advantage of parallel processing, the thread name is often useful to filter out messages that belong to a single operation.
+The logger name is sometimes abbreviated, therefore `com.evolveum.midpoint.provisioning.impl.ProvisioningServiceImpl` becomes `c.e.m.provisioning.impl.ProvisioningServiceImpl`.
+Otherwise the log message format is similar to message formats of other products and it should be quite familiar to most system engineers.
+This is the default log message format.
+The log format can be customized if needed.
+
+The most important aspect of efficient usage of logging as a diagnostic tool is to control granularity of logging.
+This is both a science and an art.
+It requires some instinct and experience.
+The granularity can be controlled in two "dimensions":
+
+* *Log level* determines the level of details that is logged.
+`INFO` log level will log only the important events.
+`TRACE` level will log huge amount of information that is primarily interesting for developers.
+This controls _depth_ of logging.
+
+* *Package* determines which midPoint components will log their messages.
+Setting a log level for a particular package also enables logging of all sub-packages and classes.
+This controls the _breadth_ of logging.
+
+Logging setting is a combination of a package and level.
+Therefore it is possible to get a very detailed logging from a single package while keeping logging of other packages at a very rough-grained level.
+And this is exactly what is needed when chasing a bug.
+We want to have a very precise look at the component where the problem occurs without being overwhelmed by a flood of data from other parts of midPoint.
+The trick is to know which package and level to use.
+
+Let’s start with log levels.
+Each level has a precise definition of the amount of details that it provides.
+
+|===
+|Level |Circumstances |Description
+
+|`FATAL`
+|Critical errors.
+The system cannot continue operation, will crash or stop working
+|This is bad.
+The system is going down.
+There is not way that the system can run.
+Big problem.
+This should not happen.
+
+|`ERROR`
+|Error that seriously affects the system, but the system as a whole can recover.
+|Typically caused by errors in the data, network errors and so on.
+This is not good.
+Sometimes the system can recover just by itself.
+But manual intervention of system administrator is usually needed.
+
+|`WARNING`
+|Suspicious situation.
+System may be able to operate normally, but there may be a hidden or temporary problem or an indication of future error.
+|Important messages that should not occur in a well-configured and tuned systems.
+If they appear they should be investigated.
+However, the investigation can wait.
+Immediate action is usually not required.
+
+|`INFO`
+|Important changes in system state, start/stop of important system tasks, etc.
+|Those events occur normally in almost all running systems.
+Unless you have a very busy system this log level can be enabled all the time in production.
+
+|`DEBUG`
+|Execution messages, state changes, expression evaluation messages and similar messages for system administrator.
+|This log level is dedicated for system administrators to debug the configuration.
+It will provide reasonable amount of messages that can be used to find configuration problems.
+
+|`TRACE`
+|Fine-grained messages about execution details.
+|This log level will provide a lot of data, lot of details.
+Its primary purpose is to allow developers to find a bug in production systems.
+However, this can also provide precious details for system administrators when troubleshooting really tricky problems.
+|===
+
+The levels are organized in a hierarchy.
+When `DEBUG` level is set for a particular package, the package will also log all messages with higher (rough-grain) levels.
+The usual log level to start with when chasing a bug is `DEBUG` log level.
+This may be too much for some packages or too little for other packages.
+But it is a good overall starting point.
+
+Log levels are simple and well defined.
+However, figuring out proper package name is much harder.
+Engineers that understand midPoint architecture and source code have a huge advantage here.
+Logging package names are directly derived from Java packages and classes used in midPoint source code.
+But even non-developers can learn how to use the package names efficiently.
+
+The first think to keep in mind is that midPoint is composed from subsystems and components.
+Each subsystem and component has its own package name.
+Those can be used to control logging of individual parts of midPoint.
+Following table provides an overview of those architectural blocks.
+
+|===
+|Subsystem/component |Package name |Description
+
+|GUI
+|`com.evolveum.midpoint.gui` +
+`com.evolveum.midpoint.web`
+|User interface. This subsystem drives all interaction with the user.
+
+*Note:* the `*.web` package is legacy, but it is still used by a lot of code.
+Both packages are needed for complete GUI logging.
+
+|Model
+|`com.evolveum.midpoint.model`
+|This subsystem implements most of the IDM logic in midPoint.
+User processing, RBAC, organizational structure, policies – everything is processed here.
+
+|Provisioning
+|`com.evolveum.midpoint.provisioning`
+|Communication with external systems.
+This subsystem is responsible for communication with the connectors, management of shadow objects, driving live synchronization, manual connectors, operation retries, management of resources and connectors and so on.
+
+|ConnId
+|`org.identityconnectors.framework`
+|ConnId connector framework.
+This is responsible for running the connectors and passing operation to the connectors.
+
+|Repository
+|`com.evolveum.midpoint.repo`
+|Primary responsibility is to store midPoint objects in the database.
+But there is also task management, authorization processing, expression evaluation and so on.
+
+|Schema
+|`com.evolveum.midpoint.schema`
+|Definition of midPoint data model and various utilities.
+
+|Prism
+|`com.evolveum.midpoint.prism`
+|Library that is parsing and storing objects in representation data formats (XML/JSON/YAML).
+|===
+
+Those package names can provide rough boundaries for logging.
+Enabling `TRACE` level on an entire subsystem can still provide a lot of data, but it is better than enabling `TRACE` for whole midPoint.
+The best approach here involves a look at midPoint source code.
+But there is a still a way to do it without a source code:
+
+. Enable `DEBUG` level on the entire subsystem.
+This is likely to provide a log of data, but it should not be overwhelming.
+
+. Look at the log file and try to figure out in which part the interesting things happen.
+Where the things are getting out of control.
+Observe name of the packages that are used in those messages.
+
+. Set `TRACE` level only for those packages or classes where interesting things happen.
+You will get much more details.
+
+. Optionally mute some packages that show too much data by setting their log level to `INFO`.
+
+This is a good overall approach.
+But there are few very specific packages that tend to attract problems.
+Therefore they are often set to finer log levels.
+Below is a list of those packages.
+
+|===
+|Component |Package name |Description
+
+|Clockwork
+|`com.evolveum.midpoint.model.impl.lens.Clockwork`
+|The "controller" that drives computation of all changes in midPoint.
+Change of every object is passing through clockwork (unless it is "raw").
+
+Enabling logging on clockwork will provide rough overview of the processing.
+
+|Projector
+|`com.evolveum.midpoint.model.impl.lens.projector.Projector`
+|The "brain" that computes all effects of the change.
+It is invoked as part of the clockwork.
+
+Enabling logging will provide overview of the computation.
+
+|Change Executor
+|`com.evolveum.midpoint.model.impl.lens.ChangeExecutor`
+|The "hand" that executes all the computed changes.
+
+Enabling logging will provide an overview of computed changes and the result of their application (success or failure).
+
+|Lens
+|`com.evolveum.midpoint.model.impl.lens`
+|Sub-component responsible for computing and processing all ordinary changes on objects.
+It includes clockwork, projector and executor.
+
+Setting `TRACE` level here will provide all the gory details about the processing.
+Lots of data.
+Use only in deep despair.
+
+|Mappings
+|`com.evolveum.midpoint.model.common.mapping.Mapping`
+|Code that is processing mappings.
+
+Enabling logging will provide a short overview of mapping inputs and outputs with some insights into the inner processing.
+
+|Expressions
+|`com.evolveum.midpoint.model.common.expression.Expression`
+|Expression evaluation code.
+Enabling logging will provide a lot of details about expression evaluation.
+This is likely to produce a log of data.
+
+|Script expressions
+|`com.evolveum.midpoint.model.common.expression.script.ScriptExpression`
+|Logs a lot of details about script expression evaluation (Groovy, JavaScript, ...).
+
+Provides a lot of details.
+
+|ConnId API Operations
+|`org.identityconnectors.framework.api.operations`
+|Special package used to log summary of all connector operations that go through ConnId framework.
+This is the API side of the framework (midPoint-ConnId boundary).
+
+|ConnId SPI Operations
+|`org.identityconnectors.framework.spi.operations`
+|Special package used to log summary of all connector operations that go through ConnId framework.
+This is the SPI side of the framework (ConnId-connector boundary).
+
+|Security
+|`com.evolveum.midpoint.security`
+|Package that contains security-related components.
+
+This is especially useful for debugging authorizations.
+|===
+
+Setting `DEBUG` log level to clockwork, projector or change executor is a good starting point for diagnostics of problems related to mappings and assignments.
+The ConnId operation log is a good starting point for connector related problems.
+And security package is perhaps the only really efficient mechanism to debug misbehaving authorizations.
+
+Logging is the best troubleshooting tool to handle even the most complex issues.
+Therefore make sure you take full advantage of this tool.
+The importance of logging can hardly be overstated.
+Make sure you know how to set up logging properly and how to interpret log messages.
+This is a skill that takes some time to learn.
+But it is a crucial investment to make.
+The time will be repaid many times over.
+Therefore, if you have any problem that looks strange, remember one simple rule: *always look at the log files*.
+The answer will be there.
+
+== Auditing
+
+Purpose of the auditing mechanism is to record all operations in midPoint for accountability purposes.
+Auditing will be used by security officers to inspect system activity, it may be used for forensic purposes or it can simply provide a data for statistical analyses.
+However, the fact that auditing records all operations in the system can be a significant benefit for troubleshooting.
+
+MidPoint user interface is quite comprehensive.
+Despite that complexity, most operations of the user interface should be easily understandable in an intuitive way.
+However, there are cases when it is not clear what exactly is user interface trying to do.
+And some operations can even be quite counter-intuitive.
+For example designation of a deputy is an operation on a different user than most people would intuitively expect.
+It is always an advantage to see all the details of an operation that the user interface tries to initiate.
+And that is where auditing mechanism comes in.
+The auditing subsystem records all the operations in a precise, structured way.
+Maybe midPoint does unexpected thing just because the operation request itself does not make sense.
+Audit trail can be examined to make sure that the operation is correct.
+Also, the results of the operation are recorded in the audit trail.
+Audit may be a quick and efficient way to get an overview about the operation as a whole.
+
+Audit may also be very handy when exploring bulk operations, such as results of synchronization or reconciliation runs.
+The tasks in which those operations run will provide overview of the results, e.g. they will provide the number of errors.
+But the task data structure cannot hold the details of each operation.
+Such data structures would be huge.
+However, there are audit records for each of those operations.
+Those records can be used to figure out what went wrong exactly: which objects have failed, what operations were attempted, what exactly is the outcome.
+
+Audit trail is one of the few places in midPoint where historical data are kept.
+All other parts of midPoint are concerned about _here and now_, historical data are usually kept only for informational purposes.
+But audit log is different.
+Therefore it can be used to get an overview of midPoint operations in the past.
+Common use of audit trail is to get overview of daily operations.
+For example audit records can provide data on how many operations were processed during the past day, which operations have failed during last few hours and so on.
+There is a special type of report to show such information.
+There is also a dashboard widget that is designed to show such audit-based information for monitoring purposes.
+
+However, please keep in mind that midPoint is an identity management system.
+It is not a SIEM system or a data warehouse.
+MidPoint is not designed to keep and process massive amount of historical data.
+Therefore even the use of audit trails has its limits.
+Keeping audit trail in midPoint database for a short period of time is usually perfectly acceptable.
+However, a more suitable system should be used for a long-term storage and processing of audit trail data.
+
+MidPoint deployment usually record audit trails in the database table.
+This is the right method to use for production deployment.
+However, there is another option.
+Audit records can be also recorded in the log files.
+This is not something that is recommended for a production deployment.
+In that case it is quite likely to flood the logs and it may even disclose sensitive data.
+However directing audit records into system logs may provide interesting benefits in development environments.
+For example in case that a detailed debug logging is used, audit records will provide summary of operation and the outcome in the same log together with all the details.
+It makes it easier to analyze the log files.
+As audit data is recorded close to the operation start and operation end, audit log entries also provide a “frame” for the operation.
+It may be easier to find start and end of the operation in the logfile.
+
+Recording audit messages can be enabled in user interface, in the part where ordinary logging is configured.
+There is an “Audit” section on that page.
+Audit log message looks like this:
+
+[source]
+----
+2019-08-19 15:02:05,367 [MODEL] [pool-3-thread-6] INFO (com.evolveum.midpoint.audit.log): 2019-08-19T15:02:05.367+0200 eid=1566219725367-0-1, et=MODIFY_OBJECT, es=REQUEST, sid=DF97547B47BC6795D941B8C28AFB6089, rid=d0c90fdf-d101-457b-baf9-ea0371637a1d, tid=1566219725331-0-1, toid=null, hid=localhost, nid=DefaultNode, raddr=127.0.0.1, I=FocusType:00000000-0000-0000-0000-000000000002(user), T=PRV(oid=df2210ad-3eec-4f59-9b11-46479b9ebc7c, targetType={.../common/common-3}UserType, targetName=alice, relation={.../common/org-3}default), TO=null, D=[df2210ad-3eec-4f59-9b11-46479b9ebc7c:MODIFY], ch=http://midpoint.evolveum.com/xml/ns/public/gui/channels-3#user, o=null, p=null, m=
+----
+
+This is a semi-structure message that provides summary of significant fields of the audit record.
+Detailed audit logging can also be enabled.
+In that case the deltas will be dumped in the log files.
+
+== Troubleshooting Clockwork and Projector
+
+MidPoint has many components that have diverse responsibilities.
+But there is one set of components that can be described as a heart (or rather a brain) of midPoint.
+It is the set of components known as "lens".
+Clockwork and Projector are two most prominent classes in that set.
+Projector is responsible for computing the values, running the mappings, processing assignment and almost anything else related to the computation of identity data.
+Clockwork is responsible for controlling the process.
+It invokes Projector as many times as is needed to complete the computation.
+Clockwork also invoked ChangeExecutor to carry out the changes.
+
+The overall request processing in midPoint works like this:
+
+. User clicks on _Save_ button in midPoint user interface.
+User interface code computes what operation needs to be done.
+
+. Operation on `ModelService` is invoked.
+This is usually `executeChanges(...)` operation.
+Deltas that describe requested changes are passed as a parameter of this operation.
+
+. The operation is passed to `Clockwork` to control the operation.
+
+. `Projector` is invoked to compute all the changes.
+The changes are recorded in _model context_.
+The changes are computed, but not executed yet.
+Mappings and expressions are evaluated at this point.
+
+. `Clockwork` figures out what to do with the operation.
+There may be a need to drive the operation through approval process.
+Or a special hooks may be invoked.
+Maybe the operation violates the policy rules therefore it needs to be stopped.
+`Clockwork` does what needs to be done.
+
+. `ChangeExecutor` is invoked to carry out the changes.
+Changes to users, roles and other focal objects are carried out by changing the data in midPoint repository.
+That is quite straightforward.
+However, changes to projections (objects that reside in resources) are much more complicated.
+
+. `Provisioning` service is invoked to carry out changes to projections.
+The changes are expressed as changes to shadow objects (`ShadowType`).
+Some of those changes are recorded in midPoint database, such as changes in identifier or metadata.
+However, most of the changes need to be carried out on a resource by using a connector.
+
+. Connector framework (ConnId) is invoked to initiate resource operation by using appropriate connector.
+
+. Connector is invoked.
+Connector initiates the operation on resources and gets the results.
+
+. Operation results get back to `ChangeExecutor` and then to `Clockwork`.
+Results are summarized.
+If there is an error it is decided whether to continue or whether to stop the operation.
+At the end `Clockwork` records the final audit record and returns control back to the caller.
+Operation is finished.
+
+Sometimes it is not possible to compute everything in a single pass.
+There may be dependencies between resources, result of one operation may be an input to another operation.
+Therefore clockwork and projector work in _waves_.
+Therefore several steps described above may be repeated in each wave.
+Clockwork and projector exchange control in each wave until the operation is done.
+
+Following picture provides a structural view of this setup.
+
+image::90-02-lens-provisioning-structure.png[Model and provisioning structure]
+
+This process is moving around a lot of data.
+Those data are recorded in _model context_.
+It is a data structure that describes the operations, it holds all related objects, intermediary computation results and all other important data.
+This data structure is absolutely crucial for the entire process.
+But it also provides valuable troubleshooting information.
+When appropriate log packages and levels are enabled the model context is dumped to log files at important moments during the computation.
+Often the best way how to find a problem is to watch how the model contest changes during the computation.
+
+The model context is putting together the _focus_ and _projections_ that belong together.
+Focus is usually a user, projections are accounts.
+In such a case the model context groups together a user with all the accounts are associated with that accounts.
+These are usually accounts that are linked to the user.
+But it also may be a new account that was not yet created, an old account that was recently deleted, etc.
+MidPoint groups all these objects together to allow efficient computation of assignments and mappings and other policies.
+
+image::90-03-model-context.png[Model context]
+
+Model Context has three parts:
+
+* The *context* itself contains information about the entire computation (such as computation state and wave number).
+
+* *Focus* part which contains information about focal object.
+There is at most one focus.
+
+* *Projection* part which contains information about each projection.
+There may be multiple projections.
+
+Focus and projection parts have similar structure.
+Both of these parts contain:
+
+* *Old object:* the object (focus or projection) as it was before the computation.
+This means really the beginning of computation.
+Please note that the computation can take several days e.g. if the request waits for approval.
+
+* *Current object:* the object as it was last time the Projector loaded the object.
+This is usually quite recent information (at most few seconds old).
+
+* *New object:* the expected form of new object after the computation.
+This item is here mostly for informational purposes and for diagnostics.
+The actual value of the result may be slightly different (e.g. if two operations are carried out over the same object in parallel).
+
+* *Primary delta:* The request delta.
+This is the delta that was explicitly entered in the GUI, supplied to the web service or otherwise specified in IDM Model Interface invocation.
+This is the "command" that midPoint should execute.
+This defines what user wants.
+This delta will be executed exactly as it was specified.
+
+* *Secondary delta:* The computed delta.
+Secondary delta originates from execution of mappings or hooks or other automated mechanisms.
+This describes what midPoint has computed.
+This delta will be executed, but it can be recomputed several times during the process.
+
+* *Synchronization delta:* The detected delta.
+The delta that was detected by synchronization.
+MidPoint assumes that this delta was already executed and all it can do is to react to this.
+It is used as an input to the computation.
+This delta will not be executed again.
+
+This description is slightly simplified.
+The real thing is more complex.
+However, this description should be sufficient to understand the overall process.
+
+Model context is dumped at strategic places during clockwork and projector computation.
+The dumps look like this:
+
+[source]
+----
+---[ PROJECTOR (INITIAL) context projection values and credentials of resource:10000000-0000-0000-0000-000000000204(Dummy Resource Blue)(default) ]--------------------------------
+LensContext: state=INITIAL, Wave(e=0,p=0,max=0), focus, 1 projections, 2 changes, fresh=true
+  Channel: null
+  Options: null
+  Settings: assignments=FULL
+  FOCUS:
+    User, oid=c0c010c0-d34d-b33f-f00d-111111111116, syncIntent=null
+      User old:
+        user: (c0c010c0-d34d-b33f-f00d-111111111116, v5, UserType) name: guybrush .....
+----
+
+Those dumps provide crucial information for troubleshooting.
+Their importance for diagnosing really hard problems cannot be overstated.
+It is more than recommended to get used to read and follow those dumps through the computation process.
+It will save a huge amount of time.
+
+Why is it so important to know all of this?
+You need to know this to find your way through this labyrinth.
+MidPoint provides quite a lot diagnostic data for each step and each sub-step of each step.
+You can try to enable full logging to get all the details.
+But what you get is a digital equivalent of a flash flood and you are very likely to get drowned.
+There information that you are looking for will be almost certainly there, but it will be lost among all the innocent-looking data.
+This is a good way how to spend a lot of time and lose your sanity in the process.
+But it is not an efficient debugging method.
+
+The efficient debugging method is to proceed in steps.
+Start with high-level information.
+Then focus your eyes a bit deeper.
+Try to figure out which steps of the processing are working well and which steps are wrong.
+The have a closer look at those steps by enabling more detailed logging.
+The look deeper and deeper until the problem is found.
+
+The process usually goes like this:
+
+. Have a look at input and output of the operation as a whole.
+There are several ways to do that.
+You can use "preview" operation of user interface to see the input.
+You can examine the operation result in the user interface to see the outcome of the operation.
+Or you may have a look at the audit trail.
+Enabling auditing to a log files may also help.
+
+. Have a look at clockwork.
+Clockwork can provide a summary of the operation when `DEBUG` log level on `com.evolveum.midpoint.model.impl.lens.Clockwork` package is enabled.
+The summary is an important branch in the troubleshooting process.
+The summary may suggest whether the problem with the operation is in the computation (Projector) or whether it is in the connectors and resources (Provisioning).
+
+. Have a detailed look at the Clockwork process.
+Clockwork summary provides only a brief summary in a very compact form.
+That information may not be detailed enough to figure out what is going on.
+Therefore you may need to go deeper.
+Enabling `TRACE` log level on Clockwork will provide detailed data about all the stages of clockwork processing.
+Model context is dumped in each step.
+And it is this dump of model context that provides valuable troubleshooting data.
+Have a look at those dumps and try to figure out where exactly the operation goes wrong.
+After that you should be able to decide whether the problem is in computation (Projector) or execution (Provisioning).
+
+. In case that you suspect provisioning issues but you are not sure it may be helpful to have a detailed look at ChangeExecutor.
+This component is responsible to carry out all the changes from Projector and Clockwork.
+Enabling `DEBUG` or `TRACE` logging on `com.evolveum.midpoint.model.impl.lens.ChangeExecutor` will provide details about each operation and its outcome.
+
+Overall, clockwork summary is a good starting point.
+The summary looks like this:
+
+[source]
+----
+###[ CLOCKWORK SUMMARY ]######################################
+Triggered by focus primary delta ObjectDelta(UserType:c0c010c0-d34d-b33f-f00d-111111111111,MODIFY: PropertyDelta( / {.../common/common-3}organizationalUnit, REPLACE), PropertyDelta(metadata / {.../common/common-3}modifyTimestamp, REPLACE))
+Focus: focus(user:c0c010c0-d34d-b33f-f00d-111111111111(jack))
+Projections (1): account(ID {.../connector/icf-1/resource-schema-3}uid = [ jack ], type 'default', resource:10000000-0000-0000-0000-000000000104(Dummy Resource Red)): KEEP
+Executed:
+ ObjectDelta(UserType:c0c010c0-d34d-b33f-f00d-111111111111,MODIFY: PropertyDelta( / {.../common/common-3}organizationalUnit, REPLACE), PropertyDelta(metadata / {.../common/common-3}modifyTimestamp, REPLACE)): SUCCESS
+ ObjectDelta(ShadowType:a3ebbe89-227b-42ff-9d00-f42bee3cf151,MODIFY: PropertyDelta(attributes / {.../resource/instance-3}ship, REPLACE), PropertyDelta(metadata / {.../common/common-3}modifyTimestamp, REPLACE)): SUCCESS
+##############################################################
+----
+
+At this point you should know the rough outline of the problem. At the very least you should know whether the problem is in:
+
+. *Projector:* the problem is that midPoint does not compute the values correctly.
+
+. *Provisioning:* the values are computed correctly, but there is a problem when midPoint tries to execute the operation.
+
+If the problem is in the computation then you need to have a closer look at Projector.
+The first step should be to enable `DEBUG` logging of `com.evolveum.midpoint.model.impl.lens.projector.Projector`.
+The output of this logging is similar to the output of Clockwork trace.
+Each step of Projector computation is recorded and model context is dumped.
+Watch the changes in model context closely and try to figure out where wrong results occur.
+This is usually all that is needed to figure out the nature of the problem.
+The problem is often in the mappings.
+In that case follow the instructions in the next section to debug the mappings.
+If you still cannot figure out what is going on there are still finer details that can be enabled.
+The projector consists of many "processor" classes, such as `ActivationProcessor` or `AssignmentProcessor`.
+Each of those are responsible for one part of the computation.
+Enabling `TRACE` logging on them provides a very fine details about the computation.
+Package names of those classes can be found in midPoint source code.
+But it is usually more convenient to enable `TRACE` logging on the entire `com.evolveum.midpoint.model.impl.lens` package at this point.
+Doing so will also show all the names of all the "processors" that take place during the computation.
+Those names can be used to focus the logging output only to specific parts of computation.
+
+The things may get quite messy if the problem is in the execution of the operation.
+There are many components to consider.
+There is midPoint provisioning code, ConnId connector framework, connector and then the target system itself.
+There are almost uncountable number of combinations, configurations, network conditions and other circumstances where things may go wrong.
+The first step should be to figure out whether the problem is on midPoint side or on the resource side.
+Once again the best strategy is to find a suitable point in the entire process and to check operation status here.
+Connector framework is such a suitable point.
+There is special logger that can be used to record summary of all the operations of connector framework: `org.identityconnectors.framework.spi.operations`.
+Enabling `TRACE` logging on this logger will record all the operation requests and results that pass between ConnId framework and the connector.
+Some connectors provide similar facility that can provide even more details.
+For example LDAP and AD connectors can log details of all LDAP operations by enabling `TRACE` logging on `com.evolveum.polygon.connector.ldap.OperationLog`.
+This method is usually preferable as it can clearly indicate whether the problem is caused by wrong operation request or whether the problem occurs on the LDAP or AD server.
+If case that the problem is in the connector or somewhere on the resource side there is a separate troubleshooting guide below.
+In case that the problem is in midPoint, then the best strategy would be to enable logging of midPoint provisioning components: `com.evolveum.midpoint.provisioning`.
+Setting the logging to `DEBUG` level should provide enough information to locate the problem.
+Desperate engineers can try to use `TRACE` level here.
+But in that case it is perhaps a good idea to leave some provisioning classes to `DEBUG` level (such as `ResourceManager`) as they are usually too loud at `TRACE` level.
+
+TIP: _Lens_, _Clockwork_ and _Projector_.
+Where do those names come from?
+Naming is a notoriously hard thing.
+Software engineers create things that are not alike anything in the real world.
+Therefore it is very hard to find good names for them.
+The recommended practice is to find appropriate metaphor for the system.
+In other words: find something in the real world that something similar as you do.
+When midPoint was young we were implementing a component that mapped user data to accounts.
+However, this component was supposed to be generic.
+It mapped user to accounts, but also role to entitlements, org to OUs and so on.
+The obvious name "Mapper" was problematic, as we had a concept of "mapping" already.
+Such name would be confusing.
+Therefore we have chosen a concept of _projecting_ user data to accounts in the same way as movie is projected to a screen in a theater.
+That was also a reason for "focus" and "projection" and to use name "lens" for the whole package.
+Some time later we needed a name for a controller that will drive the projector.
+We though about a planetarium or a telescope driven by a clockwork mechanism.
+MidPoint has evolved since then and those names may no longer be a perfect metaphor.
+But they are there and we got used to them.
+
+== Troubleshooting Mappings and Expressions
+
+Mappings and expression often contain custom scripting code.
+This means that midPoint is very flexible and can satisfy diverse requirements.
+But it also means that mappings and expressions are often a source of problems.
+Especially some scripting expressions tend to be quite complex.
+Creating, testing and maintaining those expressions would be almost impossible without any debugging and troubleshooting facilities.
+
+MidPoint contains a code that can be used to trace execution of mappings and expressions on a very detailed level.
+The trace shows inputs and outputs and deltas that are taken into consideration when the expression or mapping is evaluated.
+There are two options how to enable this tracing.
+
+First option is to enable the tracing globally for all expressions and mappings by setting one or more of the following loggers to `TRACE` level:
+
+|===
+|Component |Package name |Description |Verbosity
+
+|Mappings
+|`com.evolveum.midpoint.model.common.mapping.Mapping`
+|Code that is processing mappings.
+
+Enabling logging will provide a short overview of mapping inputs and outputs with some insights into the inner processing.
+|Medium
+
+|Expressions
+|`com.evolveum.midpoint.model.common.expression.Expression`
+|Expression evaluation code.
+
+Enabling logging will provide a lot of details about expression evaluation.
+This is likely to produce a log of data.
+|High
+
+|Script expressions
+|`com.evolveum.midpoint.model.common.expression.script.ScriptExpression`
+|Logs a lot of details about script expression evaluation (Groovy, JavaScript, ...).
+
+Provides a lot of details.
+|Very high
+|===
+
+Setting logger levels to `TRACE` will log all execution of mappings and expressions.
+However, this may be a huge amount of information, especially in complex deployments with many mappings and expressions.
+Therefore there is an alternative way that can be used to trace mappings and expressions individually.
+There is a special-purpose trace property in the mapping:
+
+[source,xml]
+----
+<mapping>
+      ...
+      <trace>true</trace>
+      ...
+</mapping>
+----
+
+And there is a similar property in expression:
+
+[source,xml]
+----
+<mapping>
+      ...
+      <expression>
+          <trace>true</trace>
+          ...
+      </expression>
+      ...
+</mapping>
+----
+
+This is a nice method to look at one particular troublesome mapping without flooding the log files with traces of all the mappings in the system.
+However, it still may not be entirely easy to locate the dump of the mapping in the log files.
+Therefore it is a good practice to name your mappings:
+
+[source,xml]
+----
+<mapping>
+      <name>my-pretty-mapping</name>
+      ...
+</mapping>
+----
+
+Mapping name will be recorded in the mapping and expression dumps, therefore it can be easily located in the log files.
+Mapping names are also used in error messages and they are likely to be used in diagnostic outputs that will be developed in midPoint in the future.
+Therefore it is a very good practice to put names to mappings.
+It is probably an overkill to name all the mappings in the system.
+However, naming complex mappings can make a lot of difference in troubleshooting.
+
+Dumping a mapping or expression will provide overview of inputs and outputs.
+But that alone may not be enough to figure out what is wrong inside the expression.
+Therefore script expressions can explicitly invoke a logging facility.
+MidPoint has script expression functions that can be used to log messages from the scripting code.
+It works like this:
+
+[source,xml]
+----
+<mapping>
+      ...
+      <expression>
+          <script>
+              <code>
+                  ...
+                  log.error('The {} is broken, {} is to blame', thing, reason)
+                  ...
+              </code>
+          </script>
+      </expression>
+      ...
+</mapping>
+----
+
+Such messages are recorded in the system log using special-purpose logger `com.evolveum.midpoint.expression` and the appropriate level.
+The message itself is composed from several parts using `{}` placeholders.
+
+== Troubleshooting Connectors
+
+MidPoint is using the ConnId connector framework to manage identity connectors.
+All ordinary connectors are running under the control of this framework.
+It means that midPoint calls the ConnId framework and the framework calls the connector.
+Therefore when it comes to troubleshooting connector problems there are several places where a problem can occur and also several places where you can get diagnostic data:
+
+. *MidPoint:* the midpoint may invoke wrong operation at the first place.
+This may be caused by a misconfiguration or a bug.
+We have already covered most of those cases.
+
+. *ConnId:* the framework may misinterpret the operation.
+The framework also simulates some operations and it may post-process the results.
+
+. *Connector:* this is the tricky part of the story.
+Each connector is different.
+Very different.
+But there are ways.
+More on this below.
+
+. *Resource:* it is possible that the problem is caused by resource misconfiguration. E.g. the connector is not allowed to see all data, there are some limits, etc.
+We will not go into details here.
+See the documentation that goes with the resource for troubleshooting details.
+
+The ConnId connector framework stands between midPoint and the connectors.
+It knows about every operation that midPoint invokes on every connector and it knows about all the return values.
+This can be easily enabled by using the following log configuration:
+
+[source]
+----
+org.identityconnectors.framework.api.operations: TRACE
+org.identityconnectors.framework.spi.operations: TRACE
+org.identityconnectors.framework.common.objects.ResultsHandler: TRACE
+----
+
+The ConnId operation traces look like this:
+
+[source]
+----
+TRACE (org.identityconnectors.framework.api.operations.SearchApiOp): method: search msg:Enter: search(ObjectClass: inetOrgPerson, null, com.evolveum.midpoint.provisioning.ucf.impl.ConnectorInstanceIcfImpl$2@643dc940, OperationOptions: {ALLOW_PARTIAL_ATTRIBUTE_VALUES:true,PAGED_RESULTS_OFFSET:1,PAGE_SIZE:20})
+....
+TRACE (org.identityconnectors.framework.api.operations.SearchApiOp): method: search msg:Return: org.identityconnectors.framework.common.objects.SearchResult@a90221a
+----
+
+This is a very useful mechanism.
+It will log every operation of every connector.
+If you suspect that the connector is not executing the right operation this is the right place to check it.
+You can see what is the operation that the midPoint is passing to the connector.
+If that operation looks good then the problem is most likely in the connector (see below).
+If the operation does not make sense then the problem is usually in the provisioning (see above).
+
+However, the operation is logged by the ConnId framework on relatively high level and the operation is still quite abstract.
+If you need more details about what really gets executed you have to rely on the connector logging.
+
+Please note that the ConnId framework has two "faces": API and SPI. The API is facing midPoint.
+MidPoint invokes ConnId API operations.
+The SPI is facing the connector.
+Connector implements SPI operations and ConnId framework is invoking them.
+You can see the distinction in the class names that are written in the logfiles, e.g. `SearchApiOp` vs `SearchOp` (if there is no `Api` or `Spi` in the operation name then it is assumed to be SPI).
+There is also similar distinction in the package name of the logger.
+Most API and SPI operations are direct equivalents.
+But there may be subtle differences. E.g.
+The get API operation is executed as search (`executeQuery`) SPI operation.
+
+Most connector operations are "pure" request-response operations: there is one request and one response.
+These are operations such as create, modify, delete.
+In this case you will see one request in the log files and one response.
+And that is the whole operation.
+Like this:
+
+[source]
+----
+2017-02-01 10:44:16,622 [main] TRACE (o.i.framework.api.operations.CreateApiOp): method: create msg:Enter: create(ObjectClass: inetOrgPerson, [Attribute: {Name=uid, Value=[will]}, Attribute: {Name=__NAME__, Value=[uid=will,ou=People,dc=example,dc=com]}, Attribute: {Name=cn, Value=[Will Turner]}, Attribute: {Name=sn, Value=[Turner]}, Attribute: {Name=givenName, Value=[Will]}], OperationOptions: {})
+2017-02-01 10:44:16,623 [main] TRACE (o.i.framework.spi.operations.CreateOp): method: create msg:Enter: create(ObjectClass: inetOrgPerson, [Attribute: {Name=uid, Value=[will]}, Attribute: {Name=__NAME__, Value=[uid=will,ou=People,dc=example,dc=com]}, Attribute: {Name=cn, Value=[Will Turner]}, Attribute: {Name=sn, Value=[Turner]}, Attribute: {Name=givenName, Value=[Will]}], OperationOptions: {})
+...
+2017-02-01 10:44:16,641 [main] TRACE (o.i.framework.spi.operations.CreateOp): method: create msg:Return: Attribute: {Name=__UID__, Value=[675f7e48-c0ee-4eaf-9273-39e67df4cd2c]}
+2017-02-01 10:44:16,641 [main] TRACE (o.i.framework.api.operations.CreateApiOp): method: create msg:Return: Attribute: {Name=__UID__, Value=[675f7e48-c0ee-4eaf-9273-39e67df4cd2c]}
+----
+
+The above example illustrates a very common `create` operation.
+It should be interpreted like this:
+
+. `...api.operations.CreateApiOp Enter`: MidPoint invokes ConnId API.
+The object to create is logged as an operation parameter.
+This is what midPoint sends.
+
+. `...spi.operations.CreateOp Enter`: ConnId invokes the connector.
+This is what the connector receives.
+
+. Connector executes the operation.
+Logs from the connector will be here (if connector logging is enabled).
+
+. `...spi.operations.CreateOp Return`: Connector operation is finished.
+The connector returns the result to ConnId.
+
+. `...api.operations.CreateApiOp Return`: Operation is finished and post-processed by the framework.
+Framework returns the result to midPoint.
+
+This is quite straightforward and it applies to vast majority of connector operations.
+However, there are some peculiarities.
+For example there are found update operations:
+
+* `update(...)` in `UpdateOp`: This replaces attribute values.
+It is (roughly) an equivalent to midPoint modify/replace deltas.
+
+* `addAttributeValues(...)` and `removeAttributeValues(...)` in `UpdateAttributeValuesOp`.
+This adds or deletes attribute values.
+ It is (roughly) an equivalent to midPoint modify/add and modify/delete deltas.
+
+* `updateDelta(...)` in `UpdateDeltaOp`: This operation allows complex combinations of add,delete and replace values.
+This is a new operation designed to replace older operations above.
+
+New connectors implement ``updateDelta(...) ``operation only.
+Other update operations are considered to be obsolete.
+However, they are still used by many connectors.
+
+Search operations are also a bit strange.
+First of all, the SPI provides only one operation for all search and get operation and that operation is `executeQuery(...)`.
+Then the results of each object found by the search operations is passed back to midPoint by using a callback method: `handle(...)`.
+Therefore interpreting search operations takes a keen eye and a bit of practice.
+
+ConnId framework logs should indicate whether the problem is on the "connector-side".
+Which means that the problem is either in the connector or that the resource itself is not behaving according to expectations.
+The next step should be to have a look inside the connector.
+But each connector is different.
+The connectors have to adapt to the resource communication protocol and therefore they are expected to use variety of client and protocol libraries.
+Each library may have its own method of troubleshooting.
+Therefore there is no universal way troubleshoot a connector.
+However, there is (almost) always some way.
+Connector documentation should provide some details about troubleshooting.
+But unfortunately, most connectors do not.
+The best way is to have a look at connector source code.
+Enabling logging by using the connector package name is usually quite a safe bet.
+The logger name is usually the same as the package name of the connector classes.
+Look in the documentation or directly inside the connector JAR file to find out the package name.
+You may also need to enable logging of the libraries that come with the connector.
+You can examine these if you look in the `lib` directory inside the connector JAR file.
+
+Some connectors have really good logging, such as the connectors in the LDAP connector family.
+The LDAP connector will log all the LDAP operations if you set the `com.evolveum.polygon.connector.ldap.OperationLog` logger to `DEBUG` level.
+
+[source]
+----
+2016-08-30 17:14:20,043 [main] DEBUG [](c.evolveum.polygon.connector.ldap.OperationLog): method: null msg:ldap://localhost:10389/ Add REQ Entry:
+Entry
+    dn: uid=jack,ou=People,dc=example,dc=com
+    objectClass: inetOrgPerson
+    uid: jack
+    userPassword: deadmentellnotales
+    sn: Sparrow
+    cn: Jack Sparrow
+    description: Created by IDM
+    givenName: Jack
+    l: Black Pearl
+    displayName: Jack Sparrow
+
+2016-08-30 17:14:20,091 [main] DEBUG [](c.evolveum.polygon.connector.ldap.OperationLog): method: null msg:ldap://localhost:10389/ Add RES uid=jack,ou=People,dc=example,dc=com:         Ldap Result
+            Result code : (SUCCESS) success
+            Matched Dn : ''
+            Diagnostic message : ''
+----
+
+This logging can be used in two connectors that are used in majority of midPoint deployments: LDAP connector and Active Directory connector.
+This logging is much more natural and easier to understand than the ConnId framework logging.
+Therefore look at this log should be the first thing to do when there are problems with LDAP and AD connectors.
+
+However, not all connectors are built with troubleshooting in mind.
+Some connectors will barely log anything.
+This is all connector-dependent.
+If the connector author did a good job you will get what you are looking for.
+If the author did a poor job you are mostly out of luck.
+But one way or another this is the best chance to learn what the connector is doing.
+If that fails you have to resort to packet sniffer and similar tools.
+
+== Troubleshooting Authorizations
+
+MidPoint authorizations provide a very powerful mechanism for a fine-grained access control.
+This mechanism is quite simple in principle.
+But the configuration can get very complex especially if a sophisticated RBAC structure is in place.
+Setting the authorization up is not entirely easy task.
+It is often quite difficult to tell why the user is not authorized for a specific action or why the user can access more than he is supposed to.
+Therefore this page describes basic mechanisms how to troubleshoot authorizations.
+
+The basic troubleshooting steps are simple in theory:
+
+. Enable logging of authorization processing.
+
+. Repeat the operation.
+
+. Figure out which authorization is wrong.
+
+. Fix it.
+
+. Rinse and repeat.
+
+Yet, the practice is much more complex.
+As always.
+
+The authorizations are processed in midPoint security component.
+The processing of every authorization is logged.
+Therefore to see the authorization processing trace simply enable the logging of security component:
+
+[source]
+----
+com.evolveum.midpoint.security: TRACE
+----
+
+However, please keep in mind that this is quite intense logging.
+It can easily impact the system performance and flood the logs on a busy system with a lot of authorization.
+It is better to troubleshoot the configuration in a development or testing environment.
+
+When the security logging is enabled then you can see following messages in the logs:
+
+[source]
+----
+2017-01-23 14:32:37,824 [main] TRACE (c.e.m.security.impl.SecurityEnforcerImpl): AUTZ: evaluating security constraints principal=MidPointPrincipal(user:c0c010c0-d34d-b33f-f00d-111111111111(jack), autz=[[http://midpoint.evolveum.com/xml/ns/public/security/authorization-model-3#read])]), object=user:c0c010c0-d34d-b33f-f00d-111111111111(jack)
+2017-01-23 14:32:37,824 [main] TRACE (c.e.m.security.impl.SecurityEnforcerImpl): Evaluating authorization 'read-some-roles' in role:7b4a3880-e167-11e6-b38b-2b6a550a03e7(Read some roles)
+....
+2017-01-23 14:32:37,824 [main] DEBUG (c.evolveum.midpoint.security.api.SecurityUtil): Denied access to user:c0c010c0-d34d-b33f-f00d-111111111111(null) by jack because the subject has not access to any item
+----
+
+There is a set of similar messages for every operation that midPoint attempts.
+First message describes the operations and its "context": who has executed it (principal), what was the object and target of the operation (if applicable).
+The last line usually summarizes the decision: allow or deny.
+The lines between describe the processing of each individual authorization.
+If you examine that part carefully then you can figure out which authorizations were used.
+The result of authorization evaluation can be one of these:
+
+* Authorization *denies* the operation.
+That's a dead end.
+If any authorization denies the operation then the operation is denied.
+No other authorizations need to be evaluated.
+
+* Authorization *allows* the operation.
+That's a green light.
+However, other authorizations are still evaluated to make sure that there is no other authorization that denies the operation.
+
+* Authorization is *not applicable*.
+The authorization does not match the constraint for object or target.
+Or it is not applicable for other reasons.
+Such authorization is skipped.
+
+If there is a single _deny_ then the evaluation is done.
+The operation is denied.
+Deny is also a default decision. I.e. if there is no decision at the end of the evaluation then the operation is denied.
+At least one explicit _allow_ is needed to allow the operation.
+
+All authorization processing is recorded in the log.
+There is a record of processing of every operation, every authorization, evaluation of every authorization clause, whether the authorization is applicable or not, whether it denies or allows the operation.
+
+Authorization of operations such as _add_ or _delete_ is quite easy.
+The result is simple: the operation is either allowed or denied.
+But it is a bit different for _get_ operations.
+The entire get operation can still be denied if the user does not have any access to the object that he is trying to retrieve.
+But the common case is that the user has some access to the object, but not all the items (properties).
+In such a case the operation must be allowed.
+But the retrieved object needs to be post-processed to remove the fields that are not accessible to the user.
+This is done in two steps.
+
+Firstly the set of _object security constraints_ is compiled from the authorizations.
+The _object security constraints_ is a data structure that describes which properties of an object are accessible to the user.
+There is a map (`itemConstraintMap`) with an entry for every item (property) which is explicitly mentioned in the authorizations.
+This entry contains explicit decisions given by the authorizations for every basic access operation (read, add, modify, delete).
+And then there are default decisions (`actionDecisionMap`).
+These decisions are applied if there is no explicit entry for the item.
+This _object security constraints_ data structure is usually logged when it is compiled.
+
+Secondly, the _object security constraints_ are applied to the retrieved object.
+The constraints are used to remove the properties that are not accessible to the user.
+This process is not easy to follow in the logs.
+Therefore it is better to inspect the _object security constraints_ structure.
+If it is correct then also the resulting object will be most likely correct.
+
+TIP: *Object security constraints and the user interface.* +
+The _object security constraints_ has much broader application than just authorization of the read operations.
+This data structure is (indirectly) used by midPoint user interface when displaying edit forms for objects.
+The data from this structure are used to figure out which fields are displayed as read-write, which fields are read only and which fields are not displayed at all.
+The _object security constraints_ structure is always produced by the same algorithm in the security component.
+Therefore the interaction of authorizations and GUI forms can be diagnosed in the same way as the _get_ operations.
+
+Search operations are very different than common operations such as _add_ or _delete_ and they are also different than _get_ operations.
+Search operations will *not* result in an access denied error (except for few special cases).
+If the user that is searching has access only to some objects then only those objects will be returned.
+There is no error, because this is a perfectly normal situation.
+The extreme case is that user has access to no object at all.
+But although this situation is not entirely "normal" it is also not in any way special.
+The search will simply return empty result and there is also no error.
+You need to keep this in mind when troubleshooting the _read_ authorizations.
+Attempt to _get_ inaccessible objects will result in a security violation error.
+But _searching_ for them will simply return empty result and there is no error.
+
+The _search_ operations are interesting for another reason.
+Operations such as _get_, _add_ or _delete_ have precise specification of object: the object that is being retrieved, added or modified.
+But it is entirely different for search operations.
+The _object_ is a result of the search operation, not the parameter.
+We cannot examine the _object_ before the search and decide whether we allow or deny the operation.
+There is no _object_ before search operation.
+Also, we cannot simply search all objects and then filter out those that are denied.
+That would be totally inefficient and it will completely ruin paging mechanisms.
+A completely different strategy is needed for search operations.
+
+Search authorizations work the other way around: first the authorizations statements are compiled to a search filter.
+For example if the authorization allows access only to active roles the authorization is compiled to a filter `activation/effectiveStatus=enabled`.
+Then this filter is appended to the normal search filter and the search operation is performed.
+This approach ensures that the search returns only the objects that the user is authorized to see.
+It also makes the search as efficient as possible and maintains page boundaries.
+But that is not all.
+Another round of post processing is needed to filter out only the items that are not visible to the user.
+This is the same filter as is applied to get operations.
+
+Finally, there is a couple of things to keep in mind:
+
+* The authorizations are designed to be *additive*.
+Each role should allow the minimum set of operations needed for the users to complete their job.
+The midPoint will "merge" all the authorizations from all the roles.
+Use allow operations, avoid deny operations if possible.
+It is much better not to allow an operation than to deny it.
+
+* *Deny always wins.* If there is a single deny in any applicable authorization in any roles then the operation is denied.
+It does not matter if there are thousands of allow authorizations, deny always wins.
+What was once denied cannot be allowed again.
+We need this approach because we do not have any way how to order the authorization in many roles.
+Do not use deny unless really needed.
+
+* There are two phases: *request and execution*.
+The operation needs to be allowed in both phases to proceed.
+Please keep in mind the that object may be changed between request and execution due to mappings, metadata and properties that are maintained by midPoint.
+This is also the reason why we have separate authorizations for request and execution.
+
+* *Name* the authorizations.
+Each authorization statement can have an optional name.
+Specify a reasonably unique name there.
+Then use that name as a string to find the appropriate trace in the log files.
+
+Authorization traces are quite verbose and there is quite a lot of them.
+Many traces need to be examined to figure out what exactly is going on.
+Troubleshooting is a hard work.
+This mechanism of recording authorization processing in the log is the best way that we have figured out to troubleshoot the authorizations.
+But we know that it is not ideal.
+If you have any better idea we are more than open to suggestions.
+
+== Reporting a Bug
+
+MidPoint is perfect.
+There are no bugs.
+Therefore you can skip this section entirely.
+
+No, that is not really the case.
+MidPoint is a real software deployed in a real world.
+And while we spend a huge amount of time and effort to maintain midPoint, test it and fix the bugs, the bugs have a way to always get in.
+This is also given by the very nature of midPoint.
+MidPoint is flexible and comprehensive.
+It is nearly impossible to test midPoint for all the conceivable configuration and use cases.
+Whenever you deploy midPoint there is a change that some part of your configuration or usage patterns are unique.
+Those parts might not be used by anybody else yet.
+Therefore there may be bugs that nobody ever experienced yet.
+That is the fate of all flexible software products that live in the real world.
+
+In case that you find a bug that needs to be fixed you have several options:
+
+. *Fix the bug yourself.* MidPoint is an open source product.
+We will gladly accept bugfixes.
+However, midPoint is also a substantial product and we need to keep it maintainable.
+Therefore all contributions including the bug fixes has to be reviewed.
+The fixes need to be good enough to be accepted.
+Writing an automated test for the bug is usually required as part of the bugfix contribution.
+
+. *Report the bug and wait.* The bug will be fixed by someone eventually.
+However, there is no telling how long you will need to wait.
+If it is a security-related bug then it will be fixed as soon as possible.
+If the bug is severe and it affects a lot of users then it is likely to be fixed soon.
+However, such bugs are very rare.
+It is likely that your bug will be quite exotic and it can only be reproduced in your deployment.
+In that case it is almost certain that you will need to wait for a very long time.
+Several years may pass before someone finds the time to have a look at your problem.
+Those issues are known as _community issues_ and they are usually seen at the very tail of developer’s work queues.
+Except for one case: security issues.
+Security issues are always prioritized regardless of who the reporter is.
+
+. *Purchase midPoint support from Evolveum.* This will dramatically increase the priority of your bug report.
+Software development cannot be easily predicted therefore we still cannot guarantee precise time period to fix the bug.
+However, typical fix times will be counted in days, weeks or in very rare and complicated cases in months.
+Those issues are known as _subscriber issues_ and they are always prioritized over community issues.
+
+In any of those cases there is a recommended procedure for bug diagnostics and reporting.
+There are bug reporting standards that apply to anybody, even midPoint subscribers.
+Evolveum provides 3^rd^-line support only.
+This means that it is expected that the issues has already passed through 1^st^ and 2^nd^ lines of support.
+The bug report should be really a report of midPoint bug.
+It should not be a configuration issue.
+Proper diagnostics techniques should be employed to investigate the issue before it is reported.
+The rest of this section will describe the recommended procedure.
+
+*Diagnostics* is the first step that is absolutely mandatory.
+Troubleshooting techniques described in this chapter should be used to find out what is going on.
+MidPoint is a very flexible product and vast majority of midPoint issues are caused by wrong configuration.
+Therefore please make sure that the problem is not one of those.
+Simple mis-configuration may easily look like a bug.
+Try to go through midPoint documentation and understand how midPoint works.
+Re-read relevant parts of this book.
+MidPoint development team invests a huge amount of time and effort to make the error messages and log entries are understandable.
+There please make sure you use those facilities.
+Please follow the troubleshooting guides above.
+They are usually very helpful.
+
+*Reproducing the problem* is a second step.
+The easiest way for us to fix a problem is being able to reproduce it.
+In such case we do not just blindly fix the problem but we can also make sure it is really gone.
+In most cases we create a test case in our automated test suite to make sure the problem will gone and it will not appear again.
+Therefore your best strategy to make sure that the problem is fixed quickly and does not appear again is to show us how to reproduce the problem in our environment.
+Saying that “this and that does not work” usually does not help as the same use case will work perfectly in other configurations.
+Please describe your configuration in the report.
+
+Try to figure out what is the minimal configuration that is needed to reproduce the problem.
+We appreciate if you could reproduce the problem using our sample resources and objects with minimal customization.
+This saves you a lot of time describing your environment to us and it also saves us a lot of time to try to re-create your environment in our lab.
+This approach also helps you to check your configuration and to make sure you are not reporting mis-configuration as a bug.
+
+In a very rare cases the problem cannot be easily reproduced using samples or similar simple setup.
+In that case we need to work with what we have.
+Therefore we either need to know quite a lot about your environment to be able to set it up in our lab.
+Or we need an access to your environment or your cooperation with diagnosing the problem.
+In such a case please use your common sense in what comes into the bug report.
+Please keep in mind that midPoint is open source project and the bug reports are public therefore please be careful when providing sensitive information in bug reports.
+
+When you are sure that the problem is not caused by mis-configuration it is time to *report the issue*.
+The best way to submit a bug report is to use Evolveum bug tracking system.
+The registration is open to everybody.
+This is also the only bugreporting method available for community issues.
+Using Evolveum tracker allows you to track the progress of issue resolution, add additional information, etc.
+Just please keep in mind that the tracker is public and open to anyone following the spirit of open source.
+Therefore be careful about submitting a sensitive information.
+
+Please note that security issues that reveal a potential security vulnerability should not be reported by using the tracker.
+Information in the tracker is public and this may lead to unintentional disclosure of sensitive information.
+Special e-mail address is provided for responsible disclosure of security-related issues:
+
+[source]
+----
+security@evolveum.com
+----
+
+Typical bug report contains following information:
+
+* What operation have you tried or what do you want to achieve.
+Some "bugs" may be caused by trying to achieve something using the wrong mechanism.
+Having a broader perspective helps us to help you.
+
+* If there is a form or other input to the operation then please describe how it was set up or filled in.
+E.g. an XML snippet used to import, data entered into input field, request deltas retrieved from an audit log and so on.
+
+* What kind of resource definition was used, how it was modified, etc.
+We need to know only the relevant parts.
+We prefer if you reproduce the problem with the simplest configuration possible (see above).
+
+* Any other special configuration that you feel can influence the outcome, such as custom schema, strange things in expressions, etc.
+
+* If the operation produced an error message in GUI include that error message as well.
+
+* If there is an exception in the log files please make sure that you include full stack trace of the exception.
+The exception stack trace is usually a very efficient pointer to likely cause of the problem.
+
+* Relevant part of the log files.
+You may want to have a look at the list of useful loggers above to correctly setup your logging to get the most useful data in the logs.
+
+* Your environment: operating system, Java platform version, target system version.
+You do not need to bother with this if the bug is obviously not environment-specific.
+
+* Indication of midPoint version (release) or git branch/revision that was used.
+
+Not all of the above is required in a bug report.
+Use your common sense.
+As a rule of the thumb too much information is usually better than too little information.
+But sometimes too much non-relevant information may obscure the tiny problem that would be obvious if just the right amount of information is provided.
+
+== Useful Troubleshooting Tips
+
+Finally, there are some generic troubleshooting tips.
+Those are not specific to midPoint and those tips should be a second nature to any experienced engineer.
+Some of those were already covered.
+However, it may still be useful to summarize.
+
+First of all try to keep your troubleshooting effort methodical and systematic.
+It makes very little sense to just randomly poke around and hope that the bug will show its ugly head.
+Even though such random methods may work occasionally, they will require a lot of effort in the end.
+Try to follow a divide-and-conquer method.
+Find a boundary in the middle of midPoint, e.g. Clockwork component.
+Examination of clockwork traces will show you whether the problem is in the mappings or it is in the provisioning.
+Is the problem in provisioning?
+Then select another boundary.
+LDAP connector operation traces may be a good bet in that case.
+That will show you whether the problem is in midPoint or it is in the LDAP server.
+Are operation parameters wrong?
+Which means that problem is in midPoint, somewhere between model and the connector.
+Have a look at debug logs of provisioning component.
+Maybe there is wrong object class in the resource definition.
+Have a look at debug logs on the connector.
+Maybe connector configuration is wrong?
+The log files will guide you to the problem.
+
+MidPoint log files may look like a maze.
+But it all makes sense.
+MidPoint has good component structure and the log files reflect that.
+You just need to understand how midPoint works and you will not get lost.
+Just make sure that you never forget to look at the log files.
+Always look at the log files.
+When it comes to troubleshooting logfiles are your best friends.
+
+There is one troubleshooting method that is universally applicable to almost any problem.
+The method involves some specialist equipment.
+However, this methods provides surprising, almost unbelievable results.
+To make this method work you have to strictly follow those steps:
+
+. Describe your problem to a rubber duck.
+
+Yes, a rubber duck.
+That strange object that usually floats in bubble baths.
+The duck is a good listener.
+Therefore just go ahead and describe you problem to the duck.
+Step by step.
+Talk about every detail that you have explored.
+Every possible solution that you have tried.
+Do not hurry.
+The duck has unlimited patience.
+You have to literally talk to the duck.
+Doing it just in your head does not work.
+Talk to the duck.
+The duck will help.
+It is a wise animal.
+
+As ridiculous as this process might sound, it really works.
+It does wonders.
+It is known as _rubber duck debugging_ method.
+Of course, it does not have to be a rubber duck.
+Any object will work as long as you really talk to it.
+However, choosing an object with eyes make you feel less stupid while you talk to it.
+Rubber duck is a popular choice.
+
+That is it.
+Troubleshooting is not an easy work to do.
+Although it may sometime resemble witchcraft, it is in fact a science.
+And an art.
+It needs some time to find your way.
+But it is a time well spent.
+It will be repaid many times over.

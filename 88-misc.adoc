@@ -1,0 +1,12 @@
+[#88-misc]
+= Misc
+
+include::chapter-include.adoc[]
+
+[quote, TODO]
+TODO
+
+TODO: create on demand?
+TODO: sequences
+TODO: validation expression (object template)
+

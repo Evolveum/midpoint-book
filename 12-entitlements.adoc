@@ -1,0 +1,177 @@
+[#12-entitlements]
+= Entitlements
+
+include::chapter-include.adoc[]
+
+[quote, TODO]
+TODO
+
+TODO
+
+== Entitlement associations
+
+TODO
+
+== Shortcut Attributes
+
+TODO
+
+== Role Synchronization
+
+TODO
+
+== Entitlements and Metaroles
+
+Simply speaking, metaroles are roles applied to other roles.
+Ordinary role applies its characteristics to a user.
+Metarole applies its characteristics to another role.
+This is perfectly possible in midPoint, as role can be applied to almost any midPoint object.
+Then why not apply a role to a another role?
+This may seem like a pretty useless exercise, but the truth is that metaroles are tremendously useful.
+
+History is repeating, they say.
+And the fact is that repetition is a daily bread in almost all IDM deployments. E.g. the application roles that are based on LDAP groups are all pretty much the same.
+There is always a construction that gives user an LDAP account and a membership in the group.
+But there is also something that connects the group and the role.
+This is either a construction that was used to create the group in the first place.
+Or there is just a link that connects the group and the role, as it would in a case when the role was created by inbound synchronization.
+One way or another, such role may become quite complex.
+And such complexity is repeated in each of those roles.
+We do not like that.
+We do not like repeating and copying things in midPoint deployments as each such repetition will become a maintenance burden in the future.
+Some of that complexity can be reduced with the mechanism that we already know, such as role hierarchy or parametric roles.
+But those mechanism do not provide a complete solution.
+Metaroles do.
+
+This was quite difficult to follow, wasn’t it?
+Metaroles can be indeed quite confusing.
+It may take quite some time to fully understand them.
+But the flexibility and the simplifications that they provide are worth all that time.
+Let’s start with the basic example and then let’s go slowly.
+
+There is a bunch of simple single-purpose web applications in the ExAmPLE IT environment.
+It was easy and cheap to purchase all those apps and they just did the job.
+Therefore they got a bit out of control and they spread through the IT environment like wildfire.
+At that time there was no enterprise architect to stop this insanity.
+And although security office was all mad about this, but they could do nothing.
+Now there is an enterprise architect and the security it taken more seriously.
+However, those little applications are such deeply embedded in business processes that it will take years or even decades to get rid of them.
+Therefore the decision was to live with them and control them as much as possible.
+But security office insisted that those apps should be connected to a central LDAP server.
+Access to these apps should require authentication by using LDAP account.
+And there should be a single LDAP group that authorizes access to each application.
+When ExAmPLE deployed midPoint, they started to create roles for those applications:
+
+[source,xml]
+----
+<role oid="aca5b3a6-a17b-11e9-a579-e7eef696a847">
+    <name>Revenue Analysis Helper App #42</name>
+    <inducement>
+        <construction>
+             <!-- OpenLDAP resource -->
+             <resourceRef oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c"/>
+             <kind>account</kind>
+             <!-- Associate the account with LDAP group revenue-app-42 -->
+             <association>
+                 <ref>ri:group</ref>
+                 <outbound>
+                     <expression>
+                         <associationTargetSearch>
+                             TODO
+                         </associationTargetSearch>
+                     </expression>
+                 </outbound>
+             </association>
+        </construction>
+    </inducement>
+</role>
+----
+
+NOTE: Please, do not pay too much attention to the `associationTargetSearch` expression up there.
+This is just a way how to locate the right group on the resource.
+The whole association clause will make sure, that the account will be member of the `revenue-app-42` group.
+That’s it.
+We will explain that expression later.
+
+Such roles do work and this is how IDM systems did this for years.
+But as there are hundreds of those little applications and doing everything like this would be really hard and repetitive work.
+But this is no ordinary IDM system, this is midPoint.
+Therefore there is still much that can be improved.
+First thing to improve is the need to create LDAP group for the application.
+There is no need to do it manually.
+MidPoint can easily do it.
+And in addition to that, midPoint will keep track of that group.
+Therefore we will know what that group is and why it was created.
+The role above can be easily extended to do this:
+
+[source,xml]
+----
+<role oid="aca5b3a6-a17b-11e9-a579-e7eef696a847">
+    <name>Revenue Analysis Helper App #42</name>
+    <inducement>
+        <construction>
+             <!-- OpenLDAP resource -->
+             <resourceRef oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c"/>
+             <kind>account</kind>
+             <!-- Associate the account with LDAP group revenue-app-42 -->
+             <association>
+                 <ref>ri:group</ref>
+                 <outbound>
+                     <expression>
+                         <associationTargetSearch>
+                             TODO
+                         </associationTargetSearch>
+                     </expression>
+                 </outbound>
+             </association>
+        </construction>
+    </inducement>
+    <assignment>
+        <construction>
+             <!-- OpenLDAP resource -->
+             <resourceRef oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c"/>
+             <kind>entitlement</kind>
+             <intent>group</intent>
+             <attribute>
+                 <ref>ri:dn</ref>
+                 <outbound>
+                     <expression>
+                         <value>cn=revenue-app-42,ou=groups,dc=example,dc=com</value>
+                     </expression>
+                 </outbound>
+             </attribute>
+             <attribute>
+                 <ref>ri:cn</ref>
+                 <outbound>
+                     <expression>
+                         <value>revenue-app-42</value>
+                     </expression>
+                 </outbound>
+             </attribute>
+        </construction>
+    </assignment>
+</role>
+----
+
+This is getting interesting.
+So far we have only seen inducements in the roles.
+And here is an assignment.
+But that makes perfect sense.
+We want to create a group that represents the role.
+If the group construction would be placed in the inducement, it will create a group that will represent the user.
+But we do not want that.
+We really want to create a group revenue-app-42, which means a group that belongs to the role.
+Hence the assignment.
+
+When this roles gets imported into the system, it will create LDAP group revenue-app-42.
+When a user is assigned to this role, then such user will become member of revenue-app-42 group.
+But we have some information duplication here.
+As the LDAP group is already linked to the role, then a simpler associationFromLink expression can be used:
+
+TODO
+
+== TODO
+
+Entitlements/OpenLDAP: explain memberof
+
+TODO

@@ -1,0 +1,9 @@
+[#88-approvals-and-cases]
+= Approvals and Cases
+
+include::chapter-include.adoc[]
+
+[quote, Panoplia Propheticus of the Bene Gesserit, "Dune: House Harkonnen by Brian Herbert and Kevin J. Anderson"]
+It is said that there is nothing firm, nothing balanced, nothing durable in all the universe - that nothing remains it its original state, that each day, each hour, each moment, there is change.
+
+== Role Request and Approval

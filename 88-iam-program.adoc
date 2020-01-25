@@ -1,0 +1,31 @@
+[#88-iam-program]
+= IAM Program
+
+include::chapter-include.adoc[]
+
+[quote, First Law of Mentat, "Dune by Frank Herbert"]
+A process cannot be understood by stopping it. Understanding must move with the flow of the process, must join it and flow with it.
+
+TODO: intro
+TODO: this chapter is still just a stub. It need to be expanded later
+
+== This Is Not A Project
+
+TODO: IAM is a program, not a project. But there may be an initial deployment project, migration projects and so on.
+TODO: how to make analysis for an deployment project
+
+== Convergencies
+
+TODO: proceed in iterations: iterative and incremental process. No big bangs.
+TODO: deployment efficiency, reuse, 20-80
+TODO: Igor: “Even on target system level, Target system shall be connected in iterations, improve on new data quality first, then take on the existing data and as business first we have to be sure we are going to improve and not destroy existing state, last do deprovisioning/disabling”
+
+== Garbage In, Garbage Out
+
+TODO: Source data quality: garbage in, garbage out. The source data quality is usually low. Do not believe “oh, we have precise HR data”. They don’t.
+
+TODO: Igor: “HR data are hard to be trusted, quality of HR data is questionable. Some actions are hard to be done in acceptance, like full data visibility is not permitted by security.”
+
+== TODO
+
+Info: maintainable solution. First day is the day of the deployment.

@@ -1,0 +1,59 @@
+[#88-todo]
+= TODO
+
+include::chapter-include.adoc[]
+
+[quote, Arthur C. Clarke]
+The only way of discovering the limits of the possible is to venture a little way past them into the impossible.
+
+Use of namespaces, Qnames, URI (e.g. connector namespace)
+
+item path
+
+matching rules
+
+advanced setting in schema handling: limitations, tolerance
+
+== Logfile Analyzer Plugin
+
+TODO? Palo?
+
+== Performance Tuning
+
+TODO: just a short overview. Maybe there will be a dedicated chapter later.
+TODO? Palo?
+
+advanced use of mappings:
+* multiple sources
+* mapping variables
+* advanced expressions
+* conditional mappings
+* time constraints
+
+Advances script topics:
+* script expression relativity
+* null values
+* absolute mode
+
+Search queries
+
+Credential management: password storage
+
+Standardized provisioning interface: bad idea
+too many changes on too many places = huge cost
+
+
+Explain migration: import “policy” from HR (users, orgs, assignments). Try to match that with reality (accounts, entitlements). Use correlation and enforcement modes. Slowly clean up the data. Gradually enforce policies.
+
+Lookup tables
+
+== Quotes
+
+Every man's life lies within the present; for the past is spent and done with, and the future is uncertain. -- Marcus Aurelius
+
+The pessimist complains about the wind; the optimist expects it to change; the realist adjusts the sails. -- William Arthur Ward
+
+The world always seems brighter when you've just made something that wasn't there before. -- Neil Gaiman
+
+Once you know what the question actually is, you'll know what the answer means. – Hitchhiker's
+

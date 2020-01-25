@@ -1,0 +1,23 @@
+[#88-deployment]
+= Deployment
+
+include::chapter-include.adoc[]
+
+[quote, John Augustus Shedd]
+A ship in harbor is safe, but that is not what ships are built for.
+
+TODO
+
+== Relational Databases
+
+TODO
+
+== High Availability
+TODO
+
+TODO: business first
+TODO: start with normal mappings. Switch to strong.
+
+== TODO
+
+Info: maintainable solution. First day is the day of the deployment.
