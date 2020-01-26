@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BOOK_NAME=midpoint-book
+BOOK_NAME=practical-identity-management-with-midpoint
 TARGET_DIR=target
 
 
