@@ -6,23 +6,23 @@ include::chapter-include.adoc[]
 [quote, Douglas Adams, "So Long, and Thanks for All the Fish"]
 Eskimos had over two hundred different words for snow, without which their conversation would probably have got very monotonous.
 
-Account
-Assignment
-Connector, Identity Connector
-ConnId
-Entitlement
-Entitlement association
-Focus
-Identity Connector Framework (ICF)
-Inducement
-LDAP
-Link
-Object class
-Persona
-Projection
-RBAC
-Repository: usually means midPoint repository. The midPoint internal database.
-Resource, Provisioning Resource: (not to be confused with web resource used in RESTful APIs)
-Resource schema
-Role
-User
+Account:: an account
+Assignment:: xxxx
+Connector, Identity Connector::
+ConnId::
+Entitlement::
+Entitlement association::
+Focus::
+Identity Connector Framework (ICF)::
+Inducement::
+LDAP::
+Link:: account link, projection link
+Object class::
+Persona::
+Projection::
+RBAC::
+Repository:: usually means midPoint repository. The midPoint internal database.
+Resource, Provisioning Resource:: (not to be confused with web resource used in RESTful APIs)
+Resource schema::
+Role::
+User::

@@ -11,7 +11,13 @@
 :sectnumlevels: 1
 :xrefstyle: full
 :source-highlighter: coderay
+:icons: font
+ifdef::backend-html5[]
+:toc: left
+endif::[]
+ifdef::backend-pdf[]
 :toc: macro
+endif::[]
 :imagesdir: images
 :front-cover-image: images/cover.svg
 
@@ -21,7 +27,9 @@
 
 include::colophon.adoc[]
 
+ifdef::backend-pdf[]
 toc::[]
+endif::[]
 
 ifndef::backend-epub3[:leveloffset: +1]
 

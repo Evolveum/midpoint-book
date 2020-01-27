@@ -259,7 +259,6 @@ Otherwise the log files would fill all available disk space.
 Log messages have a structured format.
 They look like this:
 
-[source]
 ----
 2019-08-16 16:40:25,863 [PROVISIONING] [main] INFO (com.evolveum.midpoint.provisioning.impl.ProvisioningServiceImpl): Discovered local connector connector: ConnId com.evolveum.polygon.connector.ldap.LdapConnector v2.3 (OID:268678c0-b5b3-4b13-a399-c2fbd903e51d)
 ----
@@ -588,7 +587,6 @@ Recording audit messages can be enabled in user interface, in the part where ord
 There is an “Audit” section on that page.
 Audit log message looks like this:
 
-[source]
 ----
 2019-08-19 15:02:05,367 [MODEL] [pool-3-thread-6] INFO (com.evolveum.midpoint.audit.log): 2019-08-19T15:02:05.367+0200 eid=1566219725367-0-1, et=MODIFY_OBJECT, es=REQUEST, sid=DF97547B47BC6795D941B8C28AFB6089, rid=d0c90fdf-d101-457b-baf9-ea0371637a1d, tid=1566219725331-0-1, toid=null, hid=localhost, nid=DefaultNode, raddr=127.0.0.1, I=FocusType:00000000-0000-0000-0000-000000000002(user), T=PRV(oid=df2210ad-3eec-4f59-9b11-46479b9ebc7c, targetType={.../common/common-3}UserType, targetName=alice, relation={.../common/org-3}default), TO=null, D=[df2210ad-3eec-4f59-9b11-46479b9ebc7c:MODIFY], ch=http://midpoint.evolveum.com/xml/ns/public/gui/channels-3#user, o=null, p=null, m=
 ----
@@ -726,7 +724,7 @@ However, this description should be sufficient to understand the overall process
 Model context is dumped at strategic places during clockwork and projector computation.
 The dumps look like this:
 
-[source]
+[source%nowrap]
 ----
 ---[ PROJECTOR (INITIAL) context projection values and credentials of resource:10000000-0000-0000-0000-000000000204(Dummy Resource Blue)(default) ]--------------------------------
 LensContext: state=INITIAL, Wave(e=0,p=0,max=0), focus, 1 projections, 2 changes, fresh=true
@@ -791,7 +789,7 @@ Enabling `DEBUG` or `TRACE` logging on `com.evolveum.midpoint.model.impl.lens.Ch
 Overall, clockwork summary is a good starting point.
 The summary looks like this:
 
-[source]
+[source%nowrap]
 ----
 ###[ CLOCKWORK SUMMARY ]######################################
 Triggered by focus primary delta ObjectDelta(UserType:c0c010c0-d34d-b33f-f00d-111111111111,MODIFY: PropertyDelta( / {.../common/common-3}organizationalUnit, REPLACE), PropertyDelta(metadata / {.../common/common-3}modifyTimestamp, REPLACE))
@@ -1003,7 +1001,6 @@ The ConnId connector framework stands between midPoint and the connectors.
 It knows about every operation that midPoint invokes on every connector and it knows about all the return values.
 This can be easily enabled by using the following log configuration:
 
-[source]
 ----
 org.identityconnectors.framework.api.operations: TRACE
 org.identityconnectors.framework.spi.operations: TRACE
@@ -1012,10 +1009,9 @@ org.identityconnectors.framework.common.objects.ResultsHandler: TRACE
 
 The ConnId operation traces look like this:
 
-[source]
 ----
 TRACE (org.identityconnectors.framework.api.operations.SearchApiOp): method: search msg:Enter: search(ObjectClass: inetOrgPerson, null, com.evolveum.midpoint.provisioning.ucf.impl.ConnectorInstanceIcfImpl$2@643dc940, OperationOptions: {ALLOW_PARTIAL_ATTRIBUTE_VALUES:true,PAGED_RESULTS_OFFSET:1,PAGE_SIZE:20})
-....
+...
 TRACE (org.identityconnectors.framework.api.operations.SearchApiOp): method: search msg:Return: org.identityconnectors.framework.common.objects.SearchResult@a90221a
 ----
 
@@ -1116,7 +1112,7 @@ You can examine these if you look in the `lib` directory inside the connector JA
 Some connectors have really good logging, such as the connectors in the LDAP connector family.
 The LDAP connector will log all the LDAP operations if you set the `com.evolveum.polygon.connector.ldap.OperationLog` logger to `DEBUG` level.
 
-[source]
+[source%nowrap]
 ----
 2016-08-30 17:14:20,043 [main] DEBUG [](c.evolveum.polygon.connector.ldap.OperationLog): method: null msg:ldap://localhost:10389/ Add REQ Entry:
 Entry
@@ -1177,7 +1173,6 @@ The authorizations are processed in midPoint security component.
 The processing of every authorization is logged.
 Therefore to see the authorization processing trace simply enable the logging of security component:
 
-[source]
 ----
 com.evolveum.midpoint.security: TRACE
 ----
@@ -1188,7 +1183,6 @@ It is better to troubleshoot the configuration in a development or testing envir
 
 When the security logging is enabled then you can see following messages in the logs:
 
-[source]
 ----
 2017-01-23 14:32:37,824 [main] TRACE (c.e.m.security.impl.SecurityEnforcerImpl): AUTZ: evaluating security constraints principal=MidPointPrincipal(user:c0c010c0-d34d-b33f-f00d-111111111111(jack), autz=[[http://midpoint.evolveum.com/xml/ns/public/security/authorization-model-3#read])]), object=user:c0c010c0-d34d-b33f-f00d-111111111111(jack)
 2017-01-23 14:32:37,824 [main] TRACE (c.e.m.security.impl.SecurityEnforcerImpl): Evaluating authorization 'read-some-roles' in role:7b4a3880-e167-11e6-b38b-2b6a550a03e7(Read some roles)
@@ -1412,7 +1406,6 @@ Please note that security issues that reveal a potential security vulnerability 
 Information in the tracker is public and this may lead to unintentional disclosure of sensitive information.
 Special e-mail address is provided for responsible disclosure of security-related issues:
 
-[source]
 ----
 security@evolveum.com
 ----
