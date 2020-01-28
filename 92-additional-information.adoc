@@ -8,7 +8,7 @@ Logic's useless unless it's armed with essential data.
 
 We have tried to make this book as comprehensive as possible.
 But no book can possibly include all the information that an IDM engineer would ever need.
-Therefore this chapter describes the sources of additional information about midPoint.
+Therefore, this chapter describes the sources of additional information about midPoint.
 
 == MidPoint Wiki
 
@@ -18,14 +18,14 @@ But there is much more.
 There is connector documentation, midPoint architecture, developer documentation, midPoint internals and all kinds of information including midPoint release planning and roadmap.
 Everything is public.
 
-However the wiki is so comprehensive that it is often not entirely easy to find the right page.
+However, the wiki is so comprehensive that it is often not entirely easy to find the right page.
 We have done what we could to organize the information.
 The pages are organized hierarchically.
 Many pages have "See Also" section that points to additional information.
-Yet the practice shows that if you want to find something in the wiki you need to have at least a faint idea what you are looking for.
+Yet, the practice shows that if you want to find something in the wiki, you need to have at least a faint idea what you are looking for.
 This book should give you that idea.
-If you know what you are looking for then the wiki search bar is your friend.
-If you enter the correct search term then there is high probability that you will quickly find the right page.
+If you know what you are looking for, then the wiki search bar is your friend.
+If you enter the correct search term, then there is high probability that you will quickly find the right page.
 
 URL: https://wiki.evolveum.com/
 
@@ -57,7 +57,7 @@ MidPoint developers like to create and maintain complete end-to-end automated te
 These tests are usually inspired by real-world midPoint deployments.
 We call them story tests.
 These tests are important to maintain midPoint quality and continuity.
-However they are also excellent source of inspiration and they have often proved useful as examples of midPoint configuration.
+However, they are also excellent source of inspiration and they have often proved useful as examples of midPoint configuration.
 
 Wiki description: https://wiki.evolveum.com/display/midPoint/Story+Tests +
 Code and configuration: https://github.com/Evolveum/midpoint/tree/master/testing/story
@@ -70,13 +70,13 @@ The mailing list is used for announcements, user suggestions and also what we at
 The mailing list is used to ask questions about midPoint.
 Experienced community members usually answer these questions and provide pointers to additional information.
 The whole midPoint development team is also subscribed to the mailing list and they provide answers when needed.
-However this is a best effort service.
-Please do not abuse this communication channel and try keep the following community guidelines:
+However, this is a best effort service.
+Please do not abuse this communication channel and try to keep the following community guidelines:
 
 . *Be polite.* Mailing list is a best effort service.
 Nobody is (directly) paid to answer mailing list questions.
 The engineers that answer the questions are doing that in addition to their day-to-day responsibilities and they are doing that because they want to help the community.
-Therefore if you are asking for help, do so politely.
+Therefore, if you are asking for help, do so politely.
 If you are answering a question please respect other members.
 Everybody started somewhere and it is natural that novice users do not know everything.
 Please tolerate the differences in skill sets.
@@ -86,14 +86,14 @@ If you are getting an error try to read error message very carefully and try to 
 Try to experiment with the configuration a bit.
 Look at troubleshooting section of this wiki.
 Spend at least a couple of minutes to make your own research before asking the question.
-If that research does not provide the answer then it is a good question for the mailing list.
+If that research does not provide the answer, then it is a good question for the mailing list.
 
 . *Provide context.* If your post looks like "_my midpoint is broken, please help_" then it is very unlikely that you will get any answers.
 Try to describe your problem in more details.
 Make sure to describe relevant bits of your configuration.
 Be sure to include error message.
 Look in the log files if necessary.
-And most importantly: describe what are you trying to achieve.
+And most importantly: describe what you are trying to achieve.
 Maybe the root of your problem is that you are using completely wrong approach.
 The community may point your nose in the right direction - but only if they know what is your goal.
 
@@ -102,24 +102,24 @@ There is already a significant body of knowledge distributed among community mem
 If you adhere to these guidelines and ask a question it will most likely be answered.
 But for that there needs to be someone who is answering.
 Therefore do not just ask the questions.
-If you know the answer for the question that someone else asks then please go ahead and answer it.
+If you know the answer to the question that someone else asks then please go ahead and answer it.
 Do not worry that your answer may not be perfect.
 Even a partial answer will be greatly appreciated by any novice user.
 Simply speaking: Do not only take from the community.
 Try to repay what the community gave you.
 
 You may also be tempted to send your questions directly to Evolveum or midPoint developers.
-However the developers have many midPoint users, partners, customers and contributors to deal with in their day-to-day job.
+However, the developers have many midPoint users, partners, customers and contributors to deal with in their day-to-day job.
 The first responsibility of any midPoint core developer is to make sure that midPoint development will continue.
 The developers naturally prefer to spend time doing tasks that bring funding to the midPoint project.
-Therefore the developers will strictly prioritize the communication.
+Therefore, the developers will strictly prioritize the communication.
 Answers to midPoint subscribers are highest priority, mailing list is second and answers to private messages from the community are absolutely lowest priority.
 We prefer efficient spread of knowledge about midPoint.
 Mailing list is good for that, but private communication is not.
 That’s the primary reason for this priority setup.
-Besides, if you contact a developer directly then only that developer can answer your question.
+Besides, if you contact a developer directly, then only that developer can answer your question.
 But if you send the question to the mailing list there are more people that can potentially answer the question.
-Therefore unless you have active subscription the mailing list is your best option.
+Therefore, unless you have active subscription the mailing list is your best option.
 
 Mailing list URL: http://lists.evolveum.com/mailman/listinfo/midpoint
 

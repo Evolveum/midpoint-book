@@ -94,7 +94,7 @@ Some subscription offerings also contain feature development and improvements (a
 Those subscriptions are ideal way to make sure midPoint will be able to do anything that you need for your project.
 
 MidPoint support and subscription services provide significant funding for midPoint development and maintenance.
-Therefore it is perfectly natural that midPoint subscribers get high priority for resolution of their issues, feature requests and so on.
+Therefore, it is perfectly natural that midPoint subscribers get high priority for resolution of their issues, feature requests and so on.
 This limits the time that midPoint core team has available for other tasks.
 Therefore there are some rules:
 
@@ -108,7 +108,7 @@ However, direct feature sponsoring is very limited as most of the midPoint devel
 Part of Evolveum income is reserved to maintain midPoint - to keep the architecture up to date, to make systemic quality improvements, to maintain midPoint in the long run and so on.
 In some cases Evolveum will sponsor feature development.
 Those are usually strategic features that lead midPoint development in the right direction.
-Or those may be experimental features mean to explore a particularly interesting functionality.
+Or those may be experimental features aimed at exploring a particularly interesting functionality.
 However, Evolveum will not sponsor any "customer" features.
 Those need to be covered by subscriptions.
 
@@ -117,17 +117,17 @@ Those bugfixes will be committed to midPoint primary development branch (_master
 The fixes that make it into development branch will be part of the next feature release.
 However, as midPoint release cycle is fixed, not all of the bugs will be fixed in each release.
 The bugs that were reported as part of subscription or support service will be fixed first.
-If there is still some time then other (non-subscriber) bugs will be fixed as well.
+If there is still some time, then other (non-subscriber) bugs will be fixed as well.
 But there are no guarantees for that.
-If the time before the release runs out bugs reported by non-subscribers will not get fixed.
-In fact such non-subscriber fixes may have to wait for several releases until they finally get fixed.
+If the time before the release runs out, bugs reported by non-subscribers will not get fixed.
+In fact, such non-subscriber fixes may have to wait for several releases until they finally get fixed.
 
 * Every feature release has a _support branch_.
 This is where the maintenance releases come from.
 However, every bugfix or improvement is developed on master branch first.
 It has to be backported to the support branch.
 Which takes time.
-Therefore there are very strict rules for backporting.
+Therefore, there are very strict rules for backporting.
 Any bugfix, improvement or any other update will go to the support branch only if:
 
 ** Backport to support branch is explicitly requested by customer with active support or subscription service.
@@ -141,7 +141,7 @@ Fixes for severe security issues will also get automatically backported to all a
 
 ** It fixes a severe issue that affect large number of users.
 
-Simply speaking, if you want to make sure that midPoint works for you then purchase a support or subscription.
+Simply speaking, if you want to make sure that midPoint works for you, then purchase a support or subscription.
 Those services will help you, that is what they are for.
 But the money from support and subscription services also enable long-term midPoint maintenance and new feature development.
 Getting midPoint support or subscription is the right thing to do.
@@ -152,7 +152,7 @@ MidPoint is a proper open source project.
 And as all good open source projects midPoint has a vibrant community.
 This is both engineering community and business community.
 The primary communication channel of the engineering community is midPoint mailing list.
-Mailing list is used to discuss midPoint futures, announce new release, discuss configuration issues, provide feedback to the development team and so on.
+Mailing list is used to discuss midPoint futures, announce new releases, discuss configuration issues, provide feedback to the development team and so on.
 MidPoint community is open to anyone.
 
 Business community is formed mostly from Evolveum partners.

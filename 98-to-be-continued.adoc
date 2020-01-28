@@ -10,7 +10,7 @@ Hanc marginis exiguitas non caperet. +
 This is it then.
 That was the last real chapter of this book.
 But we have not yet covered all capabilities of midPoint.
-In fact we are not even close.
+In fact, we are not even close.
 We have only scratched the surface of what midPoint can provide.
 The other chapters are not written yet.
 There is still so much to write about:
@@ -22,13 +22,14 @@ Even roles and other midPoint objects can be organized.
 Organizational structures in all their forms are fundamental building blocks that can be used to create really interesting configurations.
 
 * *Authorizations:* MidPoint works with sensitive data and there is a need to strictly control access to that data.
-Therefore midPoint has a fine-grained authorization system for controlling access to itself.
+Therefore, midPoint has a fine-grained authorization system for controlling access to itself.
 Authorization mechanisms are very powerful allowing many scenarios from delegated administration to partial multi-tenancy.
 
 * *Archetypes:* Users, roles, orgs and services are the four basic object types of midPoint.
 They are quite powerful.
 But there is often a need to define special behavior for employees, agents, students, academic staff, partners and other types of persons.
-We would also like to see business roles, application roles, system roles . And the enterprises would be lost without their divisions, departments and sections.
+We would also like to see business roles, application roles, system roles.
+And the enterprises would be lost without their divisions, departments and sections.
 There are always shades, flavors and subtypes to objects.
 And that is what _archetypes_ do.
 They can be used to create subtle flavors of functionality suitable for individual object types.
@@ -64,7 +65,7 @@ Do you want your departments to automatically appear as OU objects in Active Dir
 Here you go.
 Do you want to place the users there.
 That is easy.
-Do you also want to create nested LDAP groups for the departments.
+Do you also want to create nested LDAP groups for the departments?
 No problem.
 MidPoint can do it all.
 
@@ -106,7 +107,7 @@ MidPoint can be really helpful in managing compliance to the data protection reg
 * *User interface customizations:* MidPoint has a general-purpose user interface that can be used for user self-service, identity administration and system configuration.
 The user interface is designed to be dynamic.
 It will automatically adapt to resource schemas, extension of midPoint schema, authorizations and so on.
-Therefore usually there is no need to customize user interface at all.
+Therefore, usually there is no need to customize user interface at all.
 But there are cases when the deployment need to deviate from the default behavior.
 And midPoint is prepared to that.
 There are many ways how to customize user interface: colors, stylesheets, localization, custom forms, tabs, whole new custom pages.
@@ -116,7 +117,7 @@ In extreme cases midPoint can be customized beyond recognition.
 But even great software does not live in isolation.
 There is always need to integrate the systems together.
 Integration runs through midPoint veins, because that is what the connectors really do.
-But often there are is a need to integrate midPoint with other systems that is beyond the capabilities of a connector.
+But often there is a need to integrate midPoint with other systems that is beyond the capabilities of a connector.
 Maybe there is a password reset application that needs to interact with midPoint.
 Maybe there is a analytic software that needs to get midPoint data.
 MidPoint was designed from the day one to be a service-based application.
@@ -129,12 +130,12 @@ Other features are used all the times, but they are a natural part of midPoint a
 But all those features deserve explanation.
 And there is also a need to describe how midPoint itself is developed – as there is a lot of experimental and incomplete features.
 But, as this is midPoint, even those features may be extremely useful.
-This chapter may also be interesting to people who would like to extended midPoint in a unusual way or those that want to contribute to midPoint development.
+This chapter may also be interesting to people who would like to extended midPoint in an unusual way or those that want to contribute to midPoint development.
 
 * *MidPoint Deployment:* There are many path from downloading midPoint packages to a working system.
 Some of those paths are easier than other.
 MidPoint design was build on many years of practical identity management experience.
-Therefore midPoint has mechanisms that can be used to efficiently overcome some of the notorious problems in identity management – provided that midPoint is used correctly.
+Therefore, midPoint has mechanisms that can be used to efficiently overcome some of the notorious problems in identity management – provided that midPoint is used correctly.
 This chapter aims at giving advice how midPoint should be used in practical projects.
 How to plan the project, what information to gather, how to design the deployment, how to prepare the environment, plan the migration, handle project extensions and changes and so on.
 
@@ -151,30 +152,30 @@ How to handle new feature requests.
 How to do upgrades.
 How to keep identity management solution sustainable.
 
-* *Deployment examples:* This book is using a lot of examples in all the chapters.
+* *Deployment examples:* This book uses a lot of examples in all the chapters.
 But those are examples designed to demonstrate one specific aspect of midPoint functionality.
 This chapter will be different.
 There will be complete examples of practical midPoint solutions.
-After all, they way that copying and pasting is one the best ways how to learn.
+After all, the way that copying and pasting is one the best ways how to learn.
 
-* *Glossary:* Identity management and governance parlance may sound like a alien language to a newcomer.
-Therefore perhaps preparing IDMimsh-to-english dictionary might be a good idea.
+* *Glossary:* Identity management and governance parlance may sound like an alien language to a newcomer.
+Therefore, perhaps preparing IDMimsh-to-english dictionary might be a good idea.
 
 Those chapters are still missing.
 They are not written yet.
-Obviously, the best people to write those chapters are the people from the Evolveum team: the people that designed and implemented midPoint, the people that support midPoint deployments, people that work with midPoint every day, people that eat, breathe and sleep midPoint.
+Obviously, the best people to write those chapters are the people from the Evolveum team: people that designed and implemented midPoint, people that support midPoint deployments, people that work with midPoint every day, people that eat, breathe and sleep midPoint.
 But those people are just engineers.
 They need to pay their bills.
-They cannot put away they day-to-day responsibilities to work on this book.
+They cannot put away their day-to-day responsibilities to work on this book.
 Obviously, funding is needed to finish the book.
 As this book is available for free there is no direct income that could provide the funding for next chapters.
 There is only one way: sponsoring.
 
-If you like this book then please consider sponsoring some of the next chapters.
+If you like this book, then please consider sponsoring some of the next chapters.
 You can use Evolveum crowdfunding portal at https://wanted.evolveum.com/[wanted.evolveum.com].
-Or in case you are considering a larger-scale sponsoring please contact Evolveum team directly.
+Or in case you are considering a larger-scale sponsoring, please contact Evolveum team directly.
 The market economy is, unfortunately, quite ruthless.
 Therefore, it is pretty straightforward: if there are no sponsors, it is very unlikely that there will be any new chapters.
-Therefore please sponsor this book if you can.
-If you cannot afford to sponsor this book then please at least help us to spread the word: a word about midPoint and a word about this book.
+Therefore, please sponsor this book if you can.
+If you cannot afford to sponsor this book, then please at least help us to spread the word: a word about midPoint and a word about this book.
 Any form of help is more than appreciated.

@@ -76,11 +76,11 @@ All resource data need to be translated to and from a midPoint “data language�
 Thus midPoint creates a common language that everybody can understand.
 And this is exactly the purpose of midPoint schema.
 The schema of user, role, org and service is designed to contain properties that are often used in identity-related integration scenarios.
-Therefore an engineer who is designing a mapping is quite likely to find a suitable property in midPoint schema that is prepared to be used.
+Therefore, an engineer who is designing a mapping is quite likely to find a suitable property in midPoint schema that is prepared to be used.
 
 MidPoint schema forms a _lingua franca_, a common language that can be translating to various data dialects used by the resources.
 But it also provides a basic framework that can be reused for many midPoint deployments.
-Therefore an engineer starting a new deployment do not need to start on a completely green field.
+Therefore, an engineer starting a new deployment does not need to start on a completely green field.
 The basic schema will always be there to provide a starting point.
 
 TIP: Ever wondered why midPoint is called midPoint? Clever reader would have figured that out already.
@@ -333,7 +333,7 @@ They are either completely hidden, displayed indirectly or displayed only when u
 
 MidPoint schema has grown and evolved over time.
 And it is still evolving.
-Therefore it is quite expected that the schema will slightly change over time.
+Therefore, it is quite expected that the schema will slightly change over time.
 However, we do not affect midPoint deployments by incompatible schema changes.
 Therefore items are usually not removed from midPoint schema without a warning.
 An item that we do not want is marked as _deprecated_ first.
@@ -352,7 +352,7 @@ Those features are not officially supported, but you are free to use them at you
 Most new features require extensions of midPoint schema.
 This is also true for those experimental features.
 But when going experimental, there is a fair chance that something will change in the future.
-Therefore we are explicitly marking parts of the schema as _experimental_.
+Therefore, we are explicitly marking parts of the schema as _experimental_.
 This is a warning that those parts are likely to change.
 We are not promising any kind of compatibility for experimental parts of midPoint schema.
 They may change any time, they may even completely disappear.
@@ -394,7 +394,7 @@ E.g. if this is set to `enabled` and the user is not yet valid (according to _va
 If set to `disabled` the user is considered inactive regardless of other settings.
 Therefore this property does *not* necessarily define an actual state of the object.
 It is a kind of "manual override".
-In fact the most common setting for this property is to leave it unset and let other properties determine the state.
+In fact, the most common setting for this property is to leave it unset and let other properties determine the state.
 If this property is not present then the other constraints in the activation type should be considered (namely validity properties, see below).
 
 |===
@@ -427,7 +427,7 @@ It may also be used to "blocks" the user or account identifier to avoid their re
 It is usually used for retired employees and similar cases.
 |===
 
-If the administrative status is not present and there are no other constraints in the activation type or if there is no activation type at all then the object is assumed to be "enabled", i.e. that the user is active.
+If the administrative status is not present and there are no other constraints in the activation type or if there is no activation type at all, then the object is assumed to be "enabled", i.e. that the user is active.
 
 _Validity_ refers to state when the object is considered legal or otherwise usable.
 In midPoint the validity is currently defined by two dates: the date from which the object is valid (`validFrom`) and the date to which an object is valid (`validTo`).
@@ -440,7 +440,7 @@ If any date is not set then it is assumed to extend to infinity.
 E.g. if `validFrom` date is not set the user is considered active from the beginning of the universe to the moment specified by the `validTo` date.
 
 The validity is overridden by the administrative status.
-Therefore if administrative status is set to any non-empty value then the validity dates are not considered at all.
+Therefore, if administrative status is set to any non-empty value then the validity dates are not considered at all.
 
 Activation is also influenced by _object lifecycle_.
 Object lifecycle specifies phases of object’s life, such as `draft`, `proposed`, `active` and `deprecated`.
@@ -457,8 +457,8 @@ This is just a rough overview of the lifecycle functionality that only scratches
 We will deal with object lifecycle details later in this book.
 
 Activation is quite a complex matter that is spread out in several dimensions.
-Therefor it may not be entirely obvious which objects are active and which are not.
-Therefore midPoint provides an operational property `effectiveStatus` which shows the computed "effective state" of the object.
+Therefore it may not be entirely obvious which objects are active and which are not.
+For that reason midPoint provides an operational property `effectiveStatus` which shows the computed "effective state" of the object.
 Simply speaking it is a read-only property that tells whether the user should be considered active or inactive.
 The effective status is the result of combining several activation settings (administrative status, validity dates, etc.).
 
@@ -520,7 +520,7 @@ Log-in to the account is temporarily disabled.
 Please note that even if user of account are in the `normal` (unlocked) state they still be disabled by administrative status or validity which will make them efficiently inactive.
 
 There is also an informational property `lockoutExpirationTimestamp` that provides information about the expiration of the lock.
-However not all resources may be able to provide such information.
+However, not all resources may be able to provide such information.
 
 There are several _operational properties_ in the activation data structure that provide operational data about user activation:
 
@@ -719,12 +719,12 @@ Schema is the law.
 MidPoint schema is quite rich.
 Many of the properties that are frequently used in IDM deployments are already part of midPoint schema.
 But reality has always a way to bring unexpected things.
-Therefore midPoint deployments won’t get far if midPoint schema cannot be extended.
+Therefore, midPoint deployments won’t get far if midPoint schema cannot be extended.
 
 Vast majority of midPoint schema is available at _compile-time_.
 This means that such schema is used during compilation (build) of midPoint.
 That "static" part of schema is somehow hardcoded into midPoint itself and it would very difficult to change.
-Therefore we have developed an mechanism to extend the schema at _deployment-time_.
+Therefore we have developed a mechanism to extend the schema at _deployment-time_.
 Small parts of the XSD definition can be provided when midPoint is deployed.
 MidPoint will read those definitions when it starts up.
 The static part of the schema is extended with those definitions.
@@ -738,7 +738,7 @@ Even `employeeNumber` came very handy.
 But now they need to customize midPoint schema to better suit their very specific needs.
 The company management decided that the people look really cool in fancy hats.
 Therefore they will provide a hat for every employee.
-Therefore the IDM needs to track hat size for all users.
+Which means that the IDM system needs to track hat size for all users.
 Hat size is not used in the IDM deployments very often, therefore it is not a part of standard midPoint schema.
 But fortunately, it is easy to extend the schema.
 
@@ -810,7 +810,7 @@ However, this may be a problem in case that several schema extensions are combin
 Such combinations are possible in midPoint.
 MidPoint will simply parse all the XSD files in the schema directory and apply all of them as extensions.
 The namespace is used to differentiate between them.
-Therefore if there is an expectations that several schema extensions will be used in the same deployment then the use of namespaces in object extension is more than recommended.
+Therefore, if there is an expectations that several schema extensions will be used in the same deployment then the use of namespaces in object extension is more than recommended.
 
 TIP: Why is there an `extension` container?
 Why are not the properties simply mixed among other static properties?
@@ -938,12 +938,12 @@ Firstly, normalization is used to provide reliable uniqueness mechanism.
 Usually we do not want a user with username `semancik` and another user with username `Semancik` or even `Semančík`.
 This may lead to confusion.
 As midPoint has uniqueness constraints on both the `orig` and `norm` parts of the name then such situation is completely avoided.
-All those usernames have the same normalized form, therefor the uniqueness constraint on `norm` part of the name will prohibit the use of all those forms at the same time.
+All those usernames have the same normalized form, therefore the uniqueness constraint on `norm` part of the name will prohibit the use of all those forms at the same time.
 
 Secondly, normalization is simple and elegant way how to conveniently search for objects.
 When PolyStrings are searched, the value from the query is normalized.
 Then the norm part of the PolyString is searched.
-Therefore whether the query contains `semancik`, `Semancik` or `semančík`, it will always find the user entry above.
+Therefore, whether the query contains `semancik`, `Semancik` or `semančík`, it will always find the user entry above.
 
 Default normalization algorithm in midPoint should be a good fit for most environments.
 But there are always deployments that are different.
@@ -1067,11 +1067,11 @@ You will have to learn those schema concepts eventually to get the best of midPo
 So far we have presented midPoint schema as a simple set of data types.
 There is `UserType` for users, `RoleType` for roles and so on.
 However, all the midPoint objects have something in common.
-For example all of them have object identifier (OID), name, description and so on.
+For example, all of them have object identifier (OID), name, description and so on.
 We could simply copy definitions of those properties to all the data types.
 But that is not the best way how to do data modeling.
 The proper way is to create a type hierarchy.
-Therefore there is an `ObjectType` data type that specifies all the items that all the object types share.
+Therefore, there is an `ObjectType` data type that specifies all the items that all the object types share.
 However, midPoint schema is substantial and one common ancestor won’t be enough.
 MidPoint type hierarchy was evolving during midPoint development and now it forms quite a rich structure.
 
@@ -1096,7 +1096,7 @@ This basically means objects that have projections. But focal objects also have 
 |`UserType`
 |User object represents a physical user of the system.
 Properties of User object typically describe the user as a physical person.
-Therefore the user object defines handful of properties that are commonly used to describe users in the IDM solutions (employees, customers, partners, etc.)
+Therefore, the user object defines handful of properties that are commonly used to describe users in the IDM solutions (employees, customers, partners, etc.)
 
 |`AbstractRoleType`
 |Abstract data type that contains the "essence" of a role.
@@ -1187,7 +1187,7 @@ The output data are referred to by report output objects.
 
 |`ReportOutputType`
 |Object that refers to specific output of the report.
-It also contains metada, e.g. when the report was created, what defintion was used, etc.
+It also contains metadata, e.g. when the report was created, what definition was used, etc.
 
 |`SequenceType`
 |Definition of a sequence object that produces unique values.
@@ -1221,7 +1221,7 @@ The Node objects are the way how the nodes in cluster know about each other.
 
 Type hierarchy is a principle that is used in many software systems.
 This principle will be quite obvious to all software developers, but it may need some time to get used to for other engineers.
-However the basic idea is quite simple. E.g.
+However, the basic idea is quite simple. E.g.
 `AbstractRoleType` has all the items that are needed for an object to behave like a role.
 `RoleType`, `OrgType`, `ServiceType` and `ArchetypeType` are subtypes of `AbstractRoleType`.
 Therefore `RoleType`, `OrgType`, `ServiceType` and `ArchetypeType` can all behave like a role.
@@ -1239,8 +1239,8 @@ As you will see later, this makes midPoint both elegant and powerful.
 
 == Item Path
 
-MidPoint configuration often need to reference a particular item in a particular object.
-For example mapping sources and target are references to properties and containers.
+MidPoint configuration often needs to reference a particular item in a particular object.
+For example, mapping sources and target are references to properties and containers.
 However, midPoint data structures can be quite complex.
 For example, password is stored in property value that is located in container password which is in container `credentials` defined in `UserType` data type.
 It may be difficult to find a way in this little maze.
@@ -1279,7 +1279,7 @@ Assignment is one of those multi-valued container.
 User can have many assignments.
 If we want to disable one particular assignment, how do we do it?
 If we would use the path above then it is not clear which assignment should be disabled.
-Therefore in case of multi-valued containers the path is extended with a container identifier in square brackets:
+Therefore, in case of multi-valued containers the path is extended with a container identifier in square brackets:
 
 [source]
 assignment[123]/activation/administrativeStatus
@@ -1293,7 +1293,7 @@ You might wonder why there is an identifier for `assignment` but there is no ide
 Both are containers, aren’t they?
 However, the clever reader already knows the answer.
 `assignment` is a multi-valued container.
-Therefore identifier is needed to pinpoint a specific value of that container.
+Therefore, identifier is needed to pinpoint a specific value of that container.
 But `activation` is a single-valued container.
 There is no danger of ambiguity.
 Therefore the identifier is not needed in this case.
@@ -1303,7 +1303,7 @@ But sometimes we have a lot of objects and other data structures to choose from.
 For example a mapping can have several sources.
 And then there are expression variables.
 Therefore using simple paths would be ambiguous.
-Therefore the path can start with an optional variable identifier:
+In such case the path can start with an optional variable identifier:
 
 [source]
 $focus/activation/administrativeStatus

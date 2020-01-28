@@ -24,10 +24,10 @@ There is no other income.
 MidPoint development can only go as fast as the money allow.
 The same principle applies to midPoint documentation and this book.
 It will grow proportionally to the Evolveum income.
-Therefore if you liked this book please consider supporting us.
+Therefore, if you liked this book please consider supporting us.
 Both money and your time are more than appreciated.
 
-We hope that you have enjoyed reading this book at least as much as we have enjoyed writing it – and as we have enjoyed creating midPoint in the first place.
+We hope that you enjoyed reading this book at least as much as we enjoyed writing it – and as we enjoy creating midPoint in the first place.
 MidPoint is quite a unique software project and it would not be possible without you.
 The whole Evolveum team would like to thank all past, present and future midPoint supporters for making this exciting project a reality.
 Together we have created interesting and useful software product.

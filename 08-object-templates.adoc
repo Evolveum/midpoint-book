@@ -6,14 +6,14 @@ include::chapter-include.adoc[]
 [quote, Theodore von Kármán]
 Scientists study the world as it is; engineers create the world that has never been.
 
-Identity management systems are often seen as an integration engines that move data from one system to another system.
+Identity management systems are often seen as integration engines that move data from one system to another system.
 This is indeed a very important part of the identity management functionality.
-But the things that the identity management systems does _internally_ are crucial to all identity management deployments – especially those that deal with identity governance and compliance.
+But the things identity management systems do _internally_ are crucial to all identity management deployments - especially those that deal with identity governance and compliance.
 
 MidPoint does quite a lot of things that may not be entirely obvious on the outside.
 There are rules to apply, processes to drive, policies to enforce and so on.
 Those things are gaining utter importance at that strange boundary where identity management becomes identity governance.
-There are complex and very powerful mechanisms that allow midPoint to implement identity governance.
+There are complex and very powerful mechanisms allowing midPoint to implement identity governance.
 But more on that later.
 We need to start with simple things.
 And the simplest of those internal mechanisms is the functionality of _object template_.
@@ -23,19 +23,19 @@ And the simplest of those internal mechanisms is the functionality of _object te
 Data that come to midPoint are seldom complete and clean.
 Quite the contrary.
 The data that come from the "feeds" are often incomplete, they are not very precise and sometimes several sources may not even agree on a value for a particular data item.
-Inbound mappings can be used to sort out some of those problems.
-But inbound mappings are designed to work in isolation.
+Inbound mappings can be used to sort out some of these problems.
+However, inbound mappings are designed to work in isolation.
 They work only for one particular resource.
 But it is often needed to gather data from several resources and then look at all of them at once.
-As inbound mappings cannot do that as they are tied to a particular resource.
-However, inbound mappings can be used to gather all the relevant data in the user object.
+Inbound mappings cannot do that as they are tied to a particular resource.
+However, they can be used to gather all the relevant data in the user object.
 And then we can use some kind of a mechanism to have a look at user object when those data are gathered together.
 That is what object templates do.
 
 Simply speaking, _object template_ is a set of mappings that is applied to a particular midPoint object.
-For example user template is applied to all user objects.
+For example, user template is applied to all user objects.
 The mappings in the object template can produce new values for the object.
-For example, a very typical use of object template is computation of user’s full name:
+For instance, a very typical use of object template is computation of user’s full name:
 
 [source,xml]
 ----
@@ -66,13 +66,14 @@ For example, a very typical use of object template is computation of user’s fu
 The mapping above will compute the value of user’s `fullName` property from `givenName` and `familyName` by using a simple Groovy expression.
 It is a weak mapping, therefore it will compute the full name only in case that it is not present already.
 
-Object template can be used to do variety of things to all kind of midPoint objects.
+Object template can be used to do variety of things to all kinds of midPoint objects.
 This chapter will cover the most important functionality of object templates.
 
 Importing an object template definition into midPoint will not do much.
-The template will not be used just by being imported.There can be several object templates for different types of objects, archetypes and even organizations.
+The template will not be used just by being imported.
+There can be several object templates for different types of objects, archetypes and even organizations.
 MidPoint will not know how to use the template.
-Therefore the use of the template needs to be specified in a configuration.
+Therefore, the use of the template needs to be specified in a configuration.
 The simplest and most common way to use an object template is to configure its use in the system configuration.
 
 [source,xml]
@@ -93,16 +94,16 @@ Therefore this template will be applied to all midPoint users.
 User template is applied every time an object is changed or explicitly recomputed (e.g. on reconciliation).
 User template is applied after all the inbound mappings are processed.
 Inbound mappings often copy important data to the focal objects (e.g. user objects).
-Therefore the template can work on a data that are summarized from all the resources.
+Therefore, the template can work on a data that are summarized from all the resources.
 
 == Item Definitions In Object Template
 
 We have already seen how object template can be used to apply mappings on particular items of midPoint objects.
-But object template can also to other tricks.
+But object template can also do other tricks.
 We will have a look at some of them here.
 
 The processing of an object template is almost always focused on particular items of an object.
-Therefore almost all of the object template functionality is located in item element that references a particular item by its path:
+Therefore, almost all of the object template functionality is located in item element that references a particular item by its path:
 
 [source,xml]
 ----
@@ -163,13 +164,13 @@ This means that mappings react to changes.
 The same principle applies to mapping conditions.
 They are also relativistic.
 Therefore the mapping reacts to changes in the condition state.
-When user’s head grows and the hat size changes to a value over 60 then the mapping will add the warning.
-When the user’s head shrinks then the warning disappears.
+When user’s head grows and the hat size changes to a value over 60, then the mapping will add the warning.
+When the user’s head shrinks, then the warning disappears.
 
-It may look that this mechanism is too complicated if you look at single-valued properties only.
+It may look that this mechanism is too complicated, if you look at single-valued properties only.
 But it all starts to make sense in case of multi-value items.
 Such as the assignments.
-But more on that in a next section.
+But more on that in the next section.
 
 While mappings are the things that object template does almost all the time, the template can also do other interesting things.
 First of all, object template can tweak the schema.
@@ -202,13 +203,13 @@ The `item` specification can be used to modify the way how midPoint applies the 
 
 The "additional name" is a nice and generic term that can fit many cultural environment.
 But it is not very usual or intuitive in cultures that are not used to it (which means all the cultures).
-Therefore almost all midPoint deployments that chose to use this property would like to rename it to something that feels more natural.
+Therefore, almost all midPoint deployments that chose to use this property would like to rename it to something that feels more natural.
 Similarly for "given name" and "family name".
 We have expected that and object template can be used to modify some aspects of built-in schema.
 
 Object template can also be used to override object multiplicity, especially to change mandatory item into optional.
-MidPoint insists to have name set for all the users.
-But we may be able to compute a name from other properties, such as other user names, employee number or other identifiers. not want to present name item as mandatory in the user interface.
+MidPoint insists on having name set for all the users.
+But we may be able to compute a name from other properties, such as other user names, employee number or other identifiers, if we don't want to present name item as mandatory in the user interface.
 We can compute the value of user’s full name from given name and family name.
 Therefore user may leave full name blank in the user interface.
 But user interface is driven by the schema.
@@ -234,12 +235,12 @@ But this can be changed in the object template:
 ----
 
 This configuration will make the name optional for the _presentation_ purposes.
-This means that the user interface will treat name as optional.
-But core midPoint engine will still require a name to have a value.
-This given object template a chance to generate the value for name.
-However, this means that name will still be present as read-write item in the user interface.
-We do not want that if name is supposed to be immutable identifier.
-We want to present name as read-only item.
+This means that the user interface will treat `name` as optional.
+But core midPoint engine will still require the `name` to have a value.
+This gives object template a chance to generate the value for `name`.
+However, this means that `name` will still be present as read-write item in the user interface.
+We do not want that as `name` is supposed to be immutable identifier.
+We want to present `name` as read-only item.
 This can also be achieved by object template by using access configuration:
 
 [source,xml]
@@ -268,18 +269,18 @@ This can also be achieved by object template by using access configuration:
 NOTE: Even immutable identifiers may need to change occasionally.
 There may be a bug in the identifier generator.
 Or some identifier has to change manually to adjust to the reality.
-Theoretically every piece of the solution should play by the rules.
+Theoretically, every piece of the solution should play by the rules.
 But we know that rules have exceptions in the practice.
-Therefore privileges users such as system administrator should be able to change the identifiers if really needed.
-Therefore the proper way how to do this would be to use authorizations and not object template.
+Therefore, privileged users such as system administrator should be able to change the identifiers if really needed.
+The proper way how to do this would be to use authorizations and not object template.
 But we do not know how to use authorizations yet.
-Therefore this will have to do for now.
+Therefore this solution will have to do for now.
 
 Object template can be used to adjust how midPoint user interface interprets the schema.
 But perhaps the most extreme measure is to eliminate certain item entirely.
 In fact, this happens quite often.
 MidPoint schema is rich and many deployments do not use all the items in midPoint schema.
-It makes little sense to present the items that are not used, therefore there is way to tell midPoint that we want to completely ignore an item:
+It makes little sense to present the items that are not used, therefore there is a way to tell midPoint that we want to completely ignore an item:
 
 [source,xml]
 ----
@@ -548,7 +549,7 @@ First of all there is a `targetType` clause, which tells the expression to look 
 And then there is a search filter.
 We have already seen midPoint search filters a couple of times, for example in a form of correlation expression.
 This is yet another use for search filters.
-In this case the filter is used to look up appropriate role in midPoint repository.
+In this case, the filter is used to look up appropriate role in midPoint repository.
 The filter looks up the roles by the `autoassignJobCode` value.
 But what value do we require here?
 Static value such as `S007` will not really help as that means that we will need one mapping for each role.
@@ -1439,7 +1440,7 @@ If the iterative approach cannot find a match in several steps then perhaps iter
 Therefore the limit is usually not a problem.
 But having a limit makes a huge difference for troubleshooting.
 Most infinite iteration loops are caused by configuration errors.
-And it is much better to get an error after a couple a seconds than to wait forever.
+And it is much better to get an error after a couple of seconds than to wait forever.
 
 The second part of the iteration configuration is also quite clear for people that read this chapter carefully.
 The default iteration token sequence is `""`, `"1"`, `"2"`, `"3"` and so on.
@@ -1450,11 +1451,11 @@ The custom iteration token expression does just that.
 
 As soon as we have the mapping for name in place we can start testing the configuration.
 Therefore go ahead and import the HR resource, import object template, set the object template in the configuration and do not forget to replace the HR CSV file.
-If you did experiments with previous configuration it can be helpful to clean up midPoint by using the “delete all identities” process.
-When everything is set up then you can try to manually import a single account from the HR resource by using the “import” button on the page where you can list resource accounts.
+If you did experiments with previous configuration, it can be helpful to clean up midPoint by using the “delete all identities” process.
+When everything is set up, you can try to manually import a single account from the HR resource by using the “import” button on the page where you can list resource accounts.
 Once the basic configuration works, you can test iterations by adding Arnold Anderson to the HR CSV file and importing the account.
 Do not forget to switch from repository to resource view by clicking on the _Resource_ button on the top-left side of the page.
-There is no synchronization task running therefore MidPoint haven’t see Arnold’s account yet.
+There is no synchronization task running, therefore MidPoint haven’t see Arnold’s account yet.
 You have to instruct midPoint to explicitly look at the resource.
 Once Arnold’s account is imported a non-conflicting username should be selected for him:
 
@@ -1507,7 +1508,7 @@ There are the same checks for special cases.
 Then the main expression at the end combines given name and family name in a slightly different way to get an e-mail address.
 This is just a simple example for e-mail address that is a good fit for a book.
 However, dealing with e-mail address is a bit more difficult in practice.
-A clever reader can surely discover a could of obvious issues.
+A clever reader can surely discover a couple of obvious issues.
 Firstly, the expression is using the same iteration token than the username mapping is using.
 Therefore the e-mail address for Arnold Anderson will be `arnold.anderson2@example.com`.
 
@@ -1517,7 +1518,7 @@ This is not exactly what we want.
 Ideally, we would like to use much simpler versions `arnold.anderson@example.com`.
 In this case there is no conflict with `alice.anderson@example.com`.
 But midPoint does not consider e-mail address to be an identifier, therefore it does not check for its uniqueness.
-Also, there is only one iteration token that is reused for all the expression in all object template mappings.
+Also, there is only one iteration token that is reused for all the expressions in all object template mappings.
 There are also primary e-mail accounts and account aliases, dealing with account renames and temporary assignment of e-mail aliases and so on.
 Overall, dealing with e-mail addresses is far from easy.
 Some of those issues can be solved with pre-iteration or post-iteration conditions.
@@ -1645,7 +1646,7 @@ We can easily use the job code in object template mapping now:
 This is the same principle as we have used earlier in this chapter.
 The mapping is using `assignmentTargetSearch` expression to look for roles where user’s `jobCode` and role’s `autoassignJobCode` match.
 This mapping is strong as we want to recompute the mapping and set the value all the times.
-If the mapping would be normal-strength then the values are recomputed only when `jobCode` changes.
+If the mapping would be normal-strength, then the values are recomputed only when `jobCode` changes.
 Which actually might be enough during normal operation of the system.
 But making this mapping strong makes things much easier during testing.
 That is all for the mapping.
@@ -1756,7 +1757,7 @@ LDAP accounts will be created.
 
 But we want something that is a bit more fancy.
 Salespeople are a bit sensitive when it comes to their professional image.
-Therefore they insist to have proper titles set up in company directory.
+Therefore, they insist on having proper titles set up in company directory.
 Not a problem.
 We can do that easily in their "job" roles.
 This is how it looks like for a sales manager:
@@ -1791,7 +1792,7 @@ But that is still not enough.
 We need to provide access to CRM system for the salespeople.
 Should we create a new role for that?
 Absolutely not.
-We do not want to have too many roles as every roles is a maintenance burden.
+We do not want to have too many roles as every role is a maintenance burden.
 Let’s just add new construction to an existing job role:
 
 .role-sales-manager.xml
@@ -1823,17 +1824,17 @@ Let’s just add new construction to an existing job role:
 </role>
 ----
 
-This is the only roles that gives access to the CRM system for a sales manager.
+This is the only role that gives access to the CRM system for a sales manager.
 MidPoint knows that and it automatically creates a new CRM account when the role is assigned.
 Outbound mappings from the CRM resource definition are used to set basic properties of CRM account, such as account identifiers and password.
-In addition to that the Sales Manager role sets appropriate access level to the CRM system.
+In addition to that, the Sales Manager role sets appropriate access level to the CRM system.
 
 Our setup is almost complete now.
 We have inbound synchronization, object template, roles and outbound mappings.
 This is the right time to test everything.
 Select few representative HR accounts and try to import them.
 Check that everything is provisioned correctly.
-If it works then it is the time for roll-out.
+If it works, then it is the time for roll-out.
 Set up a synchronization task for the HR resource and we are done.
 We have running system:
 
@@ -1855,11 +1856,11 @@ We have covered all the basic mechanisms: resources, mappings, roles, schema and
 This is a good time to stop reading and get your hands dirty.
 Take the examples from this book and play a bit with them.
 Explore the examples that come with midPoint distribution.
-Now it is the time for experiments.
+Now it is time for experiments.
 You will surely do a lot of things that are suboptimal or even outright wrong.
 But never mind.
 This is part of the learning process.
-If you get to the dead end just scrap everything and start over.
+If you get to dead end, just scrap everything and start over.
 Or maybe rework everything from the ground up.
 MidPoint is designed for this.
 Evolutionary approach is deeply embedded in midPoint philosophy and design.
