@@ -70,9 +70,9 @@ And as far as we have something to say about it midPoint will remain open source
 
 MidPoint has stable development cycle.
 There are two _feature releases_ every year.
-As the name suggest those releases are bringing new features and major improvements.
+As the name suggests, those releases are bringing new features and major improvements.
 
-In addition to that there are several _maintenance releases_.
+In addition to that, there are several _maintenance releases_.
 Those releases bring bugfixes and minor improvements.
 Maintenance releases are published as needed, there is no strict schedule.
 Timing of maintenance releases is influenced by midPoint subscribers.
@@ -85,7 +85,7 @@ This release is ideal for people that prefer stability over new features.
 
 MidPoint support and subscription is a service provided by Evolveum.
 There are several service offerings with different scope and service level.
-But generally speaking the most common service is 3^rd^-line support.
+But generally speaking, the most common service is 3^rd^-line support.
 Which basically means that we will fix midPoint bugs.
 Obviously this includes assistance with diagnostics of difficult issues where it is not entirely clear whether it is a bug or configuration issue.
 Simply speaking, midPoint support service is a way how to make sure that your midPoint deployment will run without any problems.

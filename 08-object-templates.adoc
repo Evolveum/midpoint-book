@@ -311,7 +311,7 @@ It is an ability to automatically assign roles.
 
 The basic idea is quite simple.
 An assignment is just an ordinary item.
-If we use object template mapping to populate that item with appropriate value we will get automatic assignment of roles.
+If we use object template mapping to populate that item with appropriate value, we will get automatic assignment of roles.
 Like this:
 
 [source,xml]
@@ -330,7 +330,7 @@ Like this:
 
 The trick here is to set up the mapping correctly.
 The simplest case is an conditional assignment of a role.
-Let’s supposed that we want to assign a Hatter role to everybody that has provided a hat size in user profile.
+Let’s suppose that we want to assign a Hatter role to everybody that has provided a hat size in user profile.
 We already know what to do, don’t we?
 Let’s use mapping condition:
 
@@ -375,8 +375,8 @@ The real trick here is the relativity of mapping conditions.
 Assignments are multi-valued.
 Therefore it is important to know when to add a value and when to remove one.
 MidPoint evaluates the condition twice.
-Once is the condition evaluated for an object before a change is applied (old object).
-The the condition is evaluated for an object after the change is applied (new object).
+The condition is evaluated for an object before a change is applied (old object) first.
+The the condition is evaluated for an object after the change is applied (new object) once again.
 When the condition changes from `false` to `true`, `Hatter` role is assigned.
 When the condition changes from `true` to `false`, `Hatter` role is unassigned.
 Other assignments values are not changed by this mapping.
@@ -489,12 +489,12 @@ And then we set up the roles:
 ----
 
 We are almost there.
-The final part of this puzzle is an object template mapping that automatically assign the roles according to job code.
+The final part of this puzzle is an object template mapping that automatically assigns the roles according to job code.
 Naive solution would be to create one mapping for each job code.
 But we do not want that.
 We want something smarter.
-We want a single mapping that can work for all those roles.
-Such a mapping needs to dynamically look up the role when it is evaluated.
+We want a single mapping that can work for all these roles.
+Such mapping needs to dynamically look up the role when it is evaluated.
 It is certainly possible to create such mapping in Groovy script.
 But that is not entirely straightforward.
 And in fact, this use case is a very common one.
@@ -545,7 +545,7 @@ It is not the usual `script`, `path` or `value`.
 The expression evaluator is `assignmentTargetSearch`.
 This is a special evaluator that looks for assignment target, creates a complete assignment from that target and provides that assignment as an output.
 The interesting part here is the way how `assignmentTargetSearch` looks for assignment target.
-First of all there is a `targetType` clause, which tells the expression to look for roles as assignment target.
+First of all, there is a `targetType` clause, which tells the expression to look for roles as assignment target.
 And then there is a search filter.
 We have already seen midPoint search filters a couple of times, for example in a form of correlation expression.
 This is yet another use for search filters.
@@ -556,9 +556,9 @@ Static value such as `S007` will not really help as that means that we will need
 We need to make this query dynamic and smarter.
 You probably know the answer already as the same approach was used in correlation expressions.
 We simply use an expression instead of static value.
-In this case we use path expression that point to `jobCode` variable.
+In this case, we use path expression that point to `jobCode` variable.
 Job code is a source for this mapping, therefore it will be present as a variable in all the expressions of the mapping.
-Therefore when the expression is processed for Bob then the final filter looks like this:
+So when the expression is processed for Bob then the final filter looks like this:
 
 [source,xml]
 ----
@@ -608,19 +608,19 @@ As you can see, we have put an expression into an expression, so now midPoint ca
 There is an `assignmentTargetSearch` expression, inside that is a search filter and inside the search filter there is a path expression.
 This is one of the basic tenets of midPoint philosophy: we reuse and combine the mechanisms that we already have.
 The second expression could be any midPoint expression that makes sense here, e.g. it could be a script.
-The filter can bu much more complex and it can have several expressions.
+The filter can be much more complex and it can have several expressions.
 Full power of midPoint is at your disposal here.
 
 Of course, this could all have been done with one smart groovy script instead of `assignmentTargetSearch` expression.
-And if you prefer it that way you are free to do it.
+And if you prefer it that way, you are free to do it.
 It will work.
 But assignment is a complex data structure and `assignmentTargetSearch` makes work with that structure easier.
 It can set up validity constraints, relation and other assignment details.
-It can also create the target on demand in case that the target is not found.
+It can also create the target on demand in case the target is not found.
 It is quite powerful.
-But what is perhaps most important is that `assignmentTargetSearch` expression implements the use cases that are common in almost every IDM deployment.
+But perhaps the most important detail is that `assignmentTargetSearch` expression implements the use cases that are common in almost every IDM deployment.
 And that functionality is maintained and tested as a native part of midPoint.
-Therefore you can simply reuse it in every midPoint deployment instead of copying, adapting, testing and bugfixing one big groovy script over and over again.
+Therefore, you can simply reuse it in every midPoint deployment instead of copying, adapting, testing and bugfixing one big groovy script over and over again.
 
 == Autoassignment in Roles
 
@@ -628,8 +628,8 @@ Automatic assignment of roles in the object template is not the only option.
 This is midPoint, therefore there are usually several ways to do the same thing.
 For example, a mapping similar to that `assignmentTargetSearch` mapping used above can be used as an inbound mapping.
 And there is yet another way.
-Strictly speaking this method has almost nothing to do with object template.
-But as we are talking about role autoassignment this is a good opportunity to cover all the options here.
+Strictly speaking, this method has almost nothing to do with object template.
+But as we are talking about role autoassignment, this is a good opportunity to cover all the options here.
 
 The statements that control automatic assignment of roles can be placed in the roles themselves:
 
@@ -666,7 +666,7 @@ The mapping just has to decide when to apply that assignment to the user and whe
 That is what the condition is for.
 The expression in this mapping is optional.
 If an expression is specified, then such expression can be used to further set up the assignment.
-For example it can set assignment activation, relation, parameters and so on.
+For example, it can set assignment activation, relation, parameters and so on.
 
 But wait, why is there this strange `norm` thing in the condition?
 Remember about Polystrings?
@@ -711,17 +711,17 @@ It is there, right in front of administrator’s eyes.
 It may also be a benefit if delegated administration is used. E.g. a role owner may manage role definition and the autoassignment condition in the same object.
 However, in that case beware of the expressions.
 MidPoint expressions are very powerful.
-In fact they are way too powerful for secure delegated administration.
+In fact, they are way too powerful for secure delegated administration.
 Unconstrained midPoint expression can do pretty much anything.
 It can bring down the system, read memory, modify data, it can do whatever it likes to do.
 There are some safeguards that prohibit against accidental abuse, but a malevolent expression can easily circumvent them.
-If you allow a user to specify an expression you are pretty much giving away keys to the kingdom.
+If you allow a user to specify an expression, you are pretty much giving away keys to the kingdom.
 Therefore do not do it.
 At least not now.
 There is a code in midPoint that implements expression profiles.
 The goal of the profiles is to constraint expression to only allow safe operations.
-However, that functionality is not finished.
-If you are interested in this functionality then midPoint platform subscription is a way to get it fully implemented.
+However, that functionality is not finished yet.
+If you are interested in this functionality, then midPoint platform subscription is the way to get it fully implemented.
 
 Role autoassignment has another drawback and that is performance.
 All the autoassignment mappings need to be evaluated every time that user is recomputed.
@@ -745,28 +745,29 @@ It has to be explicitly enabled in system configuration:
 But perhaps the most significant drawback of role autoassingment is that the mapping needs to be in every role.
 There is no way how to use this mechanism to handle autoassignment of many roles with just one mapping.
 But object template mappings can do that easily.
-Therefore many deployments chose to implement automatic assignment of roles by the means of object template or inbound mappings.
+Therefore, many deployments chose to implement automatic assignment of roles by the means of object template or inbound mappings.
 
 == Iteration
 
 There are some use cases that pop out in IDM solutions all the time.
-One such case is a problem of finding a unique identifier.
+One such case is the problem of finding a unique identifier.
 This is a concern for almost any identifier, but it is particularly painful when it comes to usernames.
 In midPoint world this means finding a value for name property.
 This property much be unique for almost all the data types that midPoint supports.
 
 The rational way would be to base usernames on something that is already unique and immutable such as employee numbers or student identifiers.
 But those tend to be long numbers and people often hate them.
-Therefore many deployments chose to base usernames on real names of the user.
+Therefore, many deployments chose to base usernames on real names of the user.
 We can easily generate username for Alice Anderson.
-Maybe `aanderson` would a good fit?
+Maybe `aanderson` would be a good fit?
 And this can indeed work quite well.
 Until Albert Anderson is hired.
-Then the we need to get creative.
+Then we need to get creative.
 Obviously, `alanderson` will not work here.
 What about `alianderson` and `albanderson`?
-Oh no, we have this ancient system that allows only ten characters in the username and those are too long.
-And we would need to change Alice’s username.
+Oh no, we have this ancient system that allows only ten characters in the username.
+And `alianderson` is too long.
+What is even worse is that we would need to change Alice’s username.
 She will get really mad about it.
 Not to mention changing usernames for pretty much everybody.
 That won’t do.
@@ -786,7 +787,7 @@ In this case the username is not unique as it is already taken by Alice.
 That is the point when midPoint starts iterating.
 MidPoint creates _iteration token_.
 Iteration token is a short string that changes in every iteration.
-In our case the iteration token will be set to `1`.
+In our case, the iteration token will be set to `1`.
 Then midPoint re-evaluates all the object template mappings.
 Mappings that are supposed to create a unique values need to use that token.
 They should look like this:
@@ -817,12 +818,15 @@ They should look like this:
 </objectTemplate>
 ----
 
-When this mapping is evaluated for the first time the iteration token is empty.
+When this mapping is evaluated for the first time, the iteration token is empty.
 Therefore it will make no difference for the normal processing.
 But when the mappings are re-iterated, the token is set to `1`.
-Result of this mapping will be `aanderson1`. Which is an unique username.
+Result of this mapping will be `aanderson1`.
+Which is unique username.
 Therefore iteration stops there and normal processing continues.
-In case that even `aanderson1` is not unique, the iteration continues and `aanderson2`, `aanderson3` and other variants are tried until a unique username is found or until iteration limit is reached.
+In case that even `aanderson1` is not unique, the iteration continues.
+Usernames `aanderson2`, `aanderson3` and other variants are tried.
+The iteration continues until a unique username is found or until iteration limit is reached.
 
 Iteration functionality is disabled by default.
 Therefore any conflict in username will result in hard error.
@@ -841,11 +845,11 @@ The iteration functionality can be enabled by specifying `iterationSpecification
 </objectTemplate>
 ----
 
-Iteration tokes are strings that are created from iteration number.
+Iteration tokens are strings that are created from iteration number.
 It is the iteration number that really matters for midPoint.
 Iteration token can take variety of forms, it can be numeric, it may be alphanumeric, fixed length, variable length or anything else.
 Some mappings will not use the token at all. E.g. mappings that subsequently add letters from given name to the username.
-Therefore both iteration number and iteration token are exposed to the mappings.
+Therefore, both iteration number and iteration token are exposed to the mappings.
 There are two variables:
 
 * `iteration` variable contains iteration number.
@@ -877,10 +881,10 @@ The algorithm is illustrated in following table.
 The algorithm is designed to put empty value in the `iterationToken` during normal processing.
 The idea is that `iterationToken` variable can be safely used for both the normal processing and the iterations.
 This is just a default algorithm and it will not fit all the deployments.
-Therefore a custom mechanism to derive iteration token can be specified.
+Therefore, a custom mechanism to derive iteration token can be specified.
 For example, we may not like to have `aanderson` and `aanderson1`.
-Which one of those is number one and which is number two anyway?
-Let’s skip `aanderson1` altogether and let’s use `aanderson2` for the first iteration.
+Which one of these is number one and which is number two anyway?
+Let’s skip `aanderson1` and let’s use `aanderson2` for the first iteration.
 The iteration number cannot be changed as the iteration sequence is fixed.
 But there is no problem for iteration 1 to produce iteration token `"2"`.
 This can be achieved by specifying a custom algorithm for the token:
@@ -912,7 +916,7 @@ This algorithm will produce sequence of `aanderson`, `aanderson2`, `aanderson3` 
 Iteration number and iteration token is the same for the entire object template.
 All the mappings will see the same value and all the mappings are recomputed when there is a need to re-iterate.
 This means that iteration token can be used in other mappings.
-For example use of the token in e-mail address is a very common case:
+For example, use of the token in e-mail address is a very common case:
 
 [source,xml]
 ----
@@ -948,8 +952,8 @@ The same iteration token is used.
 
 However, it all becomes interesting when it comes to e-mail addresses and other identifiers that are publicly exposed.
 It is one thing to have username `aanderson2`. That username is used to log into the system.
-But otherwise is it not very visible.
-But an e-mail address is visible.
+But otherwise is it not very visible outside of the system.
+However, an e-mail address is exposed to a lot of people.
 It may be strange to have e-mail address of `albert.anderson2@example.com` while there is no `albert.anderson@example.com` in the company.
 This can be solved by making the mapping for e-mail address smarter.
 It can ignore the iteration token and try to create an e-mail address without the token.
@@ -996,17 +1000,17 @@ The problem with this approach is that there may be corner cases.
 We might need to force another iteration even if the username is unique.
 MidPoint checks only for uniqueness of username by default.
 But is possible that even if `aanderson2` username is available, the `albert.anderson2@example.com` address is already taken.
-This may be an error in the data, administrator’s mistake or it may be a remain of retired Albert Anderson senior that worked in the company years ago but his e-mail address was never deprovisioned.
+This may be an error in the data, administrator’s mistake or it may be a remain of retired Albert Anderson senior that worked in the company years ago, but his e-mail address was never deprovisioned.
 The e-mail address mapping can detect this situation.
 But what it is supposed to do with that.
 It makes no sense to have username `aanderson2` and e-mail address `albert.anderson3@example.com` or `albert.anderson.X@example.com` or anything similar.
 What would make sense is to re-iterate and produce username `aanderson3` and e-mail address `albert.anderson3@example.com`.
 That would be consistent.
 But the mapping cannot do that.
-Therefore there is another iteration expression for this purpose: _post-iteration condition_.
+Therefore, there is another iteration expression for this purpose: _post-iteration condition_.
 It is a condition that will be executed after the iteration is completed.
-If the condition returns true then the iteration will be accepted as valid and the generated values will be used.
-If the condition returns false then midPoint will re-iterate and yet another iteration will be tried.
+If the condition returns `true`, then the iteration will be accepted as valid and the generated values will be used.
+If the condition returns `false`, then midPoint will re-iterate and yet another iteration will be tried.
 
 [source,xml]
 ----
@@ -1027,21 +1031,21 @@ If the condition returns false then midPoint will re-iterate and yet another ite
 </objectTemplate>
 ----
 
-The code above does not do much in case that e-mail address is unique.
+The code above does not do much in case the e-mail address is unique.
 It returns `true`, the iteration is accepted an everything goes as usual.
-But in case that the e-mail address is not unique the code returns `false`.
-In that case midPoint will discard all the results of the iteration, increment iteration counter and re-try the iteration.
+But in case that the e-mail address is not unique, the code returns `false`.
+In that case, midPoint will discard all the results of the iteration, increment iteration counter and re-try the iteration.
 
 There is yet another mechanism that can be used here: _pre-iteration condition_.
 It is a condition that will be executed prior to iteration.
-If it returns true then the iteration will continue.
-If it returns false then midPoint will re-iterate.
+If it returns `true`, then the iteration will continue.
+If it returns `false`, then midPoint will re-iterate.
 The difference here is that this condition will be executed before all the other mappings are evaluated.
-Therefore it may be used to avoid evaluation of expensive mappings just to discard the values that they produce.
+Therefore, it may be used to avoid evaluation of expensive mappings just to discard the values that they produce.
 
-Finding identifier values and checking for uniqueness is a messy stuff.
-And it is not entirely reliable.
-There is some delay between the time when uniqueness is checked and the time that the record is actually written into database.
+Finding identifier values and uniqueness checks are messy stuff.
+And they are not entirely reliable.
+There is a delay between the time when uniqueness is checked and the time when the record is actually written into database.
 Therefore strange things can happen.
 Duplicate identifiers may be generated or attempt to create a user may end up with an error.
 Especially under high loads.
@@ -1052,9 +1056,9 @@ This is currently implemented only for usernames and even for that the implement
 Implementation of strict uniqueness constraints for other properties is possible, but it is no easy endeavor.
 The values need to be normalized, this can influence database schema and so on.
 But it is feasible.
-In case that you are interested midPoint platform subscription is the best approach for you.
+In case you are interested, midPoint platform subscription is the best approach for you.
 
-When it comes to human-friendly identifiers there is yet another trouble.
+When it comes to human-friendly identifiers, there is yet another trouble.
 People tend to change their minds.
 And then they have all kinds of crazy ideas such as the urge to get married.
 The result is that the names of people change.
@@ -1064,13 +1068,13 @@ This is known as the _rename problem_ and you can observe a glimpse of fear in t
 Overall, midPoint handles renames very well.
 Primary identifier of any midPoint object is an OID, not a name.
 And OIDs do not change.
-Therefore as long as midPoint is concerned nothing special happens when user’s name is changed.
+Therefore, as long as midPoint is concerned, nothing special happens when user’s name is changed.
 The change is picked up by mappings, recomputed and stored.
 However, iterations and uniqueness checks may complicate the things here.
 MidPoint remembers the iteration number for all objects that went through an iteration process.
 This is necessary to get the same results from the mappings every time that they are recomputed.
 Otherwise the identifiers may get re-generated on every recompute.
-But there is drawback to this approach.
+But there is a drawback to this approach.
 Let’s suppose that Carol Cooper had username `ccooper2`. She got married and now her name is Carol Cunningham.
 Even though there is no `ccunningham` in the system, her generated user name will be `ccunningham2`. The iteration token is remembered.
 The rename scenarios can be very treacherous.
@@ -1082,15 +1086,15 @@ How many people named John Smith can be in a large user population?
 We can easily get to `jsmith42`.
 This means that the next John Smith will need to go through 42 iterations before the system figures out that the next available username is `jsmith43`.
 And this gets worse with every John Smith added to the system.
-Therefore this iterative approach is not suitable for generating identifiers that are likely to require a lot of iterations.
+Therefore, this iterative approach is not suitable for generating identifiers that are likely to require a lot of iterations.
 Generating UNIX user and group numbers is a good example for identifiers that would surely cause a disaster if an iterative approach is used.
-Fortunately there is another mechanism in midPoint that can support generation of such identifiers: sequences.
+Fortunately, there is another mechanism in midPoint that can support generation of such identifiers: sequences.
 But more on that later.
 
 Overall, the best strategy is to avoid using those generated human-friendly identifiers altogether.
 The best choice would be something that is already unique, immutable and reasonably short.
 Something like employee number, student identifier or partner ID are usually suitable.
-If that is not acceptable then the second best approach is to keep the algorithms simple.
+If that is not acceptable, then the second best approach is to keep the algorithms simple.
 The simpler it is the less likely it is to fail.
 
 == Includes
@@ -1130,7 +1134,7 @@ For that reason there is mechanism to include one object template in another:
 </objectTemplate>
 ----
 
-In this case the special user template includes all the mappings from default user template.
+In this case, the special user template includes all the mappings from default user template.
 Therefore both mapping for `employeeNumber` and mapping for `fullName` will be processed.
 
 == Combining the Ingredients
@@ -1146,7 +1150,7 @@ Synchronization process invoked the connector for the source resource (Resource 
 The connector retrieves the data from the source system.
 Shadow objects are created for all the source accounts as soon as the data set foot in midPoint.
 Correlation expression is evaluated for all new accounts to find their owners.
-Once we have an owner of an account we can execute inbound mappings.
+Once we have owner of the account, we can execute inbound mappings.
 This is the way how account data are reflected to midPoint user object, which is a _focus_ of the computation.
 
 Next couple of steps is all about the _focus_.
@@ -1164,8 +1168,8 @@ Those constructions were collected from the assignments in the previous phase.
 They are combined with outbound mappings specified in resource _schema handling_.
 All of that is mixed together, sorted to resource accounts, all the values are computed.
 This is also the time when attribute-level reconciliation takes place.
-We know what attributes the account should have therefore we can compare that with the values that the attributes have in reality.
-When all of that is computed and processed then a connector is used to update the target resource (Resource B).
+We know what attributes the account should have, therefore we can compare that with the values that the attributes have in reality.
+When all of that is computed and processed, then a connector is used to update the target resource (Resource B).
 
 This picture is still not entirely complete.
 It does not show policy rules, existence mappings, approval processes, hooks and good deal of other advanced features.
@@ -1198,8 +1202,8 @@ And after all the detailed explanation in the previous chapters it will also get
 Therefore we will show only the interesting pieces of the configuration here.
 Complete configuration can be found in the usual place.
 Please see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for details.
-Those files represent the final configuration, the expected state at the end of this chapter.
-Therefore if you want to follow instructions in this chapter step-by-step you have to choose appropriate parts of the files to import.
+These files represent the final configuration, the expected state at the end of this chapter.
+Therefore, if you want to follow instructions in this chapter step-by-step you have to choose appropriate parts of the files to import.
 Or you can just import everything and use the following text as an explanation of the effects that you see.
 
 Let us start with an HR resource.
@@ -1331,7 +1335,7 @@ But this is very likely to create conflicts.
 Therefore let’s combine last name with the first letter of first name.
 We will get nice usernames such as aanderson, bbrown and so on.
 But there is still a chance of username conflict.
-Therefore let’s add iteration tokens into the mix.
+So let’s add iteration tokens into the mix.
 Like this:
 
 .object-template-user.xml
@@ -1436,7 +1440,7 @@ We can enable iterations like this:
 The `maxIteration` part up there is quite straightforward.
 We want to have some limit on the number of iterations as we do not want to iterate forever.
 Most iteration sequences are short in practice.
-If the iterative approach cannot find a match in several steps then perhaps iteration is not a good method anyway.
+If the iterative approach cannot find a match in several steps, then perhaps the iteration is not a good method anyway.
 Therefore the limit is usually not a problem.
 But having a limit makes a huge difference for troubleshooting.
 Most infinite iteration loops are caused by configuration errors.

@@ -1242,8 +1242,8 @@ This process is not easy to follow in the logs.
 Therefore it is better to inspect the _object security constraints_ structure.
 If it is correct then also the resulting object will be most likely correct.
 
-TIP: *Object security constraints and the user interface.* +
-The _object security constraints_ has much broader application than just authorization of the read operations.
+.Object security constraints and the user interface.
+TIP: The _object security constraints_ has much broader application than just authorization of the read operations.
 This data structure is (indirectly) used by midPoint user interface when displaying edit forms for objects.
 The data from this structure are used to figure out which fields are displayed as read-write, which fields are read only and which fields are not displayed at all.
 The _object security constraints_ structure is always produced by the same algorithm in the security component.
@@ -1251,7 +1251,7 @@ Therefore, the interaction of authorizations and GUI forms can be diagnosed in t
 
 Search operations are very different than common operations such as _add_ or _delete_ and they are also different than _get_ operations.
 Search operations will *not* result in an access denied error (except for few special cases).
-If the user that is searching has access only to some objects then only those objects will be returned.
+If the user that is searching has access only to some objects, then only those objects will be returned.
 There is no error, because this is a perfectly normal situation.
 The extreme case is that user has access to no object at all.
 But although this situation is not entirely "normal" it is also not in any way special.
@@ -1270,7 +1270,7 @@ Also, we cannot simply search all objects and then filter out those that are den
 That would be totally inefficient and it will completely ruin paging mechanisms.
 A completely different strategy is needed for search operations.
 
-Search authorizations work the other way around: first the authorizations statements are compiled to a search filter.
+Search authorizations work the other way around: at first, the authorizations statements are compiled to a search filter.
 For example, if the authorization allows access only to active roles the authorization is compiled to a filter `activation/effectiveStatus=enabled`.
 Then this filter is appended to the normal search filter and the search operation is performed.
 This approach ensures that the search returns only the objects that the user is authorized to see.
@@ -1287,7 +1287,7 @@ MidPoint will "merge" all the authorizations from all the roles.
 Use allow operations, avoid deny operations if possible.
 It is much better not to allow an operation than to deny it.
 
-* *Deny always wins.* If there is a single deny in any applicable authorization in any roles then the operation is denied.
+* *Deny always wins.* If there is a single deny in any applicable authorization in any roles, then the operation is denied.
 It does not matter if there are thousands of allow authorizations, deny always wins.
 What was once denied cannot be allowed again.
 We need this approach because we do not have any way how to order the authorization in many roles.
@@ -1295,7 +1295,7 @@ Do not use deny unless really needed.
 
 * There are two phases: *request and execution*.
 The operation needs to be allowed in both phases to proceed.
-Please keep in mind the that object may be changed between request and execution due to mappings, metadata and properties that are maintained by midPoint.
+Please keep in mind that object may be changed between request and execution due to mappings, metadata and properties that are maintained by midPoint.
 This is also the reason why we have separate authorizations for request and execution.
 
 * *Name* the authorizations.
@@ -1332,28 +1332,28 @@ In case that you find a bug that needs to be fixed you have several options:
 . *Fix the bug yourself.* MidPoint is an open source product.
 We will gladly accept bugfixes.
 However, midPoint is also a substantial product and we need to keep it maintainable.
-Therefore all contributions including the bug fixes has to be reviewed.
+Therefore all contributions including the bug fixes have to be reviewed.
 The fixes need to be good enough to be accepted.
 Writing an automated test for the bug is usually required as part of the bugfix contribution.
 
 . *Report the bug and wait.* The bug will be fixed by someone eventually.
 However, there is no telling how long you will need to wait.
-If it is a security-related bug then it will be fixed as soon as possible.
+If it is a security-related bug, then it will be fixed as soon as possible.
 If the bug is severe and it affects a lot of users then it is likely to be fixed soon.
 However, such bugs are very rare.
 It is likely that your bug will be quite exotic and it can only be reproduced in your deployment.
-In that case it is almost certain that you will need to wait for a very long time.
+In that case, it is almost certain that you will need to wait for a very long time.
 Several years may pass before someone finds the time to have a look at your problem.
 Those issues are known as _community issues_ and they are usually seen at the very tail of developer’s work queues.
 Except for one case: security issues.
 Security issues are always prioritized regardless of who the reporter is.
 
 . *Purchase midPoint support from Evolveum.* This will dramatically increase the priority of your bug report.
-Software development cannot be easily predicted therefore we still cannot guarantee precise time period to fix the bug.
-However, typical fix times will be counted in days, weeks or in very rare and complicated cases in months.
+Software development cannot be easily predicted, therefore we still cannot guarantee precise time period to fix the bug.
+However, typical fix time will be counted in days, weeks or in very rare and complicated cases in months.
 Those issues are known as _subscriber issues_ and they are always prioritized over community issues.
 
-In any of those cases there is a recommended procedure for bug diagnostics and reporting.
+In any of those cases, there is a recommended procedure for bug diagnostics and reporting.
 There are bug reporting standards that apply to anybody, even midPoint subscribers.
 Evolveum provides 3^rd^-line support only.
 This means that it is expected that the issues has already passed through 1^st^ and 2^nd^ lines of support.
@@ -1370,19 +1370,19 @@ Simple mis-configuration may easily look like a bug.
 Try to go through midPoint documentation and understand how midPoint works.
 Re-read relevant parts of this book.
 MidPoint development team invests a huge amount of time and effort to make the error messages and log entries are understandable.
-There please make sure you use those facilities.
+Then please make sure you use those facilities.
 Please follow the troubleshooting guides above.
 They are usually very helpful.
 
 *Reproducing the problem* is a second step.
 The easiest way for us to fix a problem is being able to reproduce it.
-In such case we do not just blindly fix the problem but we can also make sure it is really gone.
+In such case, we do not just blindly fix the problem but we can also make sure it is really gone.
 In most cases we create a test case in our automated test suite to make sure the problem will gone and it will not appear again.
 Therefore, your best strategy to make sure that the problem is fixed quickly and does not appear again is to show us how to reproduce the problem in our environment.
 Saying that “this and that does not work” usually does not help as the same use case will work perfectly in other configurations.
 Please describe your configuration in the report.
 
-Try to figure out what is the minimal configuration that is needed to reproduce the problem.
+Try to figure out what is the minimal configuration necessary to reproduce the problem.
 We appreciate if you could reproduce the problem using our sample resources and objects with minimal customization.
 This saves you a lot of time describing your environment to us and it also saves us a lot of time to try to re-create your environment in our lab.
 This approach also helps you to check your configuration and to make sure you are not reporting mis-configuration as a bug.
@@ -1390,11 +1390,11 @@ This approach also helps you to check your configuration and to make sure you ar
 In a very rare cases the problem cannot be easily reproduced using samples or similar simple setup.
 In that case we need to work with what we have.
 Therefore, we either need to know quite a lot about your environment to be able to set it up in our lab.
-Or we need an access to your environment or your cooperation with diagnosing the problem.
-In such a case please use your common sense in what comes into the bug report.
-Please keep in mind that midPoint is open source project and the bug reports are public therefore please be careful when providing sensitive information in bug reports.
+Or we need access to your environment or your cooperation with diagnosing the problem.
+In such case, please use your common sense in what comes into the bug report.
+Please keep in mind that midPoint is open source project and the bug reports are public, therefore please be careful when providing sensitive information in bug reports.
 
-When you are sure that the problem is not caused by mis-configuration it is time to *report the issue*.
+When you are sure that the problem is not caused by mis-configuration, it is time to *report the issue*.
 The best way to submit a bug report is to use Evolveum bug tracking system.
 The registration is open to everybody.
 This is also the only bug reporting method available for community issues.
@@ -1402,7 +1402,7 @@ Using Evolveum tracker allows you to track the progress of issue resolution, add
 Just please keep in mind that the tracker is public and open to anyone following the spirit of open source.
 Therefore, be careful about submitting a sensitive information.
 
-Please note that security issues that reveal a potential security vulnerability should not be reported by using the tracker.
+Please note that security issues revealing a potential security vulnerability should *not* be reported by using the tracker.
 Information in the tracker is public and this may lead to unintentional disclosure of sensitive information.
 Special e-mail address is provided for responsible disclosure of security-related issues:
 
@@ -1416,7 +1416,7 @@ Typical bug report contains following information:
 Some "bugs" may be caused by trying to achieve something using the wrong mechanism.
 Having a broader perspective helps us to help you.
 
-* If there is a form or other input to the operation then please describe how it was set up or filled in.
+* If there is a form or other input to the operation, then please describe how it was set up or filled in.
 E.g. an XML snippet used to import, data entered into input field, request deltas retrieved from an audit log and so on.
 
 * What kind of resource definition was used, how it was modified, etc.
@@ -1425,9 +1425,9 @@ We prefer if you reproduce the problem with the simplest configuration possible 
 
 * Any other special configuration that you feel can influence the outcome, such as custom schema, strange things in expressions, etc.
 
-* If the operation produced an error message in GUI include that error message as well.
+* If the operation produced an error message in GUI, include that error message as well.
 
-* If there is an exception in the log files please make sure that you include full stack trace of the exception.
+* If there is an exception in the log files, please make sure that you include full stack trace of the exception.
 The exception stack trace is usually a very efficient pointer to likely cause of the problem.
 
 * Relevant part of the log files.
@@ -1450,7 +1450,7 @@ Those are not specific to midPoint and those tips should be a second nature to a
 Some of those were already covered.
 However, it may still be useful to summarize.
 
-First of all try to keep your troubleshooting effort methodical and systematic.
+First of all, try to keep your troubleshooting effort methodical and systematic.
 It makes very little sense to just randomly poke around and hope that the bug will show its ugly head.
 Even though such random methods may work occasionally, they will require a lot of effort in the end.
 Try to follow a divide-and-conquer method.
@@ -1461,7 +1461,7 @@ Then select another boundary.
 LDAP connector operation traces may be a good bet in that case.
 That will show you whether the problem is in midPoint or it is in the LDAP server.
 Are operation parameters wrong?
-Which means that problem is in midPoint, somewhere between model and the connector.
+It means that problem is in midPoint, somewhere between model and the connector.
 Have a look at debug logs of provisioning component.
 Maybe there is wrong object class in the resource definition.
 Have a look at debug logs on the connector.

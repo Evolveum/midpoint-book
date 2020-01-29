@@ -632,6 +632,7 @@ Very expensive.
 The IDM systems used to be so expensive that it was very difficult to justify the cost even with such substantial and clear benefits.
 But that time is over now.
 
+.Terminology.
 NOTE: The term _identity management_ is often used for the whole identity and access management (IAM) field.
 This is somehow confusing because technologies such as single sign-on or access management do not really manage the identities.
 Such technologies manage the access to the applications.
@@ -1081,6 +1082,7 @@ A role may reflect the concepts of bank teller, website administrator or sales m
 User has a role, the role contains permissions, permissions are used for authorization - that is the basic principle of RBAC. The low-level permissions are hidden from the users.
 Users are quite happy when they deal with the business-friendly role names.
 
+.Terminology.
 NOTE: The term _RBAC_ is frequently used in the industry, however the actual meaning of RBAC is not always clear.
 The confusion is perhaps caused by the fact that there is a formal RBAC specification known as _NIST RBAC model_.
 When people say RBAC some of them mean that specific formal model, others mean anything that is similar to that formal model and yet others mean anything that deals with roles.
