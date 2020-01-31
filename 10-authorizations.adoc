@@ -10,3 +10,15 @@ There is a view that all the Identity management systems do is management of ide
 This view is easy to understand
 
 TODO
+
+== Subject, Action and Object
+
+TODO: ... sometimes also _target_
+
+== Authorizations and Roles
+
+TODO: Roles for everything
+
+== Delegated Administration
+
+TODO: authorizations and orgstruct

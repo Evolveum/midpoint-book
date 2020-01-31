@@ -10,3 +10,4 @@ TODO: create on demand?
 TODO: sequences
 TODO: validation expression (object template)
 
+TODO: ad-hoc deputies

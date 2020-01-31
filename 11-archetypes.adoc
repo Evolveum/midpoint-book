@@ -7,3 +7,12 @@ include::chapter-include.adoc[]
 TODO
 
 TODO: archetypes as metaroles
+
+== Archetypes for Users
+
+TODO: employees, externals, etc.
+
+== Archetypes in Organizational Structure
+
+TODO: divisions, departments, sections
+

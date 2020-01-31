@@ -1,0 +1,15 @@
+[#13-gui-customization]
+= User Interface Customization
+
+include::chapter-include.adoc[]
+
+[quote, TODO]
+TODO
+
+== Administration GUI Configuration Data Structure
+
+TODO: adminGuiConfig
+
+== Collections and Views
+
+TODO

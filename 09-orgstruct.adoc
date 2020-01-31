@@ -6,17 +6,87 @@ include::chapter-include.adoc[]
 [quote, Douglas Adams, "The Restaurant At The End Of The Universe"]
 If life is going to exist in a Universe of this size, then the one thing it cannot afford to have is a sense of proportion.
 
-Todotodotodo
+Organizations come in all shapes and sizes.
+Unless your organization is extremely unusual, there is always some form of recognizable internal structure.
+There may be the usual corporate divisions, departments and sections.
+Or there may be dynamic teams, projects, work groups and task forces.
+But some kind of _organizational structure_ is usually there.
+And it matters.
+While many organizational structures are quite far from the ideal, organizational structure is seldom completely useless.
+Membership in some organizational units is a reason to automatically grant privileges.
+Managers can usually access quite a wide set of data about employees in organizational units that they are managing.
+Team leaders and project manager often exercise elevated privileges over their team and projects.
+And all of that is not limited just to users.
+Roles are often organized into _role catalog_.
+Services and devices may be organized by applications, by geographical location and so on.
+There are many things that need to be organized and there are many ways to to organize them.
+
+Organizational structure affects almost every part of the identity management deployment.
+We have realized that in very early stages of midPoint development.
+Therefore organizational structure is an integral part of midPoint.
+It permeates almost every part of midPoint functionality.
+Unlike most other systems, organizational structure in midPoint is a very flexible and almost universal concept.
+It can be used to build functional organizational structures with divisions, departments and sections.
+But it can also be used to create a flat project-based organizational structure.
+The same mechanism can be used to sort roles in a role catalog or to manage devices by geographical location.
+And all of those organizational structures may co-exist at the same time in the same system.
+
+The concept of organizational structure is a very powerful one, but it is implemented by just a handful of simple components.
+Let us have a look at those building blocks now.
 
 == Building Simple Organizational Structures
 
-TODO: simple organizational tree
+Basic building blog of all organizational structures is just one simple object type.
+Due to the lack of poetic talent and because of critical shortage of abstract words in our dictionary, we have decided to call that object simply an _org_.
+It is a nice and short name.
+_Org_ can represent any kind of organizational unit: companies, division, department, section, project, team, role category, geographical location or anything else.
+Orgs can be used to create hierarchical structures.
+For example, a top-level org may represent a company. A couple of other orgs can represent divisions.
+Those orgs can be put "inside" the company org.
+Yet another orgs can represent divisions and they can be put "inside" the division orgs.
+Repeat the process until complete organizational structure is formed.
+
+TODO: fig: Example orgstruct screenshot
+
+Orgs are quite a simple things with a very simple anatomy:
+
+[source,xml]
+----
+<org oid="4d12c1ac-440c-11ea-80af-2b314d06ba95">
+    <name>F10000</name>
+    <displayName>ExAmPLE, Inc.</displayName>
+</org>
+----
+
+Strictly speaking, the only things that an org really needs are name and OID.
+The example above adds `displayName` to make the presentation of the org nicer.
+As all regular midPoint objects, a name of an org must be unique.
+This often leads to a practice that org names are in fact identifiers or that they are generated automatically.
+This is also our case.
+We have decided to set `F1000` as the name of this org.
+The value `1000` is an identifier of the company in our HR system.
+As we are building a functional organizational structure of the company, we have prefixed the identifier with `F` which stands for _functional_.
+However, names such as `F1000` are not very friendly.
+Therefore there is a mechanism to set nicer display name that does not need to be unique.
+The display name will be used instead of the ordinary `name` whenever this org is displayed to a user.
+
+TODO: assignment
+
+TODO: parentOrgRef
+
+TIP: TODO: import entire organizational structure from a single file
 
 TODO: Orgs are built for hierarchy (special indexing)
+
+TODO: mention archetypes, but postpone the explanation to archetypes chapter
 
 == Multiple Organizational Structures
 
 TODO: trees make a forrest
+
+TODO: user may belong to many places in the orgstruct
+TODO: many managers for orgunit
+TODO: use policy rules to limit this
 
 [ functional, project, ... ] - mention archetypes
 
@@ -28,6 +98,12 @@ Orgs behave as roles
 
 Managers, role owners
 
+== Role Catalog
+
+TODO
+
+TODO: mention role catalog in RBAC section
+
 == Organizational Structure Synchronization
 
 TODO: generic synchronization
@@ -35,3 +111,8 @@ TODO: kind/intent
 TODO: focus-projection (terminology)
 TODO: automatic assignment of org in inbound mapping
 TODO: simple principles (e.g. roles) reused everytwhere
+
+== Conclusion
+
+TODO: orgstruct used for certifications
+TODO: delgated administration
