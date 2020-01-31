@@ -17,5 +17,11 @@ http://creativecommons.org/licenses/by-nc-nd/4.0/[Creative Commons Attribution-N
 
 Major sponsoring for this book was provided by:
 
+ifdef::backend-html5[]
+image::evolveum-web.png[Evolveum]
+endif::[]
+ifndef::backend-html5[]
 // TODO: replace by SVG
 image::evolveum.png[Evolveum, scaledwidth="50%"]
+endif::[]
+
