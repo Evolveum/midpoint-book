@@ -34,7 +34,7 @@ And all of those organizational structures may co-exist at the same time in the 
 The concept of organizational structure is a very powerful one, but it is implemented by just a handful of simple components.
 Let us have a look at those building blocks now.
 
-== Building Simple Organizational Structures
+== Organizational Units
 
 Basic building blog of all organizational structures is just one simple object type.
 Due to the lack of poetic talent and because of critical shortage of abstract words in our dictionary, we have decided to call that object simply an _org_.
@@ -46,10 +46,11 @@ Those orgs can be put "inside" the company org.
 Yet another orgs can represent divisions and they can be put "inside" the division orgs.
 Repeat the process until complete organizational structure is formed.
 
-TODO: fig: Example orgstruct screenshot
+image:09-01-org-tree.png[Organizational tree]
 
-Orgs are quite a simple things with a very simple anatomy:
+Org is quite a simple things with a very simple anatomy:
 
+.org-example-top.xml
 [source,xml]
 ----
 <org oid="4d12c1ac-440c-11ea-80af-2b314d06ba95">
@@ -70,15 +71,178 @@ However, names such as `F1000` are not very friendly.
 Therefore there is a mechanism to set nicer display name that does not need to be unique.
 The display name will be used instead of the ordinary `name` whenever this org is displayed to a user.
 
-TODO: assignment
+image:09-02-org-top.png[Top-level organizational unit]
+
+We have an organizational unit now.
+But how do we put users in it?
+Clever reader already knows the answer: assignment.
+All that is needed is to assign the org to a user.
+This is done in almost the same way as you would assign a role:
+
+image:09-03-top-org-assignment.png[Assignment of an organizational unit]
+
+The user is now a part of our minimalistic organizational unit:
+
+image:09-04-top-org-assignment-tree.png[Assigned top-level organizational unit]
+
+== Organizational Structure Hierarchy
+
+There is very little structure in our tiny organizational structure yet.
+Orgs would not be very useful unless they can be placed inside each other.
+It is this hierarchy that makes organizational structures attractive.
+Therefore let us go corporate and create some hierarchy now.
+All self-respecting corporations need sales and marketing division:
+
+.org-sales-and-marketing-division.xml
+[source,xml]
+----
+<org oid="7a1feb50-471f-11ea-8aab-1b2627541f15">
+    <name>F11000</name>
+    <description>Expensive people that make money.</description>
+    <displayName>Sales and Marketing Division</displayName>
+    <identifier>11000</identifier>
+</org>
+----
+
+We have pimped up this organizational unit a little.
+We have seen `name` and `displayName` before.
+The `description` is no strange either.
+But there is also an `identifier`.
+The value of the `identifier` is usually an official "code" of the organizational unit assigned by HR people.
+But why do we need yet another identifier?
+OID is an identifier, `name` is an identifier of sorts, why do we need another one?
+For now let's just say that the identifier will be very useful later on, when we will be synchronizing organizational structures.
+
+If we import the org above into midPoint it will become the _top_ org.
+MidPoint will put it at the same level as the ExAmPLE company org.
+But we do not want that.
+We want to create a hierarchy.
+We want to tell midPoint to put the department inside the company.
+How do we do that?
+We use an assignment, of course:
+
+.org-sales-and-marketing-division.xml
+[source,xml]
+----
+<org oid="7a1feb50-471f-11ea-8aab-1b2627541f15"
+    xmlns='http://midpoint.evolveum.com/xml/ns/public/common/common-3'
+       xmlns:org='http://midpoint.evolveum.com/xml/ns/public/common/org-3'>
+    <name>F11000</name>
+    <description>Expensive people that make money.</description>
+    <displayName>Sales and Marketing Division</displayName>
+    <identifier>11000</identifier>
+    <assignment>
+       <targetRef oid="4d12c1ac-440c-11ea-80af-2b314d06ba95" type="OrgType"/>
+    </assignment>
+</org>
+----
+
+Now we have our little hierarchy:
+
+image:09-05-small-org-tree.png[Small organizational structure tree]
+
+This makes perfect sense, doesn't it?
+User become part of organizational units when the units are assigned to them.
+Therefore also organizational units become part of other organizational units when they are assigned to them.
+And this applies to everything: roles, services, tasks, resources and other object types.
+Every object type that can be _assignment holder_ can be placed in organizational structure.
+
+NOTE: Majority of midPoint object types are _assginment holders_ and therefore they can be placed into organizational structure.
+Theoretically.
+However, midPoint user interface has some limits.
+Convenient management of the assignments is currently possible only for _focal_ types: user, role, org and service.
+Other objects can be placed in organizational structure and they should behave up to the expectations.
+But that cannot be done by few convenient clicks in midPoint user interface
+Not yet.
+You have to use a different approach.
+You either add the assignment manually in the XML/JSON/YAML form.
+Or you may try to use mappings to create the assignments automatically.
+Or perhaps use the REST interface to do that.
+Or maybe send some money in the direction of midPoint development team to motivate them to add this functionality to user interface.
+
+We know how to create a simple organizational hierarchy.
+All we need to do now is to repeat the process _ad nauseam_ to create something that resembles real corporate organizational structure.
+Let us add marketing department to our division:
+
+.org-marketing-department.xml
+[source,xml]
+----
+<org oid="a0c7d92c-4722-11ea-bc8d-d79a6cefb1bf"
+    xmlns='http://midpoint.evolveum.com/xml/ns/public/common/common-3'
+       xmlns:org='http://midpoint.evolveum.com/xml/ns/public/common/org-3'>
+    <name>F11300</name>
+    <description>Creative bunch that spends money to get more money.</description>
+    <displayName>Marketing Department</displayName>
+    <identifier>11300</identifier>
+    <assignment>
+       <targetRef oid="7a1feb50-471f-11ea-8aab-1b2627541f15" type="OrgType"/>
+    </assignment>
+</org>
+----
+
+It is the same process over and over again.
+But there so many organizational units, there are so many files to import.
+We like to be efficient in all the things that we do.
+Therefore let's put the entire organizational structure into a single file:
+
+.org-tree-functional.xml
+[source,xml]
+----
+<objects>
+
+    <!-- Functional organizational structure of ExAmPLE company -->
+
+    <org oid="4d12c1ac-440c-11ea-80af-2b314d06ba95">
+        <name>F10000</name>
+        <displayName>ExAmPLE, Inc.</displayName>
+    </org>
+
+    <org oid="7a1feb50-471f-11ea-8aab-1b2627541f15">
+        <name>F11000</name>
+        <description>Expensive people that make money.</description>
+        <displayName>Sales and Marketing Division</displayName>
+        <identifier>11000</identifier>
+        <assignment>
+            <targetRef oid="4d12c1ac-440c-11ea-80af-2b314d06ba95" type="OrgType"/>
+        </assignment>
+    </org>
+
+    ...
+
+</objects>
+----
+
+It would be no big surprise to find out that lazyness was a driving force behind many improvements in life, would it?
+Now, let us use this convenient approach to create a nice and rich corporate organizational tree:
+
+image:09-06-org-tree-page.png[Organizational tree]
+
+TIP: Of course, you can create and manage organizational structure in midPoint user interface.
+And many people do that quite often.
+But now we are talking about the _initial_ organizational structure.
+It is the structure that gets created in midPoint at the beginning of the deployment.
+There is usually a lot of _trial and error_ until you get your midPoint configuration right.
+It is quite likely that you will have to purge all midPoint configuration and start clean.
+In that case, it is very convenient to have organizational structure in one file that can be easily imported after the clean up.
+Also, it is a common practice to have several environments: development, testing and production.
+You probably want the same organizational structure in all of them.
+Having organizational structure in a file makes that job easy.
+Of course, you can also create organizational structure in the user interface and then export it into a file.
+But according to our experience, many engineers prefer text editor to graphical user interfaces.
+
 
 TODO: parentOrgRef
 
-TIP: TODO: import entire organizational structure from a single file
-
 TODO: Orgs are built for hierarchy (special indexing)
 
-TODO: mention archetypes, but postpone the explanation to archetypes chapter
+== Orgs and Roles
+
+Orgs behave as roles
+
+== Relation
+
+Managers, role owners
+
 
 == Multiple Organizational Structures
 
@@ -90,13 +254,9 @@ TODO: use policy rules to limit this
 
 [ functional, project, ... ] - mention archetypes
 
-== Orgs and Roles
+Example: project organizational structure
 
-Orgs behave as roles
-
-== Relation
-
-Managers, role owners
+TODO: mention archetypes, but postpone the explanation to archetypes chapter
 
 == Role Catalog
 
@@ -111,6 +271,10 @@ TODO: kind/intent
 TODO: focus-projection (terminology)
 TODO: automatic assignment of org in inbound mapping
 TODO: simple principles (e.g. roles) reused everytwhere
+
+TODO: reason of having `identifier` in org:
+* easier correlation
+* identifier does not need to be unique among org trees, name needs to be unique.
 
 == Conclusion
 
