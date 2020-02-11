@@ -259,8 +259,8 @@ To keep a long story short, the configuration properties should be properly name
     <name>LDAP</name>
     <connectorRef oid="028159cc-f976-457f-be70-9e9fa079bcf7"/>
     <connectorConfiguration
-       xmlns:icfc="http://⁠midpoint.evolveum.com/⁠xml/⁠ns/⁠public⁠/⁠connector⁠/⁠icf⁠-⁠1⁠/⁠connector-schema-3"
-       xmlns:icfcldap="http://midpoint.evolveum.com⁠/⁠xml⁠/⁠ns⁠/⁠public⁠/⁠connector⁠/⁠icf⁠-⁠1⁠/⁠bundle⁠/⁠com.evolveum.polygon.connector⁠-⁠ldap/⁠com.evolveum.polygon.connector.ldap.LdapConnector">
+       xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3"
+       xmlns:icfcldap="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/bundle/com.evolveum.polygon.connector-ldap/com.evolveum.polygon.connector.ldap.LdapConnector">
         <icfc:configurationProperties>
             <icfcldap:port>389</icfcldap:port>
             <icfcldap:host>localhost</icfcldap:host>
@@ -278,7 +278,7 @@ You do not have to completely understand what is going on.
 Just one thing: the namespace of the configuration properties should be the same as the namespace defined in the connector object.
 This is a long URI that is composed from connector bundle name and connector name. E.g.
 
-`http://⁠midpoint.evolveum.com/⁠xml/⁠ns/⁠public/⁠connector/⁠icf-⁠1/⁠bundle/⁠com.evolveum.polygon.connector-⁠ldap/⁠com.evolveum.polygon.connector.ldap.LdapConnector`
+`http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/bundle/com.evolveum.polygon.connector-ldap/com.evolveum.polygon.connector.ldap.LdapConnector`
 
 If the namespace does not match then the connector will refuse to work.
 This is a safety mechanism that prohibits accidental use of configuration from one connector in another connector where the configuration properties may have the same name but a completely different meaning.
