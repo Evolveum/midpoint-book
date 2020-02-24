@@ -1051,24 +1051,6 @@ Therefore these two methods are often used together.
 Synchronization runs all the time and handles vast majority of the changes.
 Reconciliation runs weekly or monthly and it acts as a safety net to catch the changes that might have escaped during synchronization.
 
-Listing all accounts and processing each of them may seem as a straightforward job.
-But it can be extremely slow if the number of accounts is high and the policies are complex.
-It can take anything from few minutes to few days.
-Therefore it cannot be executed frequently.
-Running that once per day is feasible only for small and simple systems.
-Running it once per week (on weekends) is a more common practice.
-But many systems cannot afford to run it more frequently than once per month.
-
-There are also other methods.
-But synchronization and reconciliations are the most frequently used.
-The drawback of synchronization is that it is not entirely reliable.
-The IDM system may miss some changes, e.g. due to change log expiration, system times not being synchronized or variety of other reasons.
-On the other hand, reconciliation is mostly reliable.
-But it is a very demanding task.
-Therefore these two methods are often used together.
-Synchronization runs all the time and handles vast majority of the changes.
-Reconciliation runs weekly or monthly and it acts as a safety net to catch the changes that might have escaped during synchronization.
-
 == Identity Management and Role-Based Access Control
 
 Managing permissions for every user individually is a feasible options only if the number of users is very low.
