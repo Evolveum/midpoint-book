@@ -21,3 +21,15 @@ TODO: start with normal mappings. Switch to strong.
 == TODO
 
 Info: maintainable solution. First day is the day of the deployment.
+
+
+== Good Practices
+
+TODO
+
+== Bad Practices
+
+* Creating identifiers by using different "iterators", e.g. username jack123, mail jack.andrson.5@example.com
+Reason: complex to remember, complex to diagnose, complex to configure and troubleshoot
+Solution: go for jack.anderson.123@example.com or even better janderson8 and jack.anderson.8@example.com.
+
