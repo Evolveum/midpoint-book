@@ -172,8 +172,6 @@ As this book is available for free there is no direct income that could provide 
 There is only one way: sponsoring.
 
 If you like this book, then please consider sponsoring some of the next chapters.
-You can use Evolveum crowdfunding portal at https://wanted.evolveum.com/[wanted.evolveum.com].
-Or in case you are considering a larger-scale sponsoring, please contact Evolveum team directly.
 The market economy is, unfortunately, quite ruthless.
 Therefore, it is pretty straightforward: if there are no sponsors, it is very unlikely that there will be any new chapters.
 Therefore, please sponsor this book if you can.
