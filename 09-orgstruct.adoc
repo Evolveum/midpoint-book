@@ -88,10 +88,10 @@ image:09-04-top-org-assignment-tree.png[Assigned top-level organizational unit]
 == Organizational Structure Hierarchy
 
 There is very little structure in our tiny organizational structure yet.
-Orgs would not be very useful unless they can be placed inside each other.
+Orgs would not be very useful unless they can be placed inside each other, creating a hierarchy.
 It is this hierarchy that makes organizational structures attractive.
 Therefore let us go corporate and create some hierarchy now.
-All self-respecting corporations need sales and marketing division:
+It is a well-known fact that all self-respecting corporations need sales and marketing division:
 
 .org-sales-and-marketing-division.xml
 [source,xml]
@@ -147,6 +147,7 @@ Therefore also organizational units become part of other organizational units wh
 And this applies to everything: roles, services, tasks, resources and other object types.
 Every object type that can be _assignment holder_ can be placed in organizational structure.
 
+.Assignment holders
 NOTE: Majority of midPoint object types are _assginment holders_ and therefore they can be placed into organizational structure.
 Theoretically.
 However, midPoint user interface has some limits.
@@ -212,17 +213,17 @@ Therefore let's put the entire organizational structure into a single file:
 </objects>
 ----
 
-It would be no big surprise to find out that lazyness was a driving force behind many improvements in life, would it?
+It would be no big surprise to find out that laziness was a driving force behind many improvements in life, would it?
 Now, let us use this convenient approach to create a nice and rich corporate organizational tree:
 
 image:09-06-org-tree-page.png[Organizational tree]
 
 TIP: Of course, you can create and manage organizational structure in midPoint user interface.
-And many people do that quite often.
+In fact, people do that quite often.
 But now we are talking about the _initial_ organizational structure.
 It is the structure that gets created in midPoint at the beginning of the deployment.
 There is usually a lot of _trial and error_ until you get your midPoint configuration right.
-It is quite likely that you will have to purge all midPoint configuration and start clean.
+It is quite likely you will have to purge all midPoint configuration and start clean.
 In that case, it is very convenient to have organizational structure in one file that can be easily imported after the clean up.
 Also, it is a common practice to have several environments: development, testing and production.
 You probably want the same organizational structure in all of them.
@@ -230,14 +231,161 @@ Having organizational structure in a file makes that job easy.
 Of course, you can also create organizational structure in the user interface and then export it into a file.
 But according to our experience, many engineers prefer text editor to graphical user interfaces.
 
+== Orgs in the Database
 
-TODO: parentOrgRef
+Organizational structures tend to form _hierarchies_ - data structures that look like trees.
+But databases are usually designed to store _relational_ data - data structures that look like tables.
+If you ever tried to express hierarchical data in a spreadsheet application you know that these paradigms are not entirely easy to align.
+It is not entirely easy to express tree-like data structure in relational tables.
+Moreover, hierarchical data tend to have some specific requirements.
+For example, we usually want to look for people in _Operations Division_ and all the departments and sections that belong to it.
+This is know as _subtree searches_, and it is usually not possible to execute them directly on data that are stored in relational form.
 
-TODO: Orgs are built for hierarchy (special indexing)
+This is further complicated by the fact that midPoint _assignment_ is a very flexible data structure.
+Assignments can be valid from a specific time to a specific time.
+Assignments can be parametric and conditional.
+Assignment is just too complex for the database to understand and use efficiently.
+
+MidPoint is solving these problems with `parentOrgRef` operational data item.
+As the name suggests, `parentOrgRef` is an object reference that points to _parent org_.
+Any _assignment holder_ in midPoint can have _parentOrgRef_ and it points to the org (or orgs) that the object belongs to.
+This somehow duplicated the data in the assignment.
+But there are several crucial differences.
+
+Firstly, `parentOrgRef` points to the orgs that the object is _currently_ member of.
+I.e. it only reflects those assignments that are currently active and valid.
+Therefore there will be no `parentOrgRef` value for assignment that is expired or not valid yet.
+
+Secondly, `parentOrgRef` represents all organizational assignments, both direct and indirect.
+Orgs that are directly assigned to users will be present in `parentOrgRef`.
+Orgs that are induced in a role that is assigned to the user will also be present in `parentOrgRef`.
+Everything will be there.
+
+Thirdly, `parentOrgRef` is a very simple data structure.
+This simplicity allows efficient _indexing_ of the `parentOrgRef` values in the database (repository) layer.
+The indexes are designed to allow efficient subtree searches over organizational structure hierarchies.
+
+This is our trick how to fit hierarchical data into flat data tables.
+The details may be quite complicated, but it usually works quite well.
+The `parentOrgRef` is automatically maintained by midPoint under the hood.
+Therefore it is usually completely transparent.
+The user does not even notice that there is a special mechanism working in the background.
+
+However, there are also downsides to this approach.
+The index that is build on `parentOrgRef` is designed to work even if organizational structure is re-organized.
+The index has to be continually maintained.
+Maintenance overhead of the index is usually very low for small or mid-sized structures that do not change often.
+But maintenance of massive organizational structures can be painful.
+Similarly, it may be problematic to maintain organizational structures that change very frequently.
+Therefore it is perhaps a good idea to prototype the design of organizational structure before putting the system into production.
+Also, the `parentOrgRef` is in fact a copy of the primary data (assignment).
+As it is a copy, there is a risk that it may get out of synchronization.
+MidPoint is designed to keep `parentOrgRef` and all the indexes strictly consistent during normal operations.
+However, midPoint allows systems administrators to do a lot of non-standard things.
+Some of those things may lead to data inconsistencies.
+Therefore it is a good idea to check whether the values of `parentOrgRef` make sense in case you notice that organizational structures are behaving strangely.
+
+Overall, organizational structures work very well in midPoint and you usually do not need to care about the mechanisms under the hood.
+However, management of organizational structures is much more complex than it seems.
+Therefore if you try to do strange and unusual things, you should better be sure you fully understand what you are doing.
 
 == Orgs and Roles
 
-Orgs behave as roles
+Organizations and roles have many things in common.
+Roles are granting privileges to its members.
+Usually, people that are members of an organization are granted privileges too.
+People that have the same role usually have the same set of privileges.
+People in an organization often have the same privileges too.
+In fact, organizations behave in almost the same way as roles.
+
+MidPoint has fully embraced this similarity.
+Orgs are designed to behave in almost the same way as roles.
+Orgs may have _inducements_, there may be _constructions_ in them, orgs may contain _authorizations_ and so on.
+Org can do everything that a role can do.
+
+Therefore there is no need to set up complicated configurations that assign a particular role to all members of an organization.
+The organization itself acts as a role.
+All the privileges that organization members need can be simply added as _inducements_ in the organization itself.
+This is very simple, elegant and mostly fool-proof solution.
+
+We have _Indirect Sales Department_ in ExAmPLE, Inc.
+We want to make things simple, and therefore we want to grant access to CRM system to all the members of this department.
+It is very easy to do:
+
+[source,xml]
+----
+<org oid="8887e0b0-4726-11ea-96b0-5f5ced221e42">
+    <name>F11200</name>
+    <description>Suits that talk to other suits that talk to customers.</description>
+    <displayName>Indirect Sales Department</displayName>
+    <identifier>11200</identifier>
+    <assignment>
+        <!-- Assignment of parent organizational unit -->
+        <targetRef oid="7a1feb50-471f-11ea-8aab-1b2627541f15" type="OrgType"/>
+    </assignment>
+    <inducement>
+        <!-- Inducement that grants CRM privileges to all members of this department -->
+        <construction>
+            <!-- CRM resource -->
+            <resourceRef oid="04afeda6-394b-11e6-8cbe-abf7ff430056"/>
+            ...
+        </construction>
+    </inducement>
+</org>
+----
+
+Clever reader certainly wonders whether the CRM privileges apply also to _Agent Management Section_, which is located below _Indirect Sales Department_ in our organizational structure.
+However, clever reader is clever enough to figure out that the privileges are not "inherited" in this case.
+To follow the toughts of clever reader, you have to think about orgs in the same way as you would think about roles.
+There is an assignment from _Agent Management Section_ to _Indirect Sales Department_.
+But there is no _inducement_.
+Role hierarchies are built using _inducements_.
+Therefore privileges of _Agent Management Section_ are not included in _Indirect Sales Department_.
+This may seem to be counter-intuitive, but in fact it is completely correct.
+Orgs and roles form separate hierarchies (see note below).
+However, if you want to "inherit" privileges of a parent org, there is a very simple way how to do it: add explicit _inducement_.
+For example, this is how we can "inherit" the CRM privileges in _Agent Management Section_:
+
+[source,xml]
+----
+<org oid="f5e619a6-4726-11ea-888c-ab25c098d8b3">
+    <name>F11210</name>
+    <description>People that deal with agents (no James Bond here).</description>
+    <displayName>Agent Management Section</displayName>
+    <identifier>11210</identifier>
+    <assignment>
+        <!-- Assignment of parent organizational unit. This creates organizational hierarchy. -->
+        <targetRef oid="8887e0b0-4726-11ea-96b0-5f5ced221e42" type="OrgType"/>
+    </assignment>
+    <inducement>
+        <!-- Inducement to parent organizational unit. This creates "inheritance" of privileges. -->
+        <targetRef oid="8887e0b0-4726-11ea-96b0-5f5ced221e42" type="OrgType"/>
+    </assignment>
+</org>
+----
+
+This has to be done for every org that needs to inherit privileges from parent, which may be quite daunting for large organizational structures.
+There is a clever way how to avoid placing inducements everywhere.
+The solution involves the concept of _metaroles_, as parent org is technically a metarole for child orgs.
+However, this involves an advanced thinking about application of assignment and inducements.
+Even a clever reader may not be ready for such abstract thoughts yet.
+This has to come later when the basic principles have enough time to sink in.
+
+.Org and role hierarchies
+NOTE: Both orgs are roles are _hierarchical_ in a way.
+BUt it is not the same hierarchy.
+Org hierarchy is used to model organizational trees.
+Role hierarchy is used to build RBAC structures.
+Those hierarchies have completely different purpose.
+They are also built using different mechanism.
+Role hierarchy is used to group privileges and therefore it is built using _inducements_.
+Org hierarchy is used to group subjects (users) and it is built using _assignments_.
+There are also different internal mechanisms, indexing and data storage properties.
+For example, role hierarchy is not using `parentOrgRef`, therefore there is much lower overhead as compared to org hierarchy.
+However, this means that the capabilities to query role hierarchy is limited.
+Both hierarchies are their respective place and purpose.
+Even though the difference may not be very apparent now, it is quite substantial.
+Hopefully, this will get much more clear later when there will be more examples for both org and role structures.
 
 == Relation
 
