@@ -378,7 +378,7 @@ Role hierarchy is nothing more than a set of inducements between roles:
 
 [source,xml]
 ----
-<role oid="48d4ef98-20e3-46ab-cd78-548d38364a6b3">
+<role oid="48d4ef98-20e3-46ab-cd78-548d38364a6b">
     <name>Clerk</name>
     <!-- Privileges needed to do clerk’s work will be here. -->
 </role>
@@ -391,7 +391,7 @@ Role hierarchy is nothing more than a set of inducements between roles:
     <!-- Privileges that are unique to supervisor’s work will be here. -->
     <inducement>
         <!-- This "includes" all the clerk’s privileges in this role -->
-        <targetRef oid="48d4ef98-20e3-46ab-cd78-548d38364a6b3" type="RoleType"/>
+        <targetRef oid="48d4ef98-20e3-46ab-cd78-548d38364a6b" type="RoleType"/>
     </inducement>
 </role>
 ----
@@ -412,7 +412,7 @@ When a supervisor role is processed then privileges of clerk are merged with pri
 
 [source,xml]
 ----
-<role oid="48d4ef98-20e3-46ab-cd78-548d38364a6b3">
+<role oid="48d4ef98-20e3-46ab-cd78-548d38364a6b">
     <name>Clerk</name>
     <inducement>
         <construction>
@@ -455,7 +455,7 @@ When a supervisor role is processed then privileges of clerk are merged with pri
         </construction>
     </inducement>
     <inducement>
-        <targetRef oid="48d4ef98-20e3-46ab-cd78-548d38364a6b3" type="RoleType"/>
+        <targetRef oid="48d4ef98-20e3-46ab-cd78-548d38364a6b" type="RoleType"/>
     </inducement>
 </role>
 ----
