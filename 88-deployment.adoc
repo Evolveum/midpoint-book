@@ -33,3 +33,25 @@ TODO
 Reason: complex to remember, complex to diagnose, complex to configure and troubleshoot
 Solution: go for jack.anderson.123@example.com or even better janderson8 and jack.anderson.8@example.com.
 
+== Beware The Data
+
+TODO: data are always wrong. Always.
+People will tell you that they have good data.
+They do not have good data.
+No data will survive first contact with reality.
+There will be conflicts.
+There will be typos, mistakes, inaccuracies.
+Good portion of data will be out of date.
+
+Recommendation: proceed slowly.
+Validate the data before rolling out.
+
+== Organization
+
+TODO: This is not a project, it is a program (see later). Proceed in steps, iterations, increments.
+
+TODO: Good communication is absolutely essential.
+Required information is seldom documented.
+There is a lot of "historical practices", nobody may know why is it done the way that it is done.
+Difficulty for remote projects.
+
