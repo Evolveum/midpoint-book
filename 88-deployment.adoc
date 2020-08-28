@@ -33,6 +33,8 @@ TODO
 Reason: complex to remember, complex to diagnose, complex to configure and troubleshoot
 Solution: go for jack.anderson.123@example.com or even better janderson8 and jack.anderson.8@example.com.
 
+* TODO: user-user manager relation as bad practice. Use orgtree instead.
+
 == Beware The Data
 
 TODO: data are always wrong. Always.

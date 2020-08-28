@@ -48,7 +48,7 @@ Repeat the process until complete organizational structure is formed.
 
 image:09-01-org-tree.png[Organizational tree]
 
-Org is quite a simple things with a very simple anatomy:
+Org is quite a basic thing with a very simple anatomy:
 
 .org-example-top.xml
 [source,xml]
@@ -81,7 +81,22 @@ This is done in almost the same way as you would assign a role:
 
 image:09-03-top-org-assignment.png[Assignment of an organizational unit]
 
-The user is now a part of our minimalistic organizational unit:
+Or, in XML form:
+
+[source,xml]
+----
+<user>
+    <name>eevans</name>
+    ...
+    <assignment>
+        <targetRef oid="4d12c1ac-440c-11ea-80af-2b314d06ba95" type="OrgType"/>
+    </assignment>
+    ...
+</user>
+----
+
+
+The user is a part of our minimalistic organizational unit now:
 
 image:09-04-top-org-assignment-tree.png[Assigned top-level organizational unit]
 
@@ -387,12 +402,122 @@ Both hierarchies are their respective place and purpose.
 Even though the difference may not be very apparent now, it is quite substantial.
 Hopefully, this will get much more clear later when there will be more examples for both org and role structures.
 
+== Managers
+
+Placing people in organizational structures has a significant value on its own.
+However, all the people usually do not have the same _relation_ to the organizational unit.
+Most people will usually be ordinary _members_ of organizational unit.
+And then there are people that are somehow special: departmental managers, team leaders, project managers, supervisors and similar life forms.
+
+How do we designate a manager of an organizational unit?
+You probably guessed it already.
+In a typical midPoint fashion, we are re-using _assignment_, of course.
+There is just one small detail.
+We are specifying `relation` in assignment target reference:
+
+[source,xml]
+----
+<user>
+    <name>aanderson</name>
+    ...
+    <assignment>
+        <!-- Direct Sales Department -->
+        <targetRef oid="832f409a-4726-11ea-b0be-8b8eab99c1ed" type="OrgType" relation="manager"/>
+    </assignment>
+    ...
+</user>
+----
+
+This assignment makes Alice a manager of direct sales department.
+It is as simple as that.
+And all the power of assignment is at your disposal.
+Therefore it is easy to assign a manager for a temporary time period, suspend a manager and so on.
+
+Alice is a manager now.
+But she still has the same access rights as ordinary workers.
+That is not right!
+Managers wear suits and ties.
+Which means that they need to have more privileges than mere mortals.
+Obviously, there is a way how to set up privileges that apply to managers:
+
+[source,xml]
+----
+<org oid="832f409a-4726-11ea-b0be-8b8eab99c1ed">
+    <name>F11100</name>
+    <displayName>Direct Sales Department</displayName>
+    ...
+    <inducement>
+        <construction>
+            ... Privileges exclusive to managers are specified here ...
+        </construction>
+        <orderConstraint>
+            <order>1</order>
+            <relation>manager</relation>
+        </orderConstraint>
+    </inducement>
+</org>
+----
+
+This is a way how a manager of the direct sales department gets special privileges.
+The `orderConstraint` makes sure that only the users that have `manager` relation to this organization units will get the privileges.
+
+But wait s minute!
+Clever reader does not like that.
+This approach to manager privileges is not going to be very practical.
+Managers usually do not have special privileges in each organizational unit.
+In most organizations, managers have the same privileges regardless of the unit they manage.
+
+One way to implement this approach is to create a `Manager` role, put the special privileges there, and assign the role to every manager of every organizational unit.
+But that creates redundancy.
+We have to make sure this role is assigned whenever a person becomes manager and that it is unassigned when the person is no longer manager.
+This is the way how this problem is solved in many IDM deployments.
+But it is quite a fragile mechanism.
+And this is not a way how we do things in midPoint.
+
+The `orderConstraint` data structure in our example looks suspiciously complex.
+And it indeed is quite a complex concept.
+What we see here is the first glimpse at high-order "assignment algebra" that is a working horse of complex midPoint deployment.
+It is often employed when working with meta-roles and archetypes.
+As organizational units are in fact roles and organizational structures are just a trees formed by _assignments_, they technically form meta-role structures.
+
+Therefore the right way how to set up manager privileges is to move privilege definition to a central place.
+It may be top-level organizational unit, or it may be an _archetype_.
+In that case our _inducement_ can apply to all the managers, regardless of organizational unit.
+However, the exact configuration is a bit complex, and we still need to learn more about midPoint to be able to use it.
+Therefore we leave the details for later chapters.
+
+TIP: MidPoint assigns managers to organizational units.
+That is the right way how to do it.
+However, we have often seen a different approach.
+In such cases the manager is "assigned" to users.
+I.e. each user has a reference to his or her manager.
+This approach is wrong.
+Organizational structures change.
+People come and go.
+Everything is changing all the time.
+It is very easy to change one assignment in organizational structure in case that a manager is replaced.
+But it is extremely difficult to replace a manager in the direct user-manager data structure.
+Maybe the former manager was managing several organizational units and now we are replacing him with two managers.
+Maybe there is a re-organization going on at the same time.
+The result is going to be a mess.
+Avoid the direct user-manager approach whenever possible.
+
 == Relation
 
-Managers, role owners
+In midPoint, we like to design generic re-usable mechanisms.
+You did not think that we made the concept of _manager_ in a way that would be hardcoded to organizational structure, did you?
+As you have got so far through this book, you would probably suspect there is more to this _relation_ thing that we have seen so far.
 
+TODO: concept of _relation_
+TODO: role owners
+
+TODO: bulti-in relations
+TODO: relations are configurable
 
 == Multiple Organizational Structures
+
+Tree is a simple and very elegant structure in many ways.
+But it takes a lot of trees to make a forrest.
 
 TODO: trees make a forrest
 
