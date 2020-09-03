@@ -55,13 +55,15 @@ MidPoint does what any identity management system is supposed to do: it manages 
 The very basic functionality of midPoint is the synchronization of identity data that are stored in various applications, databases, directory servers, text files and so on.
 We call all these systems _resources_.
 MidPoint is using _connectors_ to reach the resources.
-MidPoint can propagate change that happened in one resource to other resources. E.g. an employee record appears in the HR system, it is picked up by midPoint, processed, transformed and then new Active Directory and CRM accounts are created.
+MidPoint can propagate change that happened in one resource to other resources.
+E.g. an employee record appears in the HR system, it is picked up by midPoint, processed, transformed and then new Active Directory and CRM accounts are created.
 This is the process that we call _synchronization_.
 
 image::02-01-midpoint.png[midPoint]
 
 MidPoint has a rich graphical user interface (GUI) that can be used to manage the identities.
-Changes made by system administrators are automatically propagated to all affected resources. E.g. security officer disables a user by clicking on disable button in midPoint user interface.
+Changes made by system administrators are automatically propagated to all affected resources.
+E.g. security officer disables a user by clicking on disable button in midPoint user interface.
 Then MidPoint makes sure that all accounts that belong to the user are immediately disabled.
 
 image::02-02-midpoint-gui.png[midPoint GUI]
@@ -82,7 +84,8 @@ There may be hierarchical roles, parametric roles, conditional roles and a lot o
 Some of them may give additional privileges to the user.
 
 * *Status and life cycle:* Accounts can be created, enabled, disabled, archived or deleted.
-There are many situations that need to be processed. E.g. we may want to create a disabled account one week before a new employee starts his work, enable the account on his first day, disable the account on his last day and delete it three months after he leaves.
+There are many situations that need to be processed.
+E.g. we may want to create a disabled account one week before a new employee starts his work, enable the account on his first day, disable the account on his last day and delete it three months after he leaves.
 
 * *Attributes and identifiers:* Simple synchronization scenarios assume that attributes and values will be the same in all the synchronized systems.
 That is a nice theory, bit it almost never works like that in real world.
@@ -142,7 +145,8 @@ Its operation heavily relies on information technologies, therefore there is a d
 As ExAmPLE has few thousand employees and there is a good potential for growth the management has decided to start an IAM program.
 The first step of the program is deployment of midPoint as the identity management system.
 
-Eric is an IT engineer at ExAmPLE. He has taken the responsibility to install and configure midPoint.
+Eric is an IT engineer at ExAmPLE.
+He has taken the responsibility to install and configure midPoint.
 Eric spins up a new Linux virtual machine for midPoint.
 He downloads midPoint distribution package and follows the installation instructions.
 Couple of minutes later midPoint instance starts up.
@@ -167,8 +171,8 @@ MidPoint communicates with all the source and target systems by the means of con
 Connectors are relatively small Java components that are plugged into midPoint.
 There is usually one connector for each type of the connected system.
 Therefore there are connectors for LDAP servers, Active Directory, databases, UNIX operating systems and so on.
-The responsibility of a connector is to translate protocols. E.g.
-LDAP connector will translate midPoint search commands to LDAP search requests.
+The responsibility of a connector is to translate protocols.
+E.g. LDAP connector will translate midPoint search commands to LDAP search requests.
 The UNIX connector will create an SSH session and translate midPoint create command to the invocation of Linux useradd binary.
 And so on.
 Each connector talks using its own communication protocol on one side.
@@ -284,7 +288,8 @@ Every resource may have different account attributes.
 There may be different names, different types and the values may have different meaning.
 MidPoint is designed to handle those differences.
 Schema for resource accounts is dynamically discovered when midPoint connects to the resource for the first time.
-MidPoint interprets the schema and automatically adapts to it. E.g. when midPoint displays information about an account, the user interface fields are dynamically generated from the discovered schema.
+MidPoint interprets the schema and automatically adapts to it.
+E.g. when midPoint displays information about an account, the user interface fields are dynamically generated from the discovered schema.
 MidPoint does that all by itself.
 No extra configuration and no coding is necessary.
 
@@ -481,7 +486,8 @@ But there is a better way, of course.
 We can define some _roles_.
 The concept of _role-based access control (RBAC)_ is a well-established practice and the roles are really the bread-and-butter of identity management.
 The basic idea of RBAC is to group privileges into roles.
-Then the roles are assigned to the users instead of privileges. E.g. let's create a `Webmaster` role.
+Then the roles are assigned to the users instead of privileges.
+E.g. let's create a `Webmaster` role.
 Then put all the privileges that webmaster should have into that role.
 And let's assign the role to every user that works as a webmaster.
 This simplifies the privilege management.
@@ -540,7 +546,8 @@ This operation works in both directions: if Eric unassigns the `Employee` role, 
 Eric can create any number of roles like this: roles for Sales agents with CRM access, roles for Sales managers with higher CRM privileges and so on.
 MidPoint is designed to handle large number of roles.
 Each role can have its own combination of resources.
-MidPoint seamlessly merges the privileges given by all the roles a user has. E.g. if two roles give CRM access to the user, only one CRM account will be created.
+MidPoint seamlessly merges the privileges given by all the roles a user has.
+E.g. if two roles give CRM access to the user, only one CRM account will be created.
 If one of these roles is unassigned then CRM account remains there.
 The account is not deleted yet because it is given by the other role.
 Only when the last CRM role is removed that’s the point where the account gets deleted.
@@ -569,7 +576,8 @@ We will be dealing with roles in almost all the parts of this book.
 
 Eric the Engineer has done a few basic steps to configure midPoint as an identity management system for his company.
 But this is still a very basic configuration.
-Careful readers have already noticed a lot of things that need to be done. E.g. employee full name is not automatically generated.
+Careful readers have already noticed a lot of things that need to be done.
+E.g. employee full name is not automatically generated.
 Employee numbers are used as identifiers and we would like to have something that is more user-friendly.
 We would like to automatically assign the `Employee` role instead of doing that manually.
 And so on.

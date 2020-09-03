@@ -51,7 +51,7 @@ The book usually describes how the things work when they work.
 But we also try to describe the limitations, drawbacks and pitfalls.
 The limitations are often much more important than the features, especially when designing a new solution on a green field.
 
-First chapter is an introduction to the basic concepts of Identity and Access Management (IAM).
+The first chapter is an introduction to the basic concepts of Identity and Access Management (IAM).
 It is very general and does not deal with midPoint at all.
 Therefore if you are familiar with Identity and Access Management feel free to skip the first chapter.
 If you are impatient and want to start directly with midPoint then do the same (you would do that anyway, right?).
@@ -59,60 +59,60 @@ But in that case please find the time to return to the first chapter later.
 That chapter contains important information to put midPoint in broader context.
 You will need that information to build a complete IAM solution.
 
-Second chapter describes the midPoint big picture.
+The second chapter describes the midPoint big picture.
 It shows how midPoint looks like from the outside.
 It describes how midPoint is usually used and how it behaves.
 The purpose of this chapter is to familiarize the reader with midPoint workings and basic principles.
 It describes how midPoint is used.
 
-Third chapter describes the basic concepts of midPoint deployment and configuration.
+The third chapter describes the basic concepts of midPoint deployment and configuration.
 It guides the reader through midPoint installation.
 It describes how midPoint is customized to suit the needs of a particular deployment.
 However midPoint customization is a very complex matter.
 This chapter describes just the basic principles.
 It will take most of the book to fill in the details.
 
-Fourth chapter describes the concepts of resource and mappings.
+The fourth chapter describes the concepts of resource and mappings.
 This is the bread-and-butter of an identity management.
 This chapter will tell you how to create very basic midPoint deployment, how to connect target systems and how to map and transform the data.
 
-Fifth chapter is all about synchronization.
+The fifth chapter is all about synchronization.
 Primary purpose of synchronization is to get the data from the source systems such as HR system to midPoint.
 But midPoint synchronization is much more powerful than that.
 This chapter also expands the explanation of underlying midPoint principles such as mappings and deltas.
 
-Sixth chapter talks about midPoint schema.
+The sixth chapter talks about midPoint schema.
 MidPoint has a built-in identity data model.
 But even though this data model is quite rich, it is usually not sufficient to cover all the real-world use cases.
 Therefore the data model is designed to be extensible.
 This chapter describes the methods how a new data items can be defined in midPoint schema.
 
-Seventh chapter is all about role-based access control (RBAC).
+The seventh chapter is all about role-based access control (RBAC).
 MidPoint role-based model is a very powerful tool to set up complex structures describing job roles, responsibilities, privileges and so on.
 But the role model, and especially the concept of assignment, are generic mechanisms that are used in almost every part of midPoint.
 Organizational structure management and many identity governance features are built on the foundations described in this chapter.
 
-Eighth chapter is an introduction to object templates.
+The eighth chapter is an introduction to object templates.
 Those templates form a basis of an internal data consistency in midPoint.
 They can be used to set up simple policies and automation rules.
 
-Ninth chapter is about troubleshooting.
+The ninth chapter is about troubleshooting.
 To err is human.
 And given all the flexibility of midPoint mechanisms configuration mistakes just happen and it may not be easy to figure out the root cause of problems.
 Therefore this chapter provides an overview of midPoint diagnostic facilities and recommendations for their use.
 
-Tenth chapter provides overview of midPoint development process and overall approach.
+The tenth chapter provides overview of midPoint development process and overall approach.
 It is also explained how midPoint development is funded and how midPoint subscriptions work.
 
-Eleventh chapter is a collections of pointers to additional information.
+The eleventh chapter is a collection of pointers to additional information.
 This includes a pointer to sample files that accompany this book.
 
 The following chapters are not written yet.
 The description of policies, entitlements, authorizations, archetypes and all the other advanced topics is missing.
 This book is not finished yet.
-Similarly to midPoint itself, this book is written in an incremental and iterative way.
+Just like midPoint itself this book is written in an incremental and iterative way.
 Writing a good book is a huge task in itself and it takes a lot of time.
-And we cannot dedicate that much time to writing the book in one huge chunk.
+We cannot dedicate that much time to writing the book in one huge chunk.
 But obviously a book like this is needed for midPoint community.
 Therefore we have decided not to wait until the book is complete.
 We will be continuously publishing those chapters that are reasonably well finished.

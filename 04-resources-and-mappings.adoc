@@ -6,13 +6,13 @@ include::chapter-include.adoc[]
 [quote, William Arthur Ward]
 The pessimist complains about the wind; the optimist expects it to change; the realist adjusts the sails.
 
-Reading an&lt; writing resource objects, attribute synchronization, mapping of attribute values, their transformation using scripts – these are the basic midPoint features.
+Reading and writing resource objects, attribute synchronization, mapping of attribute values, their transformation using scripts – these are the basic midPoint features.
 These features are absolutely essential for any self-respecting IDM deployment and all IDM engineers should be more than familiar with them.
 And this is exactly the purpose of this chapter: describe necessary configuration to use midPoint as a provisioning engine.
 
 It is not very realistic to expect that all the systems will agree on the same interface, communication protocol and schema for identity management.
 There were several attempts to unify the IAM landscape, but none of them was entirely successful.
-The LDAP protocol was created in 1990s.
+The LDAP protocol was created in the 1990s.
 But even for such a mature protocol the LDAP implementations are sill not 100% interoperable.
 The situation is even worse for identity provisioning protocols.
 There were several attempts to specify a standard provisioning protocol, but all of them failed to deliver complete interoperability.
@@ -90,7 +90,8 @@ Then we modify the sample to suit our needs.
 However, you need to understand how the resource definitions work to do this efficiently.
 Next few sections will explain the structure and function of resource definitions.
 
-Believe it or not, there are people that do not like XML/JSON/YAML. There are also people that really want to start creating the resource from scratch.
+Believe it or not, there are people that do not like XML/JSON/YAML.
+There are also people that really want to start creating the resource from scratch.
 For all those people there is a resource wizard in the midPoint user interface.
 The wizard can be used to create and edit resource using a graphical user interface.
 
@@ -129,7 +130,8 @@ The connector objects look like this:
 ----
 
 The resource definition needs to point to the appropriate connector object.
-Therefore select the right connector from the connector list and remember its OID. Then use the connector OID in the resource configuration like this:
+Therefore select the right connector from the connector list and remember its OID.
+Then use the connector OID in the resource configuration like this:
 
 [source,xml]
 ----
@@ -276,9 +278,9 @@ The use of namespaces will be completely optional in later midPoint versions.
 For now just copy the namespace URIs from the samples.
 You do not have to completely understand what is going on.
 Just one thing: the namespace of the configuration properties should be the same as the namespace defined in the connector object.
-This is a long URI that is composed from connector bundle name and connector name. E.g.
+This is a long URI that is composed of connector bundle name and connector name.
 
-`http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/bundle/com.evolveum.polygon.connector-ldap/com.evolveum.polygon.connector.ldap.LdapConnector`
+For example: `http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/bundle/com.evolveum.polygon.connector-ldap/com.evolveum.polygon.connector.ldap.LdapConnector`
 
 If the namespace does not match then the connector will refuse to work.
 This is a safety mechanism that prohibits accidental use of configuration from one connector in another connector where the configuration properties may have the same name but a completely different meaning.
@@ -664,7 +666,8 @@ This mapping can be expressed in XML:
 Not all parts of the mapping are mandatory.
 If the expression is not present then "as is" expression is assumed.
 Such expression simply copies the source to target without any transformation.
-Some parts of the mapping may be implicitly defined by the surrounding context. E.g. target or source is implicit if the mapping is used to define attribute behavior in the schema handling section.
+Some parts of the mapping may be implicitly defined by the surrounding context.
+E.g. target or source is implicit if the mapping is used to define attribute behavior in the schema handling section.
 Therefore it is usually sufficient to define either source or target for mappings in `schemaHandling`:
 
 [source,xml]
@@ -943,7 +946,8 @@ However it is easy to construct such value using a simple script:
 ----
 
 (A clever reader surely has a suspicious look on his face now.
-Of course, this is not entirely correct way how to compose LDAP DN. But please bear with us.
+Of course, this is not entirely correct way how to compose LDAP DN.
+But please bear with us.
 We will correct that later.)
 
 Midpoint supports three scripting languages:
@@ -980,7 +984,7 @@ Will get back to the scripting expressions many times in this book.
 
 The term _activation_ is used in midPoint to denote a set of properties that describe whether an object is active.
 This includes properties that describe whether the user is enabled, disabled, archived, since when he should be enabled, to what date he should be active and so on.
-The simple enabled/disabled flag might have been sufficient in 1990s.
+The simple enabled/disabled flag might have been sufficient in the 1990s.
 But that was a long time ago.
 We need much more than that.
 Therefore the _activation_ is quite a rich data structure in midPoint.
