@@ -508,18 +508,164 @@ In midPoint, we like to design generic re-usable mechanisms.
 You did not think that we made the concept of _manager_ in a way that would be hardcoded to organizational structure, did you?
 As you have got so far through this book, you would probably suspect there is more to this _relation_ thing that we have seen so far.
 
-TODO: concept of _relation_
-TODO: role owners
+The _relation_ specifies the nature of a relation between two objects.
+For example a user may be a member of an organizational unit, manager of a project, owner of a role or approver of role assignment requests.
+In such cases, _member_, _manager_, _owner_ and _approver_ are relations that a user can have to an object.
 
-TODO: bulti-in relations
-TODO: relations are configurable
+The most common way how to use relation is to specify it in `targetRef` in an assignment.
+The following example illustrates the usual way how to assign an owner for a role:
+
+[source,xml]
+----
+<user>
+    <name>aanderson</name>
+    ...
+    <assignment>
+        <!-- Business Analyst role -->
+        <targetRef oid="aaa6cde4-0471-11e9-9b50-c743da469067" type="RoleType" relation="owner"/>
+    </assignment>
+    ...
+</user>
+----
+
+There are several built-in relations in midPoint:
+
+|===
+|Relation |Usually used for |Description
+
+|`default`
+| Everything
+| This is the most common, non-specific relation to an object.
+When used with a role, it simply means that the user _has_ the role.
+Usually interpreted as _member_ when used with organizational units.
+It is the usual, normal relation.
+
+As the name suggests, this is the default relation.
+If no other relation is specified, this relation is used.
+
+|`manager`
+|Orgs
+|Manager of an organizational unit, project manager, teamleader, etc.
+Usually entitles a person (or a group) that have leading position in an org.
+This usually specifies executive or operational privileges (cf. `owner`).
+
+|`owner`
+|Roles, Orgs
+|Person responsible for governance of the object.
+Often used to nominate role owners that are responsible for role definition and maintenance.
+May be used with organizational units to specify project sponsor or business owner.
+Specifies a person responsible for governance and high-level policy decisions rather than day-to-day management (cf. `manager`).
+
+|`approver`
+|Roles, Orgs
+|Person responsible for deciding _membership_ in roles and orgs.
+A gatekeeper or moderator.
+Approvers usually decide whether someone can have a role, or may be a member of organizational unit.
+Unlike owners, approvers do not create or modify role definition.
+They cannot change the role.
+They can only decide who can have that role and who cannot.
+
+|`meta`
+|Metaroles
+|Special-purpose relation that is sometimes used with metaroles.
+Metarole structures can be complex and confusing.
+However, such structures and especially policies that govern them may sometimes be simplified, if role-metarole relations are marked in a special way.
+This relation is designed specifically for that purpose.
+
+The `meta` relation is not mandatory.
+Metarole functionality will work just fine without it.
+In fact, almost all of the metarole configuration are not using this relation.
+But it may come handy if the situation becomes too complicated.
+|===
+
+Those are built-in relations.
+There are some pre-configured policies that work with them.
+However, you are free to specify and use your own relations.
+But that is quite an advanced topic and majority of the deployments are perfectly fine using just the built-in relations.
+
+As you can see, the built-in relations do not have overly strict specifications.
+There is a lot of _usually_, _often_ and _almost_ in the description of relations.
+The reason is that the relations do not do anything just by themselves.
+They just specify how one object relates to another object.
+There are no strict _policies_ or _behavior_ associated with them.
+
+The policies are specified elsewhere.
+Assignment and inducements may behave differently for different relations, as we have seen in previous section.
+Similarly, _policy rules_ are often sensitive to relations.
+For example the policy that assignment of some roles has to be approved is implemented by a policy rule that is aware of `approver` relation.
+Authorizations are often sensitive to relations.
+Archetypes influence how the system behaves based on relations.
+User interface may behave differently for some relations.
+And so on.
+Relations do nothing just by themselves.
+However, good part of the system is usually configured to recognize relations and behave accordingly.
+It is a matter of that _configuration_ that determines how exactly will the system behave.
+This is also the reason for such vague definition of relations, even those built-in relations.
+They will do what you make them do.
 
 == Multiple Organizational Structures
 
 Tree is a simple and very elegant structure in many ways.
-But it takes a lot of trees to make a forrest.
+But it is a rare sight to see a lone tree growing in the field.
+When we think of trees, we usually think about a forrest.
+And it takes a lot of trees to make a forrest.
 
-TODO: trees make a forrest
+This is also the case when it comes to organizational structures.
+It is a very rare sight when an entire organizational structure of an organization can be modeled in a single tree.
+There is always the usual _functional_ organizational structure with divisions, departments, sections, companies, branches, schools and faculties.
+But then there is a _project_ organizational structure that is often completely orthogonal to functional organizational structure.
+This is sometimes spiced up with workgroups, task forces, focus groups, research teams, interest groups, clubs and similar collective life forms.
+There are the many trees that make a forrest.
+
+Fortunately, midPoint is not very picky when it comes to organizational structures.
+You can have as many organizational trees as you like.
+MidPoint is not limited to a single organizational tree.
+You can have functional organizational tree, as we have seen in previous sections.
+Then you can have independent project organizational structure.
+Just create new root _org_ for projects and place the projects under it:
+
+.org-tree-project.xml
+[source,xml]
+----
+<org oid="832e37e4-edfd-11ea-9f8c-ef736d6646a2">
+    <name>Projects</name>
+</org>
+
+<org oid="9c1b8464-edfd-11ea-87b8-db467c5ae301">
+    <name>PBD2020</name>
+    <description>Make money fast.</description>
+    <displayName>Big Deal</displayName>
+    <identifier>BD2020</identifier>
+    <assignment>
+        <targetRef oid="832e37e4-edfd-11ea-9f8c-ef736d6646a2" type="OrgType"/>
+    </assignment>
+</org>
+
+<org oid="22dc2bd4-edfe-11ea-a904-5be54dda2e46">
+    <name>PLS</name>
+    <description>Make sure our marketing message gets across.</description>
+    <displayName>Loudspeaker</displayName>
+    <identifier>LS</identifier>
+    <assignment>
+        <targetRef oid="832e37e4-edfd-11ea-9f8c-ef736d6646a2" type="OrgType"/>
+    </assignment>
+</org>
+
+<org oid="22dc2bd4-edfe-11ea-a904-5be54dda2e46">
+    <name>PWL2</name>
+    <description>Second generation wonderland. We are all mad here.</description>
+    <displayName>Wonderland 2.0</displayName>
+    <identifier>WL2</identifier>
+    <assignment>
+        <targetRef oid="832e37e4-edfd-11ea-9f8c-ef736d6646a2" type="OrgType"/>
+    </assignment>
+</org>
+----
+
+We have two organizational trees now.
+Each neatly stowed under its own tab:
+
+TODO: screenshot
 
 TODO: user may belong to many places in the orgstruct
 TODO: many managers for orgunit
@@ -530,6 +676,8 @@ TODO: use policy rules to limit this
 Example: project organizational structure
 
 TODO: mention archetypes, but postpone the explanation to archetypes chapter
+
+TOD: May not even be a tree. Any acyclic directed graph is fine.
 
 == Role Catalog
 
