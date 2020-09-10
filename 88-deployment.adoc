@@ -8,20 +8,54 @@ A ship in harbor is safe, but that is not what ships are built for.
 
 TODO
 
-== Relational Databases
+== Iterative and Incremental Approach
+
+TODO: intro to I&I.
+TODO: warn against waterfall big bang projects.
+It will take years. Plan ahead.
+Just the intro. More details about the entire cycle in the next chapter.
+
+TODO: IDM projects take a long time, split to iterations
+TODO: Analyse, plan, prototype, execute, learn, repeat.
+
+TODO: midPoint is built to support this approach, including open source (zero up-front license cost, subscriptions)
+
+== Deployment and Operation Tooling
+
+TODO: midPoint Studio
+TODO: ninja
+TODO: python CLI
+
+== Environment
+
+=== Relational Databases
+
+TODO: Why relational database.
+TODO: Supported relational databases.
+TODO: universal (hibernate) repository, vs PostgreSQL
+
+=== High Availability
 
 TODO
 
-== High Availability
-TODO
+=== Resources and Connectors
+
+TODO: common connectors, support status
+
+== Deployment Strategy
 
 TODO: business first
 TODO: start with normal mappings. Switch to strong.
 
-== TODO
+TODO: devel, test and prod environments
+
+TODO: configuration versioning
+
+
+== Maintainability
 
 Info: maintainable solution. First day is the day of the deployment.
-
+TODO: you will need to proceed in iterations, it will take years.
 
 == Good Practices
 
@@ -48,12 +82,21 @@ Good portion of data will be out of date.
 Recommendation: proceed slowly.
 Validate the data before rolling out.
 
-== Organization
+=== Organizational Structure
+
+TODO: quality varies wildly
+TODO: try to reconstruct the real, practical organizational tree (not the formal one).
+
+TODO: avoid user-manager method
+
+== Integration
+
+TODO: REST, Java client, Python client
+
+== Work Organization
 
 TODO: This is not a project, it is a program (see later). Proceed in steps, iterations, increments.
 
 TODO: Good communication is absolutely essential.
 Required information is seldom documented.
-There is a lot of "historical practices", nobody may know why is it done the way that it is done.
 Difficulty for remote projects.
-
