@@ -77,7 +77,7 @@ We have an organizational unit now.
 But how do we put users in it?
 Clever reader already knows the answer: assignment.
 All that is needed is to assign the org to a user.
-This is done in almost the same way as you would assign a role:
+This is done in almost the same way as you would assign a role, just select the `Org` tab in assignment dialog.
 
 image:09-03-top-org-assignment.png[Assignment of an organizational unit]
 
@@ -433,6 +433,16 @@ It is as simple as that.
 And all the power of assignment is at your disposal.
 Therefore it is easy to assign a manager for a temporary time period, suspend a manager and so on.
 
+Manager assignment is created in the user interface in almost the same way as normal assignment is created.
+The only difference is selection of _manager relation_ at the bottom of the assignment target dialog:
+
+image:09-07-assign-org-manager.png[Assign organizational unit manager]
+
+MidPoint now knows that Alice is a manager of Direct Sales Department.
+This is also displayed in the organizational tree:
+
+image:09-08-org-tree-manager.png[Organizational unit with a manager]
+
 Alice is a manager now.
 But she still has the same access rights as ordinary workers.
 That is not right!
@@ -651,7 +661,7 @@ Just create new root _org_ for projects and place the projects under it:
     </assignment>
 </org>
 
-<org oid="22dc2bd4-edfe-11ea-a904-5be54dda2e46">
+<org oid="1954d496-f6ad-11ea-a96a-8bfa569f5fff">
     <name>PWL2</name>
     <description>Second generation wonderland. We are all mad here.</description>
     <displayName>Wonderland 2.0</displayName>
@@ -665,7 +675,10 @@ Just create new root _org_ for projects and place the projects under it:
 We have two organizational trees now.
 Each neatly stowed under its own tab:
 
-TODO: screenshot
+image:09-09-org-tree-projects.png[Project organizational tree]
+
+
+
 
 TODO: user may belong to many places in the orgstruct
 TODO: many managers for orgunit
