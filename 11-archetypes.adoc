@@ -16,3 +16,6 @@ TODO: employees, externals, etc.
 
 TODO: divisions, departments, sections
 
+TODO: archetype for projects, archetype for functional org.
+
+TODO: assignment relation: allow project managers and owners, but not approvers.

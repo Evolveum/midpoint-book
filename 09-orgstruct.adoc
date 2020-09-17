@@ -443,12 +443,31 @@ This is also displayed in the organizational tree:
 
 image:09-08-org-tree-manager.png[Organizational unit with a manager]
 
-Alice is a manager now.
+But, wait a minute!
+Alice has been promoted to be a _manager_ direct sales department.
+But she should be located in sales and marketing division as a direct _member_ of that division.
+E.i. she is _member_ of one organizational unit and _manager_ of another organizational unit.
+How do we do that?
+This is all perfectly clear to a clever reader by now.
+Alice has assignments.
+First assignment is an ordinary assignment that targets sales and marketing division.
+Second assignment is a manager assignment that targets direct sales department.
+This is perfectly normal in midPoint.
+Users may have any number of assignments to any objects (unless it is explicitly constrained by policy rules or archetypes).
+Which means that users may be members of any number of organizational units at the same time.
+
+Therefore there is no problem for Alice to be a member of one unit and manager of another.
+MidPoint can support all kind of bizarre organizational arrangements.
+MidPoint was deliberately designed in this way.
+Because reality has an annoying habit to bring surprises, especially when organizational structures are involved.
+
+Well, Alice is a manager now.
+Good for her.
 But she still has the same access rights as ordinary workers.
 That is not right!
 Managers wear suits and ties.
 Which means that they need to have more privileges than mere mortals.
-Obviously, there is a way how to set up privileges that apply to managers:
+As managers usually control funding of software development, it is perfectly understandable that midPoint has a way to set up privileges that apply to managers:
 
 [source,xml]
 ----
@@ -618,7 +637,7 @@ They will do what you make them do.
 Tree is a simple and very elegant structure in many ways.
 But it is a rare sight to see a lone tree growing in the field.
 When we think of trees, we usually think about a forrest.
-And it takes a lot of trees to make a forrest.
+It takes a lot of trees to make a forrest.
 
 This is also the case when it comes to organizational structures.
 It is a very rare sight when an entire organizational structure of an organization can be modeled in a single tree.
@@ -677,24 +696,73 @@ Each neatly stowed under its own tab:
 
 image:09-09-org-tree-projects.png[Project organizational tree]
 
+This is a nice _project_ organizational structure.
+But our users are members of _functional_ organizational structure already.
+How can I add my users to the projects?
+The answer is _assignment_, of course.
+User can belong to any number of organizational units at the same time.
+It makes no difference whether they are in the same organizational tree or in different trees.
+Simply assign the projects to the users.
+The same _manager_ relation works for projects as well.
+In fact, midPoint does not even recognize the difference between _functional_ and _project_ organizational structures.
+They look all the same to midPoint and midPoint treats them in the same way.
+If there is a need for the structures to behave differently, it has to be explicitly configured.
+Which is usually done by using _archetypes_.
+We will talk about _archetypes_ later.
 
+There are two organizational structures now.
+You can have three organizational structures if you want to.
+Of five of them.
+Any number you like - as long as all the tabs for organizational structures fit on the screen.
+The structures can be deep and trees with many branches.
+Or they can be completely flat.
+The structure may not even be a tree.
+As long as it is an _acyclic directed graph_ it will work just fine.
+It can have multiple roots, it may have alternate paths, it can do all the crazy stuff.
+Just avoid cycles.
+Cycles break the maths which is the foundation of organizational structure indexing and evaluation.
+Cycles won't work.
+But pretty much all the other arrangements are perfectly fine.
 
-
-TODO: user may belong to many places in the orgstruct
-TODO: many managers for orgunit
-TODO: use policy rules to limit this
-
-[ functional, project, ... ] - mention archetypes
-
-Example: project organizational structure
-
-TODO: mention archetypes, but postpone the explanation to archetypes chapter
-
-TOD: May not even be a tree. Any acyclic directed graph is fine.
+Organizational structure may have almost any form.
+A user can be a member of many organizational units.
+Which also means that a user may _manage_ many organizational units.
+That also applies the other way around: an organizational unit may have many managers.
+MidPoint fully supports all such cases.
+By default, MidPoint is very flexible when it deals with organizational structure.
+However, you may not like all this liberalism in organizational management.
+_Ordnung muss sien!_
+If you want to constraint organizational management to allow only a single manager for each organizational unit, you can do it.
+But you have to explicitly specify a policy by setting up _policy rules_.
+_Policy rules_ provide a very generic and very powerful mechanism how to constraint and control midPoint in many ways.
+But that is a topic for its own chapter.
 
 == Role Catalog
 
-TODO
+MidPoint organizational structure can do a lot of crazy stuff.
+By now, you should not be too surprised to learn that we are not done yet.
+Organizational structures are usually build to contain people.
+Whereas midPoint organizational structure can contain a broad range of object types.
+
+_Role catalog_ is a common use of organizational structure that does not (directly) involve people.
+Role catalog is used to sort the roles into categories, much like a catalog in electronic shop is used to sort the products.
+The catalog is used to present roles to users in organized form, so users may easily find the roles when request them in self-service interface.
+
+MidPoint role catalog is simply an organizational structure.
+It does not have divisions, sections or projects, but it has categories.
+Yet the mechanism is the same, as the catalog is just a hierarchy of orgs:
+
+TODO: Catalog XML example
+
+It makes a lot of sense to use organizational structure for role catalog.
+Simple explanation would go along the lines of _roles are people too_.
+Roles have many characteristics that users have.
+Roles also need to be managed, they need to sorted, categorized, they have owners and approvers.
+Role management is often divided in several teams or application owners.
+Many of the mechanisms that are used to manage people are also used to manage roles.
+
+TODO: authorizations, delegated administration
+TODO: categories may represent applications, approvals for role modification by application owner (rules)
 
 TODO: mention role catalog in RBAC section
 

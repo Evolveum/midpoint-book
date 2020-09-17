@@ -14,6 +14,12 @@ matching rules
 
 advanced setting in schema handling: limitations, tolerance
 
+== Policy rules
+
+Constrain orgstruct: enforce single manager
+
+Role catalog: approval by application owner
+
 == Logfile Analyzer Plugin
 
 TODO? Palo?
