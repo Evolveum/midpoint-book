@@ -7,3 +7,53 @@ include::chapter-include.adoc[]
 It is said that there is nothing firm, nothing balanced, nothing durable in all the universe - that nothing remains it its original state, that each day, each hour, each moment, there is change.
 
 == Role Request and Approval
+
+
+== Role Catalog
+
+_Role catalog_ is a common use of organizational structure that does not (directly) involve people.
+Role catalog is used to sort the roles into categories, much like a catalog in electronic shop is used to sort the products.
+The catalog is used to present roles to users in organized form, so users may easily find the roles when request them in self-service interface.
+
+MidPoint role catalog is simply an organizational structure.
+It does not have divisions, sections or projects, but it has categories.
+Yet the mechanism is the same, as the catalog is just a hierarchy of orgs:
+
+TODO: Catalog XML example
+
+TODO: how to configure catalog in sysconfig
+
+TODO: Screenshot of catalog as orgstruct
+
+TODO: Screenshot of catalog in shopping cart.
+
+TODO: assign sales agent and sales manager to catalog category in GUI
+
+TODO: Role in multiple categories.
+
+It makes a lot of sense to use organizational structure for role catalog.
+Simple explanation would go along the lines of _roles are people too_.
+Roles have many characteristics that users have.
+Roles also need to be managed, they need to sorted, categorized, they have owners and approvers.
+Role management is often divided in several teams or application owners.
+Many of the mechanisms that are used to manage people are also used to manage roles.
+
+Role categories can represent almost any concept.
+They can correspond to business processes, logical collections of roles, categories of work responsibilities and so on.
+One of the common, while not entirely ideal, method is for categories to represent applications.
+Role categories are just orgs, therefore they can have owners and managers.
+This approach can be used to manage owners of business processes, or application owners.
+
+The usual use of role catalog is intimately related to request-and-approval process.
+The catalog makes it easier for a user to find appropriate role when requesting its assignment in self-service part of midPoint user interface.
+However, midPoint approval process is flexible.
+It can take advantage of category owners.
+The owners may act as implicit approvers for all requests for any role in the category.
+But more on that later, when we get to policy rules and approvals.
+
+Similar approach can be used to
+
+TODO: authorizations, delegated administration
+TODO: categories may represent applications, approvals for role modification by application owner (rules)
+
+TODO: mention role catalog in RBAC section

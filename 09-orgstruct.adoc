@@ -444,7 +444,7 @@ This is also displayed in the organizational tree:
 image:09-08-org-tree-manager.png[Organizational unit with a manager]
 
 But, wait a minute!
-Alice has been promoted to be a _manager_ direct sales department.
+Alice has been promoted to be a _manager_ of direct sales department.
 But she should be located in sales and marketing division as a direct _member_ of that division.
 E.i. she is _member_ of one organizational unit and _manager_ of another organizational unit.
 How do we do that?
@@ -737,7 +737,7 @@ But you have to explicitly specify a policy by setting up _policy rules_.
 _Policy rules_ provide a very generic and very powerful mechanism how to constraint and control midPoint in many ways.
 But that is a topic for its own chapter.
 
-== Role Catalog
+== Beyond Users
 
 MidPoint organizational structure can do a lot of crazy stuff.
 By now, you should not be too surprised to learn that we are not done yet.
@@ -750,21 +750,22 @@ The catalog is used to present roles to users in organized form, so users may ea
 
 MidPoint role catalog is simply an organizational structure.
 It does not have divisions, sections or projects, but it has categories.
-Yet the mechanism is the same, as the catalog is just a hierarchy of orgs:
+Categories are (almost) ordinary orgs that form the hierarchy.
 
-TODO: Catalog XML example
+TODO: Screenshot of catalog as orgstruct.
 
-It makes a lot of sense to use organizational structure for role catalog.
-Simple explanation would go along the lines of _roles are people too_.
-Roles have many characteristics that users have.
-Roles also need to be managed, they need to sorted, categorized, they have owners and approvers.
-Role management is often divided in several teams or application owners.
-Many of the mechanisms that are used to manage people are also used to manage roles.
+Primary use of the catalog is related to request-and-approval process.
+The catalog makes it easier for a user to find appropriate role when requesting its assignment in self-service part of midPoint user interface.
+However, the catalog can also be used to apply policies to a whole group of roles.
+Owner of the category may be considered to be a default approver for all the roles in the category.
+Category owner may be authorized to modify roles in the category.
+And so on.
 
-TODO: authorizations, delegated administration
-TODO: categories may represent applications, approvals for role modification by application owner (rules)
-
-TODO: mention role catalog in RBAC section
+Similar approach can be applied to most objects in midPoint.
+Organizational structure can be used to organize roles, services, resources, function libraries and other objects.
+Orgs are also crucial mechanism in supporting midPoint multi-tenancy.
+Not everything is perfectly supported in user interface yet.
+Yet, the organizational structure is a powerful mechanism to systematically and consistently apply policies and organize the system.
 
 == Organizational Structure Synchronization
 

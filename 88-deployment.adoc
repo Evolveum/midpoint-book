@@ -82,6 +82,17 @@ Good portion of data will be out of date.
 Recommendation: proceed slowly.
 Validate the data before rolling out.
 
+=== Role Management
+
+TODO: How to design and create roles.
+
+Try to void application roles.
+The purpose of IDM is to bridge applications.
+Construction and entitlement associations can be used instead of application roles.
+In theory.
+Although you probably cannot avoid use of application roles entirely, as people will want to request application entitlements directly.
+At least synchronize them automatically using generic sync.
+
 === Organizational Structure
 
 TODO: quality varies wildly
