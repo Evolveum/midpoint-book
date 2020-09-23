@@ -111,3 +111,18 @@ TODO: This is not a project, it is a program (see later). Proceed in steps, iter
 TODO: Good communication is absolutely essential.
 Required information is seldom documented.
 Difficulty for remote projects.
+
+
+== TODO
+
+Plan ahead, especially if you need new features.
+MidPoint has 6 months development cycles.
+The backlog has years and years worth of improvements ideas, therefor it is perhaps quite natural that roadmap is a bit overcrowded.
+It takes some planning to get your features on midPoint roadmap, even if you have the funds for their development.
+
+Even bugfixes can take weeks to months to get fixed. Plan ahead. Test early. Proceed in iterations.
+
+== Conclusion
+
+This chapter is not complete. Maybe it will never be complete.
+Similarly to midPoint project, this chapter is developed in an iterative and incremental fashion.
