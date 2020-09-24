@@ -20,6 +20,57 @@ TODO: Analyse, plan, prototype, execute, learn, repeat.
 
 TODO: midPoint is built to support this approach, including open source (zero up-front license cost, subscriptions)
 
+== Before The Project
+
+you need to know what you want to do.
+
+Cheshire cat: If you do not know where you want to get, then it does not matter which way you go.
+
+=== Proposal
+
+Purchasing process is often seen as a battle between supplier and customer.
+That is an efficient method to get a good _price_. Good for customer, that is.
+But this is a terrible method if you need to get good _result_.
+
+We like to see purchasing process as a dialog, as a cooperation rather than a battle.
+TODO
+
+TODO: RFP process is not ideal, but we have to live with it.
+Avoid RFP if you can, try to have a dialog.
+
+Writing RFP: Always prioritize the requirements.
+Real priorities, setting everything to "Critical" will not work.
+Outline a long-term plan (years)
+Make the RFP short and efficient.
+Human resources are limited, especially in IDM.
+The longer the RFP is, the lower the chance that the good engineers won't have time to answer.
+You want perfect IDM solution?
+But that is extremely expensive.
+Do you have the money?
+What IDM solution would be _good enough_ for you?
+
+Answering RFP: Try to find out the priorities (questions).
+Try to propose iterative approach, even if the requests looks like waterfall.
+Waterfall does not make sense, such project would fail anyway.
+
+*Always* do PoC. Internally or externally. 2 weeks are usually appropriate.
+
+General: Build up trust.
+Look at our source code, commits, number of developers, etc.
+Look at our bugtracking, see how bugs are fixed.
+Smart small (PoC), grow up.
+
+
+=== Skills and Consulting Capacity
+
+TODO: trainings (ideally before project)
+Make sure there is someone that can help you (Evolveum support subscription is not meant for this).
+
+=== Plan and Vision
+
+TODO: short-term plan (1-3 iterations)
+long-term vision (2-7 years)
+
 == Deployment and Operation Tooling
 
 TODO: midPoint Studio
@@ -57,17 +108,6 @@ TODO: configuration versioning
 Info: maintainable solution. First day is the day of the deployment.
 TODO: you will need to proceed in iterations, it will take years.
 
-== Good Practices
-
-TODO
-
-== Bad Practices
-
-* Creating identifiers by using different "iterators", e.g. username jack123, mail jack.andrson.5@example.com
-Reason: complex to remember, complex to diagnose, complex to configure and troubleshoot
-Solution: go for jack.anderson.123@example.com or even better janderson8 and jack.anderson.8@example.com.
-
-* TODO: user-user manager relation as bad practice. Use orgtree instead.
 
 == Beware The Data
 
@@ -81,6 +121,74 @@ Good portion of data will be out of date.
 
 Recommendation: proceed slowly.
 Validate the data before rolling out.
+
+== Iteration Structure
+
+TODO: flexible proportions.
+First iterations will be heavier on analysis
+Later iterations will be heavy on testing.
+
+=== Analysis
+
+TODO: short intro to iteration analysis
+
+=== Implementation
+
+TODO: include: data migration
+
+=== Testing and Fixing
+
+TODO
+
+== Analytic Techniques
+
+Therefore, one has to ask the right (detailed) questions and wait for the right (even more detailed) answers.
+
+Asking the right questions is both art and science.
+Identity management projects are dealing with automating the user management processes which haven't been automated (or attempted to, or failed to do so) before.
+Be prepared for a lot of very general, incomplete and inconsistent information.
+Keep asking.
+
+=== Get The Big Picture
+
+Listen to the customer.
+TODO: make sure you understand the (business) goal of the solution
+
+
+=== Understand Current Environment
+
+TODO: what is here today
+
+=== Understand The Goal
+
+TODO: what has to be achieved
+
+=== Administrator Questionnaires
+
+TODO: sysadmin questionnaires
+
+TODO: Do not expect too much from the questionnaires.
+You will get a couple of good answers.
+Most answers will have only partial data, they will not be very precise.
+Some admins will nor respond at all.
+
+=== Data Clash
+
+TODO: just pull in the data, see how they look like, try to correlate
+
+=== Reverse Engineering
+
+TODO: look at the data, look at HR records, try to figure out how they were created
+
+=== Analysis Paralysis
+
+TODO: Do not try to analyze too much.
+People are people.
+They say one thing, but the reality is different.
+If there is a database column that is supposed to be ASCII7 form of user's full name, created as concatenation of first and last name, then there is almost certain probability that it contains value `Count Félix Teleke of Tölökö III, KBE`.
+Do not rely on analytical results completely.
+
+== Data Structures
 
 === Role Management
 
@@ -111,6 +219,18 @@ TODO: This is not a project, it is a program (see later). Proceed in steps, iter
 TODO: Good communication is absolutely essential.
 Required information is seldom documented.
 Difficulty for remote projects.
+
+== Good Practices
+
+TODO
+
+== Bad Practices
+
+* Creating identifiers by using different "iterators", e.g. username jack123, mail jack.andrson.5@example.com
+Reason: complex to remember, complex to diagnose, complex to configure and troubleshoot
+Solution: go for jack.anderson.123@example.com or even better janderson8 and jack.anderson.8@example.com.
+
+* TODO: user-user manager relation as bad practice. Use orgtree instead.
 
 
 == TODO
