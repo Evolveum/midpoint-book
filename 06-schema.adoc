@@ -866,7 +866,7 @@ Therefore you can simply use localization keys instead of actual text:
                  minOccurs="0" maxOccurs="1">
         <xsd:annotation>
             <xsd:appinfo>
-                <a:displayName>UserTypeExtensionType.hatSize.displayName</a:displayName>
+                <a:displayName>UserTypeExtensionType.hatSize.displayName</a:displayName>
                 <a:help>UserTypeExtensionType.hatSize.help</a:help>
             </xsd:appinfo>
         </xsd:annotation>
@@ -1031,13 +1031,13 @@ The data are automatically protected when the object is imported into midPoint:
             <value>
                 <t:encryptedData>
                     <t:encryptionMethod>
-                        <t:algorithm>http://www.w3.org/2001/04/xmlenc#aes128-cbc</t:algorithm>
+                        <t:algorithm>http://www.w3.org/2001/04/xmlenc#aes128-cbc</t:algorithm>
                     </t:encryptionMethod>
                     <t:keyInfo>
                         <t:keyName>1z0N17tv6hNQh5CAJ+jWHWDXeBM=</t:keyName>
                     </t:keyInfo>
                     <t:cipherData>
-                        <t:cipherValue>g6Neg3ZEXY/ga00SpEa9w5MlJ9/IR+M1vEjdceni6bM=</t:cipherValue>
+                        <t:cipherValue>g6Neg3ZEXY/ga00SpEa9w5MlJ9/IR+M1vEjdceni6bM=</t:cipherValue>
                     </t:cipherData>
                 </t:encryptedData>
             </value>

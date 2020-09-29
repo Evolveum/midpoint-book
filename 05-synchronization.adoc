@@ -3,7 +3,7 @@
 
 include::chapter-include.adoc[]
 
-[quote, Sherlock Holmes, "The Adventures of Sherlock Holmes by Arthur Conan Doyle"]
+[quote,Sherlock Holmes,"The Adventures of Sherlock Holmes by Arthur Conan Doyle"]
 It is a capital mistake to theorize before one has data.
 
 Data are the lifeblood of any software system.
@@ -67,7 +67,8 @@ It usually works like this:
 
 . The application stores copy of user data locally.
 
-. Business as usual. Local copy of the data is used ever since.
+. Business as usual.
+Local copy of the data is used ever since.
 
 This approach works quite well at the beginning.
 But after a while the data begin to stink.
@@ -402,7 +403,6 @@ Whenever midPoint deals with a change on an account the _situation_ of that acco
 The situation reflects whether this account is already linked to the user, whether we know the candidate owner, but it is not linked yet, whether we cannot determine the owner and so on.
 Individual situations are explained in the following table.
 
-
 |===
 |Situation |Description
 
@@ -436,7 +436,6 @@ After synchronization _situation_ is determined, midPoint continues by figuring 
 The reaction is quite clear for some situations (e.g. `unlinked`), but there is a lot of variability for other situations (e.g. `unmatched`).
 This variability is a reason that midPoint allows to set a reaction for each situation individually.
 There are several pre-defined reactions:
-
 
 |===
 |Action |Description
@@ -488,19 +487,19 @@ The reactions can be defined in the synchronization section of resource configur
         <reaction>
             <situation>deleted</situation>
             <action>
-                <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#deleteFocus</handlerUri>
+                <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#deleteFocus</handlerUri>
             </action>
         </reaction>
         <reaction>
             <situation>unlinked</situation>
             <action>
-                <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
+                <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
             </action>
         </reaction>
         <reaction>
             <situation>unmatched</situation>
             <action>
-                <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#addFocus</handlerUri>
+                <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#addFocus</handlerUri>
             </action>
         </reaction>
     </objectSynchronization>
@@ -661,8 +660,7 @@ The core of the configuration is contained in a single resource definition file.
 Following paragraphs explain individual parts of the file.
 There are few additional configuration files for reconciliation and live synchronization tasks.
 Simplified XML notation is used for clarity.
-The complete file in a form that is directly usable in midPoint can be found at the same place as all the other samples in this book
-(see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for details).
+The complete file in a form that is directly usable in midPoint can be found at the same place as all the other samples in this book (see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for details).
 
 This HR resource is a data source.
 It will be used to "pull" the data inside midPoint.
@@ -802,21 +800,21 @@ It is the next configuration section that makes this resource really authoritati
                 <situation>deleted</situation>
                 <synchronize>true</synchronize>
                 <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#deleteFocus</handlerUri>
+                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#deleteFocus</handlerUri>
                 </action>
             </reaction>
             <reaction>
                 <situation>unlinked</situation>
                 <synchronize>true</synchronize>
                 <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
+                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
                 </action>
             </reaction>
             <reaction>
                 <situation>unmatched</situation>
                 <synchronize>true</synchronize>
                 <action>
-                     <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#addFocus</handlerUri>
+                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#addFocus</handlerUri>
                 </action>
             </reaction>
         </objectSynchronization>
@@ -888,7 +886,7 @@ Therefore the task creates new midPoint users or links the accounts to existing 
     <taskIdentifier>7c57adc2-a857-11e7-83ac-0f212d965f5b</taskIdentifier>
     <ownerRef oid="00000000-0000-0000-0000-000000000002"/>
     <executionStatus>runnable</executionStatus>
-    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/synchronization/task/import/handler-3</handlerUri>
+    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/synchronization/task/import/handler-3</handlerUri>
     <objectRef oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf" type="c:ResourceType"/>
     <recurrence>single</recurrence>
 </task>
@@ -945,7 +943,7 @@ Reconciliation task lists all the accounts on a resource and compares that with 
     <taskIdentifier>bbe4ceac-a85c-11e7-a49f-0f5777d22906</taskIdentifier>
     <ownerRef oid="00000000-0000-0000-0000-000000000002"/>
     <executionStatus>runnable</executionStatus>
-    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/synchronization/task/reconciliation/handler-3</handlerUri>
+    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/synchronization/task/reconciliation/handler-3</handlerUri>
     <objectRef oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf" type="c:ResourceType"/>
     <recurrence>recurring</recurrence>
     <schedule>
@@ -1016,7 +1014,7 @@ All that is needed is synchronization task.
     <taskIdentifier>7c57adc2-a857-11e7-83ac-0f212d965f5b</taskIdentifier>
     <ownerRef oid="00000000-0000-0000-0000-000000000002"/>
     <executionStatus>runnable</executionStatus>
-    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/synchronization/task/live-sync/handler-3</handlerUri>
+    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/synchronization/task/live-sync/handler-3</handlerUri>
     <objectRef oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf" type="c:ResourceType"/>
     <recurrence>recurring</recurrence>
     <schedule>
@@ -1553,7 +1551,7 @@ All we need is to set up the resource to use that connector:
         <filter>
             <q:equal>
                 <q:path>connectorType</q:path>
-                <q:value>com.evolveum.polygon.connector.ldap.LdapConnector</q:value>
+                <q:value>com.evolveum.polygon.connector.ldap.LdapConnector</q:value>
             </q:equal>
         </filter>
     </connectorRef>
@@ -1594,13 +1592,13 @@ Once we have proper reference to LDAP connector we need to configure the connect
             <cc:host>localhost</cc:host>
             <cc:baseContext>dc=example,dc=com</cc:baseContext>
             <cc:bindDn>cn=idm,ou=Administrators,dc=example,dc=com</cc:bindDn>
-            <cc:bindPassword><t:clearValue>secret</t:clearValue></cc:bindPassword>
+            <cc:bindPassword><t:clearValue>secret</t:clearValue></cc:bindPassword>
             ...
         </icfc:configurationProperties>
         <icfc:resultsHandlerConfiguration>
-            <icfc:enableNormalizingResultsHandler>false</icfc:enableNormalizingResultsHandler>
-            <icfc:enableFilteredResultsHandler>false</icfc:enableFilteredResultsHandler>
-            <icfc:enableAttributesToGetSearchResultsHandler>false</icfc:enableAttributesToGetSearchResultsHandler>
+            <icfc:enableNormalizingResultsHandler>false</icfc:enableNormalizingResultsHandler>
+            <icfc:enableFilteredResultsHandler>false</icfc:enableFilteredResultsHandler>
+            <icfc:enableAttributesToGetSearchResultsHandler>false</icfc:enableAttributesToGetSearchResultsHandler>
         </icfc:resultsHandlerConfiguration>
     </connectorConfiguration>
     ...
@@ -1722,7 +1720,7 @@ We want midPoint to link the account in this case, therefore we define appropria
                 <situation>unlinked</situation>
                 <synchronize>true</synchronize>
                 <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
+                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
                 </action>
             </reaction>
             ...
@@ -1775,13 +1773,13 @@ We can also tell midPoint to unlink any account that was deleted in LDAP server:
             <reaction>
                 <situation>unmatched</situation>
                 <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#deleteShadow</handlerUri>
+                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#deleteShadow</handlerUri>
                 </action>
             </reaction>
             <reaction>
                 <situation>deleted</situation>
                 <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#unlink</handlerUri>
+                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#unlink</handlerUri>
                 </action>
             </reaction>
             ...

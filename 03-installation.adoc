@@ -70,8 +70,8 @@ Use the following URL to access midPoint user interface:
 
 Log in with the following credentials:
 
-Username: `administrator` +
-Password: `5ecr3t`
+Username: `administrator` +
+Password: `5ecr3t`
 
 Now you are logged-in as the `administrator`.
 This user has superuser privileges therefore you can see everything and you can do anything in the midPoint user interface.

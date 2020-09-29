@@ -141,7 +141,7 @@ You have free access to all the necessary information to do that: this book is f
 We are not hiding anything.
 Unlike many other vendors we do not want or need to hide any aspect of the software that we are producing.
 
-This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND).
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC{nbsp}BY-NC-ND).
 This essentially means that you can freely use this book for a personal use.
 You can retrieve and distribute it at no cost.
 However you are not allowed to sell it, modify it or use any parts of this book in commercial projects.
@@ -149,7 +149,7 @@ There is no direct profit that we make from this book.
 The primary reason for writing this book is to spread knowledge about midPoint.
 However even open source projects such as midPoint need funding.
 If you use midPoint in a commercial project that is a source of profit we think it is only fair if you share part of that profit with midPoint authors.
-Therefore we have chosen the CC BY-NC-ND license for this book.
+Therefore we have chosen the CC{nbsp}BY-NC-ND license for this book.
 You can use this book freely to learn about midPoint.
 However this license does not give you right to take parts of this book and include it in your project documentation.
 You can point to this book by URL, but you are not allowed to pass this book to the customer as a part of product documentation in a commercial project.

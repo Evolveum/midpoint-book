@@ -240,7 +240,7 @@ MidPoint home directory contains sub-directory logs and midPoint logfiles are th
 There are usually several files:
 
 * `midpoint.log` is the primary midPoint log file.
-Almost all of log messages from midPoint will be recorded here.
+Almost all log messages from midPoint will be recorded here.
 This is the right file to examine.
 The truth is in there.
 
@@ -792,12 +792,12 @@ The summary looks like this:
 [source%nowrap]
 ----
 ###[ CLOCKWORK SUMMARY ]######################################
-Triggered by focus primary delta ObjectDelta(UserType:c0c010c0-d34d-b33f-f00d-111111111111,MODIFY: PropertyDelta( / {.../common/common-3}organizationalUnit, REPLACE), PropertyDelta(metadata / {.../common/common-3}modifyTimestamp, REPLACE))
+Triggered by focus primary delta ObjectDelta(UserType:c0c010c0-d34d-b33f-f00d-111111111111,MODIFY: PropertyDelta( / {.../common/common-3}organizationalUnit, REPLACE), PropertyDelta(metadata / {.../common/common-3}modifyTimestamp, REPLACE))
 Focus: focus(user:c0c010c0-d34d-b33f-f00d-111111111111(jack))
-Projections (1): account(ID {.../connector/icf-1/resource-schema-3}uid = [ jack ], type 'default', resource:10000000-0000-0000-0000-000000000104(Dummy Resource Red)): KEEP
+Projections (1): account(ID {.../connector/icf-1/resource-schema-3}uid = [ jack ], type 'default', resource:10000000-0000-0000-0000-000000000104(Dummy Resource Red)): KEEP
 Executed:
- ObjectDelta(UserType:c0c010c0-d34d-b33f-f00d-111111111111,MODIFY: PropertyDelta( / {.../common/common-3}organizationalUnit, REPLACE), PropertyDelta(metadata / {.../common/common-3}modifyTimestamp, REPLACE)): SUCCESS
- ObjectDelta(ShadowType:a3ebbe89-227b-42ff-9d00-f42bee3cf151,MODIFY: PropertyDelta(attributes / {.../resource/instance-3}ship, REPLACE), PropertyDelta(metadata / {.../common/common-3}modifyTimestamp, REPLACE)): SUCCESS
+ ObjectDelta(UserType:c0c010c0-d34d-b33f-f00d-111111111111,MODIFY: PropertyDelta( / {.../common/common-3}organizationalUnit, REPLACE), PropertyDelta(metadata / {.../common/common-3}modifyTimestamp, REPLACE)): SUCCESS
+ ObjectDelta(ShadowType:a3ebbe89-227b-42ff-9d00-f42bee3cf151,MODIFY: PropertyDelta(attributes / {.../resource/instance-3}ship, REPLACE), PropertyDelta(metadata / {.../common/common-3}modifyTimestamp, REPLACE)): SUCCESS
 ##############################################################
 ----
 
@@ -1078,7 +1078,7 @@ It is (roughly) an equivalent to midPoint modify/replace deltas.
 
 * `addAttributeValues(...)` and `removeAttributeValues(...)` in `UpdateAttributeValuesOp`.
 This adds or deletes attribute values.
- It is (roughly) an equivalent to midPoint modify/add and modify/delete deltas.
+It is (roughly) an equivalent to midPoint modify/add and modify/delete deltas.
 
 * `updateDelta(...)` in `UpdateDeltaOp`: This operation allows complex combinations of add,delete and replace values.
 This is a new operation designed to replace older operations above.
