@@ -1253,6 +1253,70 @@ We are not going to dwell on old mistakes for too long.
 These two section will be reunited once there is a proper time to make incompatible changes.
 Which will probably happen in the future when the time comes to release midPoint 5.0.
 
+== Synchronization Strategies
+
+Synchronization is simple in theory.
+However, as usual, the devil is in the details.
+Similarly to provisioning, there is no one single "synchronization protocol" that would work for all the source systems.
+Every system type has its own way to synchronize data.
+Some systems (such as LDAP) even have several mechanisms.
+And then there are source systems that have no practical way how to implement synchronization.
+We would refer to such methods as _synchronization strategies_.
+
+Specific details of each synchronization strategy is an internal matter of connector implemenation.
+The strategy is configured on connector level and the details are, theoretically, hidden inside the connetor.
+MidPoint does not know and does not need to know what synchronization strategy is used.
+That might work in an ideal world.
+But we live in practical world and there are many details that leak through the _synchronization_ abstraction.
+
+Let us take LDAP as an example.
+LDAP is, theoretically, a standard.
+However, the standard does not specify any synchronization mechanism.
+There is experimental RFC4533, however that is not widely adopted.
+However, synchronization capabilities are needed and therefore every major LDAP server provides some mechanisms.
+Some mechanisms are quite good, some are not.
+There is ancient "Retro change log", going back to Netscape/iPlanet LDAP servers, but still used today.
+Active Directory has its own "DirSync" synchronization mechanism.
+OpenLDAP has yet another mechanism based on access log.
+There is RFC4533, which is used so rarely that there was no request to implement it in midPoint LDAP connector.
+And then there is a "catch all" synchronization that looks for recent changes based on `modifyTimestamp`.
+
+In theory, all the synchronization strategies above should be equivalent.
+But they are not.
+For example, some variants of "Retro change log" synchronization cannot reliably detect rename operations.
+There may be problem with delete operations as well, especially if coupled with rename operations.
+Almost every mechanism has its quirks.
+And then there is the `modifyTimestamp`, which is the most problematic of all.
+
+Unfortunately, it is quite common to use a synchronization strategy based on last modification timestamp.
+Not just for LDAP, but also for database tables and other types of source systems.
+This is perhaps understandable, as this is a very simple mechanism.
+However, it has a lot of problems.
+The obvious problems can be caused by de-synchronized time on network, although in the age of Network Time Protocol (NTP) this should not be a problem.
+The other problem is a timestamp granularity.
+If the timestamp is granular to one second, that can be a big problem.
+One second is a very long time for a computer.
+A lot can happen in one second.
+Therefore the connector has to include the "boundary" second both consecutive synchronization runs, which means that the records may be processed twice.
+Going for millisecond granularity makes the problem less severe, but the problem is still there.
+
+However, the worst problem is that this strategy cannot detect deleted objects.
+Deleted objects are not there any more, they do not have last modification timestamp, therefore they will not be included the search.
+Which means that there must be a reconciliation process running together with synchronization.
+But wait a minute, it is usually reconciliation to run reconciliation anyway, as a form of "safety net", isn't it?
+It is, but the difference is timing.
+It is one thing to run reconciliation once a week to make sure that no records were missed.
+And it is a completely different thing to run it every hour to make sure deleted objects are properly handled.
+This makes a huge difference, especially for deployments with millions of entries.
+Strategies based on last modification timestamp may look like a good idea at the beginning.
+But they usually turn to a major liability in the long run.
+Avoid them if you can.
+
+The bottom line is, that synchronization strategies are not created equal.
+In fact, the individual strategies tend to have vastly different characteristics.
+Our advice is to learn how each synchronization strategy works, what are the limitations and when it fails.
+Also, avoid the use of strategies based on last modification timestamp if there is any other viable alternative.
+
 == Mapping and Expression Tips and Tricks
 
 Mappings and expressions form a very powerful mechanism.
