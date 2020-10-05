@@ -1312,6 +1312,9 @@ Strategies based on last modification timestamp may look like a good idea at the
 But they usually turn to a major liability in the long run.
 Avoid them if you can.
 
+// TODO LATER: Maybe mention problems with backup/restore and syncnhronization?
+// TODO LATER: Maybe mention messaging-based synch and how (un)reliable it can be?
+
 The bottom line is, that synchronization strategies are not created equal.
 In fact, the individual strategies tend to have vastly different characteristics.
 Our advice is to learn how each synchronization strategy works, what are the limitations and when it fails.
