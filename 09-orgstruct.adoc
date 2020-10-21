@@ -740,9 +740,9 @@ But that is a topic for its own chapter.
 == Beyond Users
 
 MidPoint organizational structure can do a lot of crazy stuff.
-By now, you should not be too surprised to learn that we are not done yet.
 Organizational structures are usually build to contain people.
 Whereas midPoint organizational structure can contain a broad range of object types.
+Users, roles and services are the most common object types, but almost any other midPoint object can be placed in organizational structure.
 
 _Role catalog_ is a common use of organizational structure that does not (directly) involve people.
 Role catalog is used to sort the roles into categories, much like a catalog in electronic shop is used to sort the products.
@@ -752,7 +752,7 @@ MidPoint role catalog is simply an organizational structure.
 It does not have divisions, sections or projects, but it has categories.
 Categories are (almost) ordinary orgs that form the hierarchy.
 
-TODO: Screenshot of catalog as orgstruct.
+image::09-10-role-catalog.png[Role catalog]
 
 Primary use of the catalog is related to request-and-approval process.
 The catalog makes it easier for a user to find appropriate role when requesting its assignment in self-service part of midPoint user interface.
@@ -769,17 +769,302 @@ Yet, the organizational structure is a powerful mechanism to systematically and 
 
 == Organizational Structure Synchronization
 
-TODO: generic synchronization
-TODO: kind/intent
-TODO: focus-projection (terminology)
-TODO: automatic assignment of org in inbound mapping
-TODO: simple principles (e.g. roles) reused everytwhere
+MidPoint can manage organizational structure.
+But where that structure comes from?
+Back in 20^th^ century there were entire teams dedicated to drawing organizational chart on paper.
+It is 21^st^ century now, we do not use paper any more.
+We are using computers to manage organizational charts now.
+Which means that dedicated teams are drawing organizational charts in Excel and distributing them by e-mail.
+
+Fortunately, there are some organizations that have truly progressed into 21^st^ century.
+Such organizations store their organizational structures in a structured form, usually in database tables.
+When exported to a CSV file, the structure may look like this:
+
+.org.csv
+[source,csv]
+----
+"orgnum","name","description","parentOrgNum"
+"10000","ExAmPLE","ExAmPLE, Inc.",""
+"11000","Sales and Marketing Division","Expensive people that make money.","10000"
+"11100","Direct Sales Department","Suits that talk to customers directly.","11000"
+"11200","Indirect Sales Department","Suits that talk to other suits that talk to customers.","11000"
+...
+----
+
+In this case each organizational unit has a unique identifier, such as `11000`.
+Each organizational unit has a reference to parent organizational unit.
+When all the lines are processed, they form a complete organizational tree.
+
+This is a very good information source.
+Of course, we would like to automatically pull the data from this source instead of managing organization tree manually.
+How could we do it?
+Clever reader is smiling, remembering that we like to create generic re-usable mechanisms in midPoint.
+There is a way how to synchronize _user_ records from the HR system.
+Of course, the same mechanisms can be reused to synchronize _organizational unit_ records.
+
+MidPoint synchronization mechanism can work with almost any object.
+It can synchronize HR records to users, organizational unit records to orgs, printer database to services, Active directory groups to roles or pretty much anything to anything.
+This is what we call _generic synchronization_.
+
+Similarly to ordinary synchronization, we need to start with a _resource_.
+However, this resource will not contain accounts, it will contain organizational units.
+
+[source,xml]
+----
+<resource oid="81ec779e-13b2-11eb-8e47-dfbfd542db3e">
+
+    <name>Organizational Chart</name>
+
+    <connectorRef type="ConnectorType">
+        <filter>
+            <q:equal>
+                <q:path>c:connectorType</q:path>
+                <q:value>com.evolveum.polygon.connector.csv.CsvConnector</q:value>
+            </q:equal>
+        </filter>
+    </connectorRef>
+
+    <connectorConfiguration>
+        <icfc:configurationProperties
+                xmlns:icfccsvfile="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/bundle/com.evolveum.polygon.connector-csv/com.evolveum.polygon.connector.csv.CsvConnector">
+            <icfccsvfile:filePath>/opt/midpoint/var/resources/org.csv</icfccsvfile:filePath>
+            <icfccsvfile:encoding>utf-8</icfccsvfile:encoding>
+            <icfccsvfile:fieldDelimiter>,</icfccsvfile:fieldDelimiter>
+            <icfccsvfile:multivalueDelimiter>;</icfccsvfile:multivalueDelimiter>
+            <icfccsvfile:uniqueAttribute>orgnum</icfccsvfile:uniqueAttribute>
+        </icfc:configurationProperties>
+    </connectorConfiguration>
+
+    <schemaHandling>
+
+        <objectType>
+            <displayName>Organizational unit</displayName>
+            <default>true</default>
+            <objectClass>ri:AccountObjectClass</objectClass>
+            <kind>generic</kind>
+            <intent>orgunit</intent>
+            <attribute>
+                <ref>ri:orgnum</ref>
+                <inbound>
+                    <target>
+                        <path>$focus/identifier</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute>
+                <ref>ri:name</ref>
+                <inbound>
+                    <target>
+                        <path>$focus/displayName</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute>
+                <ref>ri:description</ref>
+                <inbound>
+                    <target>
+                        <path>$focus/description</path>
+                    </target>
+                </inbound>
+            </attribute>
+        </objectType>
+
+    </schemaHandling>
+
+    <projection>
+        <assignmentPolicyEnforcement>none</assignmentPolicyEnforcement>
+    </projection>
+
+    <synchronization>
+        <objectSynchronization>
+            <enabled>true</enabled>
+            <correlation>
+                <q:equal>
+                    <q:path>identifier</q:path>
+                    <expression>
+                        <path>$projection/attributes/orgnum</path>
+                    </expression>
+                </q:equal>
+            </correlation>
+            <reaction>
+                <situation>linked</situation>
+                <synchronize>true</synchronize>
+            </reaction>
+            <reaction>
+                <situation>deleted</situation>
+                <synchronize>true</synchronize>
+                <action>
+                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#deleteFocus</handlerUri>
+                </action>
+            </reaction>
+            <reaction>
+                <situation>unlinked</situation>
+                <synchronize>true</synchronize>
+                <action>
+                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
+                </action>
+            </reaction>
+            <reaction>
+                <situation>unmatched</situation>
+                <synchronize>true</synchronize>
+                <action>
+                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#addFocus</handlerUri>
+                </action>
+            </reaction>
+        </objectSynchronization>
+    </synchronization>
+</resource>
+----
+
+This should all look very familiar by now.
+It is almost the same resource as we have seen in the synchronization chapter.
+However, there are few differences.
+We will describe them in next sections.
+
+=== Kind and Intent
+
+The definition of "Organizational unit" resource object contains specification of _kind_ and _intent_:
+
+[source,xml]
+----
+        ...
+        <objectType>
+            <displayName>Organizational unit</displayName>
+            <default>true</default>
+            <objectClass>ri:AccountObjectClass</objectClass>
+            <kind>generic</kind>
+            <intent>orgunit</intent>
+            ...
+----
+
+Kind and intent identify the type of resource object for use by midPoint.
+There are three possible values for _kind_:
+
+|===
+| Kind | Description
+
+| `account`
+| Resource object that represents identity of a person, either physical such as computer user or virtual such as `administrator`, `root`, `daemon` or similar special-purpose identities.
+Accounts are usually linked to the User objects.
+
+
+| `entitlement`
+| Resource object that represents groupings or privileges of an account.
+Entitlement resource objects represent groups, resource-specific roles or access permissions.
+Entitlements are meant to be associated to an account.
+For example a `group` entitlement may have accounts as its members.
+
+
+| `generic`
+| Any other type of resource object.
+This is used for resource objects that cannot be classified as _account_ or _entitlement_.
+|===
+
+You can choose any of these accounts for your resource objects.
+Values of _kind_ are pre-defined in midPoint, as midPoint will make some assumptions about them.
+For example, midPoint will expect that accounts can be associated with entitlements, for example accounts may be members of groups.
+Therefore, it is recommended to properly categorize your resource objects to kinds.
+This also helps to make the configuration understandable for mere mortals.
+
+Then there is _intent_. There are no pre-defined values for _intent_ in midPoint, perhaps except for value `default` that will be used in case there is no explicit definition of _intent_.
+You can choose any value that you like.
+However, it is recommended to choose a value that describes the intended use of the resource object.
+For example:
+
+|===
+| Kind | Example intent | Description
+
+| `account`
+| `default`
+| Default account.
+This usually means the usual, very ordinary user account.
+
+| `account`
+| `admin`
+| Administration account.
+Used in situations where administrators get dedicated accounts with administrator privileges.
+
+| `account`
+| `test`
+| Testing account.
+Used when testers are given special-purpose accounts to use for testing, to avoid interference with their usual accounts.
+
+
+| `entitlement`
+| `group`
+| The usual, most ordinary, boring group of users.
+It can have accounts or other groups as its members.
+
+| `entitlement`
+| `posixGroup`
+| LDAP `posixGroup`, used to assign UNIX group membership in LDAP.
+It has a different structure than ordinary group, hence we would like to use a different _kind_ for it.
+
+
+| `entitlement`
+| `privilege`
+| Resource object that represents system privilege.
+Can be "given" to an account.
+
+
+| `generic`
+| `locality`
+| Resource object that represents physical location in our organization.
+Such as branch office, campus building or meeting room.
+It has no formal association to the account.
+
+| `generic`
+| `orgunit`
+| Resource object that represents organizational unit.
+In our case, it represents one record in the organizational chart database.
+
+|===
+
+These are just examples.
+You can choose any kind/intent combination that makes sense for your deployment.
+For example, you may choose to use `entitlement` kind for organizational units instead of `generic`.
+MidPoint would work fine even in that case.
+However, our `Organizational Chart` resource does not have any accounts, therefore the organizational units cannot realy be associated to anything in this resource.
+Also, membership in an organizational unit does not really look like an entitlement.
+Therefore we have chosen to use `generic` kind here.
+You are free to make your own choices.
+
+TODO: kind+intent are as identifiers for midPoint.
+
+=== Names and Identifiers
+
+TODO: create orginit name (has to be globally-unique)
+
+TODO: add mapping to the example
 
 TODO: reason of having `identifier` in org:
 * easier correlation
+* renames
 * identifier does not need to be unique among org trees, name needs to be unique.
+
+TODO: benefit of persistent identifiers for orgs
+
+
+=== Nesting Organizational Units
+
+TODO: something is missing: nest the orgs inside each other
+
+TODO: automatic assignment of org in inbound mapping
+TODO: mention create on demand (for later)
+TODO: simple principles (e.g. roles) reused everytwhere
+
+
+== Provisioning Organizational Structure
+
+TODO: provision orgstruct to LDAP
+
+TODO: construction with explicit kind+intent
+(mention that this method can be used to create admin accounts)
+
+TODO: focus-projection (terminology)
+
 
 == Conclusion
 
 TODO: orgstruct used for certifications
-TODO: delgated administration
+TODO: delegated administration
