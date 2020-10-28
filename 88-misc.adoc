@@ -6,6 +6,9 @@ include::chapter-include.adoc[]
 [quote, TODO]
 TODO
 
+TODO: provisioning scripts
+TODO: multi-connectors (SSH)
+
 TODO: create on demand?
 TODO: sequences
 TODO: validation expression (object template)
