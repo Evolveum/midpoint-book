@@ -878,6 +878,10 @@ However, this resource will not contain accounts, it will contain organizational
     <synchronization>
         <objectSynchronization>
             <enabled>true</enabled>
+            <objectClass>AccountObjectClass</objectClass>
+            <kind>generic</kind>
+            <intent>orgunit</intent>
+            <focusType>OrgType</focusType>
             <correlation>
                 <q:equal>
                     <q:path>identifier</q:path>
@@ -1029,30 +1033,186 @@ Also, membership in an organizational unit does not really look like an entitlem
 Therefore we have chosen to use `generic` kind here.
 You are free to make your own choices.
 
-TODO: kind+intent are as identifiers for midPoint.
+.Why `AccountObjectClass`?
+NOTE: Why is there `AccountObjectClass` in the configuration?
+We are not working with accounts here, we work with organizational units.
+So, why `AccountObjectClass`?
+The reason is the CSV connector that we are using.
+The CSV connector is quite simplistic, it considers everything to be an account.
+Object classes are set by the connector, hence we need to use `AccountObjectClass` here.
+However, the _kind_ and _intent_ definition is "overriding" the notion that this is an account, making it more understandable for the users.
+
+_Kind_ and _intent_ behave like coordinates when midPoint has to identify resource object that is assigned to a user.
+A user may have at most one _default account_ on a resource (which means kind=`account`, intent=`default`).
+That same user may also have _admin account_ on the same resource (kind=`account`, intent=`admin`).
+A role may be represented by at most one _LDAP group_ on a resource (kind=`entitlement`, intent=`ldapGroup`).
+This is heavily used by midPoint logic.
+Whenever there are two _constructions_ that have the same combination of kind+intent, midPoint assumes that they are describing the same resource object.
+MidPoint automatically merges the constructions.
+If the constructions have different combination of kind+intent, midPoint assumes that they are describing different resource objects and the constructions are processed separately.
+Correct configuration of _kind_ and _intent_ is crucial for midPoint to work correctly.
+
+.Tag (a.k.a. "multiaccounts")
+TIP: The requirement that there may be at most one resource object for each kind+intent combination works very well in most cases.
+However, there are also cases when more that one resource object is needed.
+_Kind_ and _intent_ has to be specified in the configuration, therefore this mechanism will not work for resource objects that appear and disappear dynamically.
+Therefore, new concept of _tag_ was introduced in midPoint 4.0.
+The _tag_ can supplement the kind+intent combination with a dynamic value, thus allowing multiple resource objects to exist for any particular kind+intent combination.
+This feature is colloquially known as "multiaccounts".
 
 === Names and Identifiers
 
-TODO: create orginit name (has to be globally-unique)
+Synchronization of organizational structure is the same as synchronization of users.
+Theoretically.
+However, there are some subtle differences in practice, mostly caused by the differences of `User` and `Org` schemas.
 
-TODO: add mapping to the example
+The first difference originates from the fact, that `name` of the org has to be unique.
+This uniqueness is usually not a problem for users, as username is naturally unique among the entire user base.
+However, this is slightly different for orgs, as there may be several parallel organizational structures.
+There may be `Security` department, `Security` project and `Security` workgroup at the same time.
+This may be partially solved by using identifiers instead of names.
+However, this still does not solve the problem of department `123` and project `123`.
+The simple solution is to prefix the identifier with a code of the organizational tree that it belongs to, thus creating department `O123` and project `P123`.
+However, users looking for project `123` may have difficulty finding it, as the `P` prefix in `P123` name is usually just a deliberate decision of IDM administrator.
+Therefore, we still want to store the original identifier value (`123`) into the `identifier` property of the org object.
+There is no uniqueness constrain on the `identifier` property, therefore both department `123` and project `123` can co-exist and both can be easily discovered by searching the identifier.
+The result is that we neet two inbound mappings for the `` attribute:
 
-TODO: reason of having `identifier` in org:
-* easier correlation
-* renames
-* identifier does not need to be unique among org trees, name needs to be unique.
+[source,xml]
+----
+            <attribute>
+                <ref>ri:orgnum</ref>
+                <inbound>
+                    <target>
+                        <path>$focus/identifier</path>
+                    </target>
+                </inbound>
+                <inbound>
+                    <expression>
+                        <script>
+                            <code>'O'+input</code>
+                        </script>
+                    </expression>
+                    <target>
+                        <path>$focus/name</path>
+                    </target>
+                </inbound>
+            </attribute>
+----
 
-TODO: benefit of persistent identifiers for orgs
+Storing original organizational unit identifier in the `identifier` property makes it easier to correlate organizational units.
+The `idenfier` property can be used in the correlation query.
+If the identifier is reasonably persistent, this is a huge benefit.
+
+Changes in organizational structure can be quite nasty.
+Organizational units are often renamed or moved in organizational trees.
+Simplistic synchronization configuration may not be able to interpret such events correctly.
+It may look like new organizational unit was created, and the old unit was deleted.
+This is likely to wreak havoc to organizational unit assignments, especially if there were special privileges configured for this organizational unit.
+Even worse, organizational tree data are sometimes acquired from a different source than the user data, which is causing timing problems.
+If organizational tree is updated first, there will be new empty organizational unit, old unit will be deleted, and user assignments will become invalid.
+If user data are updated first, the synchronization routines may not be able to update the assignments as the new organizational unit does not exist yet.
+This is going to cause a whole lot of problems, most of them will need to be fixed by manual intervention of IDM administrator.
+Additionally, reorganizations usually happen in cycles, each cycle changing a number of units at the same time.
+Which means that every few months the organizational structure is going to break down, everybody will be complaining, and it will take days to fix all the problems manually.
+
+All of that can be avoided if there are reasonably persistent organizational unit identifiers.
+Which means that every organizational unit has an identifier that does not change when the unit is renamed or moved.
+In that case midPoint can reliably detect the rename, change organizational unit name and keep the assignments intact.
+MidPoint can also detect that the unit was moves, change the parent unit and still keep all the assignments.
+Organizational unit identifiers make everything so much easier.
+Therefore, try really hard to use the identifier when setting up synchronization of organizational structure.
+If there is no such identifier, talk to the business people to add it.
+This is usually not an easy discussion, as the solution often involves changes in business processes.
+However, it is absolutely essential to get it right.
+All the effort will be repaid many times over during the course of IAM program.
 
 
 === Nesting Organizational Units
 
-TODO: something is missing: nest the orgs inside each other
+We can synchronize the organizational units into midPoint.
+We can populate the organizational units with data.
+However, organizational structures are usually hierarchical.
+How to do we nest organizational units to create organizational tree?
 
-TODO: automatic assignment of org in inbound mapping
-TODO: mention create on demand (for later)
-TODO: simple principles (e.g. roles) reused everytwhere
+In midPoint, organizational tree is formed by _assignments_.
+Therefore the answer is quite simple: create the right assignments.
+Clever reader is not paying attention any more, re-reading the sections on automatic role assignments in object template.
+However, even a clever reader should pay attention here, as there is an easier way how to do it.
+The assignments can be set up in the inbound mappings:
 
+[source,xml]
+----
+            <attribute>
+                <ref>ri:parentOrgNum</ref>
+                <inbound>
+                    <expression>
+                        <assignmentTargetSearch>
+                            <targetType>OrgType</targetType>
+                            <filter>
+                                <q:equal>
+                                    <q:path>identifier</q:path>
+                                    <expression>
+                                        <path>$input</path>
+                                    </expression>
+                                </q:equal>
+                            </filter>
+                        </assignmentTargetSearch>
+                    </expression>
+                    <target>
+                        <path>$focus/assignment</path>
+                    </target>
+                </inbound>
+            </attribute>
+----
+
+This mapping automatically sets up an assignment to parent organizational unit.
+We are lucky, we have almost ideal source of organizational data.
+Our CSV file contains an identifier of a parent organizational unit in the `parentOrgNum` column.
+All we need to do is to look for midPoint org that has that particular value in its `identifier` property.
+This is done by the `assignmentTargetSearch` that we have already used for automatic assignment of roles in object template.
+The same mechanism is reused here.
+
+All that remains is to set up a synchronization task.
+Make sure that you specify _kind_ and _intent_ in the synchronization task.
+This is important, otherwise the tasks will not work.
+Setting the right _kind_ and _intent_ was not emphasize before when we were synchronizing accounts.
+The `account` _kind_ is the default and midPoint is usually smart enough to use default _intent_.
+However, the defaults will no longer work when we go beyond the accounts.
+
+.Troubleshooting
+TIP: Generic synchronization can be confusing and there may be non-obvious configuration complexities.
+When mis-configured, the synchronization often does nothing.
+There is no error or any other obvious indication of an error.
+Logging is your best friend in this case.
+Enable logging of _synchronization service_ (`com.evolveum.midpoint.model.impl.sync`) at debug level.
+MidPoint will log reasonable amount of information that is very likely to lead you to the solution.
+
+The configuration above will work for simple cases, but there is still a room for improvement.
+The search filter in `assignmentTargetSearch` expression is quite simplistic.
+It will match orgs from several trees if they have the same identifier.
+The same problem is in the correlation query.
+However, clever reader would surely find a way how to improve it.
+
+Also, this method will work only if the data feed is correctly ordered.
+Everything will work as long as parent organizational units are synchronized before child organizational units.
+However, that is not always the case.
+If ordering is wrong, child organizational units will not be able to find parent units, and the tree will disintegrate.
+We are living in a networked concurrent world, data ordering is usually difficult to guarantee.
+
+MidPoint has a mechanism to handle unordered data source.
+There is a way how to create parent organizational units _on demand_.
+When a child organizational unit looks for a parent that is not there yet, the parent object can be created at that moment.
+Of course, this can only create _stub_ parent, a very minimal object that has only the essential data.
+Yet, even such a _stub_ object is sufficient to create organizational hierarchy.
+The _stub_ will be updated later, when the details about parent organizational unit are retrieved from the data feed.
+The details of this _create on demand_ mechanism is beyond the scope of this chapter.
+We will get back to it later.
+
+
+=== Adding Users To Units
+
+TODO
 
 == Provisioning Organizational Structure
 
