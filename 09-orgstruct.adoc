@@ -809,6 +809,7 @@ This is what we call _generic synchronization_.
 Similarly to ordinary synchronization, we need to start with a _resource_.
 However, this resource will not contain accounts, it will contain organizational units.
 
+.resource-csv-org.xml
 [source,xml]
 ----
 <resource oid="81ec779e-13b2-11eb-8e47-dfbfd542db3e">
@@ -929,6 +930,7 @@ We will describe them in next sections.
 
 The definition of "Organizational unit" resource object contains specification of _kind_ and _intent_:
 
+.resource-csv-org.xml
 [source,xml]
 ----
         ...
@@ -1078,6 +1080,7 @@ Therefore, we still want to store the original identifier value (`123`) into the
 There is no uniqueness constrain on the `identifier` property, therefore both department `123` and project `123` can co-exist and both can be easily discovered by searching the identifier.
 The result is that we neet two inbound mappings for the `` attribute:
 
+.resource-csv-org.xml
 [source,xml]
 ----
             <attribute>
@@ -1131,7 +1134,7 @@ All the effort will be repaid many times over during the course of IAM program.
 === Nesting Organizational Units
 
 We can synchronize the organizational units into midPoint.
-We can populate the organizational units with data.
+We can set up the properties of organizational units.
 However, organizational structures are usually hierarchical.
 How to do we nest organizational units to create organizational tree?
 
@@ -1141,6 +1144,7 @@ Clever reader is not paying attention any more, re-reading the sections on autom
 However, even a clever reader should pay attention here, as there is an easier way how to do it.
 The assignments can be set up in the inbound mappings:
 
+.resource-csv-org.xml
 [source,xml]
 ----
             <attribute>
@@ -1182,11 +1186,12 @@ However, the defaults will no longer work when we go beyond the accounts.
 
 .Troubleshooting
 TIP: Generic synchronization can be confusing and there may be non-obvious configuration complexities.
-When mis-configured, the synchronization often does nothing.
+When mis-configured, the synchronization mechanism often does nothing.
 There is no error or any other obvious indication of an error.
-Logging is your best friend in this case.
+Logging is your best friend in that case.
 Enable logging of _synchronization service_ (`com.evolveum.midpoint.model.impl.sync`) at debug level.
-MidPoint will log reasonable amount of information that is very likely to lead you to the solution.
+MidPoint will log a reasonable amount of information about the synchronization process.
+That information is very likely to lead you to the solution.
 
 The configuration above will work for simple cases, but there is still a room for improvement.
 The search filter in `assignmentTargetSearch` expression is quite simplistic.
@@ -1204,7 +1209,7 @@ MidPoint has a mechanism to handle unordered data source.
 There is a way how to create parent organizational units _on demand_.
 When a child organizational unit looks for a parent that is not there yet, the parent object can be created at that moment.
 Of course, this can only create _stub_ parent, a very minimal object that has only the essential data.
-Yet, even such a _stub_ object is sufficient to create organizational hierarchy.
+Yet, even such a _stub_ object is sufficient to create an organizational hierarchy.
 The _stub_ will be updated later, when the details about parent organizational unit are retrieved from the data feed.
 The details of this _create on demand_ mechanism is beyond the scope of this chapter.
 We will get back to it later.
@@ -1212,11 +1217,379 @@ We will get back to it later.
 
 === Adding Users To Units
 
-TODO
+We have a nice hierarchical organizational structure now.
+Yet, something is still missing.
+The organizational structure is all about the people, but there are no people in our organizational tree.
+Let's fix this.
+
+The people data are coming from HR resource in our ExAmPLE case.
+We need to modify the HR resource to automatically assign people to the organizational tree.
+To do that, we need to add information about organizational units into our HR feed.
+After several phone calls, tens of e-mails and a quick 3-hour meeting, the HR department agreed to add a new `orgnum` column to the CSV file:
+
+.hr.csv
+[source,csv]
+----
+"empno","firstname","lastname","jobcode","orgnum"
+"001","Alice","Anderson","S006","11100"
+"002","Bob","Brown","S007","11210"
+"003","Carol","Cooper","S008","11310"
+...
+----
+
+The 'orgnum' column contains an identifier of the organizational unit the person belongs to.
+This looks quite familiar, and clever reader is working on the configuration already.
+Of course, we can use the same approach we have used to build up organizational hierarchy.
+We just need to apply it to the users instead of organizational units.
+Therefore we are going to add new inbound mapping to the HR resource:
+
+.resource-csv-hr.xml
+[source,xml]
+----
+            <attribute>
+                <ref>ri:orgnum</ref>
+                <inbound>
+                    <expression>
+                        <assignmentTargetSearch>
+                            <targetType>OrgType</targetType>
+                            <filter>
+                                <q:equal>
+                                    <q:path>identifier</q:path>
+                                    <expression>
+                                        <path>$input</path>
+                                    </expression>
+                                </q:equal>
+                            </filter>
+                        </assignmentTargetSearch>
+                    </expression>
+                    <target>
+                        <path>$focus/assignment</path>
+                    </target>
+                </inbound>
+            </attribute>
+----
+
+The `assignmentTargetSearch` expression looks for the right organizational unit.
+Then the mapping creates an assignment to that unit.
+And we are done.
+Run the HR synchronization task, and all the users are going to be neatly organized in the tree.
+
+.Get your data structures right at the beginning.
+[TIP]
+====
+That 3-hour meeting with HR was in fact really useful and necessary.
+The result was that ExAmPLE HR department did the right thing.
+They put _identifier_ of organizational unit in the HR feed, instead of organizational unit _name_.
+Having organizational unit _identifier_ makes everything much more stable.
+
+There is a lesson to be learned.
+Every hour spent designing the data structures will be repaid many times over.
+Getting it wrong will cost you days or months dealing with data inconsistencies.
+It is also very difficult to change data formats in the future, as they effectively become data integration interfaces.
+Take your time and get it right at the beginning.
+====
 
 == Provisioning Organizational Structure
 
-TODO: provision orgstruct to LDAP
+We have seen how we can synchronize organizational structure into midPoint.
+We are talking midPoint here.
+What goes in, can also go out.
+It is very simple to provision organizational structure to an ordinary target system, such as database table.
+However, we have already learned a thing or two, and doing that would be almost boring.
+Therefore let's do something more challenging.
+Let us synchronize the organizational structure into an LDAP directory tree.
+
+The basic principles of organizational structure provisioning are the same as for users.
+We need to set up _outbound mappings_ for organizational units.
+We already know how to do that.
+There are just few little differences:
+
+* We will use `organizationalUnit` object class instead of `inetOrgPerson`.
+
+* We will use special kind/intent combination.
+
+* We have to be a bit smarter about creating LDAP distinguished names (DNs) for the entries, as we want them to create a hierarchical data structure.
+
+Everything else is essentially the same as for users and accounts.
+However, let us go over all the details step by step.
+
+First of all, we need to add new `objectType` definition to the LDAP resource:
+
+.resource-openldap.xml
+[source,xml]
+----
+        <objectType>
+            <kind>generic</kind>
+            <intent>ou</intent>
+            <displayName>Organizational Unit</displayName>
+            <objectClass>ri:organizationalUnit</objectClass>
+            <attribute>
+                <ref>ri:dn</ref>
+                <displayName>Distinguished Name</displayName>
+                <limitations>
+                    <minOccurs>0</minOccurs>
+                    <maxOccurs>1</maxOccurs>
+                </limitations>
+                <outbound>
+                    <name>ldap-ou-dn</name>
+                    <trace>true</trace>
+                    <source>
+                        <path>$focus/name</path>
+                    </source>
+                    <expression>
+                        <script>
+                            <code>
+                                import javax.naming.ldap.Rdn
+                                import javax.naming.ldap.LdapName
+
+                                // We will collect names of the org units in the orgpath list
+                                // We cannot add them to dn yet as we need their order to be reversed
+                                def orgpath = []
+                                def node = focus
+                                while (true) {
+                                    log.debug("processing node {}", node)
+                                    orgpath.add(node.displayName.orig)
+                                    if (node.parentOrgRef == null || node.parentOrgRef.isEmpty()) {
+                                        break
+                                    } else {
+                                        node = midpoint.resolveReference(node.parentOrgRef[0])
+                                    }
+                                }
+
+                                log.debug("orgpath={}", orgpath)
+                                def dn = new LdapName('ou=org,dc=example,dc=com')
+                                orgpath.reverse().each { ouname -> dn.add(new Rdn('ou',ouname)) }
+                                return dn.toString()
+                            </code>
+                        </script>
+                    </expression>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:ou</ref>
+                <limitations>
+                    <maxOccurs>1</maxOccurs>
+                </limitations>
+                <outbound>
+                    <source>
+                        <path>$focus/displayName</path>
+                    </source>
+                </outbound>
+            </attribute>
+        </objectType>
+----
+
+Except for that big piece of Groovy code, this configuration is relatively simple.
+The `objectType` definition specifies `organizationalUnit` value for object class.
+This is a standard LDAP object class for "ou" entries.
+There is also specification of kind (`generic`) and intent (`ou`).
+These are midPoint "coordinates" for this object type.
+Then we have two _outbound_ mappings, one for LDAP distinguished name (`dn`), the other for naming attribute (`ou`).
+The `ou` mapping is very simple, using a value of org's `displayName`.
+On the other hand, the `dn` mapping looks somehow scary.
+There is no need to be afraid.
+We are going to explain everything, and there are some really interesting parts here.
+
+The purpose of this mapping is to construct LDAP distinguished name in a hierarchical manner.
+We want to put the organizational tree under the `ou=org,dc=example,dc=com` entry, with the entry for ExAmPLE company at the top.
+Therefore the `dn` of Operations Division need to be `ou=Operations Division,ou=ExAmPLE,ou=org,dc=example,dc=com`.
+IT Department goes under the Operations Division, therefore we need its `dn` to be `ou=IT Department,ou=Operations Division,ou=ExAmPLE,ou=org,dc=example,dc=com`.
+We need to process the tree from the organizational unit all the way through all the parent units to the very top of organizational structure.
+That is exactly the thing that the Groovy expression does.
+
+Let's skip the `import` statements for now.
+The first thing that the expression has to do is to figure out the "path" from the current organizational unit to the top of the tree.
+The expression gets the current organizational unit in the `focus` variable.
+However, the org object does not contain its complete path in the tree.
+All it has is a reference to its parent organizational unit (`parentOrgRef`).
+Therefore the expression has to iterate over all the levels in the tree until it gets to the top.
+The top organizational unit does not have any parent, that is where the iteration stops.
+Display names of each organizational unit at the "path" is collected in the `orgpath` list.
+As the org contains only a reference to the parent, we need to explicitly read the parent object from midPoint repository.
+We will do that with an explicit call to `midpoint.resolveReference(...)` method.
+This method reads the object from the database and returns it.
+When the loop stops, `orgpath` contains all the display names that we want in our `dn`.
+Now we need to encode the names in LDAP DN format.
+This can be done by simple string operations.
+However, there are some intricate details about escaping the names as they are encoded.
+It would be nice if someone else could do the encoding for us.
+Turns out, there is someone else to do it.
+Java platform comes with Java Naming and Directory Interface (JNDI), which is supposed to be a generic library to access broad range of directory services.
+JNDI is not the best library that the world has ever seen, but it is part of Java platform and it can do formatting of LDAP DN.
+It will be good enough for us.
+We will take advantage of `LdapName` and `Rdn` classes to encode the DN.
+The `import` statements at the beginning made use of these classes quite convenient.
+The last detail is the ordering.
+We want our names in the DN to be in a different order, therefore we just reverse `orgpath` before processing.
+
+Clever reader has noticed a couple of interesting things in that mapping.
+Especially the `<trace>` element looks very useful, which it is.
+It turns on detailed tracing of the mapping.
+MidPoint will record the details of mapping evaluation in the log file.
+Similar `<trace>` element can also be applied at the expression level.
+Then there are the `log` statements in the Groovy code, such as `log.debug("processing node {}", node)`.
+These are explicit logging statements.
+The `processing node ...` message is recorded to the log file at debug level.
+This is a very useful tool for diagnosing execution of complex expressions.
+
+Our outbound mappings are ready to go.
+But nothing happens yet.
+MidPoint does not know that it is supposed to create LDAP objects for our organizational units.
+MidPoint does not automatically create accounts for all the users either.
+We need a _construction_ to do that.
+The orgs need to have an assignment with an constuction, similar to these that we have used to create accounts.
+However, we will need to use the right _kind_ and _intent_.
+We want to achive something like this:
+
+[source,xml]
+----
+<org oid="7a1feb50-471f-11ea-8aab-1b2627541f15">
+    <name>F11000</name>
+    <displayName>Sales and Marketing Division</displayName>
+    ...
+    <assignment>
+        <construction>
+            <!-- LDAP resource -->
+            <resourceRef oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c"/>
+            <kind>generic</kind>
+            <intent>ou</intent>
+        </construction>
+    </assignment>
+</org>
+----
+
+You can test your configuration by creating this assignment manually in the GUI, or by editing the XML/JSON/YAML version of the org.
+However, we need to create these assignments automatically.
+There are several ways to do it.
+
+Perhaps the most obvious way would be to add a mapping to create this assignment in the object template.
+As there is an object template for users (`UserType`), there may be an object template for any other midPoint object.
+Therefore, you can create object template for orgs (`OrgType`) and configure the mapping there.
+This would be an acceptable solution.
+
+An alternative way would be to add _inbound_ mapping to create this assignment.
+That would be in fact quite easy, as it would is very similar to the mapping that we have used to create organizational hierarchy.
+However, that would not be an ideal configuration, as would would mix the _concerns_ here.
+The mapping will be an _inbound_ mapping in the `Organizational Chart` resource.
+It would not be entirely appropriate for this _inbound_ mapping to control provisioning (i.e. _outbound_ flow) of organizational structure.
+It will work, but such configuration will be difficult to understand and maintain.
+
+Clever reader is not thinking about the _metaroles_ that we have already mentioned in the RBAC chapter.
+As usual, cleaver reader is right, or perhaps very close to the right solution.
+Creating a _metarole_ that could be applied to all the orgs would be almost an ideal solution:
+
+.role-meta-orgunit.xml
+[source,xml]
+----
+<role oid="b8c3ccba-1dfb-11eb-9031-27e1d26ca36e">
+    <name>Functional Organizational Unit Metarole</name>
+    <inducement>
+        <construction>
+            <!-- LDAP resource -->
+            <resourceRef oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c"/>
+            <kind>generic</kind>
+            <intent>ou</intent>
+        </construction>
+    </inducement>
+</role>
+----
+
+This metarole can be assigned to every org that we want to provision.
+In such case, it is perfectly good to have the mapping to assign the meta role even in the _inbound_ part of the `Organizational Chart` resource.
+The metarole specifies type of the organizational unit.
+Therefore it is desirable to set the metarole when the org is created for the first time, which happens during organizational structure synchronization.
+
+This would be almost ideal solution.
+However, there is a better way still.
+We can use _archetype_ instead of metarole.
+Archetype will do the same trick as metarole does here.
+
+.archetype-orgunit.xml
+[source,xml]
+----
+<archetype oid="475106e4-1dfe-11eb-8429-534869969212">
+    <name>Functional Organizational Unit</name>
+    <inducement>
+        <construction>
+            <!-- LDAP resource -->
+            <resourceRef oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c"/>
+            <kind>generic</kind>
+            <intent>ou</intent>
+        </construction>
+    </inducement>
+</archetype>
+----
+
+Archetype can do even more tricks than metarole.
+Archetype can specify an icon and a color for the objetcs.
+It can control the assignments to these objects.
+Archetypes give a structure to midPoint objects.
+We will get back to archetypes in a dedicated chapter.
+
+For now, just choose any of the methods above to trigger provisioning of organizational structure.
+We will go for the archetype, assigning it automatically in inbound mappings of `Organizational Chart` resource:
+
+.resource-csv-org.xml
+[source,xml]
+----
+        ...
+        <objectType>
+            ...
+            <objectClass>ri:AccountObjectClass</objectClass>
+            <kind>generic</kind>
+            <intent>orgunit</intent>
+            <attribute>
+                <ref>ri:orgnum</ref>
+                ...
+                <inbound>
+                    <expression>
+                        <value>
+                            <targetRef oid="475106e4-1dfe-11eb-8429-534869969212" type="ArchetypeType"/>
+                        </value>
+                    </expression>
+                    <target>
+                        <path>$focus/assignment</path>
+                    </target>
+                </inbound>
+            </attribute>
+            ...
+        </objectType>
+        ...
+----
+
+All we need to do now is to re-run the synchronization task.
+The result is a nice organizational structure in LDAP directory:
+
+.Organizational strucutre in LDAP
+image::09-11-ldap-org-tree.png[Organizational strucutre in LDAP]
+
+This is a nice result.
+However, there are still several remarks to make.
+
+If you are going to try this scenario with a real LDAP server, you will need to create a root entry for the organizational structure (`ou=org,dc=example,dc=com`).
+You will also need to update access control lists (ACLs).
+However, be warned that this is not a very ideal way how to maintain organizational structure in LDAP directory.
+We are using display names here, which are part of LDAP identifiers (DNs).
+Therefore even a minor correction in organizational unit name will trigger LDAP rename operation.
+It will change the identifier of the organizational unit, and also all the organizational units below it.
+Perhaps the only thing that can make it worse is to place _users_ in that structure as well.
+Which some people actually do.
+The only real reason to put organizational structure in this form is to satisfy the needs of legacy applications.
+Avoid this approach whenever you can.
+
+The clever reader have surely noticed that the big Groovy expression above is explicitly fetching objects from the database.
+This may cause a performance problem in case that such expression is evaluated often or if the strucutre is very deep.
+This is usually not the case with ordinary organizational structures, therefore this approach is usually not problematic.
+However, it is always a good thing to keep performance in mind, especially if your user population is bigger than few thousands of users.
+
+Finally, we still depend on ordering of the data feed.
+We want to create "higher" entries in LDAP first, otherwise an attempt to create "lower" entries would fail.
+This can be solved by using the "create on demand" approach mentioned above.
+However, it is going to be problematic and cumbersome when organizational unit display names are used instead of indetifiers.
+It does not matter that much anyway, as it is likely you will suffer for many different reasons if organizational display names are used.
+Always use organizational unit identifiers if you can.
+
+== Focus and Projection
 
 TODO: construction with explicit kind+intent
 (mention that this method can be used to create admin accounts)
