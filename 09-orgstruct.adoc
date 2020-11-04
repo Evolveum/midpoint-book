@@ -46,7 +46,8 @@ Those orgs can be put "inside" the company org.
 Yet another orgs can represent divisions and they can be put "inside" the division orgs.
 Repeat the process until complete organizational structure is formed.
 
-image:09-01-org-tree.png[Organizational tree]
+.Organizational tree
+image::09-01-org-tree.png[Organizational tree]
 
 Org is quite a basic thing with a very simple anatomy:
 
@@ -71,7 +72,8 @@ However, names such as `F1000` are not very friendly.
 Therefore there is a mechanism to set nicer display name that does not need to be unique.
 The display name will be used instead of the ordinary `name` whenever this org is displayed to a user.
 
-image:09-02-org-top.png[Top-level organizational unit]
+.Top-level organizational unit
+image::09-02-org-top.png[Top-level organizational unit]
 
 We have an organizational unit now.
 But how do we put users in it?
@@ -79,7 +81,8 @@ Clever reader already knows the answer: assignment.
 All that is needed is to assign the org to a user.
 This is done in almost the same way as you would assign a role, just select the `Org` tab in assignment dialog.
 
-image:09-03-top-org-assignment.png[Assignment of an organizational unit]
+.Assignment of an organizational unit
+image::09-03-top-org-assignment.png[Assignment of an organizational unit]
 
 Or, in XML form:
 
@@ -98,7 +101,8 @@ Or, in XML form:
 
 The user is a part of our minimalistic organizational unit now:
 
-image:09-04-top-org-assignment-tree.png[Assigned top-level organizational unit]
+.Assigned top-level organizational unit
+image::09-04-top-org-assignment-tree.png[Assigned top-level organizational unit]
 
 == Organizational Structure Hierarchy
 
@@ -154,7 +158,8 @@ We use an assignment, of course:
 
 Now we have our little hierarchy:
 
-image:09-05-small-org-tree.png[Small organizational structure tree]
+.Small organizational structure tree
+image::09-05-small-org-tree.png[Small organizational structure tree]
 
 This makes perfect sense, doesn't it?
 User become part of organizational units when the units are assigned to them.
@@ -231,7 +236,8 @@ Therefore let's put the entire organizational structure into a single file:
 It would be no big surprise to find out that laziness was a driving force behind many improvements in life, would it?
 Now, let us use this convenient approach to create a nice and rich corporate organizational tree:
 
-image:09-06-org-tree-page.png[Organizational tree]
+.Organizational tree
+image::09-06-org-tree-page.png[Organizational tree]
 
 TIP: Of course, you can create and manage organizational structure in midPoint user interface.
 In fact, people do that quite often.
@@ -436,12 +442,14 @@ Therefore it is easy to assign a manager for a temporary time period, suspend a 
 Manager assignment is created in the user interface in almost the same way as normal assignment is created.
 The only difference is selection of _manager relation_ at the bottom of the assignment target dialog:
 
-image:09-07-assign-org-manager.png[Assign organizational unit manager]
+.Assign organizational unit manager
+image::09-07-assign-org-manager.png[Assign organizational unit manager]
 
 MidPoint now knows that Alice is a manager of Direct Sales Department.
 This is also displayed in the organizational tree:
 
-image:09-08-org-tree-manager.png[Organizational unit with a manager]
+.Organizational unit with a manager
+image::09-08-org-tree-manager.png[Organizational unit with a manager]
 
 But, wait a minute!
 Alice has been promoted to be a _manager_ of direct sales department.
@@ -694,7 +702,8 @@ Just create new root _org_ for projects and place the projects under it:
 We have two organizational trees now.
 Each neatly stowed under its own tab:
 
-image:09-09-org-tree-projects.png[Project organizational tree]
+.Project organizational tree
+image::09-09-org-tree-projects.png[Project organizational tree]
 
 This is a nice _project_ organizational structure.
 But our users are members of _functional_ organizational structure already.
@@ -752,6 +761,7 @@ MidPoint role catalog is simply an organizational structure.
 It does not have divisions, sections or projects, but it has categories.
 Categories are (almost) ordinary orgs that form the hierarchy.
 
+.Role catalog
 image::09-10-role-catalog.png[Role catalog]
 
 Primary use of the catalog is related to request-and-approval process.
@@ -1439,7 +1449,7 @@ MidPoint does not automatically create accounts for all the users either.
 We need a _construction_ to do that.
 The orgs need to have an assignment with an constuction, similar to these that we have used to create accounts.
 However, we will need to use the right _kind_ and _intent_.
-We want to achive something like this:
+We want to archive something like this:
 
 [source,xml]
 ----
@@ -1521,7 +1531,7 @@ Archetype will do the same trick as metarole does here.
 ----
 
 Archetype can do even more tricks than metarole.
-Archetype can specify an icon and a color for the objetcs.
+Archetype can specify an icon and a color for the objects.
 It can control the assignments to these objects.
 Archetypes give a structure to midPoint objects.
 We will get back to archetypes in a dedicated chapter.
@@ -1590,6 +1600,19 @@ It does not matter that much anyway, as it is likely you will suffer for many di
 Always use organizational unit identifiers if you can.
 
 == Focus and Projection
+
+Synchronization of an organizational structure is an application of a _generic synchronization_ principle.
+Almost any resource object can be synchronized with almost any midPoint object - and vice versa.
+
+.User and accounts
+image::04-04-hub-and-spoke.png[User and accounts]
+
+
+// TODO: image: org <-> oragnizational unit, UNIX group,
+
+
+// TODO: image: focus <-> projection
+
 
 TODO: construction with explicit kind+intent
 (mention that this method can be used to create admin accounts)
