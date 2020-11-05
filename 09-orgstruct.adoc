@@ -1603,21 +1603,76 @@ Always use organizational unit identifiers if you can.
 
 Synchronization of an organizational structure is an application of a _generic synchronization_ principle.
 Almost any resource object can be synchronized with almost any midPoint object - and vice versa.
+Principle of the synchronization is essentially the same as in user-account case that we have seen in previous chapters.
+In that case the accounts were linked to user, midPoint synchronized the data from account to user and from user to accounts.
+The synchronization follows user-account links.
 
 .User and accounts
 image::04-04-hub-and-spoke.png[User and accounts]
 
+Synchronization of an organizational structure is based on the same principle.
+However, there is an org instead of user, and there are various resource objects instead of accounts.
+It may look like this:
 
 // TODO: image: org <-> oragnizational unit, UNIX group,
 
+There may be user, org, service, role or almost any midPoint object on the midPoint side.
+That may be synchronized with account, group, role, privilege, organizational unit or almost any resource object on resource side.
+As you can see, the terminology becomes quite cumbersome.
+Saying "almost any midPoint object" and "almost any resource object" is not very natural or precise.
+Therefore we have decided to use _focus_ and _projection_ terms:
 
 // TODO: image: focus <-> projection
 
+The object that is "in the middle" is called _focus_ or _focal object_.
+It is in the centre of the synchronization, it is its focal point.
+Every relevant piece of data is reflected onto the focal object by the synchronization mechanisms.
 
-TODO: construction with explicit kind+intent
-(mention that this method can be used to create admin accounts)
+User is a typical focal object.
+Other midPoint objects can be focal objects as well, most notably org, role and service.
 
-TODO: focus-projection (terminology)
+The state of focal object is _projected_ back to the resources.
+Therefore the objects that reside on the resources are called _projections_.
+An account is a typical projection object, but there is wide variety of other object classes such as groups, organizational units, (resource-side) roles, privileges, access control lists, teams and so on.
+
+.Focus and projection
+TIP: _Focus_ and _projection_ may look like strange words to use for identity management concepts.
+Many identity management systems work with just _user_ and _account_.
+However, midPoint is more flexible, more generic.
+When we designed the generic synchronization mechanism, we needed to find good names for the generalization of _user_ and _account_ concepts.
+We tried hard, but we could not find anything better than _focus_ and _projection_.
+There are only two hard problems in computer science, after all.
+
+There is always one _focus_, one focal object in the center.
+There may be any number of _projections_ linked to the _focus_.
+There may be several _projections_ on one resource.
+However, each _projection_ has to be unique, it needs to have a unique combination of _kind_ and _intent_.
+This is the reason that we consider _kind_ and _intent_ to be coordinates, as they uniquely identify a _projection_ on a particular resource.
+
+This is a very flexible concept that can be used for various purposes.
+We have already seen how it can be used for synchronization of organizational structure.
+Similar principle can be used to synchronize Active Directory groups, automatically creating application role for each Active Directory group.
+This principle provides a mechanism to create multiple accounts for one user on one resource.
+For example, it can be used to create administration accounts for some users.
+In this case we would use explicit _kind_ and _intent_ in the constuction:
+
+[source,xml]
+----
+<role oid="0e9c448c-1f87-11eb-9703-b3d28c537192">
+    <name>System Administrator</name>
+    <inducement>
+        <construction>
+            <!-- Active Directory resource -->
+            <resourceRef oid="1e1e5a1c-1f87-11eb-8ace-1fbd338f61c5"/>
+            <kind>account</kind>
+            <intent>admin</intent>
+        </construction>
+    </inducement>
+</user>
+----
+
+The `System Administrator` role above specifies that a special `admin` account should be created for system administrators.
+When this role is combined by an ordinary `Employee` role, the administrator will get two accounts: the usual employee account (intent=`default`) and a special-purpose administration account (intent=`admin`).
 
 
 == Conclusion
