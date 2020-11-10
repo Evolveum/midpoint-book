@@ -6,6 +6,10 @@ include::chapter-include.adoc[]
 [quote, TODO]
 TODO
 
+We have users, roles, orgs and services.
+These can represent almost any type of objects.
+But sometimes we need to show finer facets.
+
 TODO: archetypes as metaroles
 
 == Archetypes for Users

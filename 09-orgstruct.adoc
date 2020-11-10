@@ -10,7 +10,7 @@ Organizations come in all shapes and sizes.
 Unless your organization is extremely unusual, there is always some form of recognizable internal structure.
 There may be the usual corporate divisions, departments and sections.
 Or there may be dynamic teams, projects, work groups and task forces.
-But some kind of _organizational structure_ is usually there.
+Some kind of _organizational structure_ is always there.
 And it matters.
 While many organizational structures are quite far from the ideal, organizational structure is seldom completely useless.
 Membership in some organizational units is a reason to automatically grant privileges.
@@ -19,7 +19,7 @@ Team leaders and project manager often exercise elevated privileges over their t
 And all of that is not limited just to users.
 Roles are often organized into _role catalog_.
 Services and devices may be organized by applications, by geographical location and so on.
-There are many things that need to be organized and there are many ways to to organize them.
+There are many things that need to be organized and there are many ways to organize them.
 
 Organizational structure affects almost every part of the identity management deployment.
 We have realized that in very early stages of midPoint development.
@@ -27,7 +27,7 @@ Therefore organizational structure is an integral part of midPoint.
 It permeates almost every part of midPoint functionality.
 Unlike most other systems, organizational structure in midPoint is a very flexible and almost universal concept.
 It can be used to build functional organizational structures with divisions, departments and sections.
-But it can also be used to create a flat project-based organizational structure.
+It can also be used to create a flat project-based organizational structure.
 The same mechanism can be used to sort roles in a role catalog or to manage devices by geographical location.
 And all of those organizational structures may co-exist at the same time in the same system.
 
@@ -43,7 +43,7 @@ _Org_ can represent any kind of organizational unit: companies, division, depart
 Orgs can be used to create hierarchical structures.
 For example, a top-level org may represent a company. A couple of other orgs can represent divisions.
 Those orgs can be put "inside" the company org.
-Yet another orgs can represent divisions and they can be put "inside" the division orgs.
+Yet another orgs can represent departments, these can be put "inside" the division orgs.
 Repeat the process until complete organizational structure is formed.
 
 .Organizational tree
@@ -125,8 +125,8 @@ It is a well-known fact that all self-respecting corporations need sales and mar
 
 We have pimped up this organizational unit a little.
 We have seen `name` and `displayName` before.
-The `description` is no strange either.
-But there is also an `identifier`.
+The `description` is no stranger either.
+Then there is an `identifier`.
 The value of the `identifier` is usually an official "code" of the organizational unit assigned by HR people.
 But why do we need yet another identifier?
 OID is an identifier, `name` is an identifier of sorts, why do we need another one?
@@ -134,7 +134,7 @@ For now let's just say that the identifier will be very useful later on, when we
 
 If we import the org above into midPoint it will become the _top_ org.
 MidPoint will put it at the same level as the ExAmPLE company org.
-But we do not want that.
+We do not want that.
 We want to create a hierarchy.
 We want to tell midPoint to put the department inside the company.
 How do we do that?
@@ -1614,7 +1614,8 @@ Synchronization of an organizational structure is based on the same principle.
 However, there is an org instead of user, and there are various resource objects instead of accounts.
 It may look like this:
 
-// TODO: image: org <-> oragnizational unit, UNIX group,
+.Org and projections
+image::09-12-org-projections.png[Org and projections]
 
 There may be user, org, service, role or almost any midPoint object on the midPoint side.
 That may be synchronized with account, group, role, privilege, organizational unit or almost any resource object on resource side.
@@ -1622,7 +1623,8 @@ As you can see, the terminology becomes quite cumbersome.
 Saying "almost any midPoint object" and "almost any resource object" is not very natural or precise.
 Therefore we have decided to use _focus_ and _projection_ terms:
 
-// TODO: image: focus <-> projection
+.Focus and projections
+image::09-13-focus-projections.png[Focus and projections]
 
 The object that is "in the middle" is called _focus_ or _focal object_.
 It is in the centre of the synchronization, it is its focal point.
@@ -1636,7 +1638,7 @@ Therefore the objects that reside on the resources are called _projections_.
 An account is a typical projection object, but there is wide variety of other object classes such as groups, organizational units, (resource-side) roles, privileges, access control lists, teams and so on.
 
 .Focus and projection
-TIP: _Focus_ and _projection_ may look like strange words to use for identity management concepts.
+TIP: _Focus_ and _projection_ may sound like strange words to use for identity management concepts.
 Many identity management systems work with just _user_ and _account_.
 However, midPoint is more flexible, more generic.
 When we designed the generic synchronization mechanism, we needed to find good names for the generalization of _user_ and _account_ concepts.
@@ -1654,7 +1656,7 @@ We have already seen how it can be used for synchronization of organizational st
 Similar principle can be used to synchronize Active Directory groups, automatically creating application role for each Active Directory group.
 This principle provides a mechanism to create multiple accounts for one user on one resource.
 For example, it can be used to create administration accounts for some users.
-In this case we would use explicit _kind_ and _intent_ in the constuction:
+In this case we would use explicit _kind_ and _intent_ in the construction:
 
 [source,xml]
 ----
@@ -1677,5 +1679,18 @@ When this role is combined by an ordinary `Employee` role, the administrator wil
 
 == Conclusion
 
-TODO: orgstruct used for certifications
-TODO: delegated administration
+MidPoint organizational structure is a versatile and powerful mechanism.
+It can be used to organize users in units, teams and projects.
+It can be used to group variety of other midPoint objects.
+However, organizational structure becomes incredibly powerful when combined with other midPoint mechanisms.
+Authorizations can take advantage of organizational structures to implement delegated administration schemes.
+Organizational structures are used in recertification campaigns.
+MidPoint multi-tenancy mechanism also relies on organizational structures.
+Organizational structure is a universal mechanism to organize midPoint objects.
+
+There are many universal mechanisms in midPoint, synchronization mechanism being one of the prominent ones.
+Synchronization was designed to work with many types of midPoint objects, including organizational structure.
+Expressions and mappings give bring the power to transform organizational structure data during synchronization, supporting diverse set of use cases.
+Similar mechanisms can be used to synchronize roles and services, granting midPoint enormous flexibility in identity management deployment.
+
+Yet, we are just starting to uncover the full power of midPoint.

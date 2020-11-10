@@ -54,7 +54,7 @@ include::07-rbac.adoc[]
 
 include::08-object-templates.adoc[]
 
-//include::09-orgstruct.adoc[]
+include::09-orgstruct.adoc[]
 
 include::90-troubleshooting.adoc[]
 
