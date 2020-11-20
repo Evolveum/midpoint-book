@@ -45,7 +45,7 @@ But there is much more: multi level approvals, optional approval steps, dynamic 
 MidPoint has most of the features already built-in, you just need to configure them.
 
 * *Entitlements:* Managing accounts if fine.
-But it is not the whole story.
+Yet, it is not the whole story.
 There is huge difference between a regular account and an administrator account.
 Fortunately, midPoint can easily manage membership in groups, roles, assignment of privileges and other entitlements.
 In this case we really mean entitlements on the resources, such as Active Directory groups, distribution lists, Unix groups and so on.
