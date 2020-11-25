@@ -1,9 +1,9 @@
 :booktitle: Practical Identity Management With MidPoint
 :doctitle: {booktitle}
 :author: Radovan Semančík et al.
-:revdate: 2020-12-25
-//:revdate: {localdate}
-:revnumber: 2.1
+//:revdate: 2020-12-25
+:revdate: {localdate}
+:revnumber: 2.2-DRAFT
 :doctype: book
 :keywords: Identity management, IDM, Identity and Access Management, IAM, Open source, OSS, midPoint, Evolveum
 :copyright: CC-BY-NC-ND 4.0
