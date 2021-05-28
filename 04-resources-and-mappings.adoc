@@ -3,12 +3,12 @@
 
 include::chapter-include.adoc[]
 
-[quote, William Arthur Ward]
+[quote,William Arthur Ward]
 The pessimist complains about the wind; the optimist expects it to change; the realist adjusts the sails.
 
 Reading and writing resource objects, attribute synchronization, mapping of attribute values, their transformation using scripts – these are the basic midPoint features.
 These features are absolutely essential for any self-respecting IDM deployment and all IDM engineers should be more than familiar with them.
-And this is exactly the purpose of this chapter: describe necessary configuration to use midPoint as a provisioning engine.
+And this is exactly the purpose of this chapter: describe the necessary configuration to use midPoint as a provisioning engine.
 
 It is not very realistic to expect that all the systems will agree on the same interface, communication protocol and schema for identity management.
 There were several attempts to unify the IAM landscape, but none of them was entirely successful.
@@ -29,7 +29,7 @@ _Resource_ is one of the most important concepts in midPoint.
 Any system connected to midPoint is a _resource_.
 Resources are typically target systems where midPoint manages accounts.
 But source systems such as HR databases are also considered to be resources.
-There is no strict distinction between source and target resource in midPoint.
+There is no strict distinction between the source and target resource in midPoint.
 Both source and target resources are defined in exactly the same way.
 Resource can even act as both source and target at the same time.
 
@@ -97,7 +97,7 @@ The wizard can be used to create and edit resource using a graphical user interf
 
 image::04-01-resource-wizard.png[Applications]
 
-However, even if resource wizard is your preferred way, it may be still easier to start with an existing sample.
+However, even if the resource wizard is your preferred way, it may still be easier to start with an existing sample.
 Find the sample that is the best match for your situation, import it in midPoint and then use the wizard to modify it.
 
 There are many resource samples to start from.
@@ -110,7 +110,7 @@ Please see <<92-additional-information.adoc#92-additional-information,Additional
 Every resource needs a connector to work.
 Connectors are small pieces of Java code that are used to communicate with the resource.
 MidPoint looks for available connectors when it starts up.
-MidPoint will automatically create new configuration object for each connector that it discovers during startup.
+MidPoint will automatically create new configuration object for each connector that it discovers during the startup.
 The list of discovered connectors can be seen in midPoint user interface in _Configuration > Repository objects > Connector_.
 The connector objects look like this:
 
@@ -172,14 +172,14 @@ For now it is important to know just few basic principles.
 When this resource definition is imported, midPoint notices that there is no OID in the `connectorRef` reference.
 It also notices that there is a search filter.
 Therefore midPoint executes that search filter.
-In this case it looks for object of `ConnectorType` type that has property `connectorType` with value `com.evolveum.polygon.connector.ldap.LdapConnector`.
+In this case it looks for an object of `ConnectorType` type that has property `connectorType` with value `com.evolveum.polygon.connector.ldap.LdapConnector`.
 Therefore midPoint finds LDAP connector regardless of the OID that was generated when midPoint discovered that connector.
 Then midPoint takes the OID of the object that it has found.
 The OID is placed to the `connectorRef` reference, so midPoint can find the connector directly and it does not need to execute the search every time the resource is used.
 
 This is the method that is frequently used to bind resource definition to a specific connector type.
 It has the advantage that it works in all midPoint deployments.
-Therefore it is also used in configuration the samples.
+Therefore it is also used in the configuration samples.
 
 == Bundled and Deployed Connectors
 
@@ -215,9 +215,9 @@ It will discover any new connectors and create a connector configuration objects
 
 == Connector Configuration Properties
 
-Connector need a configuration to be able to work with resource.
+Connector needs a configuration to be able to work with the resource.
 This configuration usually consists of connection parameters such as hostname, port, administrative username, password, connection security settings and so on.
-The connector configuration properties are specified in resource definition object.
+The connector configuration properties are specified in the resource definition object.
 In a simplified from it looks like this:
 
 [source,xml]
@@ -238,17 +238,19 @@ In a simplified from it looks like this:
 ----
 
 There may be a very broad range of configuration properties - and every connector has its own set.
-While working just with the text representation of the resource definition you will need to find out the names of the configuration properties by looking at the samples, connector documentation or maybe even connector source code.
-It may look difficult but this is perfectly viable approach.
+While working just with the text representation of the resource definition you will need to find out the names
+of the configuration properties by looking at the samples, connector documentation or maybe even connector source code.
+It may look difficult but this is a perfectly viable approach.
 However, there are other ways.
-Firstly there is the resource wizard.
+Firstly, there is the resource wizard.
 The wizard knows all the connector configuration properties and it will present the properties in a configuration form.
-The wizard takes the definition of the configuration properties from _connector schema_.
-Connector schema is a definition of the properties that the connector supports: their names, types, multiplicity and so on.
+The wizard takes the definition of the configuration properties from the _connector schema_.
+The connector schema is a definition of the properties that the connector supports: their names, types, multiplicity and so on.
 The connector schema is stored in the connector configuration object under the schema tag.
-Therefore even if you are working only with the XML/JSON/YAML files you can have a look at that schema to figure out what connector configuration properties are supported.
+Therefore even if you are working only with the XML/JSON/YAML files you can have a look at that schema
+to figure out what connector configuration properties are supported.
 
-The connector schema also defines connector namespace.
+The connector schema also defines the connector namespace.
 Generally speaking namespaces in midPoint are used to isolate schema extensions that might conflict and they are also used for data model versioning.
 The use of namespaces is optional in almost all parts of midPoint - but not yet in all the parts.
 Connector configuration is one of the few parts where namespaces should still be used.
@@ -295,13 +297,13 @@ You should be able to see your resource in the list in _Resources > List resourc
 The icon next to your resource is most likely black - not green and not red.
 Green icon means that the resource is working, red icon means that there is an error, black means "I do not know yet".
 Click on the resource label.
-Resource details page should appear.
+The resource details page should appear.
 There is a _Test Connection_ button at the bottom of the page.
 Click on that button.
 It may take a while now.
 MidPoint is initializing the connector with the configuration properties that you have specified.
 Then the connector will be used to check connection to the resource.
-If the parameters were correct and midPoint can reach the resource you will see green lights:
+If the parameters were correct and midPoint can reach the resource you will see the green lights:
 
 image::04-02-test-resource.png[Test resource]
 
@@ -310,8 +312,8 @@ In that case correct the configuration properties and try again.
 If everything works well then the resource icon turns green.
 Now we have a minimal working resource.
 
-There are few more things that you can do with such a minimal resource.
-For example you can look at the resource content.
+There are a few more things that you can do with such a minimal resource.
+For example, you can look at the resource content.
 Navigate to the resource details page and switch to _Uncategorized_ tab.
 Select one of the object classes that the resource supports.
 Just click inside the _Object class_ input box and the suggestions will appear.
@@ -324,13 +326,13 @@ image::04-03-list-accounts.png[List resource account]
 That is a very useful feature for several reasons.
 Firstly, you can check that not just the resource connection works, but that the connector can actually retrieve the objects.
 Secondly, you will get some idea about the object classes that the resource supports.
-And thirdly, by looking at several objects you can get basic overview of how the data are structured: what attributes are used and what are the typical values.
+And thirdly, by looking at several objects you can get a basic overview of how the data are structured: what attributes are used and what are the typical values.
 You will appreciate that information later on when we will be setting up mappings.
 
 == Resource Schema Basics
 
 The only resource object that early identity management systems dealt with was an _account_.
-That is not sufficient any more.
+That is not sufficient anymore.
 Good identity management system needs to manage may different types of resource objects: accounts, groups, organizational units, privileges, roles, access control lists and so on.
 In midPoint these are the _object classes_: types of resource objects that are made accessible to midPoint by the connector.
 A minimal resource supports at least the _account_ object class, but a typical resource supports more object classes.
@@ -345,7 +347,7 @@ Retrieved resource schema is stored under the schema tag in resource definition 
 You can have a look and examine the schema there.
 But beware, the schema may be quite rich and big.
 
-Resource schema is absolutely crucial concept.
+Resource schema is an absolutely crucial concept.
 MidPoint takes advantage of resource schema whenever it needs to work with resource objects such as accounts or groups.
 MidPoint uses resource schema to validate mappings.
 The schema is used for automatic type conversions.
@@ -362,7 +364,7 @@ image::04-04-hub-and-spoke.png[Hub and spoke]
 
 This means that the _account A_ can be synchronized with midPoint user and then midPoint user can be synchronized with _account B_.
 But _account A_ cannot be synchronized directly to _account B_.
-This is deliberate decision that was made very early in midPoint design and we have very good reasons for it.
+This is a deliberate decision that was made very early in midPoint design and we have very good reasons for it.
 
 _Accounts_ and user that represent the same person are _linked_ together.
 This _link_ is a relation that midPoint creates and maintains.
@@ -414,7 +416,7 @@ Then it follows other links from the user to find all the other accounts that ma
 Similarly to the previous case the mappings are applied.
 The mappings from the HR account to the user are applied first.
 The result is a modification of user properties.
-Then an process identical to the previous case takes place.
+Then a process identical to the previous case takes place.
 User modifications are automatically applied to all affected accounts.
 
 image::04-07-user-account-inbound.png[User-account GUI inbound mapping]
@@ -448,11 +450,11 @@ We want to have simple, clean and maintainable system, both externally and inter
 
 Resource schema is a very important concept.
 It defines what object classes are supported by the resource and how they look like.
-But it is not important to know only how the objects look like.
+But it is important to know not only how the objects look.
 It is also important to know what to do with them.
 And that is what the _schema handling_ is all about.
 
-_Schema handling_ is a part of resource definition object.
+_Schema handling_ is a part of the resource definition object.
 It specifies which object classes from the resource schema are actually used by midPoint.
 And most importantly of all it specifies how they are used.
 This is the place where mappings are stored.
@@ -493,7 +495,7 @@ This is a sign that the definition works correctly.
 A clever reader surely noticed definition of _kind_ in the above example.
 Setting _kind_ to `account` indicates that this object type definition represents (surprisingly) an account.
 MidPoint supports many types of objects.
-But two types have a special place: _accounts_ that represents the users and _entitlements_ that give privileges to accounts.
+But two types have a special place: _accounts_ that represents the users and _entitlements_ that give privileges to the accounts.
 MidPoint can handle the objects in a smart way if it knows that it is either account or entitlement.
 And the _kind_ definition tells just that.
 There is also optional _intent_ setting that can be used to define subtypes.
@@ -769,7 +771,6 @@ But sometimes we want to provide a default value and the mapping should never ch
 Therefore mapping can be set to various levels of _strength_: from weak to strong.
 Following table describes how that works:
 
-
 |===
 |Strength |Description
 
@@ -817,7 +818,6 @@ Expression type is determined by the element that is used inside the `expression
 We refer to those elements as _expression evaluators_.
 You can find detailed description of expression evaluators in midPoint Wiki.
 We are going to deal only with few types that are most frequently used now:
-
 
 |===
 |Expression Evaluator |Element |Description
