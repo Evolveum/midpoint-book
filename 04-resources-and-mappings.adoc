@@ -1361,7 +1361,7 @@ This is a definition that specifies handling of the activation administrative st
 This status property specifies whether account is enabled or disabled.
 Activation properties are somehow special in midPoint.
 MidPoint understands the meaning and the values of activation properties.
-MidPoint also expects that user activation and account activation will be usually mapped together.
+MidPoint also expects that user activation and account activation will usually be mapped together.
 Therefore it is enough to tell midPoint that you want such mapping.
 MidPoint already knows the source (user activation) and the target (account activation).
 If the user is disabled then the account will get disabled.
@@ -1395,8 +1395,8 @@ In this case it is a password mapping:
 ----
 
 Similarly to activation, the credentials are handled in a special way in midPoint.
-MidPoint understands how credentials work, what are their values and how they are used.
-MidPoint also expects that user credentials such as passwords will be usually mapped to the account credentials.
+MidPoint understands how credentials work, what their values are and how they are used.
+MidPoint also expects that user credentials such as passwords will usually be mapped to the account credentials.
 Therefore all that midPoint needs to know is that you want to do that mapping.
 It can automatically determine the source and target.
 The account will have the same password as the user.
@@ -1408,8 +1408,8 @@ Now you have your first (almost) working resource.
 You can import the definition to midPoint and test it.
 Simply assign the resource to a user.
 The OpenLDAP account will be created - the DN and all the essential attributes will be automatically computed.
-When midPoint creates an account for a user remembers who is the owner of that account.
-Therefore it can be easily delete the account when needed.
+When midPoint creates an account for a user it remembers who is the owner of that account.
+Therefore it can easily delete the account when needed.
 Unassign the resource and the account will get deleted.
 This is how automated provisioning and deprovisioning works.
 No real programming is needed.
@@ -1426,13 +1426,13 @@ Therefore the management can be done efficiently even at a large scale.
 
 Yet this configuration is still extremely simple.
 We are just scratching the surface of what midPoint can do.
-There is much more to see in next chapters.
+There is much more to see in the next chapters.
 But we need to explain more of the fundamental midPoint concepts before getting there.
 
 == Shadows
 
 Linking users and accounts is one of the basic principle of any decent identity management system.
-However it is surprisingly difficult to implement such link.
+However, it is surprisingly difficult to implement such link.
 There are numerous methods how to reliably identify accounts and they vary from system to system.
 Some systems identify accounts only by username - which makes reliable detection of renames quite difficult.
 Other systems improve on that by introducing another identifier, an identifier that is persistent.
