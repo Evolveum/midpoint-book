@@ -237,7 +237,7 @@ Solution: go for jack.anderson.123@example.com or even better janderson8 and jac
 
 Plan ahead, especially if you need new features.
 MidPoint has 6 months development cycles.
-The backlog has years and years worth of improvements ideas, therefor it is perhaps quite natural that roadmap is a bit overcrowded.
+The backlog has years and years worth of improvements ideas, therefore it is perhaps quite natural that roadmap is a bit overcrowded.
 It takes some planning to get your features on midPoint roadmap, even if you have the funds for their development.
 
 Even bugfixes can take weeks to months to get fixed. Plan ahead. Test early. Proceed in iterations.
