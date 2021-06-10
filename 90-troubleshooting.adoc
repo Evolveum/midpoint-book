@@ -214,20 +214,20 @@ For that we need to go deeper still.
 == Logging
 
 Logging is the best tool in the troubleshooting toolbox.
-Logging provides information about the important things that happen in the system.
-But it also goes very deep and it can provide very fine details about midPoint operations.
-Logging is universal and very powerful.
+Logging provides information about all the important things that happen in the system.
+It also goes very deep, and it can provide very fine details about midPoint operations.
+Logging is universal and very powerful tool.
 It is the best hope to find the cause even for the trickiest of problems.
 
-As for every other tool, the most important thing is to know how to use it properly.
+Similarly to every other tool, the most important thing is to know how to use it properly.
 This is especially important for midPoint logging.
 The default logging setting logs only a very little information.
 This is a reasonable detail for a production system that has been properly configured and tested.
-But it is not enough in case that you are chasing a configuration.
-In that case the logging system needs to be reconfigured to log more information.
-But beware, if logging system is set to its full power you will get a huge stream of data that is likely to completely overwhelm you.
+It is not enough in case that you are chasing a configuration.
+In that case, the logging system needs to be reconfigured to log more information.
+Beware, if logging system is set to its full power you will get a huge stream of data that is likely to completely overwhelm you.
 The important information will surely be there.
-But they will be lost in the flood of other data.
+However, they will be lost in the flood of other data.
 Therefore logging need some skill and experience to manage it correctly.
 
 MidPoint is using logging approach that is well established in the industry.
@@ -236,7 +236,7 @@ However, it is perhaps worth to provide a quick overview of those basic principl
 
 MidPoint log files are located in midPoint home directory.
 This is usually var sub-directory of midPoint installation directory.
-MidPoint home directory contains sub-directory logs and midPoint logfiles are there.
+MidPoint home directory contains sub-directory `logs` and midPoint logfiles are there.
 There are usually several files:
 
 * `midpoint.log` is the primary midPoint log file.

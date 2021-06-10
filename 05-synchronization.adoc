@@ -1303,13 +1303,13 @@ Going for millisecond granularity makes the problem less severe, but the problem
 However, the worst problem is that this strategy cannot detect deleted objects.
 Deleted objects are not there anymore, they do not have last modification timestamp, therefore they will not be included the search.
 This means that there must be a reconciliation process running together with synchronization.
-But wait a minute, it is usually reconciliation to run reconciliation anyway, as a form of "safety net", isn't it?
-It is, but the difference is timing.
+But wait a minute, it is usually recommended running reconciliation anyway, as a form of "safety net", isn't it?
+It is, but the difference is in the timing.
 It is one thing to run reconciliation once a week to make sure that no records were missed.
-And it is a completely different thing to run it every hour to make sure deleted objects are properly handled.
+Yet, it is a completely different thing to run reconciliation every hour to make sure deleted objects are properly handled.
 This makes a huge difference, especially for deployments with millions of entries.
 Strategies based on last modification timestamp may look like a good idea at the beginning.
-But they usually turn to a major liability in the long run.
+However, they usually turn into a major liability in the long run.
 Avoid them if you can.
 
 // TODO LATER: Maybe mention problems with backup/restore and synchronization?
@@ -1323,8 +1323,8 @@ Also, avoid the use of strategies based on last modification timestamp if there 
 == Mapping and Expression Tips and Tricks
 
 Mappings and expressions form a very powerful mechanism.
-In fact most of midPoint configuration is about setting up correct mappings.
-But with great power comes great responsibility and mappings may look a bit intimidating at a first sight.
+In fact, most of midPoint configuration is about setting up correct mappings.
+However, with great power comes great responsibility and mappings may look a bit intimidating at a first sight.
 Fortunately, there are some tips and tricks that make the life with mappings and expressions a bit easier.
 
 Most mappings are aware of the context in which they are used.
