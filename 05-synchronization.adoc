@@ -1109,7 +1109,7 @@ Just use the power of the mappings.
 If the errors you get are not severe then you may simply re-run the import task.
 This often works just fine.
 But if the problem was in a mapping that completely ruined all the data then it is perhaps best to start with a blank slate.
-We are all just human and this situation happens quite often, especially in the beginning while you are still learning.
+We are all just humans and this situation happens quite often, especially in the beginning while you are still learning.
 Therefore there is a special feature to help you out.
 Navigate to _Configuration > Repository Objects_.
 There is a small unassuming expand button in the top-right part of the screen.
@@ -1123,7 +1123,7 @@ This is a very convenient way how to get back to a black slate, but keep all the
 
 If the initial IDM deployment step includes an HR feed we strongly recommend to start with that HR feed.
 It is significant benefit to have authoritative HR data in the midPoint to start with.
-It is usually easier to correlate other resources to midPoint users later on, if the users were created from a reasonably-reliable HR data.
+It is usually easier to correlate other resources to midPoint users later on, if the users were created from a reasonably reliable HR data.
 Also, it will usually take some tweaking to get the HR import right.
 The possibility to easily clean up midPoint and get to a clean slate is extremely useful.
 But that is possible only if the HR feed is the first resource that is connected to midPoint.
@@ -1131,12 +1131,12 @@ But that is possible only if the HR feed is the first resource that is connected
 A clever reader would notice, that we assumed that the source feed will be taken from a CSV file.
 And this is indeed the case in majority of cases.
 If a new employee or contractor is about to join the company there is usually no hurry.
-This information is entered into the HR system at least few days in advance therefore daily CVS export is perfectly acceptable.
+This information is entered into the HR system at least a few days in advance therefore daily CSV export is perfectly acceptable.
 However, there may be cases when we want a faster response.
 Or maybe we do not want additional burden of dealing with CSV exports.
-Of course, there is solution.
+Of course, there is a solution.
 In theory any connector can be used for source resource.
-And in fact there are specialized connectors that are taking data directly from the HR system.
+There are specialized connectors that are taking data directly from the HR system.
 For example there is a connector for Oracle HCM system.
 Unfortunately, there is no connector that can take data from SAP HR system yet.
 
@@ -1156,17 +1156,17 @@ For example the HR connector detects update in the last name of an employee.
 That modification is applied to midPoint user, therefore the family name of midPoint user is updated.
 The operation continues by evaluating all templates, roles and outbound mappings.
 The outbound mappings usually map the family name change to the resource attributes.
-Therefore the resource accounts liked to the user are immediately updated.
+Therefore the resource accounts linked to the user are immediately updated.
 All of that happens in a single operation.
 That is how midPoint works.
 MidPoint is not a human.
 It will never procrastinate (unless explicitly instructed do to so).
 MidPoint will not postpone the operation for later if the operation can be executed immediately.
-MidPoint tries to get the data right on a first try.
+MidPoint tries to get the data right on the first try.
 Therefore there no specialized propagation or provisioning tasks that you might know from older IDM systems.
 MidPoint does not need them.
 
-There other advantages in doing everything in one operation.
+There are other advantages in doing everything in one operation.
 It is all one operation therefore midPoint knows all the details: what was the cause, what is the effect, what exactly has been changed.
 This is important for troubleshooting.
 Some IDM systems decouple the cause and the effect.
@@ -1175,13 +1175,13 @@ But midPoint has both the cause and the effects correlated together in a single 
 Therefore it is much easier to figure out what is going on.
 And it can also be neatly recorded in the audit trail.
 And there is another huge advantage: midPoint knows exactly what has been changed.
-This means that midPoint does not only knows the new value of a property.
+This means that midPoint does not only know the new value of a property.
 MidPoint knows also the old value and values that were added or removed.
-This is a complete description of the change that we call _delta_.
+This is a complete description of the change that we call a _delta_.
 This is recorded at the beginning of the operation and propagated all the way until the operation is done.
 Therefore the mappings may be smart.
 This approach enables a lot of interesting behavioral patterns.
-For example it is quite easy for midPoint to implement the "last change wins" policy.
+For example, it is quite easy for midPoint to implement the "last change wins" policy.
 In this case midPoint will simply overwrite only those attributes that are really changed in operation.
 MidPoint can leave other values untouched.
 In fact, this is the default behavior of midPoint.
@@ -1190,7 +1190,7 @@ And it is a very useful behavior during deployment of a new IDM system.
 Careful processing of the operations allows configurations that are not feasible with older IDM systems, e.g. a resource that is both a source and a target.
 In fact a lot of IDM systems can have resource that is both a source and a target - as long as it is a source for one attribute and a target for another attribute.
 But midPoint can live with a resource where the same attribute is both a source and a target.
-And in fact there may be may sources and many targets for the same property at the same time.
+And in fact there may be many sources and many targets for the same property at the same time.
 And this is indeed very useful configuration.
 Just think about telephone number property.
 This is usually something that the user sets up himself.
@@ -1230,7 +1230,7 @@ There are even mechanism how to avoid loops caused by connectors detecting chang
 MidPoint will break those loops automatically.
 
 TIP: Synchronization and provisioning are in fact almost the same mechanism applied in a different direction.
-Then why there two sections in the resource configuration?
+Then why there are two sections in the resource configuration?
 Why there is `schemaHandling` and `synchronization`?
 Why not just one?
 The answer is simple: history.
@@ -1263,28 +1263,28 @@ Some systems (such as LDAP) even have several mechanisms.
 And then there are source systems that have no practical way how to implement synchronization.
 We would refer to such methods as _synchronization strategies_.
 
-Specific details of each synchronization strategy is an internal matter of connector implemenation.
-The strategy is configured on connector level and the details are, theoretically, hidden inside the connetor.
+Specific details of each synchronization strategy is an internal matter of connector implementation.
+The strategy is configured on connector level and the details are, theoretically, hidden inside the connector.
 MidPoint does not know and does not need to know what synchronization strategy is used.
 That might work in an ideal world.
-But we live in practical world and there are many details that leak through the _synchronization_ abstraction.
+But we live in a practical world and there are many details that leak through the _synchronization_ abstraction.
 
 Let us take LDAP as an example.
 LDAP is, theoretically, a standard.
 However, the standard does not specify any synchronization mechanism.
-There is experimental RFC4533, however that is not widely adopted.
-However, synchronization capabilities are needed and therefore every major LDAP server provides some mechanisms.
+There is experimental RFC 4533, however it is not widely adopted.
+But synchronization capabilities are needed and every major LDAP server provides some mechanisms.
 Some mechanisms are quite good, some are not.
-There is ancient "Retro change log", going back to Netscape/iPlanet LDAP servers, but still used today.
+There is the ancient "Retro change log", going back to Netscape/iPlanet LDAP servers, but still used today.
 Active Directory has its own "DirSync" synchronization mechanism.
-OpenLDAP has yet another mechanism based on access log.
-There is RFC4533, which is used so rarely that there was no request to implement it in midPoint LDAP connector.
+OpenLDAP has yet another mechanism based on the access log.
+There is RFC 4533, which is used so rarely that there was no request to implement it in midPoint LDAP connector.
 And then there is a "catch all" synchronization that looks for recent changes based on `modifyTimestamp`.
 
 In theory, all the synchronization strategies above should be equivalent.
 But they are not.
 For example, some variants of "Retro change log" synchronization cannot reliably detect rename operations.
-There may be problem with delete operations as well, especially if coupled with rename operations.
+There may be problems with delete operations as well, especially if coupled with rename operations.
 Almost every mechanism has its quirks.
 And then there is the `modifyTimestamp`, which is the most problematic of all.
 
@@ -1297,12 +1297,12 @@ The other problem is a timestamp granularity.
 If the timestamp is granular to one second, that can be a big problem.
 One second is a very long time for a computer.
 A lot can happen in one second.
-Therefore the connector has to include the "boundary" second both consecutive synchronization runs, which means that the records may be processed twice.
+Therefore the connector has to include the "boundary" second to both consecutive synchronization runs, which means that the records may be processed twice.
 Going for millisecond granularity makes the problem less severe, but the problem is still there.
 
 However, the worst problem is that this strategy cannot detect deleted objects.
-Deleted objects are not there any more, they do not have last modification timestamp, therefore they will not be included the search.
-Which means that there must be a reconciliation process running together with synchronization.
+Deleted objects are not there anymore, they do not have last modification timestamp, therefore they will not be included the search.
+This means that there must be a reconciliation process running together with synchronization.
 But wait a minute, it is usually reconciliation to run reconciliation anyway, as a form of "safety net", isn't it?
 It is, but the difference is timing.
 It is one thing to run reconciliation once a week to make sure that no records were missed.
@@ -1312,7 +1312,7 @@ Strategies based on last modification timestamp may look like a good idea at the
 But they usually turn to a major liability in the long run.
 Avoid them if you can.
 
-// TODO LATER: Maybe mention problems with backup/restore and syncnhronization?
+// TODO LATER: Maybe mention problems with backup/restore and synchronization?
 // TODO LATER: Maybe mention messaging-based synch and how (un)reliable it can be?
 
 The bottom line is, that synchronization strategies are not created equal.
@@ -1325,12 +1325,12 @@ Also, avoid the use of strategies based on last modification timestamp if there 
 Mappings and expressions form a very powerful mechanism.
 In fact most of midPoint configuration is about setting up correct mappings.
 But with great power comes great responsibility and mappings may look a bit intimidating at a first sight.
-Fortunately, there are few tip and tricks that may life with mappings and expressions a bit easier.
+Fortunately, there are some tips and tricks that make the life with mappings and expressions a bit easier.
 
 Most mappings are aware of the context in which they are used.
 Therefore paths of mapping sources and targets can be shortened - or even left out entirely.
 Activation and credential mappings used in the HR feed example are the obvious cases.
-But even paths in ordinary mapping may be shortened.
+But even paths in ordinary mappings may be shortened.
 For example take the outbound mapping source:
 
 [source,xml]
@@ -1355,14 +1355,12 @@ As the mapping knows that its source is a focus (user) the definition may be sho
 
 Typical midPoint deployment has tens or hundreds or mappings.
 Deployments with thousands of mappings are definitely feasible.
-Therefore it may not be entirely easy to maintain the mappings.
-Therefore there are two things that can make this easier.
-There is an ability to optionally specify mapping name.
+There are two things that can make maintaining the mappings easier.
+Optionally, you can specify the mapping name.
 Mapping name will appear in the log files and some error messages.
-Therefore it may be easier to identify which mapping is causing problems or it may help locate the trace of mapping execution in the log file.
+It may be easier to identify which mapping is causing problems or it may help locate the trace of mapping execution in the log file.
 Mapping can also have a description.
-The description can be used as a general-purpose comment or a documentation of the mapping.
-The description can be used to explain what the mapping does.
+The description can be used as a general-purpose comment or a documentation explaining what the mapping does.
 
 [source,xml]
 ----
@@ -2168,7 +2166,7 @@ If an account is deleted then there is no timestamp for that account and therefo
 The connector is looking at the log and it is processing all the changes that were added to the log since the last scan.
 This is a very efficient and flexible method.
 But it is not simple.
-And not mamy systems support it.
+And not many systems support it.
 
 All live synchronization methods need to keep the track of what changes are "recent", i.e. which changes were already processed by midPoint and which were not processed yet.
 There is usually some value that needs to be remembered by midPoint: timestamp of last scan, last sequence number in the change log, serial number of last processed change and so on.
