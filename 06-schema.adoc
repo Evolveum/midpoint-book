@@ -73,7 +73,7 @@ MidPoint is actively discouraging direct resource-to-resource communication.
 Everything in midPoint is built for resource-to-midPoint and midPoint-to-resource communication.
 MidPoint is always the center – and for a good reason.
 All resource data need to be translated to and from a midPoint “data language”.
-Thus midPoint creates a common language that everybody can understand.
+Thus, midPoint creates a common language that everybody can understand.
 And this is exactly the purpose of midPoint schema.
 The schema of user, role, org and service is designed to contain properties that are often used in identity-related integration scenarios.
 Therefore, an engineer who is designing a mapping is quite likely to find a suitable property in midPoint schema that is prepared to be used.
@@ -94,7 +94,7 @@ Therefore it is worth to have a closer look at how this object looks like.
 This is going to be a really educative lesson, as it will explain several fundamental principles of midPoint.
 
 User is represented by schema datatype identified as `UserType`.
-Adding the Type suffix to datatypes is a common convention in midPoint.
+Adding the `Type` suffix to data types is a common convention in midPoint.
 There is `UserType`, `RoleType`, `OrgType`, `ResourceType` and so on.
 This convention is partially historic, partially given by XML Schema conventions, partially a convenience to developers.
 Regardless of the origins, this convention is used for all the data types in midPoint schemas.
@@ -160,7 +160,7 @@ Assignments represent what the object should have.
 The assignments represent a policy, a desired state of things.
 
 |`linkRef`
-|referrence
+|reference
 |Set of shadows (projections) linked to this focal object.
 E.g. a set of accounts linked to a user.
 This is the set of shadows that belongs to the focal object in a sense that these shadows represents the focal object on the resource.
@@ -190,7 +190,7 @@ The specific meaning and form of this property is deployment-specific.
 |property
 |Indicates user's preferred language, usually for the purpose of localizing user interfaces.
 The format is IETF language tag defined in BCP 47, where underscore is used as a subtag separator.
-This is usually a ISO 639-1 two-letter language code optionally followed by ISO 3166-1 two letter country code separated by underscore. +
+This is usually a ISO 639-1 two-letter language code optionally followed by ISO 3166-1 two-letter country code separated by underscore. +
 Example: `en_US`
 
 |`locale`
@@ -265,7 +265,7 @@ Example: `CEO`
 |`employeeNumber`
 |property
 |Unique, business-oriented identifier of the employee.
-Typically used as correlation identifier and for auditing purposes.
+Typically used as a correlation identifier and for auditing purposes.
 Should be immutable, but the specific properties and usage are deployment-specific.
 
 |`organization`
@@ -344,8 +344,8 @@ This gives enough time for midPoint users to adapt to schema changes.
 
 There is also another kind of schema evolution.
 Development of most midPoint features is quick and straightforward.
-But then there are features that are quite complex or features that involve some degree of exploration do implement.
-Those features cannot be implement in a single midPoint release.
+But then there are features that are quite complex or features that involve some degree of exploration to implement.
+Those features cannot be implemented in a single midPoint release.
 There are also features that are provided to the midPoint community as a "preview" to gather feedback for further development.
 All such features are marked as _experimental_.
 Those features are not officially supported, but you are free to use them at your own risk.
@@ -370,7 +370,7 @@ Employees have hiring date, contracts have end dates, users can be disabled, rol
 We use the term activation to encompass all those things that deal with the questions of digital life and death of the objects.
 
 The activation in itself is multi-dimensional and quite complex.
-It is composed from several properties that may change in somehow independent and somehow inter-dependent way.
+It is composed of several properties that may change in somehow independent and somehow inter-dependent way.
 Following list provides a quick summary of activation properties:
 
 * *Activation status* defines administrative state of the object, often manually set by system administrator.
@@ -378,7 +378,7 @@ Following list provides a quick summary of activation properties:
 * *Validity* properties specify when the object should be active.
 There is activation date and deactivation date.
 
-* *Effective status* is a computed operational property that show the current effective status of the user.
+* *Effective status* is a computed operational property that shows the current effective status of the user.
 It is computed from other activation properties.
 
 * *Lockout status* is used for temporary inactivation of user, e.g. in case of numerous failed authentication attempts.

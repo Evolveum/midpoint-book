@@ -1477,7 +1477,7 @@ And there may be more libraries in the future.
 === Resource Capabilities
 
 The systems that midPoint connects to are not created equal.
-In fact, those system significantly differ in their capabilities.
+In fact, those systems significantly differ in their capabilities.
 Most systems can create accounts.
 But not all of them can delete accounts.
 There are systems that keep the accounts forever, the accounts can be just permanently disabled.
@@ -1519,7 +1519,7 @@ Such connectors are very useful and they are used in almost every midPoint deplo
 However, there is no standardized way how to disable an account in database table or a CSV file.
 Various columns and various values are used to represent account activation status.
 Quite surprisingly, there is no standardized way how to disable an account in LDAP directory either.
-But that is a bad news for midPoint.
+But that is bad news for midPoint.
 MidPoint takes a significant advantage from knowing whether account is disabled or enabled.
 We had to do something about it.
 And we did.
@@ -1562,7 +1562,7 @@ In that case the synchronization is usually used for several purposes:
 
 * *Initial migration:* This is a process of connecting new resource to midPoint.
 There are usually accounts that already exist in the resource at the time when a resource is connected to midPoint.
-It is likely that at least some of the accounts correspond to the users that are present in midPoint (e.g. users created from the HR feed).
+It is likely that at least some accounts correspond to the users that are present in midPoint (e.g. users created from the HR feed).
 Therefore the accounts from the resource need to be correlated to the users that already exist in midPoint.
 Synchronization is the right mechanism for this.
 
@@ -1676,10 +1676,10 @@ The purpose of the result handlers is to assist simpler connectors in filtering 
 But LDAP connector is no ordinary simple connector.
 LDAP connector is mature and full-featured connector that can do everything without any help from such annoying little creatures as those result handlers.
 ConnId result handlers do not add any value here.
-In fact they may even be harmful.
+In fact, they may even be harmful.
 LDAP protocol has a lot of peculiarities such as case-insensitivity that applies to almost all the aspects of LDAP data – except for some notable exceptions.
 The connector is aware of those peculiarities but the handlers are not.
-Therefore if the handlers are turned on (which is the default) they may get in the way and ruin the data.
+If the handlers are turned on (which is the default) they may get in the way and ruin the data.
 Therefore it is always strongly recommended to explicitly turn off the handler when a full-featured connector is used.
 
 NOTE: The XML example above, as all other examples in this book, is simplified and shortened for clarity.
@@ -1728,7 +1728,7 @@ Therefore we need to add schema handling section to our resource:
 There should be outbound mapping for each mandatory LDAP attribute for the `inetOrgPerson` object class.
 Those mapping are very typical for a target resource definition.
 
-Once we set up the schema handling we should be able to conveniently list LDAP accounts in midPoint.
+Once we set up the schema handling, we should be able to conveniently list LDAP accounts in midPoint.
 However, we need to switch to the _Resource_ view instead of _Repository_ view.
 The accounts are stored in the LDAP server and midPoint can access them.
 Therefore the accounts are listed in the _Resource_ view.
@@ -1827,7 +1827,7 @@ Even though the uid is obviously wrong, midPoint have linked the account correct
 The reason is that we have set up midPoint to use employeeNumber for correlation.
 The result is that even accounts whose usernames violate the convention can be automatically linked to their owners - as long as there is any reliable piece of information that can be used for correlation.
 
-When all the accounts are all linked to their owners it is the right time to complete the synchronization policy.
+When all the accounts are linked to their owners, it is the right time to complete the synchronization policy.
 Now we can tell midPoint to delete any unmatched account.
 That is the case when an illegal account is created in LDAP server.
 We can also tell midPoint to unlink any account that was deleted in LDAP server:
@@ -1877,7 +1877,7 @@ Those mappings are supposed to implement the _last change wins_ strategy.
 Therefore reconciliation cannot overwrite the account data as midPoint does not know whether it was account attribute or user property that was the last to change.
 If midPoint is not sure about something then it will do nothing.
 We do not want to destroy the data.
-Therefore what we need to do now it so let midPoint know that we really mean it, that the mappings are really `strong`:
+Therefore what we need to do now is to let midPoint know that we really mean it, that the mappings are really `strong`:
 
 [source,xml]
 ----
@@ -1925,7 +1925,7 @@ This is how synchronization tasks can be useful even in case of pure target reso
 However, there is one last word of warning.
 Those accounts were synchronized and linked to existing midPoint users.
 The accounts were not created by midPoint.
-Therefore there is nothing in midPoint that would say that those accounts should exits.
+Therefore there is nothing in midPoint that would say that those accounts should exist.
 In midPoint parlance there are no _assignments_ for those accounts.
 MidPoint makes clear distinction between policy and reality.
 Therefore midPoint is aware that those accounts exist, but there is no policy statement that would justify their existence.
@@ -1939,17 +1939,17 @@ One way would be to create the assignments together with the links.
 Those that are interested in this method should look up keyword "legalize" in midPoint wiki.
 But there are much better methods how to handle this.
 Perhaps the best approach would be to utilize the roles (RBAC).
-Which is the topic of the <<07-rbac.adoc#07-rbac,Role-Based Access Control>> chapter below.
+This is the topic of the <<07-rbac.adoc#07-rbac,Role-Based Access Control>> chapter later.
 But there are still more things to learn about synchronization until we get there.
 
 === Reconciliation
 
 Reconciliation is a process of comparing current state of an account (reality) to a desired state of the account (policy).
 Reconciliation does not only compare the accounts, it is fixing the inconsistencies.
-Therefore reconciliation can correct wrong data on resources.
+Reconciliation can correct wrong data on resources.
 But it also works the other way.
 It can correct the data in midPoint.
-Therefore reconciliation is one the most useful tools in the identity management toolbox.
+Therefore, reconciliation is one of the most useful tools in the identity management toolbox.
 
 Reconciliation can be used in a variety of ways.
 Reconciliation can be initiated for one specific user by using midPoint user interface.
@@ -2014,10 +2014,10 @@ Reconciliation works with _absolute_ state of accounts.
 It means that reconciliation is reading all the accounts with all the values of all the attributes.
 Then it recomputes everything.
 Even those attributes and values that were not changed are recomputed.
-This is a very traditional and reliable way of computation and that is also the way how most older identity management systems work.
+This is a very traditional and reliable way of computation and that is also the way how the most of older identity management systems work.
 
 But there is also a better way.
-If we know that just one attribute was changed we can recompute that single attribute only.
+If we know that just one attribute was changed, we can recompute that single attribute only.
 We do not need to care about other attributes.
 And if we know that attribute foo has changed in such a way, that there is a new value bar then it gets even better.
 We just need to recompute the value bar and do not care about any other values.
@@ -2035,7 +2035,7 @@ This is a very powerful mechanism.
 Just remember that everything in midPoint can be represented as an object: user, account, resource, role, security policy … everything.
 Therefore delta can represent any change.
 It may be a change of user password, deletion of an account, change of connector configuration or introduction of a new password policy.
-If all the changes can be represent in a uniform way then they can also be handled in a uniform way.
+If all the changes can be represented in a uniform way then they can also be handled in a uniform way.
 Therefore it is easy for midPoint to record all the changes in an audit trail – including configuration changes.
 It is easy to route any change through an approval process.
 And so on.
@@ -2096,7 +2096,7 @@ This might seem to be a bit over-complicated at the beginning.
 But do not worry.
 You will get used to it.
 And clearly, this approach has major advantages.
-But a clever reader does not seems to be impressed.
+But a clever reader does not seem to be impressed.
 How can this relativistic approach conserve any significant portion of computational resources?
 We usually fetch the entire account from the resource anyway.
 Therefore there is no harm to recompute all the attributes.
@@ -2130,7 +2130,7 @@ At least for a while.
 But there is quite a simple summary: relativistic approach of midPoint can do miracles.
 For example, midPoint resource can be both sources and targets, even a single attribute can be both source and target of information.
 It is the relativistic approach that allows features like this.
-The principle or relativity is relatively simple.
+The principle of relativity is relatively simple.
 But its effect in midPoint is nothing short of being revolutionary.
 
 === Live Synchronization
@@ -2196,7 +2196,7 @@ Get the data from the HR system.
 Correlate that with Active Directory.
 Connect all the major resources to midPoint and correlate the data.
 MidPoint does not need to make any changes at this stage.
-In fact it is perfectly good approach to make all the resource read-only at this stage.
+In fact, it is perfectly good approach to make all the resource read-only at this stage.
 The point is to let midPoint see the data.
 But why do we need that?
 
@@ -2236,6 +2236,6 @@ It is indeed a capital mistake to theorize before one has data.
 
 ////
 Tips for extension:
-* CRM resource, with some rougue accounts, manual correlation, orphan detection
+* CRM resource, with some rogue accounts, manual correlation, orphan detection
 ////
 
