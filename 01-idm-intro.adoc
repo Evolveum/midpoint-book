@@ -1341,11 +1341,11 @@ Right now.
 You can thank me later.
 |===
 
-== Identity Governance and Compliance
+== Identity Governance
 
 _Identity governance_ is basically an identity management taken to a higher business level.
-The identity management proper is focused mainly on technical aspects of identity life-cycle such as automatic provisioning, synchronization, evaluation of the roles and computing attributes.
-On the other hand, identity governance abstracts from the technical details and it is focused on policies, roles, business rules, processes and data analysis.
+The _identity management_ proper is focused mainly on technical aspects of identity life-cycle such as automatic provisioning, synchronization, evaluation of the roles and computing attributes.
+On the other hand, _identity governance_ abstracts from the technical details, focusing on policies, roles, business rules, processes and data analysis.
 E.g. a governance system may deal with segregation of duties policy.
 It may drive the process of access re-certification.
 It may focus on automatic analysis and reporting of the identity, auditing and policy data.
@@ -1354,34 +1354,33 @@ It will manage application of new and changed policies, evaluate how is your sys
 This field is sometimes referred to as _governance, risk management and compliance_ (GRC).
 
 Almost all IDM systems will need at least some governance features to be of any use in practical deployments.
-And many governance features are just refinement of concepts that originated in the IDM field many years ago.
-Therefore the boundary between identity management and identity governance is quite fuzzy.
+Moreover, many governance features are just refinement of concepts that originated in the IDM field many years ago.
+Therefore, the boundary between identity management and identity governance is quite fuzzy.
 The boundary is so fuzzy that new terms were invented for the unified field that includes the identity management proper together with identity governance.
 _Identity governance and administration_ (IGA) is one of these terms.
-This field (or sub-field) is still quite young, therefore it is expected that the terminology and even the concepts need some time to settle down.
 For us the governance is just a natural continuation of identity management evolution.
 
-However, it seems to be a common practice that identity governance features are implemented by specialized products that are separated from their underlying IDM platforms.
-Almost all commercial IDM and governance solutions are divided into (at least) two products.
+Back in 2010s, it was a common practice for identity governance features to be implemented by specialized products that are separated from their underlying IDM platforms.
+Many IDM and governance solutions are still divided into (at least) two products.
 This strategy obviously brings new revenue streams for the vendors.
-But it makes almost no sense at all from customer point of view.
-The industry has even coined a term _closed-loop remediation_ (CLR) which in fact means that the governance system is somehow integrated with the underlying IDM solution.
-Industry sometimes has a need for inventing fancy marketing terms for something that should be natural part of any reasonable solution.
+Yet, it makes almost no sense at all from customer point of view.
 It perhaps comes without saying that reasonable IDM solutions should offer both the IDM and governance features in one unified and well aligned product.
 
 Below is a list of features that belong to the governance/compliance category.
-As the boundary of governance is so fuzzy, there are also features that are just related to governance.
+As the boundary of governance is so fuzzy, there are also features that may be considered governance-related IDM features.
 
-* *Delegated administration.* Basic IDM deployments are usually based on the idea of an omnipotent system administrator that can do almost anything.
-And then there are end users that can do almost nothing.
+* *Delegated administration.*
+Basic IDM deployments are usually based on the idea of an omnipotent system administrator that can do almost anything.
+Then there are end users that can do almost nothing.
 While this concept may work in small and simple deployments, it is not sufficient for larger systems.
 Large organizations usually need to delegate some administration privileges to other users.
-There may be HR personnel, people that are responsible for management of their organizational units, administrator responsible for a particular group of systems and so on.
+There may be HR personnel, people that are responsible for management of their organizational units, administrator responsible for a particular group of systems, application administrators, and so on.
 
-* *Deputies.* Delegated administration is very useful, but it is quite static.
-It is given by policies that are not entirely easy to change.
-But there is often a need for ad-hoc delegation, such as a temporary delegation of privileges during manager’s vacation.
-Such a manager could nominate a deputy that should receive parts of manager’s privileges.
+* *Deputies.*
+Delegated administration is very useful, yet it is quite static.
+Delgated administation is specified in policies that are not entirely easy to change.
+However, there is often a need for ad-hoc delegation, such as a temporary delegation of privileges during manager’s vacation.
+Such a manager could nominate a deputy that would receive some of manager’s privileges.
 This is all done on an ad-hoc basis, initiated by an explicit action of the manager.
 
 * *RBAC-related policies*, such as Segregation of Duties (SoD) policy.
@@ -1390,121 +1389,165 @@ This is usually implemented by using a role exclusion mechanisms.
 However, it may go deeper.
 E.g. it may be required that each request is approved by at least two people.
 
-* *Policies related to organizational structure.* Organizational structure may look like a simple harmless tree, but in reality it is far from being simple or harmless.
+* *Policies related to organizational structure.*
+Organizational structure may look like a simple harmless tree, but in reality it is far from being simple or harmless.
+Or a tree.
 In theory the organizational structure should be managed by business or operations departments such as HR.
-But the reality is often quite different.
+Yet the reality is often quite different.
 Business departments lack the tools and processes to efficiently manage organizational structure.
-Therefore it is often an IDM system that assumes the responsibility for organizational structure management.
+Therefore, it is often an IDM system that assumes the responsibility for organizational structure management.
 In such cases there is a need to police the organizational structure.
 For example there may be policies that mandate a single manager for each department.
 In that case the IDM system may need to handle situations that there is no manager or too many managers.
 
-* *Dynamic approval schemes.* Approval processes are usually considered to be part of basic identity management functionality.
-Those are usually implemented by some kind of general-purpose workflow engine.
+* *Dynamic approval schemes.*
+Approval processes are usually considered to be part of basic identity management functionality, as they were present in early IDM systems back in 2000s.
+The user (or the manager) request role assignment.
+The operation is driven through an approval process before being executed.
+Approvals provide a very useful mechanism, especially in case that role assignment cannot be automated, usually due to a non-existent policies.
++
+Approvals are usually implemented by some kind of general-purpose workflow engine by almost all IDM/governance systems.
 However, this is often a source of maintenance problems, especially in deployments that are focused on identity governance functionality.
 In such cases the approval processes are no longer simple quasi-linear workflows.
-Approval processes tend to be very dynamic and their nature is determined by the polices.
+Approval processes tend to be very dynamic, and their nature is almost entirely determined by the polices rather that process flows.
 Workflow engines have a very hard time coping with such a dynamic situation.
 IDM system that implement special-purpose policy-based approval engines provide much better solutions.
++
+Approval mechanisms are very useful.
+However, they also have a dark side.
+Approval decisions are often made on a very subjective "looks good" basis.
+This obviously opens an opportunity for bad decisions and negligence.
+False denial of role assignment is likely to trigger an immediate and often quite emotional feedback from the requester.
+However, approval of role assignment that should not be assigned is likely to trigger no feedback at all.
+Yet, such a decision is likely to cause a security risk, a risk that is very difficult to detect.
+This can be partially solved by a multi-level approval processes, especially for sensitive roles.
+However, there is trend to "automate" approval decisions based on "artificial intelligence" mechanisms.
+This may look like a very useful tool and time-saver.
+However, the artificial intelligence is only as good as the training data.
+If the machine is trained using bad decisions, it will also suggest bad decisions.
+This is further complicated by a very limited visibility and accountability of such decisions.
+Therefore such mechanisms have to be used with utmost care.
 
 * *Entitlement management* is mostly and identity management thing.
 It deals with entitlements of user’s accounts in target systems such as role or group membership.
 However, this process can go both ways.
-Governance systems may provide a “entitlement discovery” features that take entitlements as inputs.
+Governance systems may provide an "entitlement discovery" features that take entitlements as inputs.
 This can be used evaluate compliance and policy violations, but it may also be a valuable input for role engineering.
 
-* *Role mining.* IDM systems are seldom deployed on a green field.
+* *Role mining.*
+IDM systems are seldom deployed on a green field.
 In the common case there are existing systems in place, there are application roles, entitlements and privileges.
 It is not an easy job to create IDM roles that map to this environment.
 This is usually a slow and tedious process.
 However, IDM system can retrieve all the existing information and use it to propose role structure.
-This is not a fully deterministic process, it requires a lot of user interaction, tuning and it is often based on a machine learning capabilities.
+This is not a fully deterministic process, it requires a lot of user interaction, tuning, and it is often based on a machine learning capabilities.
 It is not a replacement for role engineering expertise.
 However, machine-assisted role mining can significantly speed up the process.
 
-* *Re-certification campaigns.* Assignment of roles is often an easy task.
-Request a role, role goes through an approval process and the role is assigned.
-And then everybody forgets about it.
+* *Re-certification campaigns.*
+Assignment of roles is often an easy task.
+Request a role, role goes through an approval process, and the role is assigned.
+Then everybody forgets about it.
 There is a significant incentive to request assignment of a new role.
-But there is almost no incentive to request unassignment of a role that is no longer needed.
-This leads to an accumulation of privileges over time.
-And such accumulation may reach dangerous levels for employees with long and rich job transfer history.
-Therefore there are re-certification campaigns that are also known as “certification”, “access certification” or “attestation” mechanisms.
-The goal of those campaign is to confirm (“certify” or “testify”) that the user still needs the privileges that were assigned previously.
+Yet, there is almost no incentive to request unassignment of a role that is no longer needed.
+This leads to accumulation of privileges over time.
+Such privilege hoarding may reach dangerous levels for employees with long and rich job transfer history.
+Therefore, there are re-certification campaigns that are also known as "certification", "access certification" or "attestation" mechanisms.
+The goal of those campaign is to confirm ("certify" or "testify") that the user still needs the privileges that were assigned previously.
 Re-certification campaigns are designed to be conducted on a large number of users in a very efficient manner.
-Therefore there are special processes and a very specific user interface is provided to conduct such campaigns.
+Therefore, there are special processes, and a very specific user interface is provided to conduct such campaigns.
++
+Similarly to approval processes, some identity governance systems offer "artificial intelligence" support for re-certification processes.
+Such assistance can be very attractive, as re-certification processes are often quite intimidating due to a large number of decisions that have to be made in each campaign.
+However, the risks of such "automation" is even more pronounced than it is in the approval case.
+Re-certification is often the last defence against dangerous privilege accumulation.
+Poorly-trained artificial intelligence may cause a systematic build-up of risk in the organization.
 
 * *Role governance* is usually quite a complex matter.
-Typical IDM deployments will have a large number of roles.
+Typical IDM deployment is likely to have a large number of roles.
 It is quite hard to define those roles in the first place.
-But then it is even harder to maintain them.
+Then it is even harder to maintain the roles.
 Environment is changing all the time, therefore the roles have to change as well.
 It is usually beyond the powers of a single administrator to do so.
-Therefore many role owners are usually nominated to take care of role maintenance.
+Therefore, many role owners are usually nominated to take care of role maintenance.
 Roles are often grouped into applications, categories, catalogs or functional areas.
 The IDM system must make sure that the owners have the right privileges to do their job.
-The IDM system should also take care that each role has at least one owner, that role definitions are periodically reviewed and so on.
+The IDM system should also take care that each role has at least one owner at any given time, that role definitions are periodically reviewed and so on.
 
 * *Role lifecycle management* is a dynamic part of role governance.
 Role changes are likely to have a serious impact on overall security of the system.
-Therefore it may not be desirable to simply delegate role management duties.
+Therefore, it may not be desirable to simply delegate role management duties.
 It may be much more sensible to require that role changes has to be approved before being applied.
 New roles are also created all the time and old roles are decommissioned.
 The IDM system may need to make sure that a decommissioned role is not assigned to any new user.
-But such role may still be needed in the system during a phase-out period.
+Yet, old roles may still be needed in the system during a phase-out period.
+IDM system has to keep track of them, to avoid keeping outdated roles in the systems forever.
 
-* *Role modeling.* A change of a single role often does not make much sense just by itself.
+* *Role modeling.*
+A change of a single role often does not make much sense just by itself.
 The roles are usually designed in such a way that a set of roles works together and forms a role model.
-Therefore approval of each individual role change may be too annoying and even harmful.
+Therefore, approval of each individual role change may be too annoying, and it may even be harmful.
 E.g. there may be an inconsistent situation in case that one change is approved and another is rejected.
-Therefore roles and policies are grouped into models, the models are reviewed, versioned and applied in their entirety.
+Therefore, roles and policies are often grouped into models.
+The models are reviewed, versioned and applied in their entirety.
 
-* *Simulation.* IDM deployments tend to be complex.
+* *Simulation.*
+IDM deployments tend to be complex.
 There are many relations, interactions and policies.
 It is no easy task to predict the effects of a change in a role, policy or organizational structure.
-Therefore some IDM systems provide a simulation features that provide predictions and impact analyses of planed changes.
+Therefore, some IDM systems provide a simulation features that provide predictions and impact analyses of planed changes.
 
 * *Compliance policies*, reporting and management.
 Policies in the identity management world are usually designed to be strictly enforced.
 This works fine for fundamental policies that are part of simple IDM deployments.
 However, the big problem is how to apply new policies - especially policies that are mandated by regulations, recommendations and best practices.
-In such cases it is almost certain that significant part of your organization will not be compliant with such new policy.
+It is almost certain that significant part of your organization will not be compliant with such new policy.
 Applying the policy and immediately enforcing it is likely to cause a major business disruption.
 However, it is almost impossible to prepare for new policies and to mitigate their impact without knowing which users and roles are affected.
-Therefore the policies are usually applied, but they are not enforced yet.
+Therefore, there is a two-step process.
+The policies are applied, but they are not enforced yet.
 The policies are used to evaluate the compliance impact.
-Compliance reports can be used to find the users that are affected by the policy in order to remedy the situation.
+Compliance reports can be used to find the users that are in violation of the policy, in order to remedy the situation.
 Compliance reports may also be used to track the extent and progress of compliance.
 
-* *Remediation.* Good IDM deployments strive for automation.
+* *Remediation.*
+Good IDM deployments strive for automation.
 All the processes and actions that can be automated are automated.
 E.g. if a role is unassigned and user does no longer needs an account, such account is automatically deleted or disabled.
 However, there are actions that cannot be automated because they require decision of a living and thinking human being.
 Approvals are one example of such processes.
 However, there are more situations like that.
-And many of those require more initiative than a simple yes/no decision.
+Many of those require more initiative than a simple yes/no decision.
 One such example is organizational structure management.
 There is usually a rule that each department must have a manager.
-But what should IDM system do in case that a department manager is fired?
+However, what should IDM system do in case that a department manager is fired?
 IDM system cannot stop that operation, as there are certainly good reasons to revoke all privileges of that manager.
-Therefore the result is that there is now a department without a manager.
-And the IDM system itself cannot do anything about that.
+The manager and all the associated accounts have to go, as soon as possible.
+Now there is a department without a manager, and the IDM system itself cannot do anything about it.
 That is where remediation comes to the rescue.
-Remediation process is started after the operation.
+Remediation process is started after the operation that removed the manager.
 The remediation process will ask a responsible person to nominate a new manager for the department.
 There may be a broad variety of remediation processes.
-Simple process will ask for yes/no decisions or may ask to nominate users.
-But there are often a generic processes that apply to completely unexpected situations.
+Simple process will ask for yes/no decisions, or it may ask to nominate a user.
+Then there are often options to set up generic processes that apply to completely unexpected situations.
 
 * *Risk management automation.*
 Information security is not a project, it is a process.
-It starts with risk analysis, planning, actions and then it goes back to analysis and planning and actions and so on and so on for ever and ever.
-Risk analysis is the part that takes a huge amount of time and effort - especially when it comes to analysis of insider threat as there is usually a lot of insiders to analyze.
+It starts with risk analysis, planning, execution, and then it goes back to analysis and planning and execution, and so on and so on for ever and ever.
+Risk analysis is the part of the process that takes a huge amount of time and effort - especially when it comes to analysis of insider threat as there is usually a lot of insiders to analyze.
 However, an IDM system can help to reduce the risk analysis effort.
 Each role assigned to a user is a risk.
 If roles are marked with relative risk levels, IDM system can compute the accumulation of risk for each user.
 As each role gives access to a particular set of assets, the IDM system may provide data to evaluate asset exposure to users.
 
+// TODO: Identity analytics/intelligence
+
+// TODO: Workflow orchestration: useless for approvals, but may be useful for enrollment, remediation, etc. Organization-wide workflow platform would be preferred over IDM-specific platform.
+
+// TODO: terminology note
+// This field (or sub-field) is quite diverse, therefore the terminology and even the concepts may seem somehow chaotic.
+
+// TODO: move AI rants to a dedicated chapter later, when we have chapter on approvals, certification, governance
 
 == Complete Identity and Access Management Solution
 
@@ -1694,3 +1737,8 @@ We consider identity management to be heart and brain of any IAM solution.
 This is one of the reasons why we have started midPoint project.
 The rest of this book will focus almost exclusively on identity management and the use of midPoint as the IDM component.
 This is the place where theory ends and practice begins.
+
+// TODO: tips to describe:
+// * Cloud, SaaS, etc.
+//   difficulty for customization
+//   autonomy

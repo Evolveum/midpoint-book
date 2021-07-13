@@ -242,6 +242,8 @@ It takes some planning to get your features on midPoint roadmap, even if you hav
 
 Even bugfixes can take weeks to months to get fixed. Plan ahead. Test early. Proceed in iterations.
 
+TODO: warn against over-use of AI
+
 == Conclusion
 
 This chapter is not complete. Maybe it will never be complete.

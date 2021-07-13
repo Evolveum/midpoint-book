@@ -8,6 +8,9 @@ It is said that there is nothing firm, nothing balanced, nothing durable in all 
 
 == Role Request and Approval
 
+TODO: danger of approval process. Approvals by "looks good", negligence.
+TODO: Especially when such negligence is automated, e.g. by using AI
+
 
 == Role Catalog
 
