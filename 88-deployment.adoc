@@ -119,6 +119,8 @@ There will be conflicts.
 There will be typos, mistakes, inaccuracies.
 Good portion of data will be out of date.
 
+HR data are usually quite good, but they are also wrong.
+
 Recommendation: proceed slowly.
 Validate the data before rolling out.
 
@@ -243,6 +245,92 @@ It takes some planning to get your features on midPoint roadmap, even if you hav
 Even bugfixes can take weeks to months to get fixed. Plan ahead. Test early. Proceed in iterations.
 
 TODO: warn against over-use of AI
+
+Data sources:
+
+(Business to Employee, B2E)
+HR system is usually a good start.
+Look for data sources for contractors & temporary workers.
+You may not find any.
+Consider that IDM may become the source.
+
+Look for organizational structure sources.
+You will probably find several sources, all of them useless.
+It would either not reflect reality, or it will not be machine-processable.
+Most likely both.
+
+
+(Business to Business, B2B)
+Look for data source for partners.
+In fact, you are looking for two data sources:
+
+* Partner _organizations_
+
+* Partner _users_ (employees/contractors of partners)
+
+You would like for the partner _user_ data to come (directly or indirectly) from partner's HR system.
+Two options:
+
+* SSO/Federation, just in time provisioning, deprovisioning problem, etc.
+* Delegated administration
+
+Most likely, you will need both.
+
+You may need a "sponsor" for each partner or even user.
+Sponsor is your employee/contractor that is responsible for the partner/user.
+
+TODO: Academia, distributed research teams, vitual organizations, all that mess.
+
+(Business to Consumer/Customer/Citizen, B2C, CIAM)
+Usually on a bigger scale. Needs scalability.
+Less value per identity, needs cost-efficient solution.
+
+Different lifecycle, usually governed by the user rather than given by the organization.
+Self-service is a must.
+
+Data protection and privacy very important.
+
+
+Do not automate everything.
+It is too much work, too much maintenance.
+Prioritize.
+Automate frequently-used systems (large populations).
+Automate frequently-changed systems (fluctuation).
+Automate sensitive systems (seucirity, accountability).
+Automate day-one systems (mail, productivity).
+Automate systems that generate helpdesk load.
+
+However, think about security and accountibility.
+Semi-manual approach may be a good compromise (CSV exports).
+
+=== Password Management
+
+Avoid storing passwords in IDM, if you can.
+
+Inconsistent password policies.
+The best way is to make them as consistent as possible, work with security team.
+
+
+=== Entitlement Management
+
+Resource-side entitlements: there may be _a lot_ of them.
+Managing everything is likely to be a complex burden.
+There will be thousands of privileges, in hundreds of systems.
+The low-level privileges often needs very intimate understanding of the system/application where they are used, including understanding of the _configuration_ of the application.
+Identity management team has almost zero chance to get this right.
+
+Try to manage high-level privileges in target systems, such as groups or roles.
+
+Separate the problem into two parts:
+
+* privileges->groups/roles on resource side: responsibility of system admin
+
+* user -> (IDM) roles -> resource-side entitlements (groups/roles): responsibility of IDM team
+
+Choose the right level of abstraction.
+The "entitlements" should have a business meaning, rather than technological meaning.
+Such as job, work position, bussiness function, responsibility, ability for meaningful action.
+E.g. "branch supervisor" rather than "access-list-123"
 
 == Conclusion
 

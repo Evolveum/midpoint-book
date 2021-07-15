@@ -1540,6 +1540,7 @@ Each role assigned to a user is a risk.
 If roles are marked with relative risk levels, IDM system can compute the accumulation of risk for each user.
 As each role gives access to a particular set of assets, the IDM system may provide data to evaluate asset exposure to users.
 
+* *Identity analytics and intelligence (IdA).*
 // TODO: Identity analytics/intelligence
 
 // TODO: Workflow orchestration: useless for approvals, but may be useful for enrollment, remediation, etc. Organization-wide workflow platform would be preferred over IDM-specific platform.
@@ -1737,6 +1738,8 @@ We consider identity management to be heart and brain of any IAM solution.
 This is one of the reasons why we have started midPoint project.
 The rest of this book will focus almost exclusively on identity management and the use of midPoint as the IDM component.
 This is the place where theory ends and practice begins.
+
+// TODO: IAM program (not a project)
 
 // TODO: tips to describe:
 // * Cloud, SaaS, etc.
