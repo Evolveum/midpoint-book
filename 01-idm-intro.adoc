@@ -1542,6 +1542,12 @@ As each role gives access to a particular set of assets, the IDM system may prov
 
 * *Identity analytics and intelligence (IdA).*
 // TODO: Identity analytics/intelligence
+// Risk-based approach, holistic, integrates several mechanisms
+// Role mining
+// Outlier detection
+// Identifying over-privileged users (risk)
+// Detection of high-privilege entitlement to a low-privilege user
+// Can be integrated with AM, e.g. require stronger authentication for high-risk users
 
 // TODO: Workflow orchestration: useless for approvals, but may be useful for enrollment, remediation, etc. Organization-wide workflow platform would be preferred over IDM-specific platform.
 
@@ -1745,3 +1751,7 @@ This is the place where theory ends and practice begins.
 // * Cloud, SaaS, etc.
 //   difficulty for customization
 //   autonomy
+// * PAM
+// * Identity proofing, velocity vs veracity trade-off
+// * Progressive user profiling
+// * Social login

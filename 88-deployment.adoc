@@ -203,12 +203,128 @@ In theory.
 Although you probably cannot avoid use of application roles entirely, as people will want to request application entitlements directly.
 At least synchronize them automatically using generic sync.
 
+Role types:
+
+* Business roles: usually map to a job position or responsibility.
+Should be understandable for non-tech people.
+Business roles are almost always composed of lower-level roles (technical, application).
+
+* Technical roles (IT roles): privileges needed for a particular activity, or part of a job.
+Technical roles should span several target systems, they should contain access to all the systems and all the privileges to carry out a particular action.
+Technical roles should still be somehow understandable to business people, even though they need to be specialized in particular business area or familiar with a specific technology.
+
+* Application roles: contain accounts/entitlements from a single application (target system).
+They are often understandable to IT people.
+Business people will have only a rough idea what application roles do.
+Avoid using application roles in IDM system if you can.
+They usually map to accounts/entitlements in target systems one-to-one.
+Therefore it is easier to use entitlements directly in technical roles.
+Application roles are often just a maintenance burden, not adding a lot of value just by themselves.
+However, they may be necessary for role management, e.g. manual role engineering, role mining, etc.
+Or maybe you have no idea how to set up technical/business roles, and you want to keep track of application role assignment as a very basic form of accountability.
+If you really need application roles, set up an automated synchronization process.
+Never maintain application roles manually.
+
+TODO: examples of role types, maybe rework this into a table.
+
+Applicability of role management/RBAC varies.
+RBAC is a huge benefit in organizations with regular structures.
+For example, branch offices of a bank usually have just a handful of work positions with well-defined responsibilities (teller, supervisor, branch manager).
+Similarly helpdesk departments, manufacturing floors and similar organizations are usually easy to describe using roles.
+However, when it comes to the same organizations, there are parts of organizational structure that are very hard to decribe using roles.
+While bank branches are regular, the HQ office is usually completely irregular.
+Almost every person working for HQ has mixed responsibilities, unique combination of privileges and so on.
+This does not mean that you should not try to apply roles in such environment.
+Quite the contrary.
+Roles are still needed, otherwise there will be no transparency or accountability.
+However, this is going to be a slow, tedious and never-ending process.
+It is usually useless to try to model complete jobs or work positions using business roles.
+However, use of technical roles can still be helpful.
+Each person is likely to have a unique combination of technical roles, usually assigned using request-and-approval process.
+However, you will have a record when the role was assigned, who assigned it, and often also a reason for assignment.
+This is a very valuable asset for re-certification campaigns.
+
+TODO: common practice: Request the same roles as someone else has.
+This is a good start.
+But it makes re-certification harder.
+Never apply request-and-approval without re-certification.
+Beware of AI.
+AI is a good tool, but it must not be overused, and there have to be an efficient oversight.
+
+TODO: role explosion, least privilege security theory vs feasibility
+TODO: organizational changes -> role maintenance
+
+TODO: Automatic role assignment, e.g. from the HR data.
+Remember: the data are always wrong.
+Have a process to correct mistakes.
+
+=== Role Assignment Cycle
+
+TODO: request -> approval -> assignment -> re-certification -> unassignment
+
+TODO: Often request same roles as someone else -> should create a business/technical role
+
+Avoid assignment of privileges that are the same as a team leader / manager.
+The boss is likely to have a long history in the company, changing several jobs, accumulating unnecessary privileges.
+Assigning the same privileges to team members is a good way to systematically increase risk.
+
+=== Entitlement Management
+
+Resource-side entitlements: there may be _a lot_ of them.
+Managing everything is likely to be a complex burden.
+There will be thousands of privileges, in hundreds of systems.
+The low-level privileges often needs very intimate understanding of the system/application where they are used, including understanding of the _configuration_ of the application.
+Identity management team has almost zero chance to get this right.
+
+Try to manage high-level privileges in target systems, such as groups or roles.
+
+Separate the problem into two parts:
+
+* privileges->groups/roles on resource side: responsibility of system admin
+
+* user -> (IDM) roles -> resource-side entitlements (groups/roles): responsibility of IDM team
+
+Choose the right level of abstraction.
+The "entitlements" should have a business meaning, rather than technological meaning.
+Such as job, work position, bussiness function, responsibility, ability for meaningful action.
+E.g. "branch supervisor" rather than "access-list-123"
+
+TODO: clean up your entitlements in the target system.
+E.g. introduce a consistent naming conventions for groups.
+If you cannot rename old groups, at least set up conventions and policies for new groups.
+This is especially important in popular directory services, such as Active Directory or LDAP.
+
 === Organizational Structure
 
 TODO: quality varies wildly
 TODO: try to reconstruct the real, practical organizational tree (not the formal one).
 
 TODO: avoid user-manager method
+
+=== Access Re-Certification
+
+TODO: removing excessive access
+TODO: usually the last defense against role accumulation
+TODO: laborious process, has to be distributed
+
+Beware of AI.
+It is especially dangerous for re-certificatin campaigns, as they are usually the last defense against privilege accumulation.
+If you use AI for re-certification, you will need to have automated risk management in place, to provide additional layer of defense.
+
+The best approach is to keep the amount of re-certification to a minimum.
+Minimize the number of roles that people have to request, this will also minimize the amount of assignments the certifiers have to review.
+
+TODO: ad-hoc re-certification, e.g. after org assignment change.
+
+Frequent campaigns (e.g. quarterly) vs "triggered" re-certification:
+
+Frequent campaigns are big problem.
+People will ge tired, won't pay attention, will certify everything.
+The result will be useless.
+Avoid frequent campaigns.
+Try to be smarter.
+Have annual campaigns, well distributed, keep the work of any individual certifier low.
+Use "triggered" (ad-hoc) re-certification, e.g. in case of organizational assignment changes, employee status changes, risk of individual user raises beyond a threshold, certification of outliers, etc.
 
 == Integration
 
@@ -311,26 +427,25 @@ Inconsistent password policies.
 The best way is to make them as consistent as possible, work with security team.
 
 
-=== Entitlement Management
+=== Risk Management
 
-Resource-side entitlements: there may be _a lot_ of them.
-Managing everything is likely to be a complex burden.
-There will be thousands of privileges, in hundreds of systems.
-The low-level privileges often needs very intimate understanding of the system/application where they are used, including understanding of the _configuration_ of the application.
-Identity management team has almost zero chance to get this right.
+TODO: Outlier detection (AI?)
 
-Try to manage high-level privileges in target systems, such as groups or roles.
+=== Role of AI/ML
 
-Separate the problem into two parts:
+Good use of AI:
 
-* privileges->groups/roles on resource side: responsibility of system admin
+* Identity correlation, especially if used only as a recommender for potential matches.
 
-* user -> (IDM) roles -> resource-side entitlements (groups/roles): responsibility of IDM team
+* Role mining, suggesting roles that have to be reviewed by human.
 
-Choose the right level of abstraction.
-The "entitlements" should have a business meaning, rather than technological meaning.
-Such as job, work position, bussiness function, responsibility, ability for meaningful action.
-E.g. "branch supervisor" rather than "access-list-123"
+* Outlier detection, e.g. warning of potential privilege accumulation
+
+Bad use of AI:
+
+Use of AI for approval and certification is dangerous.
+There is a reason that this task was delegated to *human*.
+Using machine for such decisions often just a security theater.
 
 == Conclusion
 
