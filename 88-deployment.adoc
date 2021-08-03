@@ -217,13 +217,15 @@ Technical roles should still be somehow understandable to business people, even 
 They are often understandable to IT people.
 Business people will have only a rough idea what application roles do.
 Avoid using application roles in IDM system if you can.
+However, the matter of application roles is complicated.
 They usually map to accounts/entitlements in target systems one-to-one.
 Therefore it is easier to use entitlements directly in technical roles.
 Application roles are often just a maintenance burden, not adding a lot of value just by themselves.
 However, they may be necessary for role management, e.g. manual role engineering, role mining, etc.
 Or maybe you have no idea how to set up technical/business roles, and you want to keep track of application role assignment as a very basic form of accountability.
+Application roles may also be needed in case an access to the system involves more than one resource, e.g. application database record and authorization in AM system (or LDAP group).
 If you really need application roles, set up an automated synchronization process.
-Never maintain application roles manually.
+Never maintain application roles manually if you can automate.
 
 TODO: examples of role types, maybe rework this into a table.
 

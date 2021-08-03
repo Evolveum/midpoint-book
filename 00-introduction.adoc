@@ -166,10 +166,11 @@ If you need to use this book in such a way, please contact Evolveum, and you can
 The license fees collected in this way will be used to improve midPoint and especially midPoint documentation.
 You know as well as we do that this is needed.
 
-Following people have worked on the words and pictures that make up this book:
+Following people have worked on the words and images that make up this book:
 
 * Radovan Semančík (author and maintainer)
 * Veronika Kolpaščiková (illustrations, corrections)
+* Richard Richter (corrections, suggestions)
 
 Yet there is much more people whose work was needed to make this work happen: midPoint developers, contributors, analysts and deployment engineers, specialists and generalists, theoretical scientists and practical engineers, technical staff and business people, people of Evolveum and the people that work for our partners, our families, friends and all the engineers and scientists for generations and generations past.
 We indeed stand on the shoulders of giants.
