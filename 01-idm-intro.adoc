@@ -1584,7 +1584,7 @@ Countermeasures are all the things that we do to make systems more secure, rangi
 As it is not practical to completely secure a system, there is always some amount of risk that we have to accept.
 This is called _residual risk_, a risk that we are aware of, yet it is not efficient to reduce or eliminate the risk.
 Even though residual risk cannot be completely eliminated, there may be risk _mitigation_ plans.
-For example, we may accept that there is a risk of an operating system vulnerability, and no amount of automated software updates, vulnerability database integrations and watchfulness is ever going to eliminate the risk completely. However, we can _mitigate_ the risk by preparing plans to be executed when we are affected by a zero-day vulnerability. The plan may include disabling network access to vulnerable services as soon as we learn about the vulnerability, investigation that looks for traices of an attacker exploiting the vulnerability, emergency communication and contingency plans and so on. Risk mitigation is focused on making the impact of such an attack less painful, reducing the damage.
+For example, we may accept that there is a risk of an operating system vulnerability, and no amount of automated software updates, vulnerability database integrations and watchfulness is ever going to eliminate the risk completely. However, we can _mitigate_ the risk by preparing plans to be executed when we are affected by a zero-day vulnerability. The plan may include disabling network access to vulnerable services as soon as we learn about the vulnerability, investigation that looks for traces of an attacker exploiting the vulnerability, emergency communication and contingency plans and so on. Risk mitigation is focused on making the impact of such an attack less painful, reducing the damage.
 
 In an ideal situation we are completely aware of the _risk_, so we can implement _countermeasures_ and prepare risk mitigation plans.
 However, we need to know quite a lot about the risk for the countermeasures and mitigation plans to be efficient.
@@ -1912,6 +1912,94 @@ Theoretically all of these things can be done manually.
 But it is not feasible in practice.
 The reality is that information security seriously suffers - unless there is and IDM system that brings automation and visibility.
 Good information security without an IDM system is hardly possible.
+
+=== Zero-Trust Approach
+
+Zero-trust is an approach to design network and application systems.
+The basic idea is that a system should not implicitly trust any other system, not even systems located on a "secure" corporate network.
+Simply speaking, zero-trust approach is mostly about removing _security perimeter_.
+
+For many decades, corporate networks were designed using _hard exterior, soft interior_ approach.
+Corporate network was protected from the Internet by an army of specialized security systems and techniques, such as firewalls, de-militarized zones, network traffic analysers, intrusion detection systems, network anti-virus scanners and everything else a booming network security market could provide.
+While the castle gates were heavily protected, the interior of corporate network was very _soft_.
+Originally, there were no security measures inside corporate networks at all.
+Anyone that got inside could connect to any system.
+Of course, basic authentication and authorization mechanisms were usually there, but the network was not segmented, and the traffic was usually not even protected by basic encryption.
+This approach created a _security perimeter_ around corporate network.
+If you want to keep the data secure, you have to make sure nobody gets into the network.
+
+Of course, this approach does not really make much sense in the Internet era.
+There is no such thing as a _network perimeter_, not since the invention of WiFi, mobile data and USB keys anyway.
+It is ridiculously easy to breach the perimeter by connecting a WiFi device to the corporate network.
+However, even that was usually not needed, as the data can be copied to USB keys, or easily moved outside the perimeter by using virtual private network (VPN) access.
+Corporate security professionals tried to address such threats by strictly controlling user's devices, such as disabling USB ports, disabling access to other networks while the device was part of VPN, and so on.
+However, none of these countermeasures were really effective, and they were usually very intrusive and inconvenient for the users.
+Advent of cloud services and mobile devices was the last drop, the traditional corporate information security approach was dead.
+Even the most traditional security practitioners had to admit what was already obvious: there is no perimeter.
+
+The old approach was replaced by a new one: zero trust.
+An application should not trust any other application, not even an application on the same corporate network.
+Network perimeter was replaced by _mutual authentication_ and _network traffic protection_.
+Each application must authenticate the other end of the connection, whether it is talking to the party it is supposed to talk to.
+Network traffic always needs to be encrypted and authenticated (signed), always assuming that it can be passing through an insecure network.
+Simply speaking, we are going to treat corporate network in exactly the same way as we are treating public Internet.
+The _soft interior_ turned into _hard interior_, and the _perimeter_ was no longer needed.
+
+The concept of zero trust is not new at all.
+It was here pretty much since the very beginnings of information security.
+Security practitioners are trained not to trust anything or anyone, set up policies, require authentication, deny access by default, encrypt all network traffic, minimize privileges, manage risks, and so on.
+Therefore, "zero trust" approach is essentially just a thorough application of proper information security principles.
+This approach is here for decades, it just had different names: defence in depth, perimeterless security, network hardening and so on.
+
+Even though zero trust approach is not new, it dramatically gained on importance in the era of cloud services and remote access.
+Many functions provided by traditional corporate applications are provided by cloud services now.
+Such applications need data to work, therefore, the very use of "as a service" applications is by itself a breach of the perimeter.
+Cloud applications need to wort together with on-premise applications.
+Traditional enterprise integration patterns based on _soft interior_ do not work in this brave new world any more.
+All of that is driving the _zero trust_ concepts.
+
+Of course, "zero trust" is more a wish rather than a strict rule.
+A system that trusts nothing will not be able to work at all.
+There is always some amount of _trust_ involved, even in _zero trust_ approach.
+The system must trust that the root keys and certificates are authentic.
+There is an implicit trust that the developers have not introduced a back door into system code.
+Zero trust approach should perhaps be called "minimal trust approach".
+However, "zero trust" is much more attractive in glossy magazines and presentations.
+Whatever is the approach called, the basic principle remains the same: aggressively minimize implicit trust in the system.
+
+Identity permeates everything, therefore the zero trust approach has an impact on identity and access management as well.
+Impact on access management technologies is perhaps quite obvious.
+Access management deals mostly with authentication.
+The applications need to authenticate to each other in this new _zero trust_ world.
+Therefore the access management systems need to handle authentication of non-person identities, such as applications and devices.
+Many scenarios do not significantly deviate from the usual authentication, perhaps the only difference is that the authentication needs to be completely non-interactive.
+However, there are also more complex authentication scenarios, such as an application authentication on behalf of a user.
+Traditional authentication methods (such as password-based authentication) are obviously ill-prepared for such scenarios.
+Therefore the zero trust approach is often combined with introduction of new authentication mechsnisms.
+
+Impact of zero trust approach on identity management systems is much more subtle.
+Zero trust approach requires mutual authentication of communication parties.
+Which means that the identity management system needs to manage non-person identities such as applications and devices.
+This requirement is not new, therefore most well-maintained identity management products are more than capable in this aspect.
+The problematic part is usually the connection between the identities, the _relationship_.
+If two applications have to communicate, both of them need to know about the other one.
+API keys, pre-shared secrets, certificates and other cryptographic material needs to be set up before first communication can happen.
+The credentials need to be updated, keys must be changed periodically, certificates need to be renewed.
+Such application credentials are much more important than passwords ever were, as application credentials are quite literally the keys to the kingdom.
+An attacker that gets access to the application keys has access to all the data in cloud applications, which very likely means your payroll data, customer database, internal documents, almost everything that is important to you.
+Experienced information security professionals know, that it is not encryption that is the most difficult part of cryptography.
+The key management is.
+Similarly, it is not the authentication that is the most difficult problem in zero trust approach.
+Identity and credential management is much harder.
+Today, application identities and credentials are usually configured manually by system administrators.
+However, such approach does not scale.
+The whole idea of "as a service" applications is to make information systems more flexible, more dynamic, and especially less demanding when it comes to system administration.
+Manual management of application identities goes well against that idea.
+
+// TODO: what to do in identity for zero trust?
+// There are IDM system, but not many are well-prepared.
+// There was not much demand yet. People do not realize full scale of the problem.
+// Make sure your IDM system can evolve to support this.
 
 == Building Identity and Access Management Solution
 
