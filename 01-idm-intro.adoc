@@ -8,7 +8,7 @@ The beginning of knowledge is the discovery of something we do not understand.
 
 What is identity and access management?
 Answer to that question is both easy and very complex.
-The easy part is: Identity and access management (IAM) is a set of information technologies that deal with identities in the cyberspace.
+The easy part is: identity and access management (IAM) is a set of information technologies that deal with identities in the cyberspace.
 The complex part of the answer takes the rest of this book.
 
 This book deals mostly with _Enterprise Identity and Access Management_.
@@ -18,8 +18,8 @@ However, many of the mechanisms and principles described in this book can be app
 
 The story of identity and access management starts with information security.
 The security requirements dictate the need for authentication and authorization of the users.
-Authentication is a mechanism by which the computer checks that the user is really the one he pretends to be.
-And authorization is a related mechanism by which the computer determines whether to allow of deny specific action to a user.
+Authentication is a mechanism by which the computer checks that the user is really the one they pretend to be.
+And authorization is a related mechanism by which the computer determines whether to allow or deny the user a specific action.
 Almost every computer system has some means of authentication and authorization.
 
 Perhaps the most widespread form of authentication is a password-based "log in" procedure.
@@ -38,14 +38,14 @@ And that's where the real story of digital identity begins.
 The central concept of identity management is a data record that contains information about a person.
 This concept has many names: user profile, persona, user record, digital identity and many more.
 The most common name in the context of identity management is _user account_.
-Accounts usually hold the information that describes the real-world person using a set of attributes such as given name and family name.
-But probably the most important part is the technical information that relates to operation of an information system for which the account is created.
+Accounts usually hold information that describes the real-world person using a set of attributes such as given name and family name.
+But probably the most important part is the technical information that relates to the operation of an information system for which the account is created.
 This includes operational parameters such as location of users home directory, wide variety of permission information such as group and role membership, system resource limits and so on.
 User accounts are represented in a wide variety of forms ranging from relational database records through structured data files to semi-structured text files.
 But regardless of the specific method used to store and process the records the _account_ is undoubtedly one of the most important concepts of IAM field.
-And so are the databases where the accounts are stored as accounts, being data records, have to be stored somewhere.
+And so are the databases where the accounts are stored as accounts, being data records, they have to be stored somewhere.
 
-The account databases are as varied as are the account types.
+The account databases are as varied as the account types.
 Most account databases in the past were implemented as an integral part of the monolithic information system using the same database technology as the system itself used.
 This is an obvious choice and it remains very popular even today.
 Therefore many accounts are stored in relational database tables and similar application data stores.
@@ -62,7 +62,7 @@ Directory servers are built with the primary purpose to provide shared data stor
 While application databases usually use their own proprietary protocol, _directory servers_ implement standardized protocols.
 While databases are built for application-specific data model, directory servers usually extend standardized data model which improves interoperability.
 While databases may be heavyweight and expensive to scale, directory servers are designed to be lightweight and provide massive scalability.
-That makes directory servers almost ideal candidates for shared account database.
+That makes directory servers almost ideal candidates for a shared account database.
 
 image::01-02-directory-server.png[Directory server]
 
@@ -80,16 +80,16 @@ The problem is that this usually works only for very simple systems.
 
 Lightweight Directory Access Protocol (LDAP) is a standard protocol for accessing directory services.
 It is an old protocol when judging by Internet age standards.
-LDAP roots are going as far back as 1980s to a family of telecommunication protocols known as X.500.
-Even though LDAP may be old it is widely used.
+LDAP roots go as far back as 1980s to a family of telecommunication protocols known as X.500.
+Even though LDAP may be old, it is widely used.
 It is a very efficient binary protocol that was designed to support massively distributed shared databases.
-It has small set of well-defined simple operations.
+It has a small set of well-defined simple operations.
 The operations and the data meta-model implied by the protocol allow very efficient data replication and horizontal scalability of directory servers.
 This simplicity contributes to low latencies and high throughput for read operations.
 The horizontal scalability and relative autonomy of directory server instances is supposed to increase the availability of the directory system.
 These benefits often come at the expense of slow write operations.
 As identity data are often read but seldom modified, slower writes are usually a perfectly acceptable trade-off.
-Therefore, LDAP-based directory servers were and in many places still remain, the most popular databases for identity data.
+Therefore, LDAP-based directory servers were, and in many places still remain, the most popular databases for identity data.
 
 LDAP is one of the precious few established standards in the IAM field.
 However, it is far from being perfect.
@@ -97,7 +97,7 @@ LDAP was created in 1990s, with roots going back to 1980s.
 There are some problems in original LDAP design, such as grouping mechanisms and some details of search and modify operations.
 Also, LDAP schema has a distinctive feel of 80s and 90s.
 LDAP would deserve a major review, to correct the problems and bring the protocol to 21^st^ century.
-Sadly, there was no major update to LDAP specifications in decades.
+Sadly, there hasn't been a major update to LDAP specifications for decades.
 
 Even though LDAP has its problems, it still remains a useful tool.
 Most LDAP server vendors provide proprietary solutions to LDAP problems.
@@ -117,7 +117,7 @@ While the user account data often contain entitlement information (permissions, 
 I.e. directory server can provide information what permissions an account has, but it is not designed to make a _decision_ whether to allow or deny a specific operation.
 And that is not all.
 Directory servers do not contain data about user _sessions_.
-It means that directory servers do not know whether user is currently logged in or not.
+It means that directory servers do not know whether the user is currently logged in or not.
 Many directory servers are used for basic authentication and even authorization.
 Yet, the directory servers were not designed to do this.
 Directory servers provide only the very basic capabilities.
@@ -128,15 +128,15 @@ They should be used as such.
 
 However, many applications use directory servers to centralize password authentication.
 In fact, this is a good and cost-efficient way to centralize password-based authentication, especially if you are just starting with identity and access management.
-However, you should be aware this a temporary solution.
+Nevertheless, you should be aware this a temporary solution.
 It has many limitations.
-The right way to do it is to use _authentication server_ instead of directory server.
+The right way to do it is to use an _authentication server_ instead of directory server.
 Access Management (AM) technologies can provide that.
 
 === Single Directory Server Myth
 
 Shared directory server makes user management easier.
-HOwever, this is not a complete solution and there are serious limitations to this approach.
+However, this is not a complete solution and there are serious limitations to this approach.
 The heterogeneity of information systems makes it nearly impossible to put all required data into a single directory system.
 
 The obvious problem is the lack of a single, coherent source of information.
