@@ -119,6 +119,8 @@ There will be conflicts.
 There will be typos, mistakes, inaccuracies.
 Good portion of data will be out of date.
 
+HR data are usually quite good, but they are also wrong.
+
 Recommendation: proceed slowly.
 Validate the data before rolling out.
 
@@ -201,12 +203,130 @@ In theory.
 Although you probably cannot avoid use of application roles entirely, as people will want to request application entitlements directly.
 At least synchronize them automatically using generic sync.
 
+Role types:
+
+* Business roles: usually map to a job position or responsibility.
+Should be understandable for non-tech people.
+Business roles are almost always composed of lower-level roles (technical, application).
+
+* Technical roles (IT roles): privileges needed for a particular activity, or part of a job.
+Technical roles should span several target systems, they should contain access to all the systems and all the privileges to carry out a particular action.
+Technical roles should still be somehow understandable to business people, even though they need to be specialized in particular business area or familiar with a specific technology.
+
+* Application roles: contain accounts/entitlements from a single application (target system).
+They are often understandable to IT people.
+Business people will have only a rough idea what application roles do.
+Avoid using application roles in IDM system if you can.
+However, the matter of application roles is complicated.
+They usually map to accounts/entitlements in target systems one-to-one.
+Therefore it is easier to use entitlements directly in technical roles.
+Application roles are often just a maintenance burden, not adding a lot of value just by themselves.
+However, they may be necessary for role management, e.g. manual role engineering, role mining, etc.
+Or maybe you have no idea how to set up technical/business roles, and you want to keep track of application role assignment as a very basic form of accountability.
+Application roles may also be needed in case an access to the system involves more than one resource, e.g. application database record and authorization in AM system (or LDAP group).
+If you really need application roles, set up an automated synchronization process.
+Never maintain application roles manually if you can automate.
+
+TODO: examples of role types, maybe rework this into a table.
+
+Applicability of role management/RBAC varies.
+RBAC is a huge benefit in organizations with regular structures.
+For example, branch offices of a bank usually have just a handful of work positions with well-defined responsibilities (teller, supervisor, branch manager).
+Similarly helpdesk departments, manufacturing floors and similar organizations are usually easy to describe using roles.
+However, when it comes to the same organizations, there are parts of organizational structure that are very hard to decribe using roles.
+While bank branches are regular, the HQ office is usually completely irregular.
+Almost every person working for HQ has mixed responsibilities, unique combination of privileges and so on.
+This does not mean that you should not try to apply roles in such environment.
+Quite the contrary.
+Roles are still needed, otherwise there will be no transparency or accountability.
+However, this is going to be a slow, tedious and never-ending process.
+It is usually useless to try to model complete jobs or work positions using business roles.
+However, use of technical roles can still be helpful.
+Each person is likely to have a unique combination of technical roles, usually assigned using request-and-approval process.
+However, you will have a record when the role was assigned, who assigned it, and often also a reason for assignment.
+This is a very valuable asset for re-certification campaigns.
+
+TODO: common practice: Request the same roles as someone else has.
+This is a good start.
+But it makes re-certification harder.
+Never apply request-and-approval without re-certification.
+Beware of AI.
+AI is a good tool, but it must not be overused, and there have to be an efficient oversight.
+
+TODO: role explosion, least privilege security theory vs feasibility
+TODO: organizational changes -> role maintenance
+
+TODO: Automatic role assignment, e.g. from the HR data.
+Remember: the data are always wrong.
+Have a process to correct mistakes.
+
+=== Role Assignment Cycle
+
+TODO: request -> approval -> assignment -> re-certification -> unassignment
+
+TODO: Often request same roles as someone else -> should create a business/technical role
+
+Avoid assignment of privileges that are the same as a team leader / manager.
+The boss is likely to have a long history in the company, changing several jobs, accumulating unnecessary privileges.
+Assigning the same privileges to team members is a good way to systematically increase risk.
+
+=== Entitlement Management
+
+Resource-side entitlements: there may be _a lot_ of them.
+Managing everything is likely to be a complex burden.
+There will be thousands of privileges, in hundreds of systems.
+The low-level privileges often needs very intimate understanding of the system/application where they are used, including understanding of the _configuration_ of the application.
+Identity management team has almost zero chance to get this right.
+
+Try to manage high-level privileges in target systems, such as groups or roles.
+
+Separate the problem into two parts:
+
+* privileges->groups/roles on resource side: responsibility of system admin
+
+* user -> (IDM) roles -> resource-side entitlements (groups/roles): responsibility of IDM team
+
+Choose the right level of abstraction.
+The "entitlements" should have a business meaning, rather than technological meaning.
+Such as job, work position, bussiness function, responsibility, ability for meaningful action.
+E.g. "branch supervisor" rather than "access-list-123"
+
+TODO: clean up your entitlements in the target system.
+E.g. introduce a consistent naming conventions for groups.
+If you cannot rename old groups, at least set up conventions and policies for new groups.
+This is especially important in popular directory services, such as Active Directory or LDAP.
+
 === Organizational Structure
 
 TODO: quality varies wildly
 TODO: try to reconstruct the real, practical organizational tree (not the formal one).
 
 TODO: avoid user-manager method
+
+=== Access Re-Certification
+
+TODO: removing excessive access
+TODO: usually the last defense against role accumulation
+TODO: laborious process, has to be distributed
+
+Beware of AI.
+It is especially dangerous for re-certificatin campaigns, as they are usually the last defense against privilege accumulation.
+If you use AI for re-certification, you will need to have automated risk management in place, to provide additional layer of defense.
+
+The best approach is to keep the amount of re-certification to a minimum.
+Minimize the number of roles that people have to request, this will also minimize the amount of assignments the certifiers have to review.
+
+TODO: ad-hoc re-certification, e.g. after org assignment change.
+
+Frequent campaigns (e.g. quarterly) vs "triggered" re-certification:
+
+Frequent campaigns are big problem.
+People will ge tired, won't pay attention, will certify everything.
+The result will be useless.
+Avoid frequent campaigns.
+Try to be smarter.
+Have annual campaigns, well distributed, keep the work of any individual certifier low.
+Use "triggered" (ad-hoc) re-certification, e.g. in case of organizational assignment changes, employee status changes, risk of individual user raises beyond a threshold, certification of outliers, etc.
 
 == Integration
 
@@ -237,10 +357,97 @@ Solution: go for jack.anderson.123@example.com or even better janderson8 and jac
 
 Plan ahead, especially if you need new features.
 MidPoint has 6 months development cycles.
-The backlog has years and years worth of improvements ideas, therefor it is perhaps quite natural that roadmap is a bit overcrowded.
+The backlog has years and years worth of improvements ideas, therefore it is perhaps quite natural that roadmap is a bit overcrowded.
 It takes some planning to get your features on midPoint roadmap, even if you have the funds for their development.
 
 Even bugfixes can take weeks to months to get fixed. Plan ahead. Test early. Proceed in iterations.
+
+TODO: warn against over-use of AI
+
+Data sources:
+
+(Business to Employee, B2E)
+HR system is usually a good start.
+Look for data sources for contractors & temporary workers.
+You may not find any.
+Consider that IDM may become the source.
+
+Look for organizational structure sources.
+You will probably find several sources, all of them useless.
+It would either not reflect reality, or it will not be machine-processable.
+Most likely both.
+
+
+(Business to Business, B2B)
+Look for data source for partners.
+In fact, you are looking for two data sources:
+
+* Partner _organizations_
+
+* Partner _users_ (employees/contractors of partners)
+
+You would like for the partner _user_ data to come (directly or indirectly) from partner's HR system.
+Two options:
+
+* SSO/Federation, just in time provisioning, deprovisioning problem, etc.
+* Delegated administration
+
+Most likely, you will need both.
+
+You may need a "sponsor" for each partner or even user.
+Sponsor is your employee/contractor that is responsible for the partner/user.
+
+TODO: Academia, distributed research teams, vitual organizations, all that mess.
+
+(Business to Consumer/Customer/Citizen, B2C, CIAM)
+Usually on a bigger scale. Needs scalability.
+Less value per identity, needs cost-efficient solution.
+
+Different lifecycle, usually governed by the user rather than given by the organization.
+Self-service is a must.
+
+Data protection and privacy very important.
+
+
+Do not automate everything.
+It is too much work, too much maintenance.
+Prioritize.
+Automate frequently-used systems (large populations).
+Automate frequently-changed systems (fluctuation).
+Automate sensitive systems (seucirity, accountability).
+Automate day-one systems (mail, productivity).
+Automate systems that generate helpdesk load.
+
+However, think about security and accountibility.
+Semi-manual approach may be a good compromise (CSV exports).
+
+=== Password Management
+
+Avoid storing passwords in IDM, if you can.
+
+Inconsistent password policies.
+The best way is to make them as consistent as possible, work with security team.
+
+
+=== Risk Management
+
+TODO: Outlier detection (AI?)
+
+=== Role of AI/ML
+
+Good use of AI:
+
+* Identity correlation, especially if used only as a recommender for potential matches.
+
+* Role mining, suggesting roles that have to be reviewed by human.
+
+* Outlier detection, e.g. warning of potential privilege accumulation
+
+Bad use of AI:
+
+Use of AI for approval and certification is dangerous.
+There is a reason that this task was delegated to *human*.
+Using machine for such decisions often just a security theater.
 
 == Conclusion
 

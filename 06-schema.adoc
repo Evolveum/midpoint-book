@@ -73,7 +73,7 @@ MidPoint is actively discouraging direct resource-to-resource communication.
 Everything in midPoint is built for resource-to-midPoint and midPoint-to-resource communication.
 MidPoint is always the center – and for a good reason.
 All resource data need to be translated to and from a midPoint “data language”.
-Thus midPoint creates a common language that everybody can understand.
+Thus, midPoint creates a common language that everybody can understand.
 And this is exactly the purpose of midPoint schema.
 The schema of user, role, org and service is designed to contain properties that are often used in identity-related integration scenarios.
 Therefore, an engineer who is designing a mapping is quite likely to find a suitable property in midPoint schema that is prepared to be used.
@@ -94,7 +94,7 @@ Therefore it is worth to have a closer look at how this object looks like.
 This is going to be a really educative lesson, as it will explain several fundamental principles of midPoint.
 
 User is represented by schema datatype identified as `UserType`.
-Adding the Type suffix to datatypes is a common convention in midPoint.
+Adding the `Type` suffix to data types is a common convention in midPoint.
 There is `UserType`, `RoleType`, `OrgType`, `ResourceType` and so on.
 This convention is partially historic, partially given by XML Schema conventions, partially a convenience to developers.
 Regardless of the origins, this convention is used for all the data types in midPoint schemas.
@@ -160,7 +160,7 @@ Assignments represent what the object should have.
 The assignments represent a policy, a desired state of things.
 
 |`linkRef`
-|referrence
+|reference
 |Set of shadows (projections) linked to this focal object.
 E.g. a set of accounts linked to a user.
 This is the set of shadows that belongs to the focal object in a sense that these shadows represents the focal object on the resource.
@@ -190,7 +190,7 @@ The specific meaning and form of this property is deployment-specific.
 |property
 |Indicates user's preferred language, usually for the purpose of localizing user interfaces.
 The format is IETF language tag defined in BCP 47, where underscore is used as a subtag separator.
-This is usually a ISO 639-1 two-letter language code optionally followed by ISO 3166-1 two letter country code separated by underscore. +
+This is usually a ISO 639-1 two-letter language code optionally followed by ISO 3166-1 two-letter country code separated by underscore. +
 Example: `en_US`
 
 |`locale`
@@ -265,7 +265,7 @@ Example: `CEO`
 |`employeeNumber`
 |property
 |Unique, business-oriented identifier of the employee.
-Typically used as correlation identifier and for auditing purposes.
+Typically used as a correlation identifier and for auditing purposes.
 Should be immutable, but the specific properties and usage are deployment-specific.
 
 |`organization`
@@ -329,7 +329,7 @@ Those are automatically determined and controlled by midPoint core.
 Those items are essential for correct operation of midPoint.
 Therefore they are called _operational_ items.
 Operational items are usually not directly displayed in the user interface.
-They are either completely hidden, displayed indirectly or displayed only when user chooses to displays them.
+They are either completely hidden, displayed indirectly or displayed only when user chooses to display them.
 
 MidPoint schema has grown and evolved over time.
 And it is still evolving.
@@ -344,8 +344,8 @@ This gives enough time for midPoint users to adapt to schema changes.
 
 There is also another kind of schema evolution.
 Development of most midPoint features is quick and straightforward.
-But then there are features that are quite complex or features that involve some degree of exploration do implement.
-Those features cannot be implement in a single midPoint release.
+But then there are features that are quite complex or features that involve some degree of exploration to implement.
+Those features cannot be implemented in a single midPoint release.
 There are also features that are provided to the midPoint community as a "preview" to gather feedback for further development.
 All such features are marked as _experimental_.
 Those features are not officially supported, but you are free to use them at your own risk.
@@ -370,7 +370,7 @@ Employees have hiring date, contracts have end dates, users can be disabled, rol
 We use the term activation to encompass all those things that deal with the questions of digital life and death of the objects.
 
 The activation in itself is multi-dimensional and quite complex.
-It is composed from several properties that may change in somehow independent and somehow inter-dependent way.
+It is composed of several properties that may change in somehow independent and somehow inter-dependent way.
 Following list provides a quick summary of activation properties:
 
 * *Activation status* defines administrative state of the object, often manually set by system administrator.
@@ -378,17 +378,17 @@ Following list provides a quick summary of activation properties:
 * *Validity* properties specify when the object should be active.
 There is activation date and deactivation date.
 
-* *Effective status* is a computed operational property that show the current effective status of the user.
+* *Effective status* is a computed operational property that shows the current effective status of the user.
 It is computed from other activation properties.
 
 * *Lockout status* is used for temporary inactivation of user, e.g. in case of numerous failed authentication attempts.
 
 * *Additional operational properties* provide (meta) data about the past changes of administrative status.
 
-The best way to explain how activation work is to describe the meaning and behavior of individual properties.
+The best way to explain how activation works is to describe the meaning and behavior of individual properties.
 
-_Administrative status_ defines the "administrative state" of the object (user).
-I.e. the explicit decision of the administrator.
+_Administrative status_ defines the "administrative state" of the object (user),
+i.e. the explicit decision of the administrator.
 If administrative status is set, this property overrides any other constraints in the activation type.
 E.g. if this is set to `enabled` and the user is not yet valid (according to _validity_ below), the user should be considered active.
 If set to `disabled` the user is considered inactive regardless of other settings.
@@ -412,18 +412,18 @@ It is enabled and fully operational.
 |The entity is inactive.
 It has been disabled by an administrative action.
 
-This indicates *temporary* inactivation and there is an intent to enabled the entity later.
+This indicates *temporary* inactivation and there is an intent enable the entity later.
 It is usually used for an employee on parental leave, sabbatical, temporarily disable account for security reasons, etc.
 
 |`archived`
 |The entity is inactive.
 It has been disabled by an administrative action.
 
-This indicates *permanent* inactivation and there is no intent to enabled the entity later.
+This indicates *permanent* inactivation and there is no intent to enable the entity later.
 
 This state is used to keep the user record or account around for archival purposes.
 E.g. some systems require that the account exists to maintain referential consistency of historical data, audit records, etc.
-It may also be used to "blocks" the user or account identifier to avoid their reuse.
+It may also be used to "block" the user or account identifier to avoid their reuse.
 It is usually used for retired employees and similar cases.
 |===
 
@@ -615,7 +615,7 @@ For example, an employee that has employment contract for a year would look like
 ----
 
 Given that this chapter was written in 2019, such user will be active.
-It will automatically switched to inactive state after the last day of 2019.
+It will automatically switch to inactive state after the last day of 2019.
 However, if there is ever a need to explicitly disable the user, administrative status can still be used:
 
 [source,xml]
@@ -642,8 +642,7 @@ The concept of activation is not limited to users.
 Many midPoint objects have activation.
 Roles can expire, organizational units can be disabled and so on.
 Activation is a concept that has a very broad application in midPoint.
-Even assignments have activation.
-Which is a crucial element in some configuration (e.g. multi-affiliation).
+Even assignments have activation, which is a crucial element in some configuration (e.g. multi-affiliation).
 Assignments are often used to model employment contracts, student affiliations, service contracts and similar concepts that have time boundaries.
 This is usually achieved by a clever use of assignment activation.
 
@@ -667,10 +666,10 @@ MidPoint schema is specified in XML Schema Definition (XSD) format.
 MidPoint schema is defined in several parts, but the most important is the "core" schema definition.
 The schema files reside in midPoint source code in schema component in the `infra` subsystem.
 Therefore schema files can be found in the `resources` part under the `infra/schema` subdirectory of midPoint source code.
-Schema files are are also included in midPoint distribution package for convenience.
+Schema files are also included in midPoint distribution package for convenience.
 
 TIP: Why XSD?
-Why did we chose to use the XML Schema Definition format for midPoint schema?
+Why did we choose to use the XML Schema Definition format for midPoint schema?
 There are historic reasons and there are pragmatic reasons.
 Back in early 2010s when midPoint was born XML was perhaps the only sensible choice to build a complex system.
 Alternatives such as JSON were young and their schema languages ranged from "very limited" through "useless" to "non-existent".
@@ -680,11 +679,11 @@ We had to extend XSD with custom features.
 But fortunately, XSD allowed that.
 We also had to rewrite parts of the XML/XSD-processing code.
 We have also invented a way how to use XSD to describe generic data structures (a.k.a. "Prism objects") that can be represented in XML, JSON and YAML.
-Therefore XSD does not really holds us back that much.
+Therefore XSD does not really hold us back that much.
 And despite all the limitations, XSD worked for us quite well during all those years.
 We expect that we will replace XSD with something better in the future.
 The problem is that right now there is nothing that is significantly better.
-And it does not makes any sense for us to switch one buzzword for another only to remain cool.
+And it does not make any sense for us to switch one buzzword for another only to remain cool.
 Therefore we will stick to XSD as long as it works for us.
 
 Every deployment engineer that takes midPoint deployments seriously should be aware of the schema.
@@ -723,7 +722,7 @@ Therefore, midPoint deployments won’t get far if midPoint schema cannot be ext
 
 Vast majority of midPoint schema is available at _compile-time_.
 This means that such schema is used during compilation (build) of midPoint.
-That "static" part of schema is somehow hardcoded into midPoint itself and it would very difficult to change.
+That "static" part of schema is somehow hardcoded into midPoint itself and it would be very difficult to change.
 Therefore we have developed a mechanism to extend the schema at _deployment-time_.
 Small parts of the XSD definition can be provided when midPoint is deployed.
 MidPoint will read those definitions when it starts up.
@@ -796,7 +795,7 @@ Firstly, all the extension properties are always placed in a special `extension`
 Even though the properties are placed inside a container, the user interface will present them in the same way as the static (native) midPoint properties.
 
 Secondly, a clever reader surely noticed that we have used XML namespace here.
-We have omitted XML namespaces from majority of other examples as they are not that important when working with midPoint objects.
+We have omitted XML namespaces from the majority of other examples as they are not that important when working with midPoint objects.
 But schema is different.
 Namespaces are handled quite a strict way when working with the schema.
 Namespaces must be declared and namespace prefixes must be properly used in all XSD definitions.
@@ -810,7 +809,7 @@ However, this may be a problem in case that several schema extensions are combin
 Such combinations are possible in midPoint.
 MidPoint will simply parse all the XSD files in the schema directory and apply all of them as extensions.
 The namespace is used to differentiate between them.
-Therefore, if there is an expectations that several schema extensions will be used in the same deployment then the use of namespaces in object extension is more than recommended.
+Therefore, if there is an expectation that several schema extensions will be used in the same deployment then the use of namespaces in object extension is more than recommended.
 
 TIP: Why is there an `extension` container?
 Why are not the properties simply mixed among other static properties?
@@ -874,7 +873,7 @@ Therefore you can simply use localization keys instead of actual text:
     ...
 ----
 
-The actual text to be used for label an help text is looked up in the localization catalog.
+The actual text to be used for the label can be looked up in the localization catalog.
 However, using localization catalogs is a matter of its own.
 It will be covered by later chapters.
 
@@ -926,7 +925,7 @@ What is really stored in midPoint repository is this:
 </user>
 ----
 
-This all happens in a transparent way.
+This all happens transparently.
 PolyStrings are displayed as strings in the user interface.
 They are handled (almost completely) as strings in the mappings.
 Ordinary midPoint user has no idea that the normalization happens at all.
@@ -988,7 +987,7 @@ Want them to be either hashed or encrypted.
 And that is what protected string is for.
 Protected string is basically just a simple string, but it has extra cryptographic protection.
 
-If you have ever had something to deal with cryptography you will probably know that cryptography is not simple.
+If you have ever had something to deal with cryptography, you will probably know that cryptography is not simple.
 Even such a seemingly simple thing as password hash is quite complex when it comes to all the details. E.g. we do not want simple hash as that would not provide sufficient protection.
 We want _salted_ hash.
 Which means that the salt value needs to be stored together with the string.

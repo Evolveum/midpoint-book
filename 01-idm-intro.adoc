@@ -8,7 +8,7 @@ The beginning of knowledge is the discovery of something we do not understand.
 
 What is identity and access management?
 Answer to that question is both easy and very complex.
-The easy part is: Identity and access management (IAM) is a set of information technologies that deal with identities in the cyberspace.
+The easy part is: identity and access management (IAM) is a set of information technologies that deal with identities in the cyberspace.
 The complex part of the answer takes the rest of this book.
 
 This book deals mostly with _Enterprise Identity and Access Management_.
@@ -18,8 +18,8 @@ However, many of the mechanisms and principles described in this book can be app
 
 The story of identity and access management starts with information security.
 The security requirements dictate the need for authentication and authorization of the users.
-Authentication is a mechanism by which the computer checks that the user is really the one he pretends to be.
-And authorization is a related mechanism by which the computer determines whether to allow of deny specific action to a user.
+Authentication is a mechanism by which the computer checks that the user is really the one they pretend to be.
+And authorization is a related mechanism by which the computer determines whether to allow or deny the user a specific action.
 Almost every computer system has some means of authentication and authorization.
 
 Perhaps the most widespread form of authentication is a password-based "log in" procedure.
@@ -38,14 +38,14 @@ And that's where the real story of digital identity begins.
 The central concept of identity management is a data record that contains information about a person.
 This concept has many names: user profile, persona, user record, digital identity and many more.
 The most common name in the context of identity management is _user account_.
-Accounts usually hold the information that describes the real-world person using a set of attributes such as given name and family name.
-But probably the most important part is the technical information that relates to operation of an information system for which the account is created.
+Accounts usually hold information that describes the real-world person using a set of attributes such as given name and family name.
+But probably the most important part is the technical information that relates to the operation of an information system for which the account is created.
 This includes operational parameters such as location of users home directory, wide variety of permission information such as group and role membership, system resource limits and so on.
 User accounts are represented in a wide variety of forms ranging from relational database records through structured data files to semi-structured text files.
 But regardless of the specific method used to store and process the records the _account_ is undoubtedly one of the most important concepts of IAM field.
-And so are the databases where the accounts are stored as accounts, being data records, have to be stored somewhere.
+And so are the databases where the accounts are stored as accounts, being data records, they have to be stored somewhere.
 
-The account databases are as varied as are the account types.
+The account databases are as varied as the account types.
 Most account databases in the past were implemented as an integral part of the monolithic information system using the same database technology as the system itself used.
 This is an obvious choice and it remains very popular even today.
 Therefore many accounts are stored in relational database tables and similar application data stores.
@@ -62,7 +62,7 @@ Directory servers are built with the primary purpose to provide shared data stor
 While application databases usually use their own proprietary protocol, _directory servers_ implement standardized protocols.
 While databases are built for application-specific data model, directory servers usually extend standardized data model which improves interoperability.
 While databases may be heavyweight and expensive to scale, directory servers are designed to be lightweight and provide massive scalability.
-That makes directory servers almost ideal candidates for shared account database.
+That makes directory servers almost ideal candidates for a shared account database.
 
 image::01-02-directory-server.png[Directory server]
 
@@ -80,16 +80,16 @@ The problem is that this usually works only for very simple systems.
 
 Lightweight Directory Access Protocol (LDAP) is a standard protocol for accessing directory services.
 It is an old protocol when judging by Internet age standards.
-LDAP roots are going as far back as 1980s to a family of telecommunication protocols known as X.500.
-Even though LDAP may be old it is widely used.
+LDAP roots go as far back as 1980s to a family of telecommunication protocols known as X.500.
+Even though LDAP may be old, it is widely used.
 It is a very efficient binary protocol that was designed to support massively distributed shared databases.
-It has small set of well-defined simple operations.
+It has a small set of well-defined simple operations.
 The operations and the data meta-model implied by the protocol allow very efficient data replication and horizontal scalability of directory servers.
 This simplicity contributes to low latencies and high throughput for read operations.
 The horizontal scalability and relative autonomy of directory server instances is supposed to increase the availability of the directory system.
 These benefits often come at the expense of slow write operations.
 As identity data are often read but seldom modified, slower writes are usually a perfectly acceptable trade-off.
-Therefore, LDAP-based directory servers were and in many places still remain, the most popular databases for identity data.
+Therefore, LDAP-based directory servers were, and in many places still remain, the most popular databases for identity data.
 
 LDAP is one of the precious few established standards in the IAM field.
 However, it is far from being perfect.
@@ -97,7 +97,7 @@ LDAP was created in 1990s, with roots going back to 1980s.
 There are some problems in original LDAP design, such as grouping mechanisms and some details of search and modify operations.
 Also, LDAP schema has a distinctive feel of 80s and 90s.
 LDAP would deserve a major review, to correct the problems and bring the protocol to 21^st^ century.
-Sadly, there was no major update to LDAP specifications in decades.
+Sadly, there hasn't been a major update to LDAP specifications for decades.
 
 Even though LDAP has its problems, it still remains a useful tool.
 Most LDAP server vendors provide proprietary solutions to LDAP problems.
@@ -117,7 +117,7 @@ While the user account data often contain entitlement information (permissions, 
 I.e. directory server can provide information what permissions an account has, but it is not designed to make a _decision_ whether to allow or deny a specific operation.
 And that is not all.
 Directory servers do not contain data about user _sessions_.
-It means that directory servers do not know whether user is currently logged in or not.
+It means that directory servers do not know whether the user is currently logged in or not.
 Many directory servers are used for basic authentication and even authorization.
 Yet, the directory servers were not designed to do this.
 Directory servers provide only the very basic capabilities.
@@ -128,15 +128,15 @@ They should be used as such.
 
 However, many applications use directory servers to centralize password authentication.
 In fact, this is a good and cost-efficient way to centralize password-based authentication, especially if you are just starting with identity and access management.
-However, you should be aware this a temporary solution.
+Nevertheless, you should be aware this a temporary solution.
 It has many limitations.
-The right way to do it is to use _authentication server_ instead of directory server.
+The right way to do it is to use an _authentication server_ instead of directory server.
 Access Management (AM) technologies can provide that.
 
 === Single Directory Server Myth
 
 Shared directory server makes user management easier.
-HOwever, this is not a complete solution and there are serious limitations to this approach.
+However, this is not a complete solution and there are serious limitations to this approach.
 The heterogeneity of information systems makes it nearly impossible to put all required data into a single directory system.
 
 The obvious problem is the lack of a single, coherent source of information.
@@ -1314,38 +1314,40 @@ As you are reading this book, chances are that you are one of the few people tha
 In that case it is all mostly about costs/benefits calculation.
 Identity management has some inherent complexity.
 While even very small systems need IDM, the benefits are likely to be too small to justify the costs.
-The cost/benefit ratio is much better for mid-size.
-And IDM is an absolute necessity for large-scale systems.
-There seems be a rule of thumb that has quite broad applicability:
+The cost/benefit ratio is much better for mid-size organizations.
+Comprehensive, automated identity management is an absolute necessity for large-scale systems.
+There seems to be a rule of thumb that has quite a broad applicability:
 
 
 |===
 |Number of users |Recommendation
 
 |Less than 200
-|You may need IDM, but the benefits are probably too small to justify the costs.
+|You may need automated identity management, but the benefits are probably too small to justify the costs.
+Managing users accounts manually is probably still a feasible option.
 
 |200 – 2 000
-|You need IDM and the benefits may be just enough to justify the costs.
-But you still need to look for a very cost-efficient solution.
+|You need automated identity management, and the benefits may be just enough to justify the costs.
+However, you still need to look for a very cost-efficient solution.
+Automating the most basic and time-consuming tasks is probably just enough.
 
 |2 000 – 20 000
-|You really need IDM.
-You simply cannot manage that crowd manually.
-If you implement IDM properly the benefits will be much higher than the costs.
+|You really need automated identity management.
+You cannot manage that crowd manually.
+If you implement identity management solution properly, the benefits will be much higher than the costs.
 
 |More than 20 000
-|I can't believe that you do not have any IDM yet.
+|I can't believe that you do not have any automated identity management yet.
 Go and get one.
 Right now.
 You can thank me later.
 |===
 
-== Identity Governance and Compliance
+== Identity Governance
 
 _Identity governance_ is basically an identity management taken to a higher business level.
-The identity management proper is focused mainly on technical aspects of identity life-cycle such as automatic provisioning, synchronization, evaluation of the roles and computing attributes.
-On the other hand, identity governance abstracts from the technical details and it is focused on policies, roles, business rules, processes and data analysis.
+The _identity management_ proper is focused mainly on technical aspects of identity life-cycle such as automatic provisioning, synchronization, evaluation of the roles and computing attributes.
+On the other hand, _identity governance_ abstracts from the technical details, focusing on policies, roles, business rules, processes and data analysis.
 E.g. a governance system may deal with segregation of duties policy.
 It may drive the process of access re-certification.
 It may focus on automatic analysis and reporting of the identity, auditing and policy data.
@@ -1354,34 +1356,35 @@ It will manage application of new and changed policies, evaluate how is your sys
 This field is sometimes referred to as _governance, risk management and compliance_ (GRC).
 
 Almost all IDM systems will need at least some governance features to be of any use in practical deployments.
-And many governance features are just refinement of concepts that originated in the IDM field many years ago.
-Therefore the boundary between identity management and identity governance is quite fuzzy.
+Moreover, many governance features are just refinement of concepts that originated in the IDM field many years ago.
+Therefore, the boundary between identity management and identity governance is quite fuzzy.
 The boundary is so fuzzy that new terms were invented for the unified field that includes the identity management proper together with identity governance.
 _Identity governance and administration_ (IGA) is one of these terms.
-This field (or sub-field) is still quite young, therefore it is expected that the terminology and even the concepts need some time to settle down.
 For us the governance is just a natural continuation of identity management evolution.
 
-However, it seems to be a common practice that identity governance features are implemented by specialized products that are separated from their underlying IDM platforms.
-Almost all commercial IDM and governance solutions are divided into (at least) two products.
+Back in 2010s, it was a common practice for identity governance features to be implemented by specialized products that are separated from their underlying IDM platforms.
+Many IDM and governance solutions are still divided into (at least) two products.
 This strategy obviously brings new revenue streams for the vendors.
-But it makes almost no sense at all from customer point of view.
-The industry has even coined a term _closed-loop remediation_ (CLR) which in fact means that the governance system is somehow integrated with the underlying IDM solution.
-Industry sometimes has a need for inventing fancy marketing terms for something that should be natural part of any reasonable solution.
+Yet, it makes almost no sense at all from customer point of view.
 It perhaps comes without saying that reasonable IDM solutions should offer both the IDM and governance features in one unified and well aligned product.
 
-Below is a list of features that belong to the governance/compliance category.
-As the boundary of governance is so fuzzy, there are also features that are just related to governance.
+=== Identity Governance Features
 
-* *Delegated administration.* Basic IDM deployments are usually based on the idea of an omnipotent system administrator that can do almost anything.
-And then there are end users that can do almost nothing.
+Below is a list of features that belong to the governance/compliance category.
+As the boundary of governance is so fuzzy, there are also features that may be considered governance-related IDM features.
+
+* *Delegated administration.*
+Basic IDM deployments are usually based on the idea of an omnipotent system administrator that can do almost anything.
+Then there are end users that can do almost nothing.
 While this concept may work in small and simple deployments, it is not sufficient for larger systems.
 Large organizations usually need to delegate some administration privileges to other users.
-There may be HR personnel, people that are responsible for management of their organizational units, administrator responsible for a particular group of systems and so on.
+There may be HR personnel, people that are responsible for management of their organizational units, administrator responsible for a particular group of systems, application administrators, and so on.
 
-* *Deputies.* Delegated administration is very useful, but it is quite static.
-It is given by policies that are not entirely easy to change.
-But there is often a need for ad-hoc delegation, such as a temporary delegation of privileges during manager’s vacation.
-Such a manager could nominate a deputy that should receive parts of manager’s privileges.
+* *Deputies.*
+Delegated administration is very useful, yet it is quite static.
+Delgated administation is specified in policies that are not entirely easy to change.
+However, there is often a need for ad-hoc delegation, such as a temporary delegation of privileges during manager’s vacation.
+Such a manager could nominate a deputy that would receive some of manager’s privileges.
 This is all done on an ad-hoc basis, initiated by an explicit action of the manager.
 
 * *RBAC-related policies*, such as Segregation of Duties (SoD) policy.
@@ -1390,121 +1393,355 @@ This is usually implemented by using a role exclusion mechanisms.
 However, it may go deeper.
 E.g. it may be required that each request is approved by at least two people.
 
-* *Policies related to organizational structure.* Organizational structure may look like a simple harmless tree, but in reality it is far from being simple or harmless.
+* *Policies related to organizational structure.*
+Organizational structure may look like a simple harmless tree, but in reality it is far from being simple or harmless.
+Or a tree.
 In theory the organizational structure should be managed by business or operations departments such as HR.
-But the reality is often quite different.
+Yet the reality is often quite different.
 Business departments lack the tools and processes to efficiently manage organizational structure.
-Therefore it is often an IDM system that assumes the responsibility for organizational structure management.
+Therefore, it is often an IDM system that assumes the responsibility for organizational structure management.
 In such cases there is a need to police the organizational structure.
 For example there may be policies that mandate a single manager for each department.
 In that case the IDM system may need to handle situations that there is no manager or too many managers.
 
-* *Dynamic approval schemes.* Approval processes are usually considered to be part of basic identity management functionality.
-Those are usually implemented by some kind of general-purpose workflow engine.
+* *Dynamic approval schemes.*
+Approval processes are usually considered to be part of basic identity management functionality, as they were present in early IDM systems back in 2000s.
+The user (or the manager) request role assignment.
+The operation is driven through an approval process before being executed.
+Approvals provide a very useful mechanism, especially in case that role assignment cannot be automated, usually due to a non-existent policies.
++
+Approvals are usually implemented by some kind of general-purpose workflow engine by almost all IDM/governance systems.
 However, this is often a source of maintenance problems, especially in deployments that are focused on identity governance functionality.
 In such cases the approval processes are no longer simple quasi-linear workflows.
-Approval processes tend to be very dynamic and their nature is determined by the polices.
+Approval processes tend to be very dynamic, and their nature is almost entirely determined by the polices rather that process flows.
 Workflow engines have a very hard time coping with such a dynamic situation.
 IDM system that implement special-purpose policy-based approval engines provide much better solutions.
++
+Approval mechanisms are very useful.
+However, they also have a dark side.
+Approval decisions are often made on a very subjective "looks good" basis.
+This obviously opens an opportunity for bad decisions and negligence.
+False denial of role assignment is likely to trigger an immediate (and occasionaly quite emotional) feedback from the requester.
+However, approval of role assignment that should not be assigned is likely to trigger no feedback at all.
+Yet, such a decision is likely to cause a security risk, a risk that is very difficult to detect.
+This can be partially solved by a multi-level approval processes, especially for sensitive roles.
+However, there is trend to "automate" approval decisions based on "artificial intelligence" mechanisms.
+This may look like a very useful tool and time-saver.
+However, the artificial intelligence is only as good as are the training data.
+If the machine is trained using bad decisions, it will also suggest bad decisions.
+This is further complicated by a very limited visibility and accountability of such decisions.
+Therefore such mechanisms have to be used with utmost care.
 
 * *Entitlement management* is mostly and identity management thing.
 It deals with entitlements of user’s accounts in target systems such as role or group membership.
 However, this process can go both ways.
-Governance systems may provide a “entitlement discovery” features that take entitlements as inputs.
+Governance systems may provide an "entitlement discovery" features that take entitlements as inputs.
 This can be used evaluate compliance and policy violations, but it may also be a valuable input for role engineering.
 
-* *Role mining.* IDM systems are seldom deployed on a green field.
+* *Role mining.*
+IDM systems are seldom deployed on a green field.
 In the common case there are existing systems in place, there are application roles, entitlements and privileges.
 It is not an easy job to create IDM roles that map to this environment.
 This is usually a slow and tedious process.
 However, IDM system can retrieve all the existing information and use it to propose role structure.
-This is not a fully deterministic process, it requires a lot of user interaction, tuning and it is often based on a machine learning capabilities.
+This is not a fully deterministic process, it requires a lot of user interaction, tuning, and it is often based on a machine learning capabilities.
 It is not a replacement for role engineering expertise.
 However, machine-assisted role mining can significantly speed up the process.
 
-* *Re-certification campaigns.* Assignment of roles is often an easy task.
-Request a role, role goes through an approval process and the role is assigned.
-And then everybody forgets about it.
+* *Re-certification campaigns.*
+Assignment of roles is often an easy task.
+Request a role, role goes through an approval process, and the role is assigned.
+Then everybody forgets about it.
 There is a significant incentive to request assignment of a new role.
-But there is almost no incentive to request unassignment of a role that is no longer needed.
-This leads to an accumulation of privileges over time.
-And such accumulation may reach dangerous levels for employees with long and rich job transfer history.
-Therefore there are re-certification campaigns that are also known as “certification”, “access certification” or “attestation” mechanisms.
-The goal of those campaign is to confirm (“certify” or “testify”) that the user still needs the privileges that were assigned previously.
+Yet, there is almost no incentive to request unassignment of a role that is no longer needed.
+This leads to accumulation of privileges over time.
+Such privilege hoarding may reach dangerous levels for employees with long and rich job transfer history.
+Therefore, there are re-certification campaigns that are also known as "certification", "access certification" or "attestation" mechanisms.
+The goal of those campaign is to confirm ("certify" or "testify") that the user still needs the privileges that were assigned previously.
 Re-certification campaigns are designed to be conducted on a large number of users in a very efficient manner.
-Therefore there are special processes and a very specific user interface is provided to conduct such campaigns.
+Therefore, there are special processes, and a very specific user interface is provided to conduct such campaigns.
++
+Similarly to approval processes, some identity governance systems offer "artificial intelligence" support for re-certification processes.
+Such assistance can be very attractive, as re-certification processes are often quite intimidating due to a large number of decisions that have to be made in each campaign.
+However, the risks of such "automation" is even more pronounced than it is in the approval case.
+Re-certification is often the last defence against dangerous privilege accumulation.
+Poorly-trained artificial intelligence may cause a systematic build-up of risk in the organization.
 
 * *Role governance* is usually quite a complex matter.
-Typical IDM deployments will have a large number of roles.
+Typical IDM deployment is likely to have a large number of roles.
 It is quite hard to define those roles in the first place.
-But then it is even harder to maintain them.
+Then it is even harder to maintain the roles.
 Environment is changing all the time, therefore the roles have to change as well.
 It is usually beyond the powers of a single administrator to do so.
-Therefore many role owners are usually nominated to take care of role maintenance.
+Therefore, many role owners are usually nominated to take care of role maintenance.
 Roles are often grouped into applications, categories, catalogs or functional areas.
 The IDM system must make sure that the owners have the right privileges to do their job.
-The IDM system should also take care that each role has at least one owner, that role definitions are periodically reviewed and so on.
+The IDM system should also take care that each role has at least one owner at any given time, that role definitions are periodically reviewed and so on.
 
 * *Role lifecycle management* is a dynamic part of role governance.
 Role changes are likely to have a serious impact on overall security of the system.
-Therefore it may not be desirable to simply delegate role management duties.
+Therefore, it may not be desirable to simply delegate role management duties.
 It may be much more sensible to require that role changes has to be approved before being applied.
 New roles are also created all the time and old roles are decommissioned.
 The IDM system may need to make sure that a decommissioned role is not assigned to any new user.
-But such role may still be needed in the system during a phase-out period.
+Yet, old roles may still be needed in the system during a phase-out period.
+IDM system has to keep track of them, to avoid keeping outdated roles in the systems forever.
 
-* *Role modeling.* A change of a single role often does not make much sense just by itself.
+* *Role modeling.*
+A change of a single role often does not make much sense just by itself.
 The roles are usually designed in such a way that a set of roles works together and forms a role model.
-Therefore approval of each individual role change may be too annoying and even harmful.
+Therefore, approval of each individual role change may be too annoying, and it may even be harmful.
 E.g. there may be an inconsistent situation in case that one change is approved and another is rejected.
-Therefore roles and policies are grouped into models, the models are reviewed, versioned and applied in their entirety.
+Therefore, roles and policies are often grouped into models.
+The models are reviewed, versioned and applied in their entirety.
 
-* *Simulation.* IDM deployments tend to be complex.
+* *Simulation.*
+IDM deployments tend to be complex.
 There are many relations, interactions and policies.
 It is no easy task to predict the effects of a change in a role, policy or organizational structure.
-Therefore some IDM systems provide a simulation features that provide predictions and impact analyses of planed changes.
+Therefore, some IDM systems provide a simulation features that provide predictions and impact analyses of planed changes.
 
 * *Compliance policies*, reporting and management.
 Policies in the identity management world are usually designed to be strictly enforced.
 This works fine for fundamental policies that are part of simple IDM deployments.
 However, the big problem is how to apply new policies - especially policies that are mandated by regulations, recommendations and best practices.
-In such cases it is almost certain that significant part of your organization will not be compliant with such new policy.
+It is almost certain that significant part of your organization will not be compliant with such new policy.
 Applying the policy and immediately enforcing it is likely to cause a major business disruption.
 However, it is almost impossible to prepare for new policies and to mitigate their impact without knowing which users and roles are affected.
-Therefore the policies are usually applied, but they are not enforced yet.
+Therefore, there is a two-step process.
+The policies are applied, but they are not enforced yet.
 The policies are used to evaluate the compliance impact.
-Compliance reports can be used to find the users that are affected by the policy in order to remedy the situation.
+Compliance reports can be used to find the users that are in violation of the policy, in order to remedy the situation.
 Compliance reports may also be used to track the extent and progress of compliance.
 
-* *Remediation.* Good IDM deployments strive for automation.
+* *Remediation.*
+Good IDM deployments strive for automation.
 All the processes and actions that can be automated are automated.
 E.g. if a role is unassigned and user does no longer needs an account, such account is automatically deleted or disabled.
 However, there are actions that cannot be automated because they require decision of a living and thinking human being.
 Approvals are one example of such processes.
 However, there are more situations like that.
-And many of those require more initiative than a simple yes/no decision.
+Many of those require more initiative than a simple yes/no decision.
 One such example is organizational structure management.
 There is usually a rule that each department must have a manager.
-But what should IDM system do in case that a department manager is fired?
+However, what should IDM system do in case that a department manager is fired?
 IDM system cannot stop that operation, as there are certainly good reasons to revoke all privileges of that manager.
-Therefore the result is that there is now a department without a manager.
-And the IDM system itself cannot do anything about that.
+The manager and all the associated accounts have to go, as soon as possible.
+Now there is a department without a manager, and the IDM system itself cannot do anything about it.
 That is where remediation comes to the rescue.
-Remediation process is started after the operation.
+Remediation process is started after the operation that removed the manager.
 The remediation process will ask a responsible person to nominate a new manager for the department.
 There may be a broad variety of remediation processes.
-Simple process will ask for yes/no decisions or may ask to nominate users.
-But there are often a generic processes that apply to completely unexpected situations.
+Simple process will ask for yes/no decisions, or it may ask to nominate a user.
+Then there are often options to set up generic processes that apply to completely unexpected situations.
 
 * *Risk management automation.*
 Information security is not a project, it is a process.
-It starts with risk analysis, planning, actions and then it goes back to analysis and planning and actions and so on and so on for ever and ever.
-Risk analysis is the part that takes a huge amount of time and effort - especially when it comes to analysis of insider threat as there is usually a lot of insiders to analyze.
+It starts with risk analysis, planning, execution, and then it goes back to analysis and planning and execution, and so on and so on for ever and ever.
+Risk analysis is the part of the process that takes a huge amount of time and effort - especially when it comes to analysis of insider threat as there is usually a lot of insiders to analyze.
 However, an IDM system can help to reduce the risk analysis effort.
 Each role assigned to a user is a risk.
 If roles are marked with relative risk levels, IDM system can compute the accumulation of risk for each user.
 As each role gives access to a particular set of assets, the IDM system may provide data to evaluate asset exposure to users.
 
+* *Identity analytics and intelligence (IdA)* is mostly an umbrella terms.
+It usually refers to a composition of several identity governance features, integrated into a holistic, risk-based approach.
+Identity analytics and intelligence starts by a look at the data.
+The process starts with a very realistic assumption that the data are not in perfect order,
+that there are inconsistencies, imperfections, risks and all kinds of other problems.
+Various techniques are employed to detect the problems.
+Most techniques seems to be based on recognition of anomalies and patters in the data.
+_Outlier detection_ mechanisms look for users with privileges that are significantly different from the privileges of their colleagues.
+On the other hand, _role mining_ is used to detect similar privileges assigned to similar users, suggesting new roles.
+Many of the identity analytics and intelligence techniques are based on risk modeling.
+There are mechanisms to _identity over-privileged users_ by analysing risk scores of individual users.
+Similar mechanisms can be used to identify high-privilege entitlements assigned to a low-privilege user or similar risk anomalies.
+
+// TODO: Workflow orchestration: useless for approvals, but may be useful for enrollment, remediation, etc. Organization-wide workflow platform would be preferred over IDM-specific platform.
+
+=== Risk-Based Approach To Identity Governance
+
+Risk-based approach to identity management and governance is a very good idea.
+In fact, it is an excellent idea, one of the best ideas in decades.
+However, as with many great ideas, there are difficulties and drawbacks.
+
+But wait a moment, what is this "risk-based" thing all about? To answer that question we have to make a quick road-trip through information security landscape.
+
+The concept of _risk_ comes from information security theory.
+Security practitioners have realized a long time ago that it is all but impossible to create a perfectly secure system.
+As you try to make a system more and more secure, every step is more expensive than the previous step.
+Every countermeasure is less efficient than the previous one, it is more intrusive, it is less flexible, harder to adapt to business needs.
+Eventually, the system gets to the state where it is practically useless for business, yet the system is still not completely secure.
+
+Therefore the security practitioners came with a concept of _risk_.
+_Risk_ is a measure of danger that a particular _asset_ is subjected to.
+An _asset_ such as a customer database can be in _risk_ with respect to particular _threat_, for example a hacker trying to steal the database to sell it to your competition.
+The _risk_ tells about the probability of an _asset_ being compromised.
+For example, keeping the database in a form of spreadsheet on decades old Windows machine connected to an open Internet is obviously quite a risky thing to do.
+The risk can be addressed using _countermeasures_.
+Countermeasures are all the things that we do to make systems more secure, ranging from operating system updates, through access-control systems up to bomb-proof doors and heavily-armed guards.
+
+As it is not practical to completely secure a system, there is always some amount of risk that we have to accept.
+This is called _residual risk_, a risk that we are aware of, yet it is not efficient to reduce or eliminate the risk.
+Even though residual risk cannot be completely eliminated, there may be risk _mitigation_ plans.
+For example, we may accept that there is a risk of an operating system vulnerability, and no amount of automated software updates, vulnerability database integrations and watchfulness is ever going to eliminate the risk completely. However, we can _mitigate_ the risk by preparing plans to be executed when we are affected by a zero-day vulnerability. The plan may include disabling network access to vulnerable services as soon as we learn about the vulnerability, investigation that looks for traces of an attacker exploiting the vulnerability, emergency communication and contingency plans and so on. Risk mitigation is focused on making the impact of such an attack less painful, reducing the damage.
+
+In an ideal situation we are completely aware of the _risk_, so we can implement _countermeasures_ and prepare risk mitigation plans.
+However, we need to know quite a lot about the risk for the countermeasures and mitigation plans to be efficient.
+Risk is not just a single number, it is a multi-dimensional and often very complex concept.
+The amount of risk is evaluated in a _risk assessment_ process, which is often very tedious and demanding exercise.
+Risk assessment process evaluates _assets_, to determine the value of the data and services.
+The process looks at _threats_, such as skills and motivations of an attacker.
+The assessment looks at _vulnerabilities_ that attackers can use to gain access to our systems.
+It is also concerned with existing _countermeasures_, processes, policies and other details.
+
+This means that the risk assessment process deals with big and complex data that cannot be processed by a human mind alone.
+The data are usually fed into _risk models_ to determine the risk.
+Risk models are a set of complex mathematical formulas that transform data on _assets_, _threats_, _vulnerabilities_ and all the other inputs into a multi-dimensional representation of risk areas.
+In theory, the risk model can tell us that we have a high risk in network security, especially when dealing with customer data - and we should really do something about it!
+
+The results of risk assessment are meant to drive the implementation of countermeasures and risk mitigation plans.
+There are too many countermeasures and mitigation strategies to choose from, we cannot possible implement them all.
+We want only the really efficient ones.
+We do not want to waste time and money on sophisticated encryption of data that are just copies of public information, do we?
+The risk assessment is supposed to tell us what is important and what is not.
+This is an important principle of efficient and systematic information security process: never guess, never go blind, let the risk lead you.
+Base your decisions on data.
+Implement countermeasures exactly where they are needed, where they are in a good position to address real risks.
+
+However, information systems are not the easiest things to analyze.
+They never seem to stand still!
+The data are changing, new integration routes are added, systems are re-configured.
+Yet, the most annoying of all, user accounts and privileges change pretty much every day.
+By the time the risk assessment is done, the results are already out of date!
+How are we supposed to evaluate the risk, when everything around us is changing constantly?
+
+The answer is, of course, _automation_.
+There are parts of risk assessment that cannot be automated.
+For example, there is no magic method to automatically assess business value of your data assets.
+However, some parts of risk assessment can be automated.
+
+This is where we get back to identity management and governance.
+Almost all organizations are affected by _insider threat_, a threat posed by people that are already part of your organization.
+Employees, contractors, support engineers, cloud service providers - they already have access to your data.
+They do not need to hack anything, they do not need to overcome any countermeasures.
+They are already _inside_.
+All it takes to reveal your trade secrets are a simple copy and paste keystrokes.
+One file download is all it takes to sell your customer database.
+The proliferation of cloud services make such "exploits" entirely trivial.
+There is no technological countermeasure, no perimeter that could stop an insider to use a privilege that he or she already has.
+
+This means that identity data heavily affect outcome of risk modeling.
+A system where almost all of your employees have unrestricted access to a customer database is very likely to pose much higher risk than all the network-related risks combined.
+A single person that has administrator-level access to almost every system in your organization is certainly a very attractive _phishing_ target.
+There are high risks hidden in the identity data of almost any organization.
+Yet, such risk can be easily reduced by adjusting the access rights.
+But how to find such risks?
+Identity data are often complex, system-specific, distributed in many directories, cloud systems and application databases.
+Any identity practitioner can certainly see where this leads: identity management system, of course.
+
+Identity management system is an ideal place for evaluation of risks related to identity and access data.
+Essential data are already in the database of identity management system: users, roles, role assignments, role composition, entitlements, everything is there.
+Entitlements can be assessed to assign a risk score to them.
+Then the data can be fed into a risk model, evaluating how are the entitlements combined in roles, how are teh roles assigned to users, identifying high-risk roles and users.
+The model is evaluated by the machine, quickly and efficiently.
+The efficiency opens up a whole range of possibilities, that form the essence of a risk-based approach to identity governance.
+
+As we can evaluate a risk posed by any individual user, we can easily identify dangerous accumulation of privileges in the hands of a single user.
+Then we can focus on addressing this risk, analysing why have the privileges accumulated, whether they are all necessary, removing excess privileges to lower the risk.
+Perhaps we can consider changing business processes to divide the responsibilities among several users, lowering the risk even further.
+We can evaluate the risk model after each step, checking whether we have reached acceptable risk levels already.
+
+The risk model can evaluate risk of each role.
+This allows detection of anomalies, such as assignment of a powerful high-risk role to an ordinary user that is supposed to be low-risk.
+Such role is likely to be assigned by mistake, or perhaps it was a role assigned during an emergency that was never removed.
+Unassignment of such role may be a quick way to reduce the risk.
+Smart system could suggest several types of such _outliers_, where privileges of an individual users stand out from the surrounding.
+
+Once we have the concept of risk established in our system, we can use it in security policies.
+For example, it makes sense to require stronger password for high-risk users, or even better, automatically set up a multi-factor authentication for them.
+It may be desirable to re-certify privileges of high-risk users more frequently than those of low-risk users.
+Assignment of new role to a high-risk user may need to pass through additional approval stage.
+The policies can take the _risk_ into consideration.
+This approach is often referred to as _adaptive security_.
+
+There are even more advantages when the risk-based approach is applied also to other areas of identity and access management field.
+For example, it may be a good idea to require strong authentication from high-risk users, while allowing weaker authentication for low-risk users.
+This can be achieved in many ways, the easiest is perhaps for identity management system to propagate risk scores to access management user profiles.
+
+Risk-based identity management and governance is indeed the right thing to do.
+However, the devil is in the details, and the reality is much harder than the glossy marketing brochures dare to admit.
+There are hidden dangers and dark corners on this route:
+
+* One risk assessment means nothing.
+Nothing at all.
+The results are out of date as soon as they are produced by the model.
+You have to do assessment continually, all the time, since now till eternity.
+You take the results of an assessment, plan countermeasures, apply them, only to do all the work over again.
+This is called "security process".
+It never ends.
+
+* Risk evaluation is almost always subjective.
+When evaluating risk of any individual entitlement, you will probably use subjective terms such as "low", "medium" and "high".
+The subjective terms are often hidden behind scores, numbers that may look like they are exact values.
+In reality, they are everything but exact.
++
+Subjective risk assessment is pretty much a standard method.
+Objective risk measures are sometimes tries, such as conversion of risk to a monetary value.
+However, such "objective" measures are often very misleading, and they are generally frowned upon by information security practitioners.
+There is nothing fundamentally wrong with subjective risk assessment as long as you are aware of the limitations.
+Perhaps the most important rule is to keep the assessment consistent and proportional.
+Entitlements that are assigned "low" risk level should pose approximately the same risk, and it should be significantly lower than all the entitlements marked as "medium" risk.
+
+* You need risk model appropriate for your organization and situation.
+When it comes to risk models, one size does not fit all.
+There are simple risk models appropriate for quick assessments in organizations with low security requirements.
+Then there are overly complex risk models that are designed for high-security military setting.
+Even if you find a model that fits your needs, you still need to fine-tune it.
+You cannot just buy an instant ready-to-serve-in-5-minutes risk model.
+Such model will never work for you.
+
+* Model is not reality.
+Model is meant to be an approximation of reality.
+However, how well the model approximates reality must not be taken for granted.
+Risk model may not for you, and you may not even realize it.
+Bad model will get you into a false sense of security, claiming that you are all green while in fact you can be in grave danger.
+Do not trust your risk model blindly.
+Try to validate the results, try to confront model results with reality as much as you can.
+
+Information security is quite a strange field.
+You can clearly prove that your system is _insecure_, for example by successfully attacking your system.
+Yet, you can never completely prove that your system is _secure_.
+This limitation is a major source of confusion, and it also opens up opportunities for charlatans, offering their security snake oil on the market.
+As you cannot buy information security process, you cannot buy a ready-made risk-based approach to identity governance.
+You have to build it yourself.
+Having advanced and smart identity governance platform at your side is unquestionably a great help.
+However, such a platform is only a tool.
+Even the smartest and most expensive tool will not do all the work.
+It will make your work more efficient, but you still need to be the one driving it.
+One size does not fit all.
+Your organization is different to other organizations.
+That is what makes you unique, what gives you competitive edge, what makes you survive on the market.
+You cannot expect to buy a model or a process that fits your needs perfectly.
+You have to adapt and develop your own models, policies and processes.
+Having a starting point that is similar to your needs is a huge advantage.
+Starting from industry-specific frameworks, templates and samples will save you a lot of time.
+Go for these, whenever they are available.
+However, you will have to understand how the frameworks work, you will need to know what you are doing, as you will certainly need to adapt them to your needs.
+
+Similarly to information security, "off the shelf" is mostly just an illusion in identity management and governance.
+Whatever the bold marketing statements say, you cannot just buy it and run it.
+No, not even in the cloud.
+You can buy identity governance _platform_ as a service, but you cannot buy identity governance.
+You will have to learn a lot of things, you will have to dive deep into policies and models, you will have to do a lot of work yourself.
+Set your expectations realistically.
+
+=== Identity Governance Terminology
+
+// TODO: terminology note
+// This field (or sub-field) is quite diverse, therefore the terminology and even the concepts may seem somehow chaotic.
+
+// TODO: move AI rants to a dedicated chapter later, when we have chapter on approvals, certification, governance
 
 == Complete Identity and Access Management Solution
 
@@ -1676,6 +1913,94 @@ But it is not feasible in practice.
 The reality is that information security seriously suffers - unless there is and IDM system that brings automation and visibility.
 Good information security without an IDM system is hardly possible.
 
+=== Zero-Trust Approach
+
+Zero-trust is an approach to design network and application systems.
+The basic idea is that a system should not implicitly trust any other system, not even systems located on a "secure" corporate network.
+Simply speaking, zero-trust approach is mostly about removing _security perimeter_.
+
+For many decades, corporate networks were designed using _hard exterior, soft interior_ approach.
+Corporate network was protected from the Internet by an army of specialized security systems and techniques, such as firewalls, de-militarized zones, network traffic analysers, intrusion detection systems, network anti-virus scanners and everything else a booming network security market could provide.
+While the castle gates were heavily protected, the interior of corporate network was very _soft_.
+Originally, there were no security measures inside corporate networks at all.
+Anyone that got inside could connect to any system.
+Of course, basic authentication and authorization mechanisms were usually there, but the network was not segmented, and the traffic was usually not even protected by basic encryption.
+This approach created a _security perimeter_ around corporate network.
+If you want to keep the data secure, you have to make sure nobody gets into the network.
+
+Of course, this approach does not really make much sense in the Internet era.
+There is no such thing as a _network perimeter_, not since the invention of WiFi, mobile data and USB keys anyway.
+It is ridiculously easy to breach the perimeter by connecting a WiFi device to the corporate network.
+However, even that was usually not needed, as the data can be copied to USB keys, or easily moved outside the perimeter by using virtual private network (VPN) access.
+Corporate security professionals tried to address such threats by strictly controlling user's devices, such as disabling USB ports, disabling access to other networks while the device was part of VPN, and so on.
+However, none of these countermeasures were really effective, and they were usually very intrusive and inconvenient for the users.
+Advent of cloud services and mobile devices was the last drop, the traditional corporate information security approach was dead.
+Even the most traditional security practitioners had to admit what was already obvious: there is no perimeter.
+
+The old approach was replaced by a new one: zero trust.
+An application should not trust any other application, not even an application on the same corporate network.
+Network perimeter was replaced by _mutual authentication_ and _network traffic protection_.
+Each application must authenticate the other end of the connection, whether it is talking to the party it is supposed to talk to.
+Network traffic always needs to be encrypted and authenticated (signed), always assuming that it can be passing through an insecure network.
+Simply speaking, we are going to treat corporate network in exactly the same way as we are treating public Internet.
+The _soft interior_ turned into _hard interior_, and the _perimeter_ was no longer needed.
+
+The concept of zero trust is not new at all.
+It was here pretty much since the very beginnings of information security.
+Security practitioners are trained not to trust anything or anyone, set up policies, require authentication, deny access by default, encrypt all network traffic, minimize privileges, manage risks, and so on.
+Therefore, "zero trust" approach is essentially just a thorough application of proper information security principles.
+This approach is here for decades, it just had different names: defence in depth, perimeterless security, network hardening and so on.
+
+Even though zero trust approach is not new, it dramatically gained on importance in the era of cloud services and remote access.
+Many functions provided by traditional corporate applications are provided by cloud services now.
+Such applications need data to work, therefore, the very use of "as a service" applications is by itself a breach of the perimeter.
+Cloud applications need to wort together with on-premise applications.
+Traditional enterprise integration patterns based on _soft interior_ do not work in this brave new world any more.
+All of that is driving the _zero trust_ concepts.
+
+Of course, "zero trust" is more a wish rather than a strict rule.
+A system that trusts nothing will not be able to work at all.
+There is always some amount of _trust_ involved, even in _zero trust_ approach.
+The system must trust that the root keys and certificates are authentic.
+There is an implicit trust that the developers have not introduced a back door into system code.
+Zero trust approach should perhaps be called "minimal trust approach".
+However, "zero trust" is much more attractive in glossy magazines and presentations.
+Whatever is the approach called, the basic principle remains the same: aggressively minimize implicit trust in the system.
+
+Identity permeates everything, therefore the zero trust approach has an impact on identity and access management as well.
+Impact on access management technologies is perhaps quite obvious.
+Access management deals mostly with authentication.
+The applications need to authenticate to each other in this new _zero trust_ world.
+Therefore the access management systems need to handle authentication of non-person identities, such as applications and devices.
+Many scenarios do not significantly deviate from the usual authentication, perhaps the only difference is that the authentication needs to be completely non-interactive.
+However, there are also more complex authentication scenarios, such as an application authentication on behalf of a user.
+Traditional authentication methods (such as password-based authentication) are obviously ill-prepared for such scenarios.
+Therefore the zero trust approach is often combined with introduction of new authentication mechsnisms.
+
+Impact of zero trust approach on identity management systems is much more subtle.
+Zero trust approach requires mutual authentication of communication parties.
+Which means that the identity management system needs to manage non-person identities such as applications and devices.
+This requirement is not new, therefore most well-maintained identity management products are more than capable in this aspect.
+The problematic part is usually the connection between the identities, the _relationship_.
+If two applications have to communicate, both of them need to know about the other one.
+API keys, pre-shared secrets, certificates and other cryptographic material needs to be set up before first communication can happen.
+The credentials need to be updated, keys must be changed periodically, certificates need to be renewed.
+Such application credentials are much more important than passwords ever were, as application credentials are quite literally the keys to the kingdom.
+An attacker that gets access to the application keys has access to all the data in cloud applications, which very likely means your payroll data, customer database, internal documents, almost everything that is important to you.
+Experienced information security professionals know, that it is not encryption that is the most difficult part of cryptography.
+The key management is.
+Similarly, it is not the authentication that is the most difficult problem in zero trust approach.
+Identity and credential management is much harder.
+Today, application identities and credentials are usually configured manually by system administrators.
+However, such approach does not scale.
+The whole idea of "as a service" applications is to make information systems more flexible, more dynamic, and especially less demanding when it comes to system administration.
+Manual management of application identities goes well against that idea.
+
+// TODO: what to do in identity for zero trust?
+// There are IDM system, but not many are well-prepared.
+// There was not much demand yet. People do not realize full scale of the problem.
+// Make sure your IDM system can evolve to support this.
+
 == Building Identity and Access Management Solution
 
 There is no single identity and access management solution that would suit everybody.
@@ -1694,3 +2019,14 @@ We consider identity management to be heart and brain of any IAM solution.
 This is one of the reasons why we have started midPoint project.
 The rest of this book will focus almost exclusively on identity management and the use of midPoint as the IDM component.
 This is the place where theory ends and practice begins.
+
+// TODO: IAM program (not a project)
+
+// TODO: tips to describe:
+// * Cloud, SaaS, etc.
+//   difficulty for customization
+//   autonomy
+// * PAM
+// * Identity proofing, velocity vs veracity trade-off
+// * Progressive user profiling
+// * Social login
