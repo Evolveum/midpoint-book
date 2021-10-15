@@ -68,6 +68,6 @@ include::98-to-be-continued.adoc[]
 
 include::99-conclusion.adoc[]
 
-//include::glossary.adoc[]
+include::glossary.adoc[]
 
 ifndef::backend-epub3[:leveloffset: -1]
