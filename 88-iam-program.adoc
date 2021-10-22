@@ -71,7 +71,7 @@ Extreme inhouse or turnkey won't work.
 But "assisted" inhouse or turnkey will both work.
 
 TODO: board-level sponsorship for the program, similar to security.
-But is is seldom achievable, as identity does not get sufficient attention.
+But it is seldom achievable, as identity does not get sufficient attention.
 Data protection?
 
 Leadership is essential. There must be a leader in target organization.

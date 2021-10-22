@@ -370,7 +370,7 @@ Given an account with empno attribute set to `007`, the resulting search filter 
 ----
 
 MidPoint looks for users that match this search filter.
-If there is an user with `employeeNumber` property set to `007` then such user is considered to be an owner of the account.
+If there is a user with `employeeNumber` property set to `007` then such user is considered to be an owner of the account.
 
 MidPoint has its own data representation mechanism and object structure.
 Therefore midPoint also has its own query language that is designed to work with the object structure.
