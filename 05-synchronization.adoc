@@ -1466,8 +1466,8 @@ Function `norm()` from the basic library can be invoked in a Groovy script like 
 
 Invocation of the libraries from JavaScript and Python is almost the same and we are sure that a clever reader will have no trouble figuring that out.
 What is more difficult to figure out is which functions the libraries provide.
-For that purpose there is a page in midPoint wiki that lists all the libraries and this page also has a link to library function documentation.
-Look for https://wiki.evolveum.com/display/midPoint/Script+Expression+Functions[Script Expression Functions] page in midPoint wiki.
+For that purpose there is a page in midPoint docs that lists all the libraries and this page also has a link to library function documentation.
+Look for https://docs.evolveum.com/midpoint/reference/expressions/expressions/script/functions/[Script Expression Functions] page in midPoint docs.
 
 Only two libraries were mentioned in this section so far.
 However, this is not a whole story.
@@ -1936,7 +1936,7 @@ But this is a fragile situation.
 Accounts that are linked but not assigned can easily get deleted if midPoint administrator is not careful.
 Of course, there are methods to handle such situations.
 One way would be to create the assignments together with the links.
-Those that are interested in this method should look up keyword "legalize" in midPoint wiki.
+Those that are interested in this method should look up keyword "legalize" in midPoint docs.
 But there are much better methods how to handle this.
 Perhaps the best approach would be to utilize the roles (RBAC).
 This is the topic of the <<07-rbac.adoc#07-rbac,Role-Based Access Control>> chapter later.

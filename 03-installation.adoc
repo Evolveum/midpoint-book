@@ -24,7 +24,7 @@ This chapter gives you midPoint installation that is ideal to get you started.
 MidPoint will run on almost any machine.
 All you need is approximately 4GB RAM.
 That’s perhaps the only real limiting factor.
-If you look for more formal system requirements definition then you will find that in midPoint wiki (see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter at the end of the book).
+If you look for more formal system requirements definition, then you will find that in midPoint docs (see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter at the end of the book).
 
 From the software side you will need:
 
