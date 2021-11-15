@@ -1234,7 +1234,7 @@ Therefore the IDM system is the obvious choice when it comes to management of au
 === Organizational Structure, Roles, Services and Other Wildlife
 
 Back in the 2000s the IDM was all about managing user accounts.
-It was enough to create, disable and delete an account to a have an successful IDM deployment.
+It was enough to create, disable and delete an account to a have a successful IDM deployment.
 But the world is a different place now.
 Managing the accounts is simply not enough anymore.
 Yes, automated account management brings significant benefits and it is a necessary condition to get at least a minimal level of security in complex systems.

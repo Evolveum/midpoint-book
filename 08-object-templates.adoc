@@ -329,7 +329,7 @@ Like this:
 ----
 
 The trick here is to set up the mapping correctly.
-The simplest case is an conditional assignment of a role.
+The simplest case is a conditional assignment of a role.
 Let’s suppose that we want to assign a Hatter role to everybody that has provided a hat size in user profile.
 We already know what to do, don’t we?
 Let’s use mapping condition:
