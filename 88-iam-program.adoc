@@ -13,7 +13,7 @@ this chapter is about IAM in general.
 == This Is Not A Project
 
 TODO: IAM is a program, not a project. But there may be an initial deployment project, migration projects and so on.
-TODO: how to make analysis for an deployment project
+TODO: how to make analysis for a deployment project
 
 TODO: IAM projects fail, because IAM is not a project.
 It is a program.
@@ -71,7 +71,7 @@ Extreme inhouse or turnkey won't work.
 But "assisted" inhouse or turnkey will both work.
 
 TODO: board-level sponsorship for the program, similar to security.
-But is is seldom achievable, as identity does not get sufficient attention.
+But it is seldom achievable, as identity does not get sufficient attention.
 Data protection?
 
 Leadership is essential. There must be a leader in target organization.

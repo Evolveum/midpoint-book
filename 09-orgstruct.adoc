@@ -1447,7 +1447,7 @@ But nothing happens yet.
 MidPoint does not know that it is supposed to create LDAP objects for our organizational units.
 MidPoint does not automatically create accounts for all the users either.
 We need a _construction_ to do that.
-The orgs need to have an assignment with an constuction, similar to these that we have used to create accounts.
+The orgs need to have an assignment with a constuction, similar to these that we have used to create accounts.
 However, we will need to use the right _kind_ and _intent_.
 We want to archive something like this:
 
@@ -1479,7 +1479,7 @@ This would be an acceptable solution.
 
 An alternative way would be to add _inbound_ mapping to create this assignment.
 That would be in fact quite easy, as it would is very similar to the mapping that we have used to create organizational hierarchy.
-However, that would not be an ideal configuration, as would would mix the _concerns_ here.
+However, that would not be an ideal configuration, as we would mix the _concerns_ here.
 The mapping will be an _inbound_ mapping in the `Organizational Chart` resource.
 It would not be entirely appropriate for this _inbound_ mapping to control provisioning (i.e. _outbound_ flow) of organizational structure.
 It will work, but such configuration will be difficult to understand and maintain.

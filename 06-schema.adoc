@@ -699,7 +699,7 @@ We have tried to make that process easier by developing _schemadoc_ mechanism.
 Schemadoc is a process that takes raw midPoint schema and generates HTML documentation out of that.
 This task is part of midPoint build process and generated documentation is a result of midPoint build.
 Schemadoc is also available online.
-Just search for "schemadoc" in midPoint wiki.
+Just search for "schemadoc" in midPoint docs.
 
 Schema is not just a description how midPoint works.
 MidPoint schema is part of midPoint itself.
