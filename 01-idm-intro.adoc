@@ -1557,7 +1557,35 @@ Many of the identity analytics and intelligence techniques are based on risk mod
 There are mechanisms to _identify over-privileged users_ by analysing risk scores of individual users.
 Similar mechanisms can be used to identify high-privilege entitlements assigned to a low-privilege user or similar risk anomalies.
 
-// TODO: Workflow orchestration: useless for approvals, but may be useful for enrollment, remediation, etc. Organization-wide workflow platform would be preferred over IDM-specific platform.
+* *Workflow orchestration* is provided by some IGA platforms.
+Workflow engines drive processes based on simple algorithms, usually containing many manual steps that need to be carried out by different people of teams.
+IGA platforms use workflow automation mostly to implement approval mechanisms.
+While use of workflow engine for approvals may look like an obvious choice, workflow engines are perhaps the worst tools possible.
+Approval processes are usually dynamic process, their form heavily depends on input (request) and policy settings.
+The list of approvers, approval stages and exit conditions depend on the set of requested roles and other factors (e.g. user risk level), which is not an easy thing to handle in high-level business process modeling language.
++
+Even though workflow orchestration is almost useless for implementation of approval processes, it still has its place in IGA platform.
+Workflow automation may be useful for driving on-boarding (enrollment) and off-boarding processes.
+It may also be useful for some remediation cases, although remediation tends to be an unstructured or semi-structured activity that is better handled by case management than workflow automation.
++
+Almost all IGA platforms that support workflow automation are bringing their own (often proprietary) workflow engine.
+This means that the administrators need to learn how to configure the workflows, users need to adapt to new user interface, notifications need to be integrated and so on.
+It would be much better to re-use existing workflow engine, an engine that is already used by the organization to drive all its other business processes.
+Except for approvals which heavily depend on role structure, other IGA processes tend to be very similar to ordinary business processes in the organization.
+Re-use of existing workflow automation and orchestration platform should be a natural choice.
+Except for one annoying detail.
+Most organizations do not have such a system.
+Therefore even that strange proprietary workflow engine embedded in the IGA platform may still be quite useful.
+
+Not all IGA platforms will implement all the features.
+Scope and quality of implementation vary wildly from system to system.
+Moreover, individual IGA platforms are using their own terminology, which makes the situation very confusing.
+This is further obscured by marketing departments, that try to present even the smallest advantage as revolutionary achievement.
+Most IGA platform are closely guarded commercial closed source software, access to the software and documentation is jealously guarded.
+This makes comparison of individual IGA platform a very challenging undertaking.
+Perhaps the best approach is to know what you need: summarize your requirements and priorities.
+Write down your expectations, select a product, and conduct a proof-of-concept test tuned to your specific needs.
+That is perhaps the only reliable way to break through the marketing veil.
 
 === Risk-Based Approach To Identity Governance
 
