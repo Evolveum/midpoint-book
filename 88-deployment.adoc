@@ -91,7 +91,12 @@ TODO
 
 === Resources and Connectors
 
-TODO: common connectors, support status
+Identity connectors are essential components, integrating midPoint with source and target systems.
+
+Connectors to many commercial off-the shelf (COTS) systems are bundled with midPoint, or readily-available as separate open source projects.
+However, connectors to custom (or heavily customized) systems have to be developed as part of the project.
+
+// TODO: common connectors, support status
 
 == Deployment Strategy
 
@@ -449,7 +454,221 @@ Use of AI for approval and certification is dangerous.
 There is a reason that this task was delegated to *human*.
 Using machine for such decisions often just a security theater.
 
+== MidPoint Alternatives
+
+Why would you use midPoint?
+Can you perhaps use something else instead?
+
+It may seem strange to ask this question so far into the book.
+If you made it this far, you are probably persuaded about midPoint qualities.
+However, you will often be asked why have you chosen midPoint instead of something else.
+Identity management and governance market is quite over-crowded, with many products trying to do roughly the same thing.
+There is always a competing product.
+For almost every function that midPoint has, there is some other product that does that particular function better.
+However, there is no single system that does _everything_ midPoint does, and it does everything better, cheaper and faster.
+Every product has advantages and disadvantages, every product has strengths and weaknesses.
+
+MidPoint is an open source platform, developed by a company focused on technology.
+This seems the right way to do thing for us.
+However, vast majority of midPoint competition are commercial closed source products, backed by strong sales and marketing organizations.
+It is easy to make midPoint look weak, given the right framing and information cherry-picking.
+Many sales-driven corporations are very good at that.
+Therefore there is a benefit in knowing how midPoint fits in the "market" to be able to defend your position.
+
+MidPoint is unified, compact, pre-integrated IGA platform.
+This means that midPoint has all the functionality that a common organization need to manage and govern identity data, or at least midPoint has an _ambition_ to deliver such functionality.
+Not all the IDM/IGA products are designed like this.
+Many products are in fact a loosely-integrated bunch of several components.
+
+// TODO: more about competition
+
+Use of compact, pre-integrated system such as midPoint has numerous advantages, both for end users as well as engineers and system administrators.
+Compact, pre-integrated solution avoids the need to integrate the solution from several components, which is usually very demanding task.
+Solution composed of several products often lead to integration nightmares, policy duplication, data inconsistencies, upgrade problems and constant need for maintenance of integration paths.
+Therefore, we strongly recommend a solution, which has a unified IGA platform at its core, covering all crucial IGA functionalities.
+A platform such as midPoint.
+
+// TODO: more on midPoint ambition
+
+Of course, there is a downside of unified, pre-integrated solution, provided by a single vendor.
+It can often lead to a vendor lock-in situation.
+Vendor lock-in is a situation where only a single vendor can improve your solution, only a single vendor can provide services for you, or the vendor has to approve or certify any services provided to you.
+It is very difficult to escape from such situation, as you have probably already heavily invested into the solution, making replacement very costly.
+This turns you from a customer to a hostage.
+Avoid vendor lock-in at all cost.
+Does that mean how have to avoid midPoint at all cost?
+Definitely not.
+MidPoint is different from most of its competition: midPoint is an open source platform.
+Anyone can provide midPoint-related services, and Evolveum has no power to do anything about it.
+Yes, Evolveum maintains a partner network, there are partner levels, marketing channels and all that usual commercial stuff.
+However, those are more-or-less just recommendations.
+We recommend that you engage one of Evolveum partners, companies that demonstrated ability to deliver midPoint-based solutions.
+However, if you choose to employ your local open source enthusiast to work on your midPoint deployment there is nothing to stop you - as long as an appropriate levels of professionally and expertise are maintained.
+There is no warranty to void, because in fact, there are no warranties in the software world anyway.
+There are no contracts to break, as the support contracts do not mandate exclusivity.
+There are no copyrights to violate, as all midPoint source code is out there, as is all the documentation.
+You are free to choose who will take care of your midPoint deployment.
+We will be happy if you choose Evolveum or one of its partners, but the ultimate choice is yours.
+
+// TODO: MidPoint is very flexible, which is both a blessing and a curse.
+// There may be hidden complexity, which can easily be amplified if midPoint is not used well.
+
+// TODO: What about cloud?
+// You can deploy midPoint in cloud.
+
+
+== Boundaries of Identity Management and Governance
+
+Every system has its boundaries.
+Identity governance and administration (IGA) systems are very powerful, they reach quite deep in many other systems, they permeate information infrastructures, they are at the center of everything.
+However, there are things that the IGA system cannot do, or would not do.
+This section summarizes where are the boundaries of IGA platform.
+
+
+=== Privileged Identity Management (PIM)
+
+Privileged identity management (PIM) also known as privileged account management (PAM) deal with management of privileged accounts, accounts that have privileges far above the privileges of common user.
+These are usually shared system administration accounts in operating systems, databases and legacy applications.
+
+PIM is sometimes considered to be part of IDM or IGA, sometimes it is considered to be separate.
+Formally, this is quite a gray zone.
+However, it does not really matter where it formally belongs.
+The important aspect is what PIM does, and what it should do.
+
+Overall, we recommend not to use PIM system unless absolutely necessary.
+Many PIM systems are using agents that provide protection and auditing capability beyond native capabilities of protected operating system or application.
+The agent provides fine-grained control over privileged operations in the protected system.
+While such approach may seem attractive, the presence of an agent is a significant operational burden, complicating system updates, upgrades and general maintenance.
+
+NOTE: Privileged account management (PAM) should not be confused with pluggable authentication modules (PAM), used by UNIX/Linux systems to carry out user authentication.
+These two systems just share the same acronym by coincidence, otherwise they have nothing in common.
+
+We rather recommend utilizing native capabilities of operating systems whenever possible.
+For example, for UNIX/Linux system, we recommend avoiding use of `root` account entirely, disabling access to such account.
+Rather than using privileged accounts directly, we recommend to use privilege escalation tools, such as `sudo` mechanism in modern UNIX/Linux systems.
+MidPoint can be used to manage access to the privilege escalation mechanism, for example by controlling membership in UNIX/Linux groups.
+MidPoint can also make sure that there is at least one active user with system administration privileges at all times.
+All modern operating systems and applications have capability to control administration privileges in a user-centric and fine-grained manner.
+Regular identity connectors could be used to manage access control policies of privileged accounts.
+Legacy systems that do not have such capabilities pose a security risk on their own, therefore effort to upgrade or decommission them should be prioritized.
+
+One of the common problems that often motivates PIM deployments is use of shared privileged accounts (such as `root`) for routine system administration.
+However, this is a bad practice.
+It is very dangerous, difficult to manage and almost impossible to use securely.
+Avoid this practice.
+It should be perfectly possible to use dedicated, personalized administrator accounts in current information systems.
+Therefore, unless your IT is still in 1980s, you should be able to avoid use of shared accounts for routine administration, and keep them only for emergency situations.
+
+If necessary, we recommend use of dedicated password vault application to store passwords to emergency privileged accounts.
+Such password vault could theoretically be integrated with midPoint sometime in the future, to change passwords of emergency accounts after use.
+However, assuming the number of emergency situations is relatively low, manual process may still be feasible, and even desirable.
+In case that the number of emergency situation is not low, then perhaps there is much more serious problem to address than automated management of privileged accounts.
+
+
+=== Other IAM Components
+
+Identity governance and administration (IGA) platform, such as midPoint, is only one part of a complete identity and access management (IAM) solution.
+Primary responsibility of IGA platform is _management_ and _governance_ of identity data and policies.
+However, policies are toothless unless they are _enforced_, and data are useless if they cannot be _accessed_.
+Other IAM components are needed to form a complete solution, most notably _access management_ components and _identity data stores_.
+Such components provide functions that are not provided by IGA platform.
+
+Quite naturally, components with the IAM solution need to cooperate.
+IGA platform is used to set the policies, that have to be reflected in identity data stores and enforced by access management systems.
+There is a lot of integration surface between components of IAM solution.
+
+IGA platform deals mostly with the _state_ of identity data, taking into account changes of the state.
+However, IGA platform does not deal with _behavior_ of users.
+For example, a common requirement for IGA platform is to disable accounts that are not used in a long time.
+In theory, IGA platform can provide this function, provided that timestamp of last user login is recorded in the identity data, usually originating from a single sign-on system.
+However, such solution is far from being ideal.
+The account could be used even if user does not log in into the system in a very long time, for example using capability to execute scheduled tasks or using authentication that is processed by single sign-on system (e.g. SSH keys).
+The root of the problem is that analysis of user behavior is needed to reliably identify account that are not used.
+This is a responsibility of systems that mediate user activity, such as access management systems.
+
+=== Business Intelligence
+
+MidPoint includes some _identity analytics_ functionality, and the ambition is to expand the functionality in the future.
+The _identity analytics_ functionality of any IGA platform is designed to satisfy the needs of identity management and governance.
+It includes reports and visualization aimed at role design, management of identities, entitlement curation and similar responsibilities.
+The IGA platform is supposed to be self-contain in this capacity, i.e. identity administrators should not need any other system to do their job.
+
+However, the identity-related data managed by IGA platform may have value for activities outside the IAM domain.
+There may be valuable business information hidden in the data.
+Parts of IGA platform functionality could be used to find business insights in the data.
+However, that is not the purpose of IGA platform.
+Sophisticated business analytics is not in a scope of IGA platform functionality.
+That is a job for _business intelligence_ systems.
+
+We recommend synchronizing selected data from midPoint to appropriate business intelligence system.
+MidPoint is an excellent data synchronization tool.
+Native synchronization capabilities of midPoint may be used to synchronize at least some parts of the data into the business intelligence platform.
+However, it is likely that a more sophisticated approach may be needed to feed summary and derived data into the business intelligence platform, such as custom data pumps and ETL jobs.
+
+For example, midPoint identity analytic functionality is designed to analyze usage and structure of roles, or point out roles without owners.
+Future functionality might be used to locate users with risky or unusual access rights.
+However, midPoint should not be used to compute average number of persons in an organizational units, or estimate typical fluctuation of organization unit managers.
+That is a responsibility of business intelligence system, even though such reports may be based on data provided by midPoint.
+
+
+=== Data Warehousing
+
+Identity governance and administration platforms are mostly concerned with "here and now".
+MidPoint repository is full of data that describe current situation, current state of identities.
+There is limited amount of historical data in midPoint, mostly for short-term to mid-term accountability and diagnostics purposes, such as audit log records.
+However, midPoint is not designed to be a data warehouse.
+MidPoint is designed to store data for a long time.
+Keeping audit log records for months or even a couple of years is usually perfectly fine.
+However, do not expect midPoint to deal with years or decades of data.
+MidPoint is not designed to be a data warehouse.
+Data warehousing require special mechanisms, such as summarization of data, using cost-efficient high-capacity slow-access data storage, data long-term integrity guarantees and so on.
+There is no point of re-implementing such functionality in midPoint, data warehousing systems do that already.
+If data archival or a long-term data storage is needed, the data need to be transferred into appropriate data warehousing system.
+
+
+=== Security Information and Event Management (SIEM)
+
+Information contained inside midPoint is a precious resource for information security practitioners.
+It is expected that the information security team members will be heavy users of midPoint.
+However, midPoint is not a replacement for Security Information and Event Management (SIEM) system.
+MidPoint mostly deals with the _state_ of identity information.
+There is also a considerable dynamics in midPoint as well, dealing with _events_ such as re-organizations, data changes, policy violations and so on.
+However, such events are limited to the identity domain only.
+Much broader scope of information is needed to support information security management.
+
+MidPoint is a precious source of information for SIEM system.
+It is expected that SIEM systems will process audit trails recorded by midPoint, as well as a static identity information stored in midPoint repository.
+MidPoint RESTful API can be used to transfer identity state data to SIEM platform.
+Direct access to audit database table is usually used to transfer event information from midPoint to SIEM platform.
+
+=== Summary of Boundaries
+
+Following table provides summary and clarification of border cases, specifying functionality provided by IGA plarform _vis-à-vis_ functionality of other systems.
+
+|===
+| MidPoint functionality | Functionality of other systems
+
+| Operational reporting for identity management and governance purposes.
+| Business analytics containing identity data.
+
+| Monitoring of IGA processes
+| General-purpose business process management
+
+| Short-term storage of identity-related data
+| Long-term data storage and archival
+
+| Handling of identity-related events
+| Handling of information security events
+
+| Analysis and monitoring of identity data
+| User behavior monitoring and analysis
+
+|===
+
+
 == Conclusion
 
 This chapter is not complete. Maybe it will never be complete.
 Similarly to midPoint project, this chapter is developed in an iterative and incremental fashion.
+
+// TODO
