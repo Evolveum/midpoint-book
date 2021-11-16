@@ -35,7 +35,7 @@ We use the term _RBAC_ in quite a broad sense.
 We do not strictly mean NIST RBAC model.
 What me mean by _RBAC_ is a generic mechanism that is based on the concept of roles.
 Although the basic principles of midPoint RBAC are very similar to NIST RBAC model, we take the liberty to deviate from NIST model when needed.
-And as you will see later, such deviation is really necessary.
+As you will see later, such deviation is really necessary.
 
 == Reality, Policy and Assignments
 

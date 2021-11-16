@@ -114,7 +114,7 @@ And there is also a need to describe how midPoint itself is developed – as the
 But, as this is midPoint, even those features may be extremely useful.
 This chapter may also be interesting to people who would like to extended midPoint in an unusual way or those that want to contribute to midPoint development.
 
-* *MidPoint Deployment:* There are many path from downloading midPoint packages to a working system.
+* *MidPoint Deployment:* There are many paths from downloading midPoint packages to a working system.
 Some of those paths are easier than other.
 MidPoint design was build on many years of practical identity management experience.
 Therefore, midPoint has mechanisms that can be used to efficiently overcome some of the notorious problems in identity management – provided that midPoint is used correctly.
@@ -141,7 +141,7 @@ There will be complete examples of practical midPoint solutions.
 After all, the way that copying and pasting is one the best ways how to learn.
 
 * *Glossary:* Identity management and governance parlance may sound like an alien language to a newcomer.
-Therefore, perhaps preparing IDMimsh-to-english dictionary might be a good idea.
+Therefore, perhaps preparing IDMish-to-english dictionary might be a good idea.
 
 Those chapters are still missing.
 They are not written yet.
