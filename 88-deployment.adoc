@@ -197,6 +197,42 @@ Do not rely on analytical results completely.
 
 == Data Structures
 
+=== Identifier Management
+
+
+* Bad idea: Creating identifiers by using different "iterators", e.g. username jack123, mail jack.andrson.5@example.com
+Reason: complex to remember, complex to diagnose, complex to configure and troubleshoot
+Solution: go for jack.anderson.123@example.com or even better janderson8 and jack.anderson.8@example.com.
+
+* Bad idea: Relying on resources to enforce uniqueness, e.g. assuming that LDAP server or AD will make sure that the identifiers are unique.
+There are subtle differences, e.g. names with national characters are handled differently.
+The right way is to manage identifiers in midPoint.
+Make sure that the identifiers are simple, ASCII-only, no national characters.
+This may apply to full names as well, as some systems are using full names instead of usernames for identifiers (notably AD).
+
+Perhaps the best strategy is to make all potential identifier values consistent and unique:
+
+|====
+| Original Name | Username | E-mail address | Full name in AD
+
+| John Smith
+| `jsmith12`
+| `john.smith.12@example.com`
+| `John Smith (12)`
+
+| Ján Novák
+| `jnovak3`
+| `jan.novak.3@example.com`
+| `Jan Novak (3)`
+
+| John Novak
+| `jnovak4`
+| `john.novak.4@example.com`
+| `John Novak (4)`
+
+|====
+
+
 === Role Management
 
 TODO: How to design and create roles.
@@ -373,9 +409,8 @@ TODO
 
 == Bad Practices
 
-* Creating identifiers by using different "iterators", e.g. username jack123, mail jack.andrson.5@example.com
-Reason: complex to remember, complex to diagnose, complex to configure and troubleshoot
-Solution: go for jack.anderson.123@example.com or even better janderson8 and jack.anderson.8@example.com.
+* Assuming that all the systems will be fully compliant with standards.
+E.g. there is pracically no LDAP server deployment that is fully compliant with LDAP standard (see LDAP Survival Guide).
 
 * TODO: user-user manager relation as bad practice. Use orgtree instead.
 
