@@ -201,8 +201,28 @@ Do not rely on analytical results completely.
 
 Identifier management is one the most crucial mechanisms in IDM deployment.
 
-* Make sure that identifier management is done in a single system in a consistent way.
+TL;DR: Make sure that identifier management is done in a single system in a consistent way.
 We *strongly* suggest that this system is midPoint.
+Use only ASCII7 alphanumeric characters.
+
+* If possible, do not delegate check of identifier validity and uniqueness to any other system, unless you are absolutely and unquestionably sure that the algorithm is correct and acceptable for all your existing and future systems.
+Almost no system has such an algorithm.
+Systems differ in case sensitivity.
+Some systems will interpret national characters differently, some systems will consider "Novák" and "Novak" to be the same, other will consider it different, and many will consider "Novák" to be invalid identifier.
+Some systems will consider global uniqueness, other organization-wide uniqueness, other just local uniqueness of identifier.
+The system may not have complete and consistent database, which may lead to duplicate identifiers.
+Many systems will not consider all the special usernames, such as `administrator` or `root`.
+All of this is will lead to many unexpected problems.
+Keep identifier management completely under your control.
+
+* Never ever delegate identifier management to two or more systems, unless you are absolutely sure that they are always going to generate disjoint (non-overlapping) identifier sets.
+It is acceptable to use several identifier management system if each of them has a different _namespace_ (e.g. identifier prefix or suffix).
+However, never ever use two or more systems if there is any chance that they would generate identifiers that can be potentially considered the same.
+Make sure that you consider letter case, national characters, whitespaces and all the details.
+Double check and triple check all the algorithms, make a very deep analysis of all possible cases, be absolutely sure you know what you are doing.
+And then forget it.
+Use centralized identifier management anyway, just to be on the safe side.
+Your future self will thank your present self for that decision.
 
 * Be very conservative when it comes to identifier format. Be minimalist.
 
