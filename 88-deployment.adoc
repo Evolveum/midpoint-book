@@ -199,6 +199,28 @@ Do not rely on analytical results completely.
 
 === Identifier Management
 
+Identifier management is one the most crucial mechanisms in IDM deployment.
+
+* Make sure that identifier management is done in a single system in a consistent way.
+We *strongly* suggest that this system is midPoint.
+
+* Be very conservative when it comes to identifier format. Be minimalist.
+
+** Use persistent identifiers (such as student identification number or employee numbers) if you can.
+This will save you a lot of trouble when it comes to account renames, group management, analysis of audit trails and so on.
+Unfortunately, people will usually tend to prefer `jsmith` rather than `X2325` as their username.
+
+** Avoid using national characters in identifier at all cost.
+Stick to basic ASCII7 alphanumeric characters, possibly with addition of period (`.`) or underscore (`_`) if needed.
+
+** Avoid using full names of people as identifiers.
+Full names can have several variations, there will be an urge to include national characters, there will be problems with white spaces (Unicode has many characters that represent a space) and so on.
+Full names are not unique, and they tend to change surprisingly often.
+Overall, names of people make a terrible identifier.
+You will get into all kinds of problems.
+Unfortunately, some systems insist on using full name as an identifier.
+Most notable among them is Microsoft Active Directory.
+Brace yourself.
 
 * Bad idea: Creating identifiers by using different "iterators", e.g. username jack123, mail jack.andrson.5@example.com
 Reason: complex to remember, complex to diagnose, complex to configure and troubleshoot
