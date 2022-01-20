@@ -8,7 +8,7 @@ by {author} +
 
 Book revision: {revnumber} +
 Publication date: {revdate} +
-Corresponding midPoint version: 4.4
+Corresponding midPoint version: {midpointversion}
 
 *© 2015-2021 Radovan Semančík and Evolveum, s.r.o. All rights reserved.*
 
