@@ -214,6 +214,7 @@ He edits the file to change the filesystem path to his CSV file and adjusts the 
 The very minimal resource configuration specifies just the resource name, connector and connector configuration.
 The XML file that Eric creates looks approximately like this (simplified for clarity):
 
+.`resource-csv-hr-bare.xml`
 [source,xml]
 ----
 <resource oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf">
@@ -228,7 +229,7 @@ The XML file that Eric creates looks approximately like this (simplified for cla
 </resource>
 ----
 
-TIP: If you are a hands-on type of an engineer you probably want to follow what Eric is doing in your own midPoint instance.
+TIP: If you are a hands-on type of engineer you probably want to follow what Eric is doing in your own midPoint instance.
 All the files that Eric is using are provided in a form of ready-to-use samples.
 Please see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter at the end of this book for the details.
 
@@ -302,7 +303,7 @@ image::02-07-user-account-mapping.png[User-account mapping]
 
 Getting back to our ExAmPLE story, Eric has a HR resource configured.
 Therefore he can see the "accounts" that the users have in the HR system.
-Eric opens the resource detail page in the midPoint GUI, cliks on _Accounts_ tab and then on the _Resource_ button (we'll explain that later).
+Eric opens the resource detail page in the midPoint GUI, clicks on menu:Accounts[] tab and then on the btn:[Resource] button (we'll explain that later).
 The list of accounts appears:
 
 image::02-08-resource-hr-accounts.png[Resource HR accounts]
@@ -351,12 +352,15 @@ The synchronization section instructs midPoint to create a new user for each new
 This is exactly what Eric wants: create a user for each HR account.
 Eric then re-imports the modified XML file into midPoint.
 
+TIP: For the curious and impatient readers, complete definition of HR resource is stored in `resource-csv-hr.xml` file in book samples.
+Please see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for the details.
+
 MidPoint is now ready to synchronize the attributes.
 But we still need a _task_ to pull all the data from the HR system.
 Eric navigates to the page that shows the list of HR accounts.
-At the bottom of that page there is a big _Import_ button that can be used to manage the import tasks.
+At the bottom of that page there is a big btn:[Import] button that can be used to manage the import tasks.
 Eric clicks on that button and creates a new import task.
-The task is started and it runs for a couple of seconds.
+The task is started, and it runs for a couple of seconds.
 After the task is done Eric can look at users in midPoint:
 
 image::02-09-users.png[Users]
@@ -366,9 +370,9 @@ Eric can see details about the user by clicking on the username:
 image::02-10-user-details.png[User details]
 
 This page shows all the details about the user that midPoint knows about.
-The details are sorted to several tabs and we are going to explain all of that later in this book.
-For now we only care about first two tabs.
-The _Basic_ tab shows user properties as midPoint knows them.
+The details are sorted to several tabs, and we are going to explain all of that later in this book.
+For now, we only care about first two tabs.
+The menu:Basic[] tab shows user properties as midPoint knows them.
 These properties are stored in midPoint repository.
 MidPoint has quite a rich data model that can be used out-of-the-box, but the GUI only shows those properties that are actually used.
 The "name", given name and family name were imported from the HR resource and that's what the page shows.
@@ -377,8 +381,9 @@ Let's have a look at the second tab now:
 
 image::02-11-user-projections.png[User projections]
 
-The _Projections_ tab shows user's accounts.
-Currently there is only one account and it is the HR account that was used to import the data.
+The menu:Projections[] tab shows user's accounts.
+Currently, there is only one account.
+It is the HR account that was used to import the data.
 Account details are displayed by clicking on account identifier:
 
 image::02-12-user-projection-hr.png[User HR projection]
@@ -407,11 +412,11 @@ Primary role of midPoint is to manage that difference.
 And completely align policy and reality in the long run.
 
 This kind of thinking is easy to see in midPoint user interface.
-There is _Projections_ tab in the user details page.
+There is menu:Projections[] tab in the user details page.
 It shows the accounts that the user has right now.
 It shows the real state in which the accounts are.
 It shows the reality.
-And then there is _Assignments_ tab.
+And then there is menu:Assignments[] tab.
 This tab shows the policy.
 This tab shows what accounts, roles, organizations, or services are assigned to the user.
 This tab shows what user should have.
@@ -419,12 +424,12 @@ This tab shows what user should have.
 image::02-13-assignments-empty.png[Assignments]
 
 To demonstrate how the assignments work we need a new resource.
-Therefore let Eric connect a new resource to midPoint.
+Therefore, let Eric connect a new resource to midPoint.
 This time it will be new, clean and empty LDAP server.
 So Eric once again locates the proper example, modifies the configuration and imports it to midPoint.
 In a while there is a new LDAP resource.
 Eric wants to synchronize all the users to the LDAP server.
-Therefore Eric has to define mappings once again.
+To do that, Eric has to define mappings once again.
 But this time these will be _outbound_ mappings as Eric wants to propagate data out of midPoint into the (LDAP) resource.
 We will cover the details of mapping configuration later, so now let's just see the results.
 We have two resources now:
