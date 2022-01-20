@@ -197,9 +197,35 @@ Do not rely on analytical results completely.
 
 == Data Structures
 
+=== Common Data Model
+
+Explain star topology again, its benefits.
+
+Explain what common data model means, and why we want it.
+
+How to handle extensions to data model.
+
+=== Mappings
+
+* Take advantage of the star topology of midPoint data flow.
+Do it like this:
+
+. Map data from source systems to focus (user), transforming the values to be as close to the common data model as possible.
+
+. Make sure the focus data are complete and consistent.
+Use object templates for that.
+E.g. Make
+
+
+* Do not go directly from the source to the target.
+E.g. do not map `givenName` and `familyName` directly to `cn` LDAP attribute.
+First map `givenName` and `familyName` to user's `fullName`, then map `fullName` to `cn`.
+TODO: explain why: reusing `fullName` on many systems. Consistent application of iteration variables. etc.
+TODO: explain national characters problem, and how polystring can help.
+
 === Identifier Management
 
-Identifier management is one the most crucial mechanisms in IDM deployment.
+Identifier management is one of the most crucial mechanisms in IDM deployment.
 
 TL;DR: Make sure that identifier management is done in a single system in a consistent way.
 We *strongly* suggest that this system is midPoint.

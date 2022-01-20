@@ -722,7 +722,7 @@ Each time the team role is assigned there needs to be a parameter in the assignm
 
 This is the first part of the solution.
 The second part are the roles.
-The roles needs to be a bit smarter to use the `teamName` parameter:
+The roles need to be a bit smarter to use the `teamName` parameter:
 
 [source,xml]
 ----
