@@ -332,6 +332,7 @@ Eric can open the resource definition in the configuration wizard in GUI and he 
 Or he can simply look at the configuration samples again and add the mappings in the XML form.
 Inbound mapping looks like this:
 
+.`resource-csv-hr.xml`
 [source,xml]
 ----
     <attribute>
@@ -436,20 +437,22 @@ We have two resources now:
 
 image::02-14-resources.png[Resources]
 
+TIP: For the curious, LDAP resource configuration is located in `resource-openldap.xml` in samples directory.
+
 But how do we create an account on that LDAP resource?
 The right way to do this is to let midPoint know that a user _should have_ an account on that resource.
 In midPoint terminology we say, that we are _assigning_ the resource to the user.
-All that Eric needs to do is to navigate to user details page, click on the _Assignments_ tab, use _New assignment_ button to add an assignment for the LDAP resource and click _Save_:
+All that Eric needs to do is to navigate to user details page, click on the menu:Assignments[Resource] tab, use btn:[New] button to add an assignment for the LDAP resource and click btn:[Save]:
 
 image::02-15-assign-ldap.png[Assign LDAP account]
 
-After the click on _Save_ button a lot of complex things happen.
+After the click on btn:[Save] button a lot of complex things happen.
 But simply speaking midPoint recomputes what the user should have and what the user has.
 MidPoint detects that the user should have an LDAP account now (because there is a new assignment for it).
 But no such account exists.
-Therefore midPoint creates the account.
+Therefore, midPoint creates the account.
 
-When Eric opens the user details again and navigates to the _Projections_ tab he can see that there are two accounts now:
+When Eric opens the user details again and navigates to the menu:Projections[] tab he can see that there are two accounts now:
 
 image::02-16-user-projections-2.png[User projections]
 
@@ -458,7 +461,7 @@ And there is also LDAP account that was created as a reaction to a new assignmen
 
 image::02-17-user-projection-ldap.png[User LDAP projection]
 
-TIP: Careful reader may have noticed that the two accounts have vastly different attributes.
+TIP: Perceptive reader may have noticed that the two accounts have vastly different attributes.
 That's right.
 Every account has a different _schema_.
 MidPoint automatically discovers the schema.
@@ -505,7 +508,7 @@ And all webmasters will have it.
 
 That's the theory.
 But how does it work for Eric?
-First of all let's add a handful of new resources – to get some material for the roles.
+First of all, let's add a handful of new resources – to get some material for the roles.
 So now we have four resources: HR, LDAP, CRM and Portal.
 That’s a good start.
 Let’s do some role engineering now.
@@ -522,9 +525,9 @@ We want every ExAmPLE employee to have account there.
 * *Portal:* this is enterprise intranet portal with lots of small services essential for every employee.
 
 It is simple to create such role in midPoint user interface.
-Eric navigates to _Roles > New role_.
+Eric navigates to menu:Roles[New role].
 Fills in the name of the new role (`Employee`).
-Then he goes to the _Inducements_ tab.
+Then he goes to the menu:Inducements[All] tab.
 This is where the role definition takes place.
 Inducements are almost the same as assignments.
 However, inducements do not give access to the role itself.
@@ -534,7 +537,7 @@ Eric clicks on _New inducement_ button and adds inducements for the two resource
 
 image::02-18-role-employee-inducements.png[Role Employee inducements]
 
-Eric clicks on _Save_ button and the new role is created.
+Eric clicks on btn:[Save] button and the new role is created.
 Now it is ready to be assigned to the users.
 Eric goes on and assigns `Employee` role to user Bob:
 
