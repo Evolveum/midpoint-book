@@ -109,7 +109,7 @@ Authorization concerning big architectural blocks, such as entire applications o
 +
 See also: <<glossterm-authentication,Authentication>>
 [[glossterm-connid]]ConnId::
-ConnId is an open source identity connector framework project. It originated from Identity Connector Framework (ICF) developed by Sun Microsystems in late 2000s. ConnId is an now an independent open source project, used by several identity management platforms.
+ConnId is an open source identity connector framework project. It originated from Identity Connector Framework (ICF) developed by Sun Microsystems in late 2000s. ConnId is now an independent open source project, used by several identity management platforms.
 +
 Alternative terms: ConnId Framework
 +
@@ -243,9 +243,12 @@ X.1252 term: enrollment
 +
 See also: <<glossterm-identity-registration,Identity Registration>>, <<glossterm-onboarding,Onboarding>>, <<glossterm-identity-assertion,Identity Assertion>>
 [[glossterm-entitlement]]Entitlement::
-A privilege or right of access given to the user. An "entitlement" is a very overloaded term. It can be used to represent any kind of privilege, ranging from a very high-level business role to the finest filesystem permission in a specific system.
+A privilege or right of access given to the user.
+An "entitlement" is a very overloaded term.
+It can be used to represent any kind of privilege, ranging from a very high-level business role to the finest filesystem permission in a specific system.
 +
-In midPoint terminology: An Entitlement is a resource object representing privilege, access right, resource-side role, group or any similar concept. However, unlike account, the entitlement does not represent a user.
+In midPoint terminology: An Entitlement is a resource object representing privilege, access right, resource-side role, group or any similar concept.
+However, unlike account, the entitlement does not represent a user.
 +
 Alternative terms: Privilege, Access Right
 +
@@ -489,9 +492,11 @@ X.1252 term: registration
 +
 See also: <<glossterm-enrollment,Enrollment>>, <<glossterm-onboarding,Onboarding>>, <<glossterm-identity-register,Identity Register>>, <<glossterm-identity-data-store,Identity Data Store>>
 [[glossterm-identity-resource]]Identity Resource::
-In IAM field, a Resource is usually an network-accessible asset capable of managing identity information.
+In IAM field, a Resource is usually a network-accessible asset capable of managing identity information.
 +
-In midPoint terminology: An Resource is a system that is either identity data source or provisioning target. IDM system (midPoint) is managing accounts in that system, feeding data from that system or doing any other combination of identity management operations. Identity resource should not be confused with "web resource" that is used by RESTful APIs.
+In midPoint terminology: A Resource is a system that is either identity data source or provisioning target.
+IDM system (midPoint) is managing accounts in that system, feeding data from that system or doing any other combination of identity management operations.
+Identity resource should not be confused with "web resource" that is used by RESTful APIs.
 +
 Alternative terms: Provisioning Resource, Resource
 +
@@ -759,7 +764,7 @@ In midPoint terminology: MidPoint internal database. It is used to store all int
 +
 Alternative terms: MidPoint repository
 [[glossterm-resource]]Resource::
-In generic terms, a Resource is any information asset, system or a service that can be meaningfully used to obtain an information, or to initiate an action. Web resources are often used to access information across World Wide Web, e.g. in a form of RESTful interfaces. In IAM field, a Resource (Identity Resource) is usually an network-accessible asset capable of managing identity information.
+In generic terms, a Resource is any information asset, system or a service that can be meaningfully used to obtain an information, or to initiate an action. Web resources are often used to access information across World Wide Web, e.g. in a form of RESTful interfaces. In IAM field, a Resource (Identity Resource) is usually a network-accessible asset capable of managing identity information.
 +
 In midPoint terminology: A Resource is a system that is either identity data source or provisioning target.
 +
@@ -861,11 +866,14 @@ X.1252 term: user
 +
 See also: <<glossterm-account,Account>>, <<glossterm-principal,Principal>>, <<glossterm-subject,Subject>>
 [[glossterm-user-centric]]User-Centric::
-A system that is oriented towards the user, having user in control. In identity and access management context it usually means a system, where users are in control of their data.
+A system that is oriented towards the user, having user in control.
+In identity and access management context it usually means a system, where users are in control of their data.
 +
 X.1252 term: user-centric
 [[glossterm-verification]]Verification::
-A process establishing that a particular information is correct, while the meaning of "information" and "correct" varies from context to context. When dealing with identity information, this usually means formal verification of identity attributes, checking the schema, identifier uniqueness and referential integrity. However, verification may mean deeper verification, such as checking that the information is true and up-to-date.
+A process establishing that a particular information is correct, while the meaning of "information" and "correct" varies from context to context.
+When dealing with identity information, this usually means formal verification of identity attributes, checking the schema, identifier uniqueness and referential integrity.
+However, verification may mean deeper verification, such as checking that the information is true and up-to-date.
 +
 ISO 24760 term: verification
 +

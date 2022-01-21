@@ -3,31 +3,31 @@
 
 include::chapter-include.adoc[]
 
-[quote, Leto II, "Children of Dune by Frank Herbert"]
+[quote,Leto II,"Children of Dune by Frank Herbert"]
 Logic's useless unless it's armed with essential data.
 
 We have tried to make this book as comprehensive as possible.
 But no book can possibly include all the information that an IDM engineer would ever need.
 Therefore, this chapter describes the sources of additional information about midPoint.
 
-== MidPoint Wiki
+== MidPoint Documentation Site
 
-MidPoint wiki is the most comprehensive information about midPoint.
+MidPoint documentation site is the most comprehensive information about midPoint.
 This is where all the midPoint documentation is stored.
 But there is much more.
 There is connector documentation, midPoint architecture, developer documentation, midPoint internals and all kinds of information including midPoint release planning and roadmap.
 Everything is public.
 
-However, the wiki is so comprehensive that it is often not entirely easy to find the right page.
+However, the docs are so comprehensive that it is often not entirely easy to find the right page.
 We have done what we could to organize the information.
 The pages are organized hierarchically.
 Many pages have "See Also" section that points to additional information.
-Yet, the practice shows that if you want to find something in the wiki, you need to have at least a faint idea what you are looking for.
+Yet, the practice shows that if you want to find something in the docs, you need to have at least a faint idea what you are looking for.
 This book should give you that idea.
-If you know what you are looking for, then the wiki search bar is your friend.
+If you know what you are looking for, then the docs search bar is your friend.
 If you enter the correct search term, then there is high probability that you will quickly find the right page.
 
-URL: https://wiki.evolveum.com/
+URL: https://docs.evolveum.com/
 
 == Samples
 
@@ -37,19 +37,22 @@ They are usually provided in the XML form.
 The samples are maintained in a separate project on GitHub.
 Those samples are also part of midPoint distribution package.
 
-URL (latest version): https://github.com/Evolveum/midpoint-samples/tree/master/samples
+URL (version {midpointversion}): https://github.com/Evolveum/midpoint-samples/support-{midpointversion}/master/samples +
+URL (latest development version): https://github.com/Evolveum/midpoint-samples/tree/master/samples
 
 == Book Samples
 
 This book contains many examples and configuration snippets that are taken from various places.
-Some of the smaller snippets are taken from midPoint wiki or from the sample files (see above).
+Some smaller snippets are taken from midPoint docs or from the sample files (see above).
 
 Some chapters contain mostly complete configurations of the midPoint deployment.
 These configurations have a separate folder in the midPoint samples.
 Look for a folder `book` in midPoint samples.
 All the important files used in this book are there, sorted by chapter number.
 
-URL: https://github.com/Evolveum/midpoint-samples/tree/master/samples/book
+URL (version {midpointversion}): https://github.com/Evolveum/midpoint-samples/support-{midpointversion}/master/samples/book/ +
+URL (latest development version): https://github.com/Evolveum/midpoint-samples/tree/master/samples/book/
+
 
 == Story Tests
 
@@ -59,8 +62,8 @@ We call them story tests.
 These tests are important to maintain midPoint quality and continuity.
 However, they are also excellent source of inspiration and they have often proved useful as examples of midPoint configuration.
 
-Wiki description: https://wiki.evolveum.com/display/midPoint/Story+Tests +
-Code and configuration: https://github.com/Evolveum/midpoint/tree/master/testing/story
+* Documentation: https://docs.evolveum.com/midpoint/reference/samples/story-tests/
+* Code and configuration: https://github.com/Evolveum/midpoint/tree/master/testing/story
 
 == MidPoint Mailing List
 
@@ -81,10 +84,11 @@ If you are answering a question please respect other members.
 Everybody started somewhere and it is natural that novice users do not know everything.
 Please tolerate the differences in skill sets.
 
-. *Do some research before asking a question.* Do not ask trivial question that can be easily answered by googling the question, by searching for it in the midPoint wiki or mailing list archive.
+. *Do some research before asking a question.*
+Do not ask trivial question that can be easily answered by googling the question, by searching for it in the midPoint docs or mailing list archive.
 If you are getting an error try to read error message very carefully and try to think about the possible causes.
 Try to experiment with the configuration a bit.
-Look at troubleshooting section of this wiki.
+Look at the troubleshooting section in the docs.
 Spend at least a couple of minutes to make your own research before asking the question.
 If that research does not provide the answer, then it is a good question for the mailing list.
 
@@ -113,7 +117,7 @@ However, the developers have many midPoint users, partners, customers and contri
 The first responsibility of any midPoint core developer is to make sure that midPoint development will continue.
 The developers naturally prefer to spend time doing tasks that bring funding to the midPoint project.
 Therefore, the developers will strictly prioritize the communication.
-Answers to midPoint subscribers are highest priority, mailing list is second and answers to private messages from the community are absolutely lowest priority.
+Answers to midPoint subscribers are the highest priority, mailing list is second and answers to private messages from the community are absolutely the lowest priority.
 We prefer efficient spread of knowledge about midPoint.
 Mailing list is good for that, but private communication is not.
 That’s the primary reason for this priority setup.

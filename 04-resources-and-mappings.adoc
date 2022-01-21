@@ -816,7 +816,7 @@ Expression is the most flexible part of the mapping.
 There are approximately dozen different type of expressions ranging from the simplest _as is_ expression through the _scripting expressions_ all the way to a special purpose expressions that search through midPoint repository.
 Expression type is determined by the element that is used inside the `expression` section of the mapping.
 We refer to those elements as _expression evaluators_.
-You can find detailed description of expression evaluators in midPoint Wiki.
+You can find detailed description of expression evaluators in midPoint docs.
 We are going to deal only with few types that are most frequently used now:
 
 |===

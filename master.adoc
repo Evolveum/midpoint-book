@@ -10,9 +10,11 @@
 :creator: {author}
 :producer: Evolveum
 :sectnumlevels: 1
+:midpointversion: 4.4
 :xrefstyle: full
 :source-highlighter: coderay
 :icons: font
+:experimental:
 ifdef::backend-html5[]
 :toc: left
 endif::[]

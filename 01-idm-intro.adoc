@@ -1234,7 +1234,7 @@ Therefore the IDM system is the obvious choice when it comes to management of au
 === Organizational Structure, Roles, Services and Other Wildlife
 
 Back in the 2000s the IDM was all about managing user accounts.
-It was enough to create, disable and delete an account to a have an successful IDM deployment.
+It was enough to create, disable and delete an account to a have a successful IDM deployment.
 But the world is a different place now.
 Managing the accounts is simply not enough anymore.
 Yes, automated account management brings significant benefits and it is a necessary condition to get at least a minimal level of security in complex systems.
@@ -1432,7 +1432,7 @@ If the machine is trained using bad decisions, it will also suggest bad decision
 This is further complicated by a very limited visibility and accountability of such decisions.
 Therefore such mechanisms have to be used with utmost care.
 
-* *Entitlement management* is mostly and identity management thing.
+* *Entitlement management* is mostly an identity management thing.
 It deals with entitlements of user’s accounts in target systems such as role or group membership.
 However, this process can go both ways.
 Governance systems may provide an "entitlement discovery" features that take entitlements as inputs.
@@ -1554,10 +1554,42 @@ Most techniques seems to be based on recognition of anomalies and patters in the
 _Outlier detection_ mechanisms look for users with privileges that are significantly different from the privileges of their colleagues.
 On the other hand, _role mining_ is used to detect similar privileges assigned to similar users, suggesting new roles.
 Many of the identity analytics and intelligence techniques are based on risk modeling.
-There are mechanisms to _identity over-privileged users_ by analysing risk scores of individual users.
+There are mechanisms to _identify over-privileged users_ by analysing risk scores of individual users.
 Similar mechanisms can be used to identify high-privilege entitlements assigned to a low-privilege user or similar risk anomalies.
 
-// TODO: Workflow orchestration: useless for approvals, but may be useful for enrollment, remediation, etc. Organization-wide workflow platform would be preferred over IDM-specific platform.
+* *Workflow orchestration* is provided by some IGA platforms.
+Workflow engines drive processes based on simple algorithms, usually containing many manual steps that need to be carried out by different people of teams.
+IGA platforms use workflow automation mostly to implement approval mechanisms.
+While use of workflow engine for approvals may look like an obvious choice, workflow engines are perhaps the worst tools possible.
+Approval processes are usually dynamic process, their form heavily depends on input (request) and policy settings.
+The list of approvers, approval stages and exit conditions depend on the set of requested roles and other factors (e.g. user risk level), which is not an easy thing to handle in high-level business process modeling language.
++
+Even though workflow orchestration is almost useless for implementation of approval processes, it still has its place in IGA platform.
+Workflow automation may be useful for driving on-boarding (enrollment) and off-boarding processes.
+It may also be useful for some remediation cases, although remediation tends to be an unstructured or semi-structured activity that is better handled by case management than workflow automation.
++
+Almost all IGA platforms that support workflow automation are bringing their own (often proprietary) workflow engine.
+This means that the administrators need to learn how to configure the workflows, users need to adapt to new user interface, notifications need to be integrated and so on.
+It would be much better to re-use existing workflow engine, an engine that is already used by the organization to drive all its other business processes.
+Except for approvals which heavily depend on role structure, other IGA processes tend to be very similar to ordinary business processes in the organization.
+Re-use of existing workflow automation and orchestration platform should be a natural choice.
+Except for one annoying detail.
+Most organizations do not have such a system.
+Therefore even that strange proprietary workflow engine embedded in the IGA platform may still be quite useful.
+
+Not all IGA platforms will implement all the features.
+Scope and quality of implementation vary wildly from system to system.
+Moreover, individual IGA platforms are using their own terminology, which makes the situation very confusing.
+This is further obscured by marketing departments, that try to present even the smallest advantage as revolutionary achievement.
+Most IGA platform are closely guarded commercial closed source software, access to the software and documentation is jealously guarded.
+This makes comparison of individual IGA platform a very challenging undertaking.
+Perhaps the best approach is to know what you need: summarize your requirements and priorities.
+Write down your expectations, select a product, and conduct a proof-of-concept test tuned to your specific needs.
+That is perhaps the only reliable way to break through the marketing veil.
+
+// TODO: move AI rants to a dedicated chapter later, when we have chapter on approvals, certification, governance
+
+// TODO: later - align with IGA capabilities
 
 === Risk-Based Approach To Identity Governance
 
@@ -1736,12 +1768,27 @@ You can buy identity governance _platform_ as a service, but you cannot buy iden
 You will have to learn a lot of things, you will have to dive deep into policies and models, you will have to do a lot of work yourself.
 Set your expectations realistically.
 
-=== Identity Governance Terminology
+== Identity Management and Governance Terminology
 
-// TODO: terminology note
-// This field (or sub-field) is quite diverse, therefore the terminology and even the concepts may seem somehow chaotic.
+Identity professionals, often motivated by marketing needs, like to invent new names and use them to describe the same thing.
+Therefore there are many overlapping, overloaded and similar terms in use.
 
-// TODO: move AI rants to a dedicated chapter later, when we have chapter on approvals, certification, governance
+_Identity management_ (IDM) is usually used to describe the low-level parts (technology), while _identity governance_ is used to describe the high-level parts (business).
+Yet the boundary is very fuzzy and many IDM systems provide governance capabilities, and many governance systems provide low-level functions.
+_Identity governance and administration_ (IGA) is a term supposed to describe both parts together.
+_Governance, risk management and compliance (GRC)_ is a terms that was mostly used in the past to represent the high-level identity governance functionality, later known simply as _identity governance_.
+_Identity security_ is a marketing term that roughly covers IGA functionality.
+
+Overall, the terminology is very fluid.
+Vendors use their own terms, often choosing overloaded or confusing terminology.
+Industry analysts and consultants also adding their own terms and meanings to existing terms.
+Marketing terms are invented faster than the documentation can adapt, making the situation quite confusing.
+We have tried to compile the terminology as precisely as we could, while still making the terms understandable.
+We have chosen to follow established industry terminology when possible, even though many terms are overloaded and ambiguous.
+However, we did not want to increase the confusion by re-inventing the terminology.
+We are pointing out the ambiguities in the text as needed.
+At the very least, we are trying to use a consistent terminology in this book.
+When in doubt, please refer to the <<glossary.adoc#glossary,glossary>>.
 
 == Complete Identity and Access Management Solution
 
@@ -1942,7 +1989,7 @@ An application should not trust any other application, not even an application o
 Network perimeter was replaced by _mutual authentication_ and _network traffic protection_.
 Each application must authenticate the other end of the connection, whether it is talking to the party it is supposed to talk to.
 Network traffic always needs to be encrypted and authenticated (signed), always assuming that it can be passing through an insecure network.
-Simply speaking, we are going to treat corporate network in exactly the same way as we are treating public Internet.
+Simply speaking, we treat corporate network in exactly the same way as we are treating public Internet.
 The _soft interior_ turned into _hard interior_, and the _perimeter_ was no longer needed.
 
 The concept of zero trust is not new at all.
@@ -1954,7 +2001,7 @@ This approach is here for decades, it just had different names: defence in depth
 Even though zero trust approach is not new, it dramatically gained on importance in the era of cloud services and remote access.
 Many functions provided by traditional corporate applications are provided by cloud services now.
 Such applications need data to work, therefore, the very use of "as a service" applications is by itself a breach of the perimeter.
-Cloud applications need to wort together with on-premise applications.
+Cloud applications need to work together with on-premise applications.
 Traditional enterprise integration patterns based on _soft interior_ do not work in this brave new world any more.
 All of that is driving the _zero trust_ concepts.
 
@@ -1975,7 +2022,7 @@ Therefore the access management systems need to handle authentication of non-per
 Many scenarios do not significantly deviate from the usual authentication, perhaps the only difference is that the authentication needs to be completely non-interactive.
 However, there are also more complex authentication scenarios, such as an application authentication on behalf of a user.
 Traditional authentication methods (such as password-based authentication) are obviously ill-prepared for such scenarios.
-Therefore the zero trust approach is often combined with introduction of new authentication mechsnisms.
+Therefore the zero trust approach is often combined with introduction of new authentication mechanisms.
 
 Impact of zero trust approach on identity management systems is much more subtle.
 Zero trust approach requires mutual authentication of communication parties.
@@ -1996,10 +2043,79 @@ However, such approach does not scale.
 The whole idea of "as a service" applications is to make information systems more flexible, more dynamic, and especially less demanding when it comes to system administration.
 Manual management of application identities goes well against that idea.
 
-// TODO: what to do in identity for zero trust?
-// There are IDM system, but not many are well-prepared.
-// There was not much demand yet. People do not realize full scale of the problem.
-// Make sure your IDM system can evolve to support this.
+What can an identity management system do for zero trust approach?
+
+Firstly, it can do the same thing it normally does.
+It can manage user identities.
+In zero trust mode, users have to authenticate everywhere, they have to be authorized everywhere, in every application or service.
+While authentication can usually be handled by access management or single sign-on systems, authorization is much harder.
+Identity management system can do it, it can manage entitlements and privileges, it can deprovision unnecessary accounts and access rights.
+This part is relatively easy, it is what identity management systems do for decades.
+
+Secondly, identity management system can manage access of one application to other application.
+This means management of application accounts, management of application credentials, privileges, deprovisioning the accounts when application is decommissioned.
+This may sound simple, but it is all but simple in reality.
+The most basic requirement is an application inventory, an authoritative list of applications in an organization.
+However, many organizations do not have that at all.
+Those organizations that have it, usually have in a form of informal spreadsheet that is not entirelly machine-readable.
+How is identity management system supposed to even start management of application identities, when there is no authoritative source?
+Therefore the effort should start with building such a source, which may be a manually-maintained information in the identity management system.
+Then, application accounts and entitlements (groups) need to be associated with the application.
+Applications much have owners, which can be maintained in IDM system.
+As application accounts and entitlements are associated with an application, they can be automatically deprovissioned when application is decommissioned.
+However, perhaps the most challenging part is credential management.
+The credentials should be changed periodically.
+However, this change has to be synchronized on both sides of the communication channel (both client and server part), otherwise there will be an outage.
+This is difficult to automate, even with the state-of-the-art IDM system.
+
+Overall, current identity management and governance platforms are not ready for full management of applications, application accounts and entitlements.
+Only a partial functionality is usually available.
+Even though the concepts of zero trust approach are quite old, they were never applied systematically at scale.
+Therefore there was not a sufficient demand to implement required features in identity management systems.
+The future will tell whether current wave of zero trust hype brings such demand.
+However, pretty much all IDM systems much evolve and develop new features.
+Therefore it is crucial to choose and IDM platform that can evolve.
+
+
+== Digital Identity
+
+Strictly speaking, _digital identity_ is any digital representation of one's identity.
+It is a set of characteristics, qualities, believes and behaviors of en entity, usually represented as a set of attributes.
+Digital identity is a data record, usually structured, intended for machine processing.
+Such identity usually describes a person, however it can describe a non-person entities as well.
+
+That is a dictionary definition of _digital identity_.
+However, this is IAM field, it would be just too easy if one simple definition can fully describe a concept.
+It is perhaps not a big surprise that in practice _digital identity_ is many things to many people.
+Academics and identity experts would probably be happy with the dictionary definition of digital identity.
+However, the term have got a slightly different meaning when dealing with a broader audience.
+
+Generally speaking, the term _digital identity_ is understood as a data records on a person's identity, together with appropriate tools to manage it.
+This is usually an application that allows to control and manage the identity data by the user.
+It is the _user-centric_ approach which is usually considered a distinguishing factor between _digital identity_ and other IAM technologies.
+The basic idea is to keep user in control.
+Idealistically, the user should be able to see and manage all the aspects of her or his digital identity, modify identity attributes, manage the relationships with other entities, control how the identity is presented.
+The user should be able to control how the data are shared with other sites and applications, log into other sites without a need to use passwords, manage consents, initiate data erasure and so on.
+That is the idea.
+However, the reality is far from being ideal, and there are some practical obstacles.
+
+While a person's identity is intangible, the _digital_ identity is composed of data.
+The data need to reside somewhere.
+
+// TODO: centralized identity, social media
+
+// TODO: identifiers, DID
+
+// TODO: who should manage the identity? Transparency? How much is user in control? Who owns the data?
+// TODO: the identity is not presented by the user alone, but by other sites and organizations
+// TODO: questions transcend to humanities, philosophy and ethics
+
+// TODO: social login
+
+// * Identity proofing, velocity vs veracity trade-off
+// * Progressive user profiling
+// * Social login
+
 
 == Building Identity and Access Management Solution
 
@@ -2007,26 +2123,30 @@ There is no single identity and access management solution that would suit every
 Every deployment has specific needs and characteristics.
 Deployment in a big bank will probably focus on governance, role management and security.
 Deployment in small enterprise will focus on cost efficiency.
-Cloud provider will focus on scalability, user experience and comfort.
-Simply speaking one size does not fit all.
+Cloud provider will focus on scalability, user experience and simplicity.
+Simply speaking, one size does not fit all.
 Almost all IAM solutions use the same principal components.
-But product choice and configuration will significantly vary.
+However, product choice, solution topology and configuration will significantly vary.
 Do not expect that you download a product, install it and that it will solve all your problems.
 It won't.
 Customization is the key.
+// TODO: Customization on both sides
+// TODO: adjust your processes, as well as customize the IDM product
+
+// TODO: cloud, pre-packaged solutions, customization limitations
+// * Cloud, SaaS, etc.
+//   difficulty for customization
+//   autonomy
+
+// TODO: IAM program (not a project)
+// IAM is not just the technology
+// cloud does not change that, you have to program running even if you have cloud.
 
 We consider identity management to be heart and brain of any IAM solution.
 This is one of the reasons why we have started midPoint project.
 The rest of this book will focus almost exclusively on identity management and the use of midPoint as the IDM component.
 This is the place where theory ends and practice begins.
 
-// TODO: IAM program (not a project)
 
 // TODO: tips to describe:
-// * Cloud, SaaS, etc.
-//   difficulty for customization
-//   autonomy
 // * PAM
-// * Identity proofing, velocity vs veracity trade-off
-// * Progressive user profiling
-// * Social login
