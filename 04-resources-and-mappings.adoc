@@ -111,7 +111,7 @@ Every resource needs a connector to work.
 Connectors are small pieces of Java code that are used to communicate with the resource.
 MidPoint looks for available connectors when it starts up.
 MidPoint will automatically create new configuration object for each connector that it discovers during the startup.
-The list of discovered connectors can be seen in midPoint user interface in _Configuration > Repository objects > Connector_.
+The list of discovered connectors can be seen in midPoint user interface in menu:Configuration[Repository objects > All objects] and select menu:Connector[] in the type field located at the top of the screen.
 The connector objects look like this:
 
 [source,xml]
@@ -147,7 +147,7 @@ However, it is not the most convenient one.
 MidPoint creates connector objects automatically.
 Therefore the OIDs of the connector objects are not fixed.
 Every midPoint instance will have different OID for the discovered connectors.
-Therefore if we want a resource that is always using the LDAP connector in all the midPoint instances we cannot do that by just using OIDs.
+Therefore, if we want a resource that is always using the LDAP connector in all the midPoint instances we cannot do that by just using OIDs.
 But there is another way.
 You can use search filter instead of fixed OID:
 
@@ -222,7 +222,7 @@ In a simplified from it looks like this:
 
 [source,xml]
 ----
-<resource oid="b4101662-7902-11e6-9f14-53e18426fe81">
+<resource oid="690f9f44-8027-11e6-a248-3b5fe08dea36">
     <name>My LDAP Server</name>
     <connectorRef oid="028159cc-f976-457f-be70-9e9fa079bcf7"/>
     <connectorConfiguration>
@@ -251,16 +251,17 @@ Therefore even if you are working only with the XML/JSON/YAML files you can have
 to figure out what connector configuration properties are supported.
 
 The connector schema also defines the connector namespace.
-Generally speaking namespaces in midPoint are used to isolate schema extensions that might conflict and they are also used for data model versioning.
+Generally speaking namespaces in midPoint are used to isolate schema extensions that might conflict, and they are also used for data model versioning.
 The use of namespaces is optional in almost all parts of midPoint - but not yet in all the parts.
 Connector configuration is one of the few parts where namespaces should still be used.
 And it also makes some sense, as namespaces are used here as an additional safety mechanism.
 To keep a long story short, the configuration properties should be properly namespace-qualified:
 
+.`resource-openldap-minimal.xml`
 [source,xml]
 ----
-<resource oid="b4101662-7902-11e6-9f14-53e18426fe81">
-    <name>LDAP</name>
+<resource oid="690f9f44-8027-11e6-a248-3b5fe08dea36">
+    <name>LDAP Minimal</name>
     <connectorRef oid="028159cc-f976-457f-be70-9e9fa079bcf7"/>
     <connectorConfiguration
             xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3"
@@ -321,6 +322,8 @@ Now click on the _Resource_ button on the right side.
 MidPoint connects to the resource, lists all the objects of the given object class and displays the list.
 Now you can click on any object to see the details.
 
+// TODO: need to update screenshot to 4.4.1 (MID-7596)
+
 image::04-03-list-accounts.png[List resource account]
 
 That is a very useful feature for several reasons.
@@ -364,15 +367,15 @@ image::04-04-hub-and-spoke.png[Hub and spoke]
 
 This means that the _account A_ can be synchronized with midPoint user and then midPoint user can be synchronized with _account B_.
 But _account A_ cannot be synchronized directly to _account B_.
-This is a deliberate decision that was made very early in midPoint design and we have very good reasons for it.
+This is a deliberate decision that was made very early in midPoint design, and we have very good reasons for it.
 
 _Accounts_ and user that represent the same person are _linked_ together.
 This _link_ is a relation that midPoint creates and maintains.
-Therefore midPoint knows who is the owner of a particular account.
+Therefore, midPoint knows who is the owner of a particular account.
 MidPoint also knows which accounts the user has.
 That is how midPoint knows which account needs to be synchronized with which user.
 It is critical for the links to be correct otherwise midPoint cannot reliably synchronize the data.
-Therefore midPoint takes great care to maintain the links.
+For that reason, midPoint takes great care to maintain the links.
 And that is not always an easy task.
 There are strange corner cases such as renamed accounts or accounts that were deleted by mistake and re-created.
 But midPoint is built to handle such cases.
@@ -954,7 +957,7 @@ Midpoint supports three scripting languages:
 
 * *Groovy:* This is the default scripting language.
 * *JavaScript* (ECMAscript)
-* *Python*
+* *Python* (must be explicitly installed)
 
 All three languages can be arbitrarily mixed even in a single midPoint deployment.
 Although quite understandably such a practice is not recommended.
