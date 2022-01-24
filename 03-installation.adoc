@@ -9,12 +9,12 @@ Reality is frequently inaccurate.
 
 This chapter provides instructions for installation and initial configuration of a midPoint system.
 The instructions describe installation on Linux system because that is by far the most common operating environment for midPoint deployments.
-However, midPoint is platform-independent and it can run on any environment where Java is running.
+However, midPoint is platform-independent, it can run on any environment where Java is running.
 Any experienced engineer will have no trouble adapting these instructions to fit a different operating system.
 
 MidPoint installation described in this chapter is a very basic one.
 It is ideal for initial exploration of midPoint, development of midPoint configurations, demonstrations and similar purposes.
-It is a very convenient installation and we use it every day for development work.
+It is a very convenient installation, and we use it every day for development work.
 However, to use midPoint in a production deployment the installation need to be slightly adjusted.
 The adjustments are mentioned in this chapter, but the full description of the production-ready installation is provided in later chapters.
 This chapter gives you midPoint installation that is ideal to get you started.
@@ -28,7 +28,7 @@ If you look for more formal system requirements definition, then you will find t
 
 From the software side you will need:
 
-* *Java 11* runtime environment (JRE) or development environment (JDK).
+* *Java 17* or *Java 11* runtime environment (JRE) or development environment (JDK).
 Any JRE or JDK should work.
 You can use the packages from your operating system distribution.
 Or you can download Java and install it as a standalone package.
@@ -36,17 +36,17 @@ Both should work well.
 Just do not forget to set your `PATH` and `JAVA_HOME` environment variables to point to the Java installation.
 
 * *MidPoint distribution package.* Download the latest version of midPoint from the Evolveum website.
-You are looking for an archive that looks like `midpoint-4.0-dist.zip`.
+You are looking for an archive that looks like `midpoint-{midpointversion}-dist.zip`.
 This archive contains everything that you will need to run midPoint.
 
-We recommend to use the latest available versions of all software packages when dealing with midPoint.
+We recommend using the latest available versions of all software packages when dealing with midPoint.
 We are trying really hard to always keep midPoint up-to-date with the rest of the technologies.
 
 == Installation
 
 MidPoint is Java web application distributed in a stand-alone package.
 The distribution package contains everything that midPoint needs to run – except for Java platform itself.
-Therefore as long as the Java platform is installed all that is needed to run midPoint is to start it:
+Therefore, as long as the Java platform is installed all that is needed to run midPoint is to start it:
 
 . Extract the files from the distribution package to a location where you want to install midPoint.
 
@@ -74,7 +74,7 @@ Username: `administrator` +
 Password: `5ecr3t`
 
 Now you are logged-in as the `administrator`.
-This user has superuser privileges therefore you can see everything and you can do anything in the midPoint user interface.
+This user has superuser privileges therefore you can see everything, and you can do anything in the midPoint user interface.
 
 MidPoint user interface is structured.
 It has the same layout and controls for all the user interface areas:
@@ -100,9 +100,9 @@ This part of user interface is usually used only by identity management engineer
 The menu can be hidden by clicking on the button at the top of the screen.
 The top bar also contains the title of the current user interface page and breadcrumbs.
 Breadcrumbs show where you currently are in the user interface and how you got there.
-The breadcrumbs can be used to “find your way home” and back to the previous page.
-The use of browser _Back_ button is not recommended.
-Please use the _Back_ buttons that are present in midPoint user interface or use breadcrumbs.
+The breadcrumbs can be used to "find your way home" and back to the previous page.
+The use of browser btn:[Back] button is not recommended.
+Please use the btn:[Back] buttons that are present in midPoint user interface or use breadcrumbs.
 
 == User Interface Areas
 
@@ -131,8 +131,6 @@ Roles can be created and defined in this part of the user interface.
 
 * *Service* pages allow to list and define services, such as devices, servers, applications and so on.
 
-* *Archetype* pages define specific object types that can be used to customize behavior of midPoint objects.
-
 * *Resource* pages list and manage resources.
 New resource can be defined here, associated with the connector, tested, etc.
 
@@ -142,6 +140,8 @@ Work items are created if user has to approve something or if there is some manu
 * *Certification* pages deal with access certification (re-certification, attestation).
 Certification campaigns can be created and managed here.
 
+* *Nodes* page lists processing nodes in midPoint cluster.
+
 * *Server task* pages show the tasks that are running on midPoint servers.
 These may be scheduled synchronization tasks, import tasks, running user requests – everything that runs on the servers and cannot be executed immediately in a synchronous way.
 
@@ -149,6 +149,8 @@ These may be scheduled synchronization tasks, import tasks, running user request
 These pages typically deal with scheduled printable reports.
 
 * *Configuration* area contains many pages that manage midPoint configuration: system default configuration, repository objects, logging, bulk actions and so on.
+
+* *Archetype* pages define specific object types that can be used to customize behavior of midPoint objects.
 
 == User Interface Concepts
 
@@ -164,8 +166,6 @@ Right side is reserved for action buttons.
 Buttons in the table header trigger actions that apply to all selected objects.
 Buttons in each table row trigger actions that apply only to that individual object.
 The buttons in the bottom-left corner execute global actions, such as creating or importing new object, exporting objects and refreshing the view.
-The _Import_ button is especially useful.
-It allows importing new object in XML/JSON/YAML form.
 Paging controls are in the bottom-right corner.
 
 MidPoint has a unified color-code that makes the navigation easier.
@@ -218,41 +218,40 @@ E.g. user details page looks like this:
 
 image::03-04-user-details.png[User details]
 
-There is an information area at the top of the page.
-That area shows user photo (or icon) and provides some basic information such as user name and identifier.
+The screen below the information area is divided into several panels.
+There is a summary panel at the top of the page.
+This is an information area which shows user photo (or icon) and provides some basic information such as user identifier and title.
 It also shows where the object belongs in the organizational structure.
 There is also a couple of "tags" that show interesting details about the object: whether the object is enabled, whether it has special privileges and so on.
 
-The screen below the information area is divided into several tabs.
-Each tab shows one aspect of the object.
-There are tabs that show projections, assignments, inducements – we will come to that later in this book.
-The first tab is perhaps the most interesting right now.
-It contains a dialog that shows basic object properties: the attributes of the object.
-Properties are displayed and they can be edited – depending on the authorizations of currently logged-in user.
-In addition to the basic properties there are also other sections.
-E.g. activation section shows whether the object is enabled or disabled, it shows the activation dates and other activation details.
-The credentials section allows changing password and other credentials.
-There are several little buttons at the top of each section.
-One of them can be used to change the ordering in which the properties are shown.
-The other button toggles the display of metadata.
-There may be additional buttons depending on the situation.
+Below the summary panel, there is a panel with operation controls.
+There are buttons to save the changes, go back to the previous page, controls to set operation options and so on.
 
-Operation options and buttons are located at the bottom of the details page.
-The buttons initiate the operations.
-The most common operation is just to save the changes and that’s what the _Save_ button is for.
-Saving the changes is a universal way how to start almost any operation: change of user properties, assignment of roles, change of password, user disable, etc.
-When you make edits in any of the tabs on the details page then nothing really happens yet.
-MidPoint just remembers what you are editing.
-The operation is executed only when you click the Save button.
-This is our method how to execute several changes in one operation.
-It may require some time to get used to it.
-Just do not forget to click the save Button.
+The data are displayed in _details panel_.
+However, midPoint data structures are often quite complex.
+Displaying the data in their full complexity would make it very difficult to understand.
+Therefore, the data are divided into several tabs, each tab containing a portion of the data.
+Navigation tabs are displayed left to the main details panel.
+The tabs allow easy navigation through data structures.
 
-Operation options are used to modify the behavior of the operation.
-These options may force to execute operations that fail to pass midPoint internal checks.
-There is an option to reconcile the data even if midPoint thinks that reconciliation is not needed.
+The first tab is perhaps the most interesting one.
+It contains fields that show basic object properties: the attributes of the object.
+Properties are displayed, and they can be edited – depending on the authorizations of currently logged-in user.
+The other tabs shows more complex information about the object.
+E.g. activation tab shows whether the object is enabled or disabled, it shows the activation dates and other activation details.
+The password tab provide password management functionality.
 And so on.
-Checking or unchecking these options influences the way how midPoint executes the operation.
+
+The view control buttons present in the details panel can be used to adjust the way the information is presented.
+These buttons control sorting of the fields, can toggle metadata display and there may be additional control buttons for more complex fields.
+MidPoint shows only some fields by default, to make the presentation easier to read.
+For example, most empty fields are not shown by default.
+There is a small btn:[Show empty fields] button under the fields than can be used to display empty fields.
+
+The content of the details panel changes its form, adapting to the type of displayed information.
+Basic properties are shown as a series of editable fields.
+Content of some tabs is similar to the menu:Basic[] tab, displaying a set of fields.
+Other tabs provide lists of more complex data structures such as projections, assignments and personas.
 
 MidPoint user interface often needs to present objects that are internally quite complex.
 It does not make sense to present all the details at once.
@@ -271,10 +270,34 @@ image::03-06-user-projection-details.png[Projection details]
 Account details display is shown in place of user details.
 This may be slightly confusing.
 But account details can be often complex, therefore all the available screen space is needed to display them.
-The _Cancel_ and _Done_ buttons at the bottom can be used to return back to _Projections_ tab.
-Click on _Done_ button will not start the operation yet, it only changes the view.
-Therefore do not confuse those buttons with _Back_ and _Save_ buttons on the very bottom on the page.
-The operation starts when _Save_ button is clicked.
+The btn:[Cancel] and btn:[Done] buttons at the bottom can be used to return back to list of projections.
+Click on btn:[Done] button will not start the operation yet, it only changes the view.
+Therefore, do not confuse those buttons with btn:[Back] and btn:[Save] buttons located in the control panel.
+
+TIP: Perceptive reader is certainly curious about the big red question mark in the corner of the account icon.
+This corner of the account icon is a place where a special marker would be displayed to indicated disabled accounts.
+There would be no such marker for enabled accounts.
+Such visual indicators are very helpful when managing identities of larger user bases.
+However, this is an LDAP account.
+There is no standard way to disable an account in LDAP world.
+Many LDAP servers implement their own proprietary mechanisms, and the OpenLDAP server that we are using has no such mechanism at all out-of-the-box.
+Hence the question mark, indicating that the activation status of the account is not known.
+
+Each tab provides the information in an editable way, provided that the user has adequate privileges to edit the information.
+When the data are edited, the changes can be confirmed by using the btn:[Save] button in the operations panel.
+Saving the changes is a universal way how to start almost any operation: change of user properties, assignment of roles, change of password, user disable, etc.
+When you make edits in any of the tabs on the details page then nothing really happens yet.
+MidPoint just remembers what you are editing.
+The operation is executed only when you click the Save button.
+This is our method how to execute several changes in one operation.
+It may require some time to get used to it.
+Just do not forget to click the btn:[Save] button.
+
+Operation options are used to modify the behavior of the operation.
+These options may force execution of operations that fail to pass midPoint internal checks.
+There is an option to reconcile the data even if midPoint thinks that reconciliation is not needed.
+And so on.
+Checking or unchecking these options influences the way how midPoint executes the operation.
 
 == MidPoint Configuration Basics
 
