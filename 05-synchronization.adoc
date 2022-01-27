@@ -6,6 +6,11 @@ include::chapter-include.adoc[]
 [quote,Sherlock Holmes,"The Adventures of Sherlock Holmes by Arthur Conan Doyle"]
 It is a capital mistake to theorize before one has data.
 
+// TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO
+// TODO: This section needs to be re-structured for the next review of the book
+// See TODOs inside the text
+// TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO
+
 Data are the lifeblood of any software system.
 Ensuring proper management of the data is one of the primary responsibilities of a software architect.
 But data management can be very tricky – as any experienced software architect knows only too well.
@@ -16,9 +21,9 @@ And there should not be any copies of that value.
 Ever.
 There is just one universal source of truth.
 If there are no copies then the data are always consistent.
-No copies means no contradictions.
+No copies mean no contradictions.
 Just one truth, precise and crystal-clear.
-Keep data in one place and one place only.
+Keep data in one place, and one place only.
 
 That is the theory.
 
@@ -49,7 +54,7 @@ Identity data are no exception.
 In fact identity data are often the most heavily affected.
 And it makes a lot of sense.
 Applications are built for users to use them.
-Therefore almost every application keeps some kind of data about users.
+Therefore, almost every application keeps some kind of data about users.
 In addition to that, such data are usually very sensitive from security and privacy point of view.
 
 We cannot avoid copying the data.
@@ -88,7 +93,7 @@ Configuration errors.
 Data models are evolving in time.
 Policies are changing.
 It is no easy task to reliably synchronize the data in such environment.
-Therefore there is a special breed of systems that specialize in synchronization of identity data: identity management systems.
+Therefore, there is a special breed of systems that specialize in synchronization of identity data: identity management systems.
 
 == Synchronization in MidPoint
 
@@ -131,7 +136,7 @@ However due to its nature it is usually executed during off-peak times (nights a
 * *Import* is usually a one-time process to get data from the resource to midPoint.
 Import is used to populate midPoint with initial data or it may be used to connect a new resource to midPoint.
 Import is almost the same as reconciliation with only a few minor differences.
-However its purpose is different and therefore there is usually also a slightly different configuration of import policies (mappings).
+However, its purpose is different and therefore there is usually also a slightly different configuration of import policies (mappings).
 Import is usually not scheduled, it is manually triggered when needed.
 
 * *Opportunistic synchronization* is a very special kind of animal which is quite unique to midPoint.
@@ -635,11 +640,11 @@ And that’s the way how synchronization tasks are often managed.
 When an XML-formatted resource definition is created then there is often an associated synchronization task.
 Which means that both resource and all the necessary synchronization tasks can be imported together.
 Synchronization tasks can also be created from midPoint user interface.
-They are usually created by using special-purpose buttons in resource detail pages.
+They are usually created by using special-purpose menu:Defined tasks[] tab in resource detail pages.
 
 image::05-03-synchronization-tasks.png[Synchronization tasks]
 
-Once the synchronization tasks are created they can be managed in the same way as other tasks are managed: in the _Server tasks_ part of the midPoint user interface.
+Once the synchronization tasks are created they can be managed in the same way as other tasks are managed: in the menu:Server tasks[] part of the midPoint user interface.
 
 == Synchronization Example: HR Feed
 
@@ -668,6 +673,7 @@ However, as we have described previously, there is no fundamental difference bet
 Therefore this HR resource starts in entirely ordinary way.
 There is a reference to the CSV connector and the connector configuration:
 
+.`resource-csv-hr.xml`
 [source,xml]
 ----
 <resource oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf">
@@ -690,6 +696,7 @@ The next section is schema handling configuration.
 That is where is becomes slightly more interesting.
 The schema handling section contains inbound mappings for HR account attributes:
 
+.`resource-csv-hr.xml`
 [source,xml]
 ----
     ...
@@ -734,6 +741,7 @@ This is perhaps self-explanatory.
 
 The next part of the configuration specifies mappings for activation and credentials:
 
+.`resource-csv-hr.xml`
 [source,xml]
 ----
             ...
@@ -778,6 +786,7 @@ But the mappings do not specify whether the accounts should be created or delete
 Mappings control the data, but they do not control the _lifecycle_.
 It is the next configuration section that makes this resource really authoritative:
 
+.`resource-csv-hr.xml`
 [source,xml]
 ----
     ...
@@ -839,6 +848,7 @@ If the values match then the user is considered to be an owner of the account.
 
 There is one more detail in this resource that we have skipped:
 
+.`resource-csv-hr.xml`
 [source,xml]
 ----
     ...
@@ -879,97 +889,127 @@ The task pretends that each of the accounts was just created.
 If the task is executed for the first time then resulting situation of the accounts is going to be either `unmatched` or `unlinked`.
 Therefore the task creates new midPoint users or links the accounts to existing users.
 
+.`task-hr-import.xml`
 [source,xml]
 ----
-<task oid="7c57adc2-a857-11e7-83ac-0f212d965f5b">
+<task oid="fa25e6dc-a858-11e7-8ebc-eb2b71ecce1d">
     <name>HR Import</name>
-    <taskIdentifier>7c57adc2-a857-11e7-83ac-0f212d965f5b</taskIdentifier>
+    <assignment>
+        <!-- Import task archetype -->
+        <targetRef oid="00000000-0000-0000-0000-000000000503" type="ArchetypeType"/>
+    </assignment>
     <ownerRef oid="00000000-0000-0000-0000-000000000002"/>
-    <executionStatus>runnable</executionStatus>
-    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/synchronization/task/import/handler-3</handlerUri>
-    <objectRef oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf" type="c:ResourceType"/>
-    <recurrence>single</recurrence>
+    <executionState>runnable</executionState>
+    <schedule>
+        <recurrence>single</recurrence>
+    </schedule>
+    <activity>
+        <work>
+            <import>
+                <resourceObjects>
+                    <!-- HR Resource -->
+                    <resourceRef oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf"/>
+                    <kind>account</kind>
+                </resourceObjects>
+            </import>
+        </work>
+    </activity>
 </task>
 ----
 
 This is a very basic structure of the task.
 Similarly to all midPoint objects a task has a name.
-Then there is a task identifier which is used for internal task management purposes.
-This is usually the same as task object OID. Task needs definition of an owner.
+Then there is an assignment of `Import task` archetype.
+We will describe archetrypes later.
+For now, it is only important to know that this classifies the task as _import_ task, so the user interface can place the task in proper categories.
+Task needs definition of an owner.
 The owner is a user that is executing the task.
 This is important, because authorizations of task owner determine what the task is allowed to do.
 This is also the identity that will be recorded in the audit log.
 In this case `administrator` is owner of this task.
 Task execution status tells whether the task is running, it is suspended or finished.
-Then there is a handler URI. The handler URI specifies what the task really does.
-It (indirectly) refers to the code that the server executes.
-In this case the task URI specifies that this is a synchronization task that imports accounts from the resource.
-And the resource is specified by the objectRef reference.
+Tasks are often executed periodically, therefore they need a schedule.
+In this case we will start with task that is executed just once, to test the configuration.
+Hence the `single` recurrence,  which specifies that the task runs only once.
+Then there is definition of _activity_.
+Activity specifies what the task really does.
+In this case the activity specifies that this is a synchronization task that imports accounts from the resource.
+The resource is specified by the `resourceRef` reference in the activity specification.
 This points to our HR resource.
-The last item is recurrence.
-Recurrence specifies whether the task runs only once (single) or whether the execution should be repeated (recurring).
 
 When this XML definition is imported to midPoint, the server tries to execute the task.
 That means that import of accounts from the HR resource starts immediately.
 Progress of the task can be monitored in the Server tasks section of midPoint user interface.
-The import task is not a recurring task.
-Therefore it will run only once.
+The import task is not a recurring task, it will run only once.
 If you need to re-run the task, you can do that from midPoint user interface.
-But the task will not be executed unless you explicitly tell midPoint to do so.
+However, the task will not be executed unless you explicitly tell midPoint to do so.
 This is how typical import tasks work.
 They are usually executed when a new resource is connected to the system.
 And once everything is set up, correlated and linked then the import task is not needed any more.
 
-A clever reader may ask what happens when the import task is executed more than once.
+TIP: A clever reader may ask what happens when the import task is executed more than once.
 The answer is simple: not much.
 Even if the task pretends that the accounts were just created, midPoint is not fooled easily.
-In fact, it is hard to believe that the account was just created if midPoint already has shadow for that account and it is linked to a user, isn’t it?
-Therefore midPoint is going to stay calm and carry on.
+In fact, it is hard to believe that the account was just created if midPoint already has shadow for that account, and it is linked to a user, isn’t it?
+Therefore, midPoint is going to stay calm and carry on.
 If there is any change in the account attribute, the change will be reflected to the user.
 But that is it.
 No big drama here.
 
 Import task will get the data from the resource into midPoint.
-But as import is not a recurring task it will not keep the data synchronized.
+As import is not a recurring task, it will not _keep_ the data synchronized.
 Import tasks are not designed to do so.
-But there are other tasks that are designed for continuous synchronization.
+Fortunatelly, there are other tasks that are designed for continuous synchronization.
 Reconciliation task is one of these.
 Reconciliation task lists all the accounts on a resource and compares that with data in midPoint.
 
+.`task-hr-recon.xml`
 [source,xml]
 ----
 <task oid="bbe4ceac-a85c-11e7-a49f-0f5777d22906">
     <name>HR Reconciliation</name>
-    <taskIdentifier>bbe4ceac-a85c-11e7-a49f-0f5777d22906</taskIdentifier>
+    <assignment>
+        <!-- Reconciliation task archetype -->
+        <targetRef oid="00000000-0000-0000-0000-000000000501" type="ArchetypeType"/>
+    </assignment>
     <ownerRef oid="00000000-0000-0000-0000-000000000002"/>
-    <executionStatus>runnable</executionStatus>
-    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/synchronization/task/reconciliation/handler-3</handlerUri>
-    <objectRef oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf" type="c:ResourceType"/>
-    <recurrence>recurring</recurrence>
+    <executionState>runnable</executionState>
     <schedule>
+        <recurrence>recurring</recurrence>
         <cronLikePattern>0 0 1 ? * SAT</cronLikePattern>
         <misfireAction>executeImmediately</misfireAction>
-   </schedule>
+    </schedule>
+    <activity>
+        <work>
+            <reconciliation>
+                <resourceObjects>
+                    <resourceRef oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf"/>
+                    <kind>account</kind>
+                </resourceObjects>
+            </reconciliation>
+        </work>
+    </activity>
 </task>
 ----
 
 Definition of a reconciliation task is almost the same as the definition of import task.
-But there are crucial differences.
-First of all there is different handler URI. This is what makes this task a reconciliation task.
-Then the task is recurring.
+However, there are crucial differences.
+First of all, there is different _activity_.
+This is what makes this task a reconciliation task.
+Then, the task is recurring.
 This means that midPoint will repeat execution of the task.
-Therefore there is also execution schedule so the server knows when to execute the task.
-Reconciliation tasks are usually resource-intensive therefore we usually want to execute them at a very specific off-peak times.
+Therefore, there is also execution schedule so the server knows when to execute the task.
+Reconciliation tasks are usually resource-intensive, therefore we usually want to execute them at a very specific off-peak times.
 For that reason the execution schedule is defined using a cron-like pattern.
 UNIX-friendly readers will be surely familiar with this.
 The format is:
 
 `_seconds_ _minutes_ _hours_ _day-of-month_ _month_ _day-of-week_ _year_`
 
-Therefore this task will be executed every Saturday at 01:00:00am.
+The string `0 0 1 ? * SAT` means that this task will be executed every Saturday at 01:00:00am.
 There is also definition of misfire action.
 Misfire is a situation when the server is down at the time when the task is supposed to run.
-Therefore if the server is down in the early hours of Saturday this task will be executed as soon as the server starts up.
+In this case, if the server is down in the early hours of Saturday, this task will be executed as soon as the server starts up.
 
 Reconciliation task is a real workhorse of identity management.
 It can be used in almost any resource.
@@ -1004,27 +1044,32 @@ But it has to be good enough for the connector to discover recent changes and it
 If such mechanism is available and the connector knows how to use it then setting up live synchronization is easy.
 All that is needed is synchronization task.
 
+.`task-hr-livesync.xml`
 [source,xml]
 ----
 <task oid="7c57adc2-a857-11e7-83ac-0f212d965f5b">
     <name>HR Live Synchronization</name>
-    <extension>
-        <mext:kind>account</mext:kind>
-    </extension>
-    <taskIdentifier>7c57adc2-a857-11e7-83ac-0f212d965f5b</taskIdentifier>
     <ownerRef oid="00000000-0000-0000-0000-000000000002"/>
-    <executionStatus>runnable</executionStatus>
-    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/synchronization/task/live-sync/handler-3</handlerUri>
-    <objectRef oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf" type="c:ResourceType"/>
-    <recurrence>recurring</recurrence>
+    <executionState>runnable</executionState>
     <schedule>
+        <recurrence>recurring</recurrence>
         <interval>10</interval>
     </schedule>
+    <activity>
+        <work>
+            <liveSynchronization>
+                <resourceObjects>
+                    <resourceRef oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf"/>
+                    <kind>account</kind>
+                </resourceObjects>
+            </liveSynchronization>
+        </work>
+    </activity>
 </task>
 ----
 
-This task definition should be easy to understand now.
-There is a different handler URI that makes this a live synchronization task.
+This task definition should be easy to understand by now.
+There is a different _activity_ that makes this a live synchronization task.
 There is also a different type of scheduling.
 We do not want to execute this task at a specific time.
 We rather want to execute it all the time at regular intervals.
@@ -1032,9 +1077,9 @@ In this case the interval is set to 10 seconds.
 And that is all that is needed to have live synchronization running.
 If the HR CSV file is changed now, the changes will get automatically processed by midPoint.
 
-Setting up configuration flavors is just a matter of setting up the tasks.
+Setting up synchronization flavors is just a matter of setting up the tasks.
 The rest of the configuration is the same for all flavors.
-Therefore it is very easy to run both live synchronization and reconciliation for the same resource.
+Therefore, it is very easy to run both live synchronization and reconciliation for the same resource.
 Just create two tasks.
 This is quite a common setup.
 Live synchronization is used to get the changes quickly and efficiently.
@@ -1047,7 +1092,7 @@ A clever reader would surely notice that this is not a very good HR resource.
 MidPoint users created from this HR feed have given name and family name, but the full name field is empty.
 But do not worry.
 We will sort that out in later chapters with the help of _object template_.
-Also the users have employee number as their username.
+Also, the users have employee number as their username.
 This may be in fact a very good approach for some deployments as it avoids the need to rename accounts.
 However, it is not a very user-friendly approach.
 Therefore most deployments need to generate more convenient usernames.
@@ -1061,13 +1106,17 @@ However, source resources almost always have slightly special standing.
 Even though midPoint mechanisms are the same for all resources, the data coming from the sources often have significant impact on the entire solution.
 There is this traditional computer engineering wisdom: _garbage in, garbage out_.
 An error in data feed may cause a lot of problems everywhere.
-Therefore it is important to get the data sources right.
-And this is usually one of the first steps in an IDM project.
+Therefore, it is important to get the data sources right.
+This is usually one of the first steps in an IDM project.
 
 Unfortunately, source data feed is usually quite difficult to set up correctly.
 And it is almost impossible to get it right at the first try.
-Therefore setup of a data source is usually an iterative process.
-And there may be many iterations - especially if the quality of the source data is unknown.
+There may be good old configuration problems, that are usually easy to fix.
+There may be data compatibility problems, such as presence of non-ASCII national characters where they are not expected.
+Worst of all, source data may be of poor quality, there may be inconsistencies, typos, the data may be out of date, overall not reflecting the reality very well.
+These problems are the most difficult to correct, as the right way to correct them is to modify the data at its source.
+That takes time.
+Therefore, setup of a data source is usually an iterative process.
 The process usually goes like this:
 
 . Set up initial source resource definition based on the information you have.
@@ -1076,8 +1125,8 @@ Check that you can see the accounts.
 Set up mappings and synchronization policy.
 
 . Test the import process on a couple of individual accounts.
-Navigate to the resource details pages, click on Accounts tab to list accounts, choose an account and click on the small _Import_ button in the table row.
-Import of that individual account will start.
+Navigate to the resource details pages, click on menu:Accounts[] tab to list accounts, choose an account and click on the small btn:Import[] button in the table row.
+Import of that individual account starts immediately.
 Just that one account.
 It is easier to see the errors (see step 6) by using this method.
 
@@ -1089,7 +1138,7 @@ It is easier to see the errors (see step 6) by using this method.
 You can use task details page to get the summary.
 
 . If there are no errors, then examine the users.
-If everything is OK then congratulations.
+If everything seems right then it is time to congratulate yourself.
 You have a good import.
 However, this is unlikely to happen on the first few attempts.
 
@@ -1098,30 +1147,31 @@ MidPoint heavily relies on logs for detailed error analysis.
 See the <<90-troubleshooting.adoc#90-troubleshooting,Troubleshooting>> chapter of this book to learn how to adjust log levels and how to get understand the log messages.
 
 . Some errors are likely to be caused by the errors in your mappings and policies.
-Those are usually easy to fix.
-But there are usually worse errors as well – errors caused by wrong or unexpected input data.
+These are usually easy to fix.
+However, there are usually worse errors as well – errors caused by wrong or unexpected input data.
 The right way would be to fix the data.
-But that is not always possible (in fact it is almost never a feasible option).
+But that is not always possible (in fact it is almost never a feasible option for a quick fix).
 Fortunately, most of the input data errors can be fixed (read: "worked around") in midPoint with a bit of ingenuity.
 Just use the power of the mappings.
+For example, clean up the unexpected characters, white space or data formats using scripting expressions.
 
 . Rinse and repeat.
 If the errors you get are not severe then you may simply re-run the import task.
 This often works just fine.
 But if the problem was in a mapping that completely ruined all the data then it is perhaps best to start with a blank slate.
 We are all just humans and this situation happens quite often, especially in the beginning while you are still learning.
-Therefore there is a special feature to help you out.
-Navigate to _Configuration > Repository Objects_.
+Therefore, there is a special feature to help you out.
+Navigate to menu:Configuration[Repository Objects].
 There is a small unassuming expand button in the top-right part of the screen.
 That button opens a context menu.
-Select “Delete all identities” item.
-That is what we lovingly call “laxative button”.
+Select menu:Delete all identities[] item.
+That is what we lovingly call "laxative button".
 A brief dialog will pop up asking you to specify which identities exactly are to be deleted (users, shadows, …).
 This is a very convenient way how to get back to a black slate, but keep all the configuration (resources, templates, tasks).
 
 . Goto step 2. Repeat until done.
 
-If the initial IDM deployment step includes an HR feed we strongly recommend to start with that HR feed.
+If the initial IDM deployment step includes an HR feed, we strongly recommend to start with that HR feed.
 It is significant benefit to have authoritative HR data in the midPoint to start with.
 It is usually easier to correlate other resources to midPoint users later on, if the users were created from a reasonably reliable HR data.
 Also, it will usually take some tweaking to get the HR import right.
@@ -1129,9 +1179,10 @@ The possibility to easily clean up midPoint and get to a clean slate is extremel
 But that is possible only if the HR feed is the first resource that is connected to midPoint.
 
 A clever reader would notice, that we assumed that the source feed will be taken from a CSV file.
-And this is indeed the case in majority of cases.
+And this is indeed the case in many of cases.
+The CSV file is usually produced as an automatic scheduled export of HR system data, usually running every night.
 If a new employee or contractor is about to join the company there is usually no hurry.
-This information is entered into the HR system at least a few days in advance therefore daily CSV export is perfectly acceptable.
+This information is entered into the HR system at least a few days in advance, therefore daily CSV export is perfectly acceptable.
 However, there may be cases when we want a faster response.
 Or maybe we do not want additional burden of dealing with CSV exports.
 Of course, there is a solution.
@@ -1151,35 +1202,35 @@ The result of inbound mapping evaluation is that the user object is modified.
 According to midPoint principles it does not matter how the user was modified.
 The reaction is the same: accounts are provisioned, modified or deleted as needed.
 
-The synchronization (_inbound_ processing) and provisioning (_outbound_ processing) usually happen in the same seamless operation.
+The synchronization (_inbound_ processing) and provisioning (_outbound_ processing) usually happen in one seamless operation.
 For example the HR connector detects update in the last name of an employee.
 That modification is applied to midPoint user, therefore the family name of midPoint user is updated.
 The operation continues by evaluating all templates, roles and outbound mappings.
 The outbound mappings usually map the family name change to the resource attributes.
-Therefore the resource accounts linked to the user are immediately updated.
+Therefore, the resource accounts linked to the user are immediately updated.
 All of that happens in a single operation.
 That is how midPoint works.
 MidPoint is not a human.
 It will never procrastinate (unless explicitly instructed do to so).
 MidPoint will not postpone the operation for later if the operation can be executed immediately.
 MidPoint tries to get the data right on the first try.
-Therefore there no specialized propagation or provisioning tasks that you might know from older IDM systems.
+Therefore, there are no specialized propagation or provisioning tasks that you might know from older IDM systems.
 MidPoint does not need them.
 
 There are other advantages in doing everything in one operation.
 It is all one operation therefore midPoint knows all the details: what was the cause, what is the effect, what exactly has been changed.
-This is important for troubleshooting.
-Some IDM systems decouple the cause and the effect.
+Such _context_ is extremely important for troubleshooting.
+Some IDM systems decouple the cause from the effect.
 Such a divided approach may have its advantages, but it is an absolute nightmare when an engineer needs to figure out why a certain effect happened.
-But midPoint has both the cause and the effects correlated together in a single operation.
+For that reason, midPoint has both the cause and the effects correlated together in a single operation.
 Therefore it is much easier to figure out what is going on.
-And it can also be neatly recorded in the audit trail.
-And there is another huge advantage: midPoint knows exactly what has been changed.
+Having the cause and effect connected in one operation means that it can also be neatly recorded in the audit trail.
+Then there is another huge advantage: midPoint knows exactly what has been changed.
 This means that midPoint does not only know the new value of a property.
 MidPoint knows also the old value and values that were added or removed.
 This is a complete description of the change that we call a _delta_.
 This is recorded at the beginning of the operation and propagated all the way until the operation is done.
-Therefore the mappings may be smart.
+Therefore the mappings can be smart.
 This approach enables a lot of interesting behavioral patterns.
 For example, it is quite easy for midPoint to implement the "last change wins" policy.
 In this case midPoint will simply overwrite only those attributes that are really changed in operation.
@@ -1190,14 +1241,14 @@ And it is a very useful behavior during deployment of a new IDM system.
 Careful processing of the operations allows configurations that are not feasible with older IDM systems, e.g. a resource that is both a source and a target.
 In fact a lot of IDM systems can have resource that is both a source and a target - as long as it is a source for one attribute and a target for another attribute.
 But midPoint can live with a resource where the same attribute is both a source and a target.
-And in fact there may be many sources and many targets for the same property at the same time.
-And this is indeed very useful configuration.
+In fact there may be many sources and many targets for the same property at the same time.
+This is indeed very useful configuration.
 Just think about telephone number property.
-This is usually something that the user sets up himself.
+It is usually something that the user sets up himself.
 This may be set up by some kind of specialized self-service, it may be updated by a call center call, the user may update that in his Active Directory profile ... there are many ways how this information is changed.
 But we want this property to be consistent.
 We want telephone number to be the same everywhere.
-And we do not care where it was changed.
+We do not care where it was changed.
 We just want to propagate the last change from anywhere to all the other systems.
 MidPoint can easily do this.
 Just specify both inbound and outbound mappings for the same attribute:
@@ -1222,10 +1273,11 @@ Just specify both inbound and outbound mappings for the same attribute:
 In this case the change in user property `telephoneNumber` will be propagated to the account attribute `mobile` (outbound change).
 But also a change in the account attribute `mobile` will be propagated back to user property `telephoneNumber` (inbound change).
 Last change wins.
+
 A clever reader certainly grumbles something about infinite loops now.
 But do not worry.
 MidPoint can see complete operation context, both inbound and outbound sides.
-Therefore midPoint knows when to stop processing the operation.
+Therefore, midPoint knows when to stop processing the operation.
 There are even mechanism how to avoid loops caused by connectors detecting changes caused by the connector itself.
 MidPoint will break those loops automatically.
 
@@ -1234,20 +1286,20 @@ Then why there are two sections in the resource configuration?
 Why there is `schemaHandling` and `synchronization`?
 Why not just one?
 The answer is simple: history.
-No software is created perfect on day one.
+Rome was not built in a day, and no software is created perfect on day one.
 Similarly to other software systems, midPoint went through an evolutionary process of continuous improvement.
 MidPoint had a very good design at the beginning.
 Looking back at the initial design, now it is quite clear that almost all of midPoint developments were correctly foreseen and accounted for in the design.
 However, there are occasional mistakes.
 The initial midPoint data model design expected that there will be major differences between synchronization and provisioning mechanisms.
-Therefore there were two sections, one for each mechanism.
-But midPoint evolution improved the initial design and we have found a way how to unify synchronization and provisioning mechanisms into one.
+Therefore, there were two sections, one for each mechanism.
+As midPoint was developed, evolutionary process improved the initial design, and we have found a way how to unify synchronization and provisioning mechanisms into one.
 However, we have not modified the initial data model because we wanted to keep compatibility.
 Having two sections instead of one is only a cosmetic imperfection.
 It does not cause any major trouble.
-But incompatible change would certainly affect continuity of midPoint deployments.
-And we highly value midPoint continuity and upgradeability.
-Therefore the two sections remained to this day.
+On the other hand, incompatible change would certainly affect continuity of midPoint deployments.
+We highly value midPoint continuity and upgradeability.
+Therefore, the two sections remained to this day.
 However, they will not remain there forever.
 We are not going to dwell on old mistakes for too long.
 These two section will be reunited once there is a proper time to make incompatible changes.
@@ -1255,31 +1307,31 @@ Which will probably happen in the future when the time comes to release midPoint
 
 == Synchronization Strategies
 
-Synchronization is simple in theory.
+Synchronization is simple, in theory.
 However, as usual, the devil is in the details.
 Similarly to provisioning, there is no one single "synchronization protocol" that would work for all the source systems.
 Every system type has its own way to synchronize data.
-Some systems (such as LDAP) even have several mechanisms.
-And then there are source systems that have no practical way how to implement synchronization.
+Some systems (such as LDAP servers) even have several mechanisms to choose from.
+Then there are source systems that have no practical way to implement efficient synchronization.
 We would refer to such methods as _synchronization strategies_.
 
-Specific details of each synchronization strategy is an internal matter of connector implementation.
-The strategy is configured on connector level and the details are, theoretically, hidden inside the connector.
-MidPoint does not know and does not need to know what synchronization strategy is used.
+Specific details of each synchronization strategy should be an internal matter of connector implementation.
+The strategy is configured on connector level, and the details should be, theoretically, hidden inside the connector.
+MidPoint would not know and would not need to know what synchronization strategy is used.
 That might work in an ideal world.
-But we live in a practical world and there are many details that leak through the _synchronization_ abstraction.
+But we live in a practical world, and there are many details that leak through the _synchronization_ abstraction.
 
 Let us take LDAP as an example.
 LDAP is, theoretically, a standard.
 However, the standard does not specify any synchronization mechanism.
 There is experimental RFC 4533, however it is not widely adopted.
-But synchronization capabilities are needed and every major LDAP server provides some mechanisms.
+Yet, synchronization capabilities are necessary, and every major LDAP server provides some synchronization mechanism.
 Some mechanisms are quite good, some are not.
-There is the ancient "Retro change log", going back to Netscape/iPlanet LDAP servers, but still used today.
-Active Directory has its own "DirSync" synchronization mechanism.
+There is the ancient "Retro change log", going back to Netscape/iPlanet LDAP servers, that is still used today.
+Active Directory, in a very typical way, has its own "DirSync" synchronization mechanism.
 OpenLDAP has yet another mechanism based on the access log.
 There is RFC 4533, which is used so rarely that there was no request to implement it in midPoint LDAP connector.
-And then there is a "catch all" synchronization that looks for recent changes based on `modifyTimestamp`.
+And then there is a catch-all synchronization mechanism that looks for recent changes based on `modifyTimestamp` attribute.
 
 In theory, all the synchronization strategies above should be equivalent.
 But they are not.
@@ -1292,12 +1344,12 @@ Unfortunately, it is quite common to use a synchronization strategy based on las
 Not just for LDAP, but also for database tables and other types of source systems.
 This is perhaps understandable, as this is a very simple mechanism.
 However, it has a lot of problems.
-The obvious problems can be caused by de-synchronized time on network, although in the age of Network Time Protocol (NTP) this should not be a problem.
+The obvious problems can be caused by de-synchronized time on network, although in the age of Network Time Protocol (NTP) this should not be a problem at all.
 The other problem is a timestamp granularity.
 If the timestamp is granular to one second, that can be a big problem.
 One second is a very long time for a computer.
 A lot can happen in one second.
-Therefore the connector has to include the "boundary" second to both consecutive synchronization runs, which means that the records may be processed twice.
+Therefore, the connector has to include the "boundary" second to both consecutive synchronization runs, which means that the records may be processed twice.
 Going for millisecond granularity makes the problem less severe, but the problem is still there.
 
 However, the worst problem is that this strategy cannot detect deleted objects.
@@ -1321,6 +1373,10 @@ Our advice is to learn how each synchronization strategy works, what are the lim
 Also, avoid the use of strategies based on last modification timestamp if there is any other viable alternative.
 
 == Mapping and Expression Tips and Tricks
+
+// TODO: Move up to mapping section?
+
+// Note: This section was NOT reviewed for 4.4 changes
 
 Mappings and expressions form a very powerful mechanism.
 In fact, most of midPoint configuration is about setting up correct mappings.
@@ -1431,6 +1487,10 @@ The <<90-troubleshooting.adoc#90-troubleshooting,Troubleshooting>> chapter provi
 
 == Expression Functions
 
+// TODO: Move up to mapping section?
+
+// Note: This section was NOT reviewed for 4.4 changes
+
 Expressions in general and scripting expressions in particular are the place where most midPoint customization takes place.
 Scripting expressions are able to execute any code in a general-purpose programming language.
 Therefore the script can transform the data in any way or it can execute any function.
@@ -1474,7 +1534,9 @@ However, this is not a whole story.
 A clever reader has certainly figured out that the logging function described in previous section is also a scripting library.
 And there may be more libraries in the future.
 
-=== Resource Capabilities
+== Resource Capabilities
+
+// TODO: Review for 4.4
 
 The systems that midPoint connects to are not created equal.
 In fact, those systems significantly differ in their capabilities.
@@ -1552,7 +1614,7 @@ If an account has attribute `active` set to `false` value midPoint will display 
 No extra logic or mapping is needed to achieve that.
 The capability does it all.
 
-=== Synchronization Example: LDAP Account Correlation
+== Synchronization Example: LDAP Account Correlation
 
 Previous example demonstrated the use of synchronization for HR feed.
 That is the most obvious use of synchronization mechanisms.
@@ -1942,7 +2004,9 @@ Perhaps the best approach would be to utilize the roles (RBAC).
 This is the topic of the <<07-rbac.adoc#07-rbac,Role-Based Access Control>> chapter later.
 But there are still more things to learn about synchronization until we get there.
 
-=== Reconciliation
+== Reconciliation
+
+// TODO: Move up to sync section?
 
 Reconciliation is a process of comparing current state of an account (reality) to a desired state of the account (policy).
 Reconciliation does not only compare the accounts, it is fixing the inconsistencies.
@@ -2005,7 +2069,7 @@ The task looks for shadows that have not been processed in the main phase.
 Those are accounts that used to be on the resource some time ago but that have disappeared.
 That is how reconciliation detects deleted accounts.
 
-=== Deltas
+== Deltas
 
 Reconciliation is really useful mechanism.
 It is reliable and thorough, but it is also quite slow and it consumes o lot of computational and network resources.
@@ -2133,7 +2197,7 @@ It is the relativistic approach that allows features like this.
 The principle of relativity is relatively simple.
 But its effect in midPoint is nothing short of being revolutionary.
 
-=== Live Synchronization
+== Live Synchronization
 
 MidPoint has a range of synchronization mechanisms.
 Slow, brutal but reliable reconciliation is at one end.
@@ -2187,7 +2251,7 @@ Just remember, all the synchronization mechanism share the same configuration.
 And it is perfectly acceptable to run live synchronization and reconciliation on the same resource at the same time.
 But of course, it would be a good idea to run reconciliation less frequently than live synchronization.
 
-=== Conclusion
+== Conclusion
 
 Synchronization is one of the most important mechanisms in the entire identity management field.
 Primary purpose of synchronization is to get the data into midPoint.
