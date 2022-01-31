@@ -3,6 +3,9 @@
 
 include::chapter-include.adoc[]
 
+// Note: Reviewed for midPoint 4.4
+// TODO: except for 04-03-list-accounts.png, that still needs to be updated
+
 [quote,William Arthur Ward]
 The pessimist complains about the wind; the optimist expects it to change; the realist adjusts the sails.
 

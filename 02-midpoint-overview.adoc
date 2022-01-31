@@ -3,6 +3,8 @@
 
 include::chapter-include.adoc[]
 
+// Note: Reviewed for midPoint 4.4
+
 [quote, Henry Adams]
 Chaos was the law of nature; Order was the dream of man.
 
