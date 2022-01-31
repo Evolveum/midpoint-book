@@ -1669,6 +1669,7 @@ First task is to set up the connector for this resource.
 As LDAP servers are used for identity management purpose all the time, MidPoint comes with a really good LDAP connector.
 All we need is to set up the resource to use that connector:
 
+.`resource-openldap.xml`
 [source,xml]
 ----
 <resource oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c">
@@ -1710,6 +1711,7 @@ In that case the connector reference has to be set up manually.
 
 Once we have proper reference to LDAP connector we need to configure the connection:
 
+.`resource-openldap.xml`
 [source,xml]
 ----
     ...
@@ -1735,14 +1737,14 @@ This is all very similar to the configuration of the other resource that were al
 It should be quite self-explanatory – except perhaps for the configuration of result handlers.
 _Result handlers_ are little helpers that come with the ConnId connector framework.
 The purpose of the result handlers is to assist simpler connectors in filtering and post-processing search results.
-But LDAP connector is no ordinary simple connector.
+However, LDAP connector is no ordinary simple connector.
 LDAP connector is mature and full-featured connector that can do everything without any help from such annoying little creatures as those result handlers.
 ConnId result handlers do not add any value here.
 In fact, they may even be harmful.
-LDAP protocol has a lot of peculiarities such as case-insensitivity that applies to almost all the aspects of LDAP data – except for some notable exceptions.
-The connector is aware of those peculiarities but the handlers are not.
+LDAP protocol has a lot of peculiarities, such as case-insensitivity that applies to almost all the aspects of LDAP data – except for some notable exceptions.
+The connector is aware of those peculiarities, but the handlers are not.
 If the handlers are turned on (which is the default) they may get in the way and ruin the data.
-Therefore it is always strongly recommended to explicitly turn off the handler when a full-featured connector is used.
+Therefore, it is always strongly recommended to explicitly turn off the handler when a full-featured connector is used.
 
 NOTE: The XML example above, as all other examples in this book, is simplified and shortened for clarity.
 You will not be able to import the example in this form into midPoint.
@@ -1750,11 +1752,12 @@ For a full importable examples see the files that are supposed to accompany this
 Please see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter.
 
 The basic resource configuration above is sufficient to connect to the resource.
-Therefore the test connection operation on resource details page should be successful.
+Therefore, the test connection operation on resource details page should be successful.
 This configuration may also be used to list the accounts.
 However, LDAP servers support many object classes and midPoint does not yet know which object class represents account.
 Therefore we need to add schema handling section to our resource:
 
+.`resource-openldap.xml`
 [source,xml]
 ----
     ...
@@ -1814,6 +1817,7 @@ We want to link them.
 But we do not want to do the linking manually.
 We would rather set up a correlation expression that does this automatically:
 
+.`resource-openldap.xml`
 [source,xml]
 ----
     ...
@@ -1840,6 +1844,7 @@ Simply speaking: if account and user employee numbers match then we assume that 
 In that case midPoint decides that synchronization situation is unlinked (they should be linked, but they are not yet linked).
 We want midPoint to link the account in this case, therefore we define appropriate reaction:
 
+.`resource-openldap.xml`
 [source,xml]
 ----
             ...
@@ -1872,6 +1877,8 @@ After the task is finished the situation may look like this:
 
 image::05-04-reconciliation-ldap-unmatched.png[OpenLDAP accounts]
 
+TIP: For the curious readers, the LDAP server has data equivalent to the content of `ldap-real.ldif` file located in book samples.
+
 It looks like we had quite a good data in the LDAP server.
 Most of the accounts were successfully correlated and linked to their owners.
 But there are few accounts that were not correlated.
@@ -1894,6 +1901,7 @@ Now we can tell midPoint to delete any unmatched account.
 That is the case when an illegal account is created in LDAP server.
 We can also tell midPoint to unlink any account that was deleted in LDAP server:
 
+.`resource-openldap.xml`
 [source,xml]
 ----
             ...
@@ -1920,6 +1928,7 @@ Those accounts are in the `linked` situation.
 And we have not configured any reaction for this situation.
 Therefore now we need to tell midPoint to synchronize the values:
 
+.`resource-openldap.xml`
 [source,xml]
 ----
             ...
@@ -1941,6 +1950,7 @@ If midPoint is not sure about something then it will do nothing.
 We do not want to destroy the data.
 Therefore what we need to do now is to let midPoint know that we really mean it, that the mappings are really `strong`:
 
+.`resource-openldap.xml`
 [source,xml]
 ----
             ...
@@ -2301,5 +2311,6 @@ It is indeed a capital mistake to theorize before one has data.
 ////
 Tips for extension:
 * CRM resource, with some rogue accounts, manual correlation, orphan detection
+... don't we have that already in LDAP?
 ////
 
