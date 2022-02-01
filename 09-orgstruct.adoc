@@ -23,7 +23,7 @@ There are many things that need to be organized and there are many ways to organ
 
 Organizational structure affects almost every part of the identity management deployment.
 We have realized that in very early stages of midPoint development.
-Therefore organizational structure is an integral part of midPoint.
+Therefore, organizational structure is an integral part of midPoint.
 It permeates almost every part of midPoint functionality.
 Unlike most other systems, organizational structure in midPoint is a very flexible and almost universal concept.
 It can be used to build functional organizational structures with divisions, departments and sections.
@@ -69,7 +69,7 @@ We have decided to set `F1000` as the name of this org.
 The value `1000` is an identifier of the company in our HR system.
 As we are building a functional organizational structure of the company, we have prefixed the identifier with `F` which stands for _functional_.
 However, names such as `F1000` are not very friendly.
-Therefore there is a mechanism to set nicer display name that does not need to be unique.
+Therefore, there is a mechanism to set nicer display name that does not need to be unique.
 The display name will be used instead of the ordinary `name` whenever this org is displayed to a user.
 
 .Top-level organizational unit
@@ -162,17 +162,17 @@ Now we have our little hierarchy:
 image::09-05-small-org-tree.png[Small organizational structure tree]
 
 This makes perfect sense, doesn't it?
-User become part of organizational units when the units are assigned to them.
-Therefore also organizational units become part of other organizational units when they are assigned to them.
-And this applies to everything: roles, services, tasks, resources and other object types.
-Every object type that can be _assignment holder_ can be placed in organizational structure.
+Users become part of organizational units when the units are assigned to them.
+Therefore, also organizational units become part of other organizational units when they are assigned to them.
+This priciple applies to everything: roles, services, tasks, resources and other object types.
+Every object type that can be _assignment holder_ can be placed in organizational structure, by assigning an organizational unit to it.
 
 .Assignment holders
-NOTE: Majority of midPoint object types are _assginment holders_ and therefore they can be placed into organizational structure.
+NOTE: Majority of midPoint object types are _assginment holders_, and therefore they can be placed into organizational structure.
 Theoretically.
 However, midPoint user interface has some limits.
 Convenient management of the assignments is currently possible only for _focal_ types: user, role, org and service.
-Other objects can be placed in organizational structure and they should behave up to the expectations.
+Other objects can be placed in organizational structure, and they should behave up to the expectations.
 But that cannot be done by few convenient clicks in midPoint user interface
 Not yet.
 You have to use a different approach.
@@ -204,7 +204,7 @@ Let us add marketing department to our division:
 It is the same process over and over again.
 But there so many organizational units, there are so many files to import.
 We like to be efficient in all the things that we do.
-Therefore let's put the entire organizational structure into a single file:
+Therefore, let's put the entire organizational structure into a single file:
 
 .org-tree-functional.xml
 [source,xml]
@@ -241,26 +241,26 @@ image::09-06-org-tree-page.png[Organizational tree]
 
 TIP: Of course, you can create and manage organizational structure in midPoint user interface.
 In fact, people do that quite often.
-But now we are talking about the _initial_ organizational structure.
+However, now we are talking about the _initial_ organizational structure.
 It is the structure that gets created in midPoint at the beginning of the deployment.
 There is usually a lot of _trial and error_ until you get your midPoint configuration right.
 It is quite likely you will have to purge all midPoint configuration and start clean.
-In that case, it is very convenient to have organizational structure in one file that can be easily imported after the clean up.
+In that case, it is very convenient to have organizational structure in one file that can be easily imported after the clean-up.
 Also, it is a common practice to have several environments: development, testing and production.
 You probably want the same organizational structure in all of them.
 Having organizational structure in a file makes that job easy.
 Of course, you can also create organizational structure in the user interface and then export it into a file.
-But according to our experience, many engineers prefer text editor to graphical user interfaces.
+However, according to our experience, many engineers prefer text editor to graphical user interfaces.
 
 == Orgs in the Database
 
 Organizational structures tend to form _hierarchies_ - data structures that look like trees.
-But databases are usually designed to store _relational_ data - data structures that look like tables.
+However, databases are usually designed to store _relational_ data - data structures that look like tables.
 If you ever tried to express hierarchical data in a spreadsheet application you know that these paradigms are not entirely easy to align.
 It is not entirely easy to express tree-like data structure in relational tables.
 Moreover, hierarchical data tend to have some specific requirements.
 For example, we usually want to look for people in _Operations Division_ and all the departments and sections that belong to it.
-This is know as _subtree searches_, and it is usually not possible to execute them directly on data that are stored in relational form.
+This is known as _subtree searches_, and it is usually not possible to execute them directly on data that are stored in relational form.
 
 This is further complicated by the fact that midPoint _assignment_ is a very flexible data structure.
 Assignments can be valid from a specific time to a specific time.
@@ -269,13 +269,13 @@ Assignment is just too complex for the database to understand and use efficientl
 
 MidPoint is solving these problems with `parentOrgRef` operational data item.
 As the name suggests, `parentOrgRef` is an object reference that points to _parent org_.
-Any _assignment holder_ in midPoint can have _parentOrgRef_ and it points to the org (or orgs) that the object belongs to.
+Any _assignment holder_ in midPoint can have _parentOrgRef_, and it points to the org (or orgs) that the object belongs to.
 This somehow duplicated the data in the assignment.
-But there are several crucial differences.
+Yet, there are several crucial differences.
 
 Firstly, `parentOrgRef` points to the orgs that the object is _currently_ member of.
 I.e. it only reflects those assignments that are currently active and valid.
-Therefore there will be no `parentOrgRef` value for assignment that is expired or not valid yet.
+Therefore, there will be no `parentOrgRef` value for assignment that is expired or not valid yet.
 
 Secondly, `parentOrgRef` represents all organizational assignments, both direct and indirect.
 Orgs that are directly assigned to users will be present in `parentOrgRef`.
@@ -296,19 +296,19 @@ However, there are also downsides to this approach.
 The index that is build on `parentOrgRef` is designed to work even if organizational structure is re-organized.
 The index has to be continually maintained.
 Maintenance overhead of the index is usually very low for small or mid-sized structures that do not change often.
-But maintenance of massive organizational structures can be painful.
+However, maintenance of massive organizational structures can be painful.
 Similarly, it may be problematic to maintain organizational structures that change very frequently.
-Therefore it is perhaps a good idea to prototype the design of organizational structure before putting the system into production.
+Therefore, it is perhaps a good idea to prototype the design of organizational structure before putting the system into production.
 Also, the `parentOrgRef` is in fact a copy of the primary data (assignment).
 As it is a copy, there is a risk that it may get out of synchronization.
 MidPoint is designed to keep `parentOrgRef` and all the indexes strictly consistent during normal operations.
 However, midPoint allows systems administrators to do a lot of non-standard things.
 Some of those things may lead to data inconsistencies.
-Therefore it is a good idea to check whether the values of `parentOrgRef` make sense in case you notice that organizational structures are behaving strangely.
+Therefore, it is a good idea to check whether the values of `parentOrgRef` make sense in case you notice that organizational structures are behaving strangely.
 
-Overall, organizational structures work very well in midPoint and you usually do not need to care about the mechanisms under the hood.
+Overall, organizational structures work very well in midPoint, and you usually do not need to care about the mechanisms under the hood.
 However, management of organizational structures is much more complex than it seems.
-Therefore if you try to do strange and unusual things, you should better be sure you fully understand what you are doing.
+Therefore, if you try to do strange and unusual things, you should better be sure you fully understand what you are doing.
 
 == Orgs and Roles
 
@@ -324,7 +324,7 @@ Orgs are designed to behave in almost the same way as roles.
 Orgs may have _inducements_, there may be _constructions_ in them, orgs may contain _authorizations_ and so on.
 Org can do everything that a role can do.
 
-Therefore there is no need to set up complicated configurations that assign a particular role to all members of an organization.
+Therefore, there is no need to set up complicated configurations that assign a particular role to all members of an organization.
 The organization itself acts as a role.
 All the privileges that organization members need can be simply added as _inducements_ in the organization itself.
 This is very simple, elegant and mostly fool-proof solution.
@@ -357,11 +357,11 @@ It is very easy to do:
 
 Clever reader certainly wonders whether the CRM privileges apply also to _Agent Management Section_, which is located below _Indirect Sales Department_ in our organizational structure.
 However, clever reader is clever enough to figure out that the privileges are not "inherited" in this case.
-To follow the toughts of clever reader, you have to think about orgs in the same way as you would think about roles.
+To follow the thoughts of clever reader, you have to think about orgs in the same way as you would think about roles.
 There is an assignment from _Agent Management Section_ to _Indirect Sales Department_.
-But there is no _inducement_.
+However, there is no _inducement_.
 Role hierarchies are built using _inducements_.
-Therefore privileges of _Agent Management Section_ are not included in _Indirect Sales Department_.
+Therefore, privileges of _Agent Management Section_ are not included in _Indirect Sales Department_.
 This may seem to be counter-intuitive, but in fact it is completely correct.
 Orgs and roles form separate hierarchies (see note below).
 However, if you want to "inherit" privileges of a parent org, there is a very simple way how to do it: add explicit _inducement_.
@@ -394,13 +394,13 @@ This has to come later when the basic principles have enough time to sink in.
 
 .Org and role hierarchies
 NOTE: Both orgs are roles are _hierarchical_ in a way.
-BUt it is not the same hierarchy.
+However, it is not the same hierarchy.
 Org hierarchy is used to model organizational trees.
 Role hierarchy is used to build RBAC structures.
 Those hierarchies have completely different purpose.
 They are also built using different mechanism.
-Role hierarchy is used to group privileges and therefore it is built using _inducements_.
-Org hierarchy is used to group subjects (users) and it is built using _assignments_.
+Role hierarchy is used to group privileges, and therefore it is built using _inducements_.
+Org hierarchy is used to group subjects (users), and it is built using _assignments_.
 There are also different internal mechanisms, indexing and data storage properties.
 For example, role hierarchy is not using `parentOrgRef`, therefore there is much lower overhead as compared to org hierarchy.
 However, this means that the capabilities to query role hierarchy is limited.
@@ -413,7 +413,7 @@ Hopefully, this will get much more clear later when there will be more examples 
 Placing people in organizational structures has a significant value on its own.
 However, all the people usually do not have the same _relation_ to the organizational unit.
 Most people will usually be ordinary _members_ of organizational unit.
-And then there are people that are somehow special: departmental managers, team leaders, project managers, supervisors and similar life forms.
+Then there are people that are somehow special: departmental managers, team leaders, project managers, supervisors and similar life forms.
 
 How do we designate a manager of an organizational unit?
 You probably guessed it already.
@@ -436,8 +436,8 @@ We are specifying `relation` in assignment target reference:
 
 This assignment makes Alice a manager of direct sales department.
 It is as simple as that.
-And all the power of assignment is at your disposal.
-Therefore it is easy to assign a manager for a temporary time period, suspend a manager and so on.
+All the power of assignment is at your disposal.
+Therefore, it is easy to assign a manager for a temporary time period, suspend a manager and so on.
 
 Manager assignment is created in the user interface in almost the same way as normal assignment is created.
 The only difference is selection of _manager relation_ at the bottom of the assignment target dialog:
@@ -457,17 +457,16 @@ But she should be located in sales and marketing division as a direct _member_ o
 E.i. she is _member_ of one organizational unit and _manager_ of another organizational unit.
 How do we do that?
 This is all perfectly clear to a clever reader by now.
-Alice has assignments.
+Alice has two assignments.
 First assignment is an ordinary assignment that targets sales and marketing division.
 Second assignment is a manager assignment that targets direct sales department.
 This is perfectly normal in midPoint.
 Users may have any number of assignments to any objects (unless it is explicitly constrained by policy rules or archetypes).
 Which means that users may be members of any number of organizational units at the same time.
 
-Therefore there is no problem for Alice to be a member of one unit and manager of another.
+Therefore, there is no problem for Alice to be a member of one unit and manager of another.
 MidPoint can support all kind of bizarre organizational arrangements.
-MidPoint was deliberately designed in this way.
-Because reality has an annoying habit to bring surprises, especially when organizational structures are involved.
+MidPoint was deliberately designed in this way, because reality has an annoying habit to bring surprises, especially when organizational structures are involved.
 
 Well, Alice is a manager now.
 Good for her.
@@ -505,41 +504,43 @@ Managers usually do not have special privileges in each organizational unit.
 In most organizations, managers have the same privileges regardless of the unit they manage.
 
 One way to implement this approach is to create a `Manager` role, put the special privileges there, and assign the role to every manager of every organizational unit.
-But that creates redundancy.
+However, that creates redundancy.
 We have to make sure this role is assigned whenever a person becomes manager and that it is unassigned when the person is no longer manager.
 This is the way how this problem is solved in many IDM deployments.
-But it is quite a fragile mechanism.
-And this is not a way how we do things in midPoint.
+Yet, it is quite a fragile mechanism.
+This is not a way how we do things in midPoint.
 
 The `orderConstraint` data structure in our example looks suspiciously complex.
-And it indeed is quite a complex concept.
-What we see here is the first glimpse at high-order "assignment algebra" that is a working horse of complex midPoint deployment.
-It is often employed when working with meta-roles and archetypes.
-As organizational units are in fact roles and organizational structures are just a trees formed by _assignments_, they technically form meta-role structures.
+That impression is correct, as it indeed is quite a complex concept.
+What we see here is the first glimpse at high-order "assignment algebra" that is a working horse of complex midPoint deployments.
+This mechanism is often employed when working with meta-roles and archetypes.
+As organizational units are in fact roles, and organizational structures are just a trees formed by _assignments_, they technically form meta-role structures.
 
-Therefore the right way how to set up manager privileges is to move privilege definition to a central place.
+Therefore, the right way how to set up manager privileges is to move privilege definition to a central place.
 It may be top-level organizational unit, or it may be an _archetype_.
-In that case our _inducement_ can apply to all the managers, regardless of organizational unit.
+In such case our _inducement_ can apply to all the managers, regardless of organizational unit.
 However, the exact configuration is a bit complex, and we still need to learn more about midPoint to be able to use it.
 Therefore we leave the details for later chapters.
 
 TIP: MidPoint assigns managers to organizational units.
-That is the right way how to do it.
+That is the right way to do it.
 However, we have often seen a different approach.
-In such cases the manager is "assigned" to users.
+In these cases the manager is "assigned" to users.
 I.e. each user has a reference to his or her manager.
 This approach is wrong.
 Organizational structures change.
 People come and go.
 Everything is changing all the time.
 It is very easy to change one assignment in organizational structure in case that a manager is replaced.
-But it is extremely difficult to replace a manager in the direct user-manager data structure.
-Maybe the former manager was managing several organizational units and now we are replacing him with two managers.
+However, it is extremely difficult to replace a manager in the direct user-manager data structure.
+Maybe the former manager was managing several organizational units, and now we are replacing him with two managers.
 Maybe there is a re-organization going on at the same time.
 The result is going to be a mess.
 Avoid the direct user-manager approach whenever possible.
 
 == Relation
+
+// TODO: TODO TODO 4.4 review
 
 In midPoint, we like to design generic re-usable mechanisms.
 You did not think that we made the concept of _manager_ in a way that would be hardcoded to organizational structure, did you?
