@@ -260,7 +260,7 @@ Connector configuration is one of the few parts where namespaces should still be
 And it also makes some sense, as namespaces are used here as an additional safety mechanism.
 To keep a long story short, the configuration properties should be properly namespace-qualified:
 
-.`resource-openldap-minimal.xml`
+.resource-openldap-minimal.xml
 [source,xml]
 ----
 <resource oid="690f9f44-8027-11e6-a248-3b5fe08dea36">

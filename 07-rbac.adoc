@@ -157,7 +157,7 @@ This principle is reused for many purposes in midPoint: accounts, privileges, au
 Role is a special type of object in midPoint.
 Yet, as all midPoint objects, role has a very familiar structure:
 
-.`role-business-analyst.xml`
+.role-business-analyst.xml
 [source,xml]
 ----
 <role oid="aaa6cde4-0471-11e9-9b50-c743da469067">
@@ -194,7 +194,7 @@ Provisioning roles are usually combining several _construction_ statements.
 The idea is that a provisioning role should specify all the privileges that users of that role need.
 Therefore a `Business Analyst` role may look like this:
 
-.`role-business-analyst.xml`
+.role-business-analyst.xml
 [source,xml]
 ----
 <role oid="aaa6cde4-0471-11e9-9b50-c743da469067">
@@ -414,7 +414,7 @@ However, their privileges will be different.
 This is where the merging mechanism becomes very useful.
 When a supervisor role is processed then privileges of clerk are merged with privileges of supervisor:
 
-.`role-clerk.xml`
+.role-clerk.xml
 [source,xml]
 ----
 <role oid="48d4ef98-20e3-46ab-cd78-548d38364a6b">
@@ -438,7 +438,7 @@ When a supervisor role is processed then privileges of clerk are merged with pri
 </role>
 ----
 
-.`role-supervisor.xml`
+.role-supervisor.xml
 [source,xml]
 ----
 <role oid="86e58643-d5e7-36a8-04f6-38dc3754f04e">

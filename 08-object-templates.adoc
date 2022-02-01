@@ -3,12 +3,14 @@
 
 include::chapter-include.adoc[]
 
+// Note: Reviewed for midPoint 4.4
+
 [quote, Theodore von Kármán]
 Scientists study the world as it is; engineers create the world that has never been.
 
 Identity management systems are often seen as integration engines that move data from one system to another system.
 This is indeed a very important part of the identity management functionality.
-But the things identity management systems do _internally_ are crucial to all identity management deployments - especially those that deal with identity governance and compliance.
+However, the things identity management systems do _internally_ are crucial to all identity management deployments - especially those that deal with identity governance and compliance.
 
 MidPoint does quite a lot of things that may not be entirely obvious on the outside.
 There are rules to apply, processes to drive, policies to enforce and so on.
@@ -16,7 +18,7 @@ Those things are gaining utter importance at that strange boundary where identit
 There are complex and very powerful mechanisms allowing midPoint to implement identity governance.
 But more on that later.
 We need to start with simple things.
-And the simplest of those internal mechanisms is the functionality of _object template_.
+The simplest of those internal mechanisms is the functionality of _object template_.
 
 == Object Templates
 
@@ -26,10 +28,10 @@ The data that come from the "feeds" are often incomplete, they are not very prec
 Inbound mappings can be used to sort out some of these problems.
 However, inbound mappings are designed to work in isolation.
 They work only for one particular resource.
-But it is often needed to gather data from several resources and then look at all of them at once.
-Inbound mappings cannot do that as they are tied to a particular resource.
+However, it is often needed to gather data from several resources and then look at all of them at once.
+Inbound mappings cannot do that very well, as they are tied to a particular resource.
 However, they can be used to gather all the relevant data in the user object.
-And then we can use some kind of a mechanism to have a look at user object when those data are gathered together.
+Then we can use some kind of mechanism to have a look at user object when those data are gathered together.
 That is what object templates do.
 
 Simply speaking, _object template_ is a set of mappings that is applied to a particular midPoint object.
@@ -37,6 +39,7 @@ For example, user template is applied to all user objects.
 The mappings in the object template can produce new values for the object.
 For instance, a very typical use of object template is computation of user’s full name:
 
+.object-template-user-simple.xml
 [source,xml]
 ----
 <objectTemplate oid="22f83022-b76d-11e9-8a30-6ffc11b23016">
@@ -53,9 +56,7 @@ For instance, a very typical use of object template is computation of user’s f
             </source>
             <expression>
                 <script>
-                    <code>
-                        givenName + ' ' + familyName
-                    </code>
+                    <code>givenName + ' ' + familyName</code>
                 </script>
             </expression>
         </mapping>
@@ -82,14 +83,18 @@ The simplest and most common way to use an object template is to configure its u
     ...
     <defaultObjectPolicyConfiguration>
         <type>UserType</type>
-    	  <objectTemplateRef oid="22f83022-b76d-11e9-8a30-6ffc11b23016"/>
+        <objectTemplateRef oid="22f83022-b76d-11e9-8a30-6ffc11b23016"/>
     </defaultObjectPolicyConfiguration>
     ...
 </systemConfiguration>
 ----
 
 This configuration activates the object template for use by all object of `UserType` type.
-Therefore this template will be applied to all midPoint users.
+Therefore, this template will be applied to all midPoint users.
+
+Alternatively, user interface can be used to activate an object template.
+Navigate to menu:Configuration[System > Object policy], create a new policy using the btn:New[] button.
+Specify reference to your template, select `User` in type field and click btn:Save[].
 
 User template is applied every time an object is changed or explicitly recomputed (e.g. on reconciliation).
 User template is applied after all the inbound mappings are processed.
@@ -103,7 +108,7 @@ But object template can also do other tricks.
 We will have a look at some of them here.
 
 The processing of an object template is almost always focused on particular items of an object.
-Therefore, almost all of the object template functionality is located in item element that references a particular item by its path:
+Therefore, almost all the object template functionality is located in item element that references a particular item by its path:
 
 [source,xml]
 ----
@@ -202,9 +207,9 @@ The `item` specification can be used to modify the way how midPoint applies the 
 ----
 
 The "additional name" is a nice and generic term that can fit many cultural environment.
-But it is not very usual or intuitive in cultures that are not used to it (which means all the cultures).
+However, it is not very usual or intuitive in cultures that are not used to it (which means pretty much all the cultures).
 Therefore, almost all midPoint deployments that chose to use this property would like to rename it to something that feels more natural.
-Similarly for "given name" and "family name".
+Similarly for "given name" and "family name", which do not fit well in all the cultural environments.
 We have expected that and object template can be used to modify some aspects of built-in schema.
 
 Object template can also be used to override object multiplicity, especially to change mandatory item into optional.
@@ -342,6 +347,7 @@ Let’s use mapping condition:
 </role>
 ----
 
+.object-template-user.xml
 [source,xml]
 ----
 <objectTemplate>
@@ -430,7 +436,8 @@ A user object that is created from an HR record looks like this:
 </user>
 ----
 
-The we do similar extension for roles. We extend role schema with custom `autoassignJobCode` property:
+Then we do similar extension for roles.
+We extend role schema with custom `autoassignJobCode` property:
 
 [source,xml]
 ----
@@ -502,6 +509,7 @@ Role autoassignment is a part of almost every IDM solution in one form or anothe
 Therefore we have created a special expression evaluator to make this job easy.
 Enter `assignmentTargetSearch` expression evaluator:
 
+.object-template-user.xml
 [source,xml]
 ----
 <objectTemplate>
@@ -608,7 +616,7 @@ As you can see, we have put an expression into an expression, so now midPoint ca
 There is an `assignmentTargetSearch` expression, inside that is a search filter and inside the search filter there is a path expression.
 This is one of the basic tenets of midPoint philosophy: we reuse and combine the mechanisms that we already have.
 The second expression could be any midPoint expression that makes sense here, e.g. it could be a script.
-The filter can be much more complex and it can have several expressions.
+The filter can be much more complex, and it can have several expressions.
 Full power of midPoint is at your disposal here.
 
 Of course, this could all have been done with one smart groovy script instead of `assignmentTargetSearch` expression.
@@ -633,6 +641,7 @@ But as we are talking about role autoassignment, this is a good opportunity to c
 
 The statements that control automatic assignment of roles can be placed in the roles themselves:
 
+.role-cook.xml
 [source,xml]
 ----
 <role oid="9f6add7c-b9bf-11e9-abf6-2348fcd328f1">
@@ -828,12 +837,21 @@ In case that even `aanderson1` is not unique, the iteration continues.
 Usernames `aanderson2`, `aanderson3` and other variants are tried.
 The iteration continues until a unique username is found or until iteration limit is reached.
 
+TIP: The expression to generate `name` as provided above is nice and simple.
+However, reality is not _that_ simple.
+There are going to be users without given names or family names.
+Using the script above would produce some ugly `null` strings in that case.
+Real-world script has to account for that, generating more sensible usernames.
+Also, there is `administrator` user, which we usually do not want to rename.
+For the curious, a more sophisticated script is provided in `object-template-user.xml` file in book samples.
+
 Iteration functionality is disabled by default.
 Therefore any conflict in username will result in hard error.
 This makes sense, as no amount of iterations will make any difference until the iteration token is used in the expressions.
 We also want to set maximum number of iterations. E.g. there may be a bug in the mappings that may cause endless iterations.
 The iteration functionality can be enabled by specifying `iterationSpecification` element and setting iteration limit:
 
+.object-template-user.xml
 [source,xml]
 ----
 <objectTemplate>
@@ -889,6 +907,7 @@ The iteration number cannot be changed as the iteration sequence is fixed.
 But there is no problem for iteration 1 to produce iteration token `"2"`.
 This can be achieved by specifying a custom algorithm for the token:
 
+.object-template-user.xml
 [source,xml]
 ----
 <objectTemplate>
@@ -918,6 +937,7 @@ All the mappings will see the same value and all the mappings are recomputed whe
 This means that iteration token can be used in other mappings.
 For example, use of the token in e-mail address is a very common case:
 
+.object-template-user.xml
 [source,xml]
 ----
 <objectTemplate>
@@ -951,10 +971,10 @@ If username of `aanderson2` is generated then the e-mail address will be `albert
 The same iteration token is used.
 
 However, it all becomes interesting when it comes to e-mail addresses and other identifiers that are publicly exposed.
-It is one thing to have username `aanderson2`. That username is used to log into the system.
-But otherwise is it not very visible outside of the system.
+It is one thing to have username `aanderson2`.
+That username is used to log into the system, but is it not very visible outside the system.
 However, an e-mail address is exposed to a lot of people.
-It may be strange to have e-mail address of `albert.anderson2@example.com` while there is no `albert.anderson@example.com` in the company.
+It may be strange to have e-mail address of `albert.anderson2@example.com`, while there is no `albert.anderson@example.com` in the company.
 This can be solved by making the mapping for e-mail address smarter.
 It can ignore the iteration token and try to create an e-mail address without the token.
 But in that case it needs to explicitly check for uniqueness.
@@ -1000,16 +1020,16 @@ The problem with this approach is that there may be corner cases.
 We might need to force another iteration even if the username is unique.
 MidPoint checks only for uniqueness of username by default.
 But is possible that even if `aanderson2` username is available, the `albert.anderson2@example.com` address is already taken.
-This may be an error in the data, administrator’s mistake or it may be a remain of retired Albert Anderson senior that worked in the company years ago, but his e-mail address was never deprovisioned.
+This may be an error in the data, administrator’s mistake, or it may be a remain of retired Albert Anderson senior that worked in the company years ago, but his e-mail address was never deprovisioned.
 The e-mail address mapping can detect this situation.
-But what it is supposed to do with that.
-It makes no sense to have username `aanderson2` and e-mail address `albert.anderson3@example.com` or `albert.anderson.X@example.com` or anything similar.
+However, what is the mapping supposed to do when it detects a problem?
+It makes no sense to have username `aanderson2`, and e-mail address `albert.anderson3@example.com` or `albert.anderson.X@example.com` or anything similar.
 What would make sense is to re-iterate and produce username `aanderson3` and e-mail address `albert.anderson3@example.com`.
 That would be consistent.
-But the mapping cannot do that.
+However, the mapping cannot do that by itself.
 Therefore, there is another iteration expression for this purpose: _post-iteration condition_.
 It is a condition that will be executed after the iteration is completed.
-If the condition returns `true`, then the iteration will be accepted as valid and the generated values will be used.
+If the condition returns `true`, then the iteration will be accepted as valid, and the generated values will be used.
 If the condition returns `false`, then midPoint will re-iterate and yet another iteration will be tried.
 
 [source,xml]
@@ -1032,8 +1052,8 @@ If the condition returns `false`, then midPoint will re-iterate and yet another 
 ----
 
 The code above does not do much in case the e-mail address is unique.
-It returns `true`, the iteration is accepted an everything goes as usual.
-But in case that the e-mail address is not unique, the code returns `false`.
+It returns `true`, the iteration is accepted, and everything goes as usual.
+In case that the e-mail address is not unique, the code returns `false`.
 In that case, midPoint will discard all the results of the iteration, increment iteration counter and re-try the iteration.
 
 There is yet another mechanism that can be used here: _pre-iteration condition_.
@@ -1044,30 +1064,29 @@ The difference here is that this condition will be executed before all the other
 Therefore, it may be used to avoid evaluation of expensive mappings just to discard the values that they produce.
 
 Finding identifier values and uniqueness checks are messy stuff.
-And they are not entirely reliable.
+They are not entirely reliable.
 There is a delay between the time when uniqueness is checked and the time when the record is actually written into database.
 Therefore strange things can happen.
-Duplicate identifiers may be generated or attempt to create a user may end up with an error.
-Especially under high loads.
+Duplicate identifiers may be generated or attempt to create a user may end up with an error, especially under high loads.
 The delay between check and write cannot be entirely avoided.
 We could lock the data during that time, but that would have significant impact on system performance.
 What we can do to improve the situation is to check the uniqueness on database level and gracefully handle the errors.
 This is currently implemented only for usernames and even for that the implementation is not perfect.
 Implementation of strict uniqueness constraints for other properties is possible, but it is no easy endeavor.
 The values need to be normalized, this can influence database schema and so on.
-But it is feasible.
+Nevertheless, it is still feasible.
 In case you are interested, midPoint platform subscription is the best approach for you.
 
 When it comes to human-friendly identifiers, there is yet another trouble.
 People tend to change their minds.
-And then they have all kinds of crazy ideas such as the urge to get married.
+They also like to have all kinds of crazy ideas, such as the urge to get married.
 The result is that the names of people change.
-And in fact they change surprisingly often.
+In fact, they change surprisingly often.
 When user-friendly identifiers are used, change in user’s name usually means a change in the identifiers.
-This is known as the _rename problem_ and you can observe a glimpse of fear in the eyes of all experienced IDM engineers every time it is mentioned.
+This is known as the _rename problem_, and you can observe a glimpse of fear in the eyes of all experienced IDM engineers every time it is mentioned.
 Overall, midPoint handles renames very well.
 Primary identifier of any midPoint object is an OID, not a name.
-And OIDs do not change.
+OIDs do not change.
 Therefore, as long as midPoint is concerned, nothing special happens when user’s name is changed.
 The change is picked up by mappings, recomputed and stored.
 However, iterations and uniqueness checks may complicate the things here.
@@ -1075,8 +1094,10 @@ MidPoint remembers the iteration number for all objects that went through an ite
 This is necessary to get the same results from the mappings every time that they are recomputed.
 Otherwise the identifiers may get re-generated on every recompute.
 But there is a drawback to this approach.
-Let’s suppose that Carol Cooper had username `ccooper2`. She got married and now her name is Carol Cunningham.
-Even though there is no `ccunningham` in the system, her generated user name will be `ccunningham2`. The iteration token is remembered.
+Let’s suppose that Carol Cooper had username `ccooper2`.
+She got married and now her name is Carol Cunningham.
+Even though there is no `ccunningham` in the system, her generated user name will be `ccunningham2`.
+The iteration token is remembered and re-used during the rename process.
 The rename scenarios can be very treacherous.
 We always recommend to test them thoroughly in any project where user renames are possible.
 
@@ -1089,7 +1110,7 @@ And this gets worse with every John Smith added to the system.
 Therefore, this iterative approach is not suitable for generating identifiers that are likely to require a lot of iterations.
 Generating UNIX user and group numbers is a good example for identifiers that would surely cause a disaster if an iterative approach is used.
 Fortunately, there is another mechanism in midPoint that can support generation of such identifiers: sequences.
-But more on that later.
+More on that later.
 
 Overall, the best strategy is to avoid using those generated human-friendly identifiers altogether.
 The best choice would be something that is already unique, immutable and reasonably short.
@@ -1146,7 +1167,7 @@ Let’s see how all the parts fit together:
 image::08-01-big-picture.png[Big picture]
 
 Everything starts with a synchronization process, whether it is reconciliation or live synchronization.
-Synchronization process invoked the connector for the source resource (Resource A).
+Synchronization process invoked the connector for the source resource (`Resource A`).
 The connector retrieves the data from the source system.
 Shadow objects are created for all the source accounts as soon as the data set foot in midPoint.
 Correlation expression is evaluated for all new accounts to find their owners.
@@ -1173,7 +1194,7 @@ When all of that is computed and processed, then a connector is used to update t
 
 This picture is still not entirely complete.
 It does not show policy rules, existence mappings, approval processes, hooks and good deal of other advanced features.
-But this picture is good enough for now.
+Yet, this picture is good enough for now.
 It is good enough to create a simple solution.
 
 == Complete Deployment Example
@@ -1199,7 +1220,7 @@ We can do that if we put together all that we have learned so far.
 Even though this is still quite a simple example, the complete configuration is too large to put all of it into this book.
 It will take too much space.
 And after all the detailed explanation in the previous chapters it will also get a bit boring.
-Therefore we will show only the interesting pieces of the configuration here.
+Therefore, we will show only the interesting pieces of the configuration here.
 Complete configuration can be found in the usual place.
 Please see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for details.
 These files represent the final configuration, the expected state at the end of this chapter.
@@ -1389,13 +1410,13 @@ Firstly, good part of any programming is error handling.
 Hence all the if-then statements.
 It may look like those situations cannot happen in our little example.
 All the HR records have both first and last name set, anyway.
-Therefore they will never be `null` in the expression, will they?
+Therefore, they will never be `null` in the expression, will they?
 In fact, they will.
 This is one small peculiarity of midPoint expressions.
-MidPoint works in a relative way.
-Therefore midPoint often evaluates _old_ values of attributes and properties to figure out which values to remove.
+MidPoint works in a _relative_ way.
+Therefore, midPoint often evaluates _old_ values of attributes and properties to figure out which values to remove.
 The old values for any new user are `null`.
-Therefore it may happen that the expression is evaluated with `null` inputs.
+Therefore, it may happen that the expression is evaluated with `null` inputs.
 This may seem a bit annoying at the beginning.
 But you will be more than grateful that your expressions are properly sanitized and null-safe when you get to work with real data.
 Reality always finds a way to bring surprises.
@@ -1404,7 +1425,7 @@ Secondly, midPoint is built with multi-national environment in mind.
 It is 21^st^ century already and unicode is everywhere.
 _Almost_ everywhere, that is.
 It is expected that the HR system stores names with full national characters, such as `Radovan Semančík`.
-But it is still not a common practice to use national characters in usernames, e-mail addresses and so on.
+Yet, it is still not a common practice to use national characters in usernames, e-mail addresses and so on.
 Therefore we usually want to normalize the national characters to their ASCII-7 equivalents.
 That is what PolyString is for and that is what the `norm()` methods are doing.
 The result is that the generated username will be `rsemancik` instead of `RSemančík`.
@@ -1450,16 +1471,16 @@ The second part of the iteration configuration is also quite clear for people th
 The default iteration token sequence is `""`, `"1"`, `"2"`, `"3"` and so on.
 But that would give us `aanderson`, `aanderson1`, `aanderson2` and so on.
 We do not want to have `aanderson` and `aanderson1` as that would be confusing.
-Therefore we chose to skip the `"1"` token and start with `"2"`.
+Therefore, we chose to skip the `"1"` token and start with `"2"`.
 The custom iteration token expression does just that.
 
-As soon as we have the mapping for name in place we can start testing the configuration.
-Therefore go ahead and import the HR resource, import object template, set the object template in the configuration and do not forget to replace the HR CSV file.
-If you did experiments with previous configuration, it can be helpful to clean up midPoint by using the “delete all identities” process.
-When everything is set up, you can try to manually import a single account from the HR resource by using the “import” button on the page where you can list resource accounts.
+As soon as we have the mapping for name in place, we can start testing the configuration.
+Go ahead and import the HR resource, import object template, set the object template in the configuration and do not forget to replace the HR CSV file.
+If you did any experiments with previous configuration, it can be helpful to clean up midPoint by using the "delete all identities" process (that little dropdown button in menu:Repository objects[] page).
+When everything is set up, you can try to manually import a single account from the HR resource by using the "import" button, located on the page where you can list resource accounts.
 Once the basic configuration works, you can test iterations by adding Arnold Anderson to the HR CSV file and importing the account.
-Do not forget to switch from repository to resource view by clicking on the _Resource_ button on the top-left side of the page.
-There is no synchronization task running, therefore MidPoint haven’t see Arnold’s account yet.
+Do not forget to switch from repository to resource view by clicking on the btn:Resource[] button on the top-left side of the page.
+There is no synchronization task running, therefore MidPoint have not seen Arnold’s account yet.
 You have to instruct midPoint to explicitly look at the resource.
 Once Arnold’s account is imported a non-conflicting username should be selected for him:
 
@@ -1476,6 +1497,7 @@ In our case the mapping for e-mail address is quite similar to username mapping:
     <item>
         <ref>emailAddress</ref>
         <mapping>
+            <strength>weak</strength>
             <source>
                 <path>givenName</path>
             </source>
@@ -1507,26 +1529,33 @@ In our case the mapping for e-mail address is quite similar to username mapping:
 </objectTemplate>
 ----
 
-This mapping should be quite understandable now.
+This mapping should be quite understandable by now.
 There are the same checks for special cases.
 Then the main expression at the end combines given name and family name in a slightly different way to get an e-mail address.
 This is just a simple example for e-mail address that is a good fit for a book.
 However, dealing with e-mail address is a bit more difficult in practice.
 A clever reader can surely discover a couple of obvious issues.
 Firstly, the expression is using the same iteration token than the username mapping is using.
-Therefore the e-mail address for Arnold Anderson will be `arnold.anderson2@example.com`.
+Therefore, the e-mail address for Arnold Anderson will be `arnold.anderson2@example.com`.
+
+This is what we get when we re-import or reconcile both Andersons:
 
 image::08-03-users-andersons-email.png[Users]
 
 This is not exactly what we want.
 Ideally, we would like to use much simpler versions `arnold.anderson@example.com`.
 In this case there is no conflict with `alice.anderson@example.com`.
-But midPoint does not consider e-mail address to be an identifier, therefore it does not check for its uniqueness.
+However, midPoint does not consider e-mail address to be an identifier, therefore it does not check for its uniqueness.
 Also, there is only one iteration token that is reused for all the expressions in all object template mappings.
 There are also primary e-mail accounts and account aliases, dealing with account renames and temporary assignment of e-mail aliases and so on.
 Overall, dealing with e-mail addresses is far from easy.
 Some of those issues can be solved with pre-iteration or post-iteration conditions.
-But it is quite likely that a completely custom code will be needed for a more complex cases.
+However, it is quite likely that a completely custom code will be needed for a more complex cases.
+
+That is also one of the reasons to set strength of this mapping to _weak_.
+We want to set an e-mail address automatically, but only in case that an address was not already specified manually.
+Weak mapping will not overwrite existing value.
+Sometimes it is best not to automate everything, leave the complex cases to system administrators to deal with.
 
 Role autoassignment is the next step.
 Let’s start with something simple.
@@ -1569,7 +1598,7 @@ This mapping is quite straightforward.
 Its expression produces a static `targetRef` value that is placed in user’s assignment.
 The strange thing here is the placement of this mapping.
 It is placed in the section that corresponds to `empno` attribute.
-This is inbound mapping and it just has to be placed somewhere.
+This is inbound mapping, and it just has to be placed somewhere.
 Any reasonable attribute would do.
 It does not really matter into which attribute it is placed as it ignores attribute value anyway.
 
@@ -1581,7 +1610,7 @@ For example, inbound mappings cannot have more than one input.
 And being an inbound mapping, this can only work with account attributes and therefore its behavior cannot be influenced by user data changed in the user interface.
 
 Autoassignment in inbound mapping is still useful and in fact it is also used quite often.
-But there is another way that is much more popular: autoassignment in object template mapping.
+Yet, there is another way that is much more popular: autoassignment in object template mapping.
 That is what we are going to do next.
 We are going to handle role autoassignment based on job code.
 
@@ -1681,6 +1710,7 @@ We need to extend role schema first:
 
 Then we need a couple of roles with job codes in their extension:
 
+.role-sales-manager.xml
 [source,xml]
 ----
 <role oid="a1572de4-b9b9-11e9-af3e-5f68b3207f97">
@@ -1692,6 +1722,7 @@ Then we need a couple of roles with job codes in their extension:
 </role>
 ----
 
+.role-sales-agent.xml
 [source,xml]
 ----
 <role oid="b93af850-b9b9-11e9-8c2c-dfb9a89635a0">
@@ -1703,6 +1734,7 @@ Then we need a couple of roles with job codes in their extension:
 </role>
 ----
 
+.role-sales-assistant.xml
 [source,xml]
 ----
 <role oid="b9d2b604-b9b9-11e9-bbc4-17d8e85623b4">
@@ -1733,10 +1765,10 @@ Those resources are used here pretty much unchanged.
 There is no need to change them.
 Outbound mappings in the resource definitions specify the basic framework of the account.
 The key to provisioning flexibility is usually not in the resource definition.
-The key is in the roles.
+It is in the roles.
 But let’s start in the simplest way possible with the `Employee` role.
-Example company policy states that every employee should have a very basic LDAP account.
-Therefore all we need is a very simple LDAP account _construction_ that we place into an _inducement_ in the `Employee` role:
+ExAmPLE company policy states that every employee should have a very basic LDAP account.
+Therefore, all we need is a very simple LDAP account _construction_ that we place into an _inducement_ in the `Employee` role:
 
 .role-employee.xml
 [source,xml]
@@ -1754,13 +1786,13 @@ Therefore all we need is a very simple LDAP account _construction_ that we place
 ----
 
 All employees get this role by the means of inbound mapping on HR resource.
-Therefore all employees will automatically get basic LDAP account.
-As simple as that.
-Put the construction in the role and the reconcile HR resource or just recompute the users.
+Therefore, all employees will automatically get basic LDAP account.
+It is as simple as that.
+Put the construction in the role, reconcile the HR resource or just recompute the users.
 LDAP accounts will be created.
 
 But we want something that is a bit more fancy.
-Salespeople are a bit sensitive when it comes to their professional image.
+Salespeople tend to be a bit sensitive when it comes to their professional image.
 Therefore, they insist on having proper titles set up in company directory.
 Not a problem.
 We can do that easily in their "job" roles.
@@ -1792,7 +1824,7 @@ This is how it looks like for a sales manager:
 This construction refers to the same account as the Employee role.
 MidPoint knows that, therefore it does not attempt to create a new account.
 It just updates existing account with appropriate title.
-But that is still not enough.
+However, we are not done yet.
 We need to provide access to CRM system for the salespeople.
 Should we create a new role for that?
 Absolutely not.
@@ -1829,7 +1861,7 @@ Let’s just add new construction to an existing job role:
 ----
 
 This is the only role that gives access to the CRM system for a sales manager.
-MidPoint knows that and it automatically creates a new CRM account when the role is assigned.
+MidPoint knows that, and it automatically creates a new CRM account when the role is assigned.
 Outbound mappings from the CRM resource definition are used to set basic properties of CRM account, such as account identifiers and password.
 In addition to that, the Sales Manager role sets appropriate access level to the CRM system.
 
@@ -1839,16 +1871,34 @@ This is the right time to test everything.
 Select few representative HR accounts and try to import them.
 Check that everything is provisioned correctly.
 If it works, then it is the time for roll-out.
-Set up a synchronization task for the HR resource and we are done.
+Set up a synchronization task for the HR resource, and we are done.
 We have running system:
 
 image::08-03-users-final.png[Users]
 
-This is nice little identity management deployment.
-But there is still a lot of things to do here.
+Users are imported from the HR system.
+Roles are assigned, which can be checked by navigating to user details page and opening the menu:Inducements[] tab.
+Accounts are provisioned according to the roles, which is the reason for variations in number of accounts for individual users.
+The basic stuff works now.
+Go ahead and try it out, add more roles and mappings, modify the configuration.
+Have some fun.
+
+TIP: Zealous reader has certainly tried both the HR and user recompute task, and stares at the `administrator` user now.
+Administrator has an e-mail address!
+Value `midpoint.administrator@example.com` was generated for administrator by recomputation task.
+Oh yes, administrators are people too, and the `administrator` user is still a user.
+Therefore, user template applies to administrator as well, as does user recompute task.
+User `admnistrator` was not updated by the HR import as there is no corresponding HR account.
+However, user recompute task iterates over all the users, including `administrator`.
+This has to be kept in mind when designing midPoint policies and configurations.
+
+We have got nice little identity management deployment.
+The basic functionality is in place, data are synchronized from the HR system, accounts are provisioned to handful of simple resources, access is governed by roles.
+This is a huge improvement for many organizations already.
+However, there is still a lot of things to improve here.
 Maybe we want to set up a formalized organizational structure.
 Maybe we need delegated administration.
-Maybe we have several object types and we want to set up archetypes for them.
+Maybe we have several object types to manage, and we want to set up archetypes for them.
 We almost certainly want to manage groups, privileges and other entitlements.
 This is still just a beginning.
 
