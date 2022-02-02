@@ -3,6 +3,8 @@
 
 include::chapter-include.adoc[]
 
+// Note: Reviewed for midPoint 4.4
+
 [quote, Douglas Adams, "The Restaurant At The End Of The Universe"]
 If life is going to exist in a Universe of this size, then the one thing it cannot afford to have is a sense of proportion.
 
@@ -540,8 +542,6 @@ Avoid the direct user-manager approach whenever possible.
 
 == Relation
 
-// TODO: TODO TODO 4.4 review
-
 In midPoint, we like to design generic re-usable mechanisms.
 You did not think that we made the concept of _manager_ in a way that would be hardcoded to organizational structure, did you?
 As you have got so far through this book, you would probably suspect there is more to this _relation_ thing that we have seen so far.
@@ -619,7 +619,7 @@ But it may come handy if the situation becomes too complicated.
 Those are built-in relations.
 There are some pre-configured policies that work with them.
 However, you are free to specify and use your own relations.
-But that is quite an advanced topic and majority of the deployments are perfectly fine using just the built-in relations.
+But that is quite an advanced topic and the majority of deployments are perfectly fine using just the built-in relations.
 
 As you can see, the built-in relations do not have overly strict specifications.
 There is a lot of _usually_, _often_ and _almost_ in the description of relations.
@@ -644,20 +644,20 @@ They will do what you make them do.
 == Multiple Organizational Structures
 
 Tree is a simple and very elegant structure in many ways.
-But it is a rare sight to see a lone tree growing in the field.
+However, it is a rare sight to see a lone tree growing in the field.
 When we think of trees, we usually think about a forrest.
 It takes a lot of trees to make a forrest.
 
 This is also the case when it comes to organizational structures.
 It is a very rare sight when an entire organizational structure of an organization can be modeled in a single tree.
 There is always the usual _functional_ organizational structure with divisions, departments, sections, companies, branches, schools and faculties.
-But then there is a _project_ organizational structure that is often completely orthogonal to functional organizational structure.
+Then there is a _project_ organizational structure that is often completely orthogonal to functional organizational structure.
 This is sometimes spiced up with workgroups, task forces, focus groups, research teams, interest groups, clubs and similar collective life forms.
-There are the many trees that make a forrest.
+There are the many trees that make a forrest of organizational structures.
 
 Fortunately, midPoint is not very picky when it comes to organizational structures.
-You can have as many organizational trees as you like.
 MidPoint is not limited to a single organizational tree.
+You can have as many organizational trees as you like.
 You can have functional organizational tree, as we have seen in previous sections.
 Then you can have independent project organizational structure.
 Just create new root _org_ for projects and place the projects under it:
@@ -707,7 +707,7 @@ Each neatly stowed under its own tab:
 image::09-09-org-tree-projects.png[Project organizational tree]
 
 This is a nice _project_ organizational structure.
-But our users are members of _functional_ organizational structure already.
+However, our users are members of _functional_ organizational structure already.
 How can I add my users to the projects?
 The answer is _assignment_, of course.
 User can belong to any number of organizational units at the same time.
@@ -715,24 +715,21 @@ It makes no difference whether they are in the same organizational tree or in di
 Simply assign the projects to the users.
 The same _manager_ relation works for projects as well.
 In fact, midPoint does not even recognize the difference between _functional_ and _project_ organizational structures.
-They look all the same to midPoint and midPoint treats them in the same way.
+They look all the same to midPoint, and midPoint treats them in the same way.
 If there is a need for the structures to behave differently, it has to be explicitly configured.
 Which is usually done by using _archetypes_.
 We will talk about _archetypes_ later.
 
 There are two organizational structures now.
-You can have three organizational structures if you want to.
-Of five of them.
+You can have three organizational structures if you want to, or five of them.
 Any number you like - as long as all the tabs for organizational structures fit on the screen.
-The structures can be deep and trees with many branches.
-Or they can be completely flat.
+The structures can be a deep rees with many branches, or they can be completely flat, with just a single level.
 The structure may not even be a tree.
 As long as it is an _acyclic directed graph_ it will work just fine.
 It can have multiple roots, it may have alternate paths, it can do all the crazy stuff.
 Just avoid cycles.
 Cycles break the maths which is the foundation of organizational structure indexing and evaluation.
-Cycles won't work.
-But pretty much all the other arrangements are perfectly fine.
+Cycles won't work, but pretty much all the other arrangements are perfectly fine.
 
 Organizational structure may have almost any form.
 A user can be a member of many organizational units.
@@ -743,8 +740,8 @@ By default, MidPoint is very flexible when it deals with organizational structur
 However, you may not like all this liberalism in organizational management.
 _Ordnung muss sien!_
 If you want to constraint organizational management to allow only a single manager for each organizational unit, you can do it.
-But you have to explicitly specify a policy by setting up _policy rules_.
-_Policy rules_ provide a very generic and very powerful mechanism how to constraint and control midPoint in many ways.
+But you have to explicitly specify a policy by setting up _policy rules_ and _archetypes_.
+_Policy rules_ provide a very generic and very powerful mechanism how to constraint and control midPoint in many ways, and _archetypes_ provide flexible typing mechanism.
 But that is a topic for its own chapter.
 
 == Beyond Users
@@ -776,7 +773,7 @@ Similar approach can be applied to most objects in midPoint.
 Organizational structure can be used to organize roles, services, resources, function libraries and other objects.
 Orgs are also crucial mechanism in supporting midPoint multi-tenancy.
 Not everything is perfectly supported in user interface yet.
-Yet, the organizational structure is a powerful mechanism to systematically and consistently apply policies and organize the system.
+Nevertheless, the organizational structure is a powerful mechanism to systematically and consistently apply policies and organize the system.
 
 == Organizational Structure Synchronization
 
@@ -983,7 +980,8 @@ For example, midPoint will expect that accounts can be associated with entitleme
 Therefore, it is recommended to properly categorize your resource objects to kinds.
 This also helps to make the configuration understandable for mere mortals.
 
-Then there is _intent_. There are no pre-defined values for _intent_ in midPoint, perhaps except for value `default` that will be used in case there is no explicit definition of _intent_.
+Then there is _intent_.
+There are no pre-defined values for _intent_ in midPoint, perhaps except for value `default` that will be used in case there is no explicit definition of _intent_.
 You can choose any value that you like.
 However, it is recommended to choose a value that describes the intended use of the resource object.
 For example:
@@ -1041,9 +1039,9 @@ These are just examples.
 You can choose any kind/intent combination that makes sense for your deployment.
 For example, you may choose to use `entitlement` kind for organizational units instead of `generic`.
 MidPoint would work fine even in that case.
-However, our `Organizational Chart` resource does not have any accounts, therefore the organizational units cannot realy be associated to anything in this resource.
+However, our `Organizational Chart` resource does not have any accounts, therefore the organizational units cannot be associated to anything in this resource.
 Also, membership in an organizational unit does not really look like an entitlement.
-Therefore we have chosen to use `generic` kind here.
+Therefore, we have chosen to use `generic` kind here.
 You are free to make your own choices.
 
 .Why `AccountObjectClass`?
@@ -1056,10 +1054,10 @@ Object classes are set by the connector, hence we need to use `AccountObjectClas
 However, the _kind_ and _intent_ definition is "overriding" the notion that this is an account, making it more understandable for the users.
 
 _Kind_ and _intent_ behave like coordinates when midPoint has to identify resource object that is assigned to a user.
-A user may have at most one _default account_ on a resource (which means kind=`account`, intent=`default`).
+Given normal circumstances, a user may have at most one _default account_ on a resource (which means kind=`account`, intent=`default`).
 That same user may also have _admin account_ on the same resource (kind=`account`, intent=`admin`).
 A role may be represented by at most one _LDAP group_ on a resource (kind=`entitlement`, intent=`ldapGroup`).
-This is heavily used by midPoint logic.
+Such assumptions are heavily used by midPoint logic.
 Whenever there are two _constructions_ that have the same combination of kind+intent, midPoint assumes that they are describing the same resource object.
 MidPoint automatically merges the constructions.
 If the constructions have different combination of kind+intent, midPoint assumes that they are describing different resource objects and the constructions are processed separately.
@@ -1067,7 +1065,7 @@ Correct configuration of _kind_ and _intent_ is crucial for midPoint to work cor
 
 .Tag (a.k.a. "multiaccounts")
 TIP: The requirement that there may be at most one resource object for each kind+intent combination works very well in most cases.
-However, there are also cases when more that one resource object is needed.
+However, there are also cases when more than one resource object is needed.
 _Kind_ and _intent_ has to be specified in the configuration, therefore this mechanism will not work for resource objects that appear and disappear dynamically.
 Therefore, new concept of _tag_ was introduced in midPoint 4.0.
 The _tag_ can supplement the kind+intent combination with a dynamic value, thus allowing multiple resource objects to exist for any particular kind+intent combination.
@@ -1089,7 +1087,7 @@ The simple solution is to prefix the identifier with a code of the organizationa
 However, users looking for project `123` may have difficulty finding it, as the `P` prefix in `P123` name is usually just a deliberate decision of IDM administrator.
 Therefore, we still want to store the original identifier value (`123`) into the `identifier` property of the org object.
 There is no uniqueness constrain on the `identifier` property, therefore both department `123` and project `123` can co-exist and both can be easily discovered by searching the identifier.
-The result is that we neet two inbound mappings for the `` attribute:
+The result is that we need two inbound mappings for the `orgnum` attribute:
 
 .resource-csv-org.xml
 [source,xml]
@@ -1150,9 +1148,9 @@ However, organizational structures are usually hierarchical.
 How to do we nest organizational units to create organizational tree?
 
 In midPoint, organizational tree is formed by _assignments_.
-Therefore the answer is quite simple: create the right assignments.
-Clever reader is not paying attention any more, re-reading the sections on automatic role assignments in object template.
-However, even a clever reader should pay attention here, as there is an easier way how to do it.
+Therefore, the answer is quite simple: create the right assignments.
+Clever reader is not paying attention any more, being busy re-reading the sections on automatic role assignments in object template.
+However, even a clever reader should be paying attention now, as there is an easier way how to do it.
 The assignments can be set up in the inbound mappings:
 
 .resource-csv-org.xml
@@ -1191,7 +1189,7 @@ The same mechanism is reused here.
 All that remains is to set up a synchronization task.
 Make sure that you specify _kind_ and _intent_ in the synchronization task.
 This is important, otherwise the tasks will not work.
-Setting the right _kind_ and _intent_ was not emphasize before when we were synchronizing accounts.
+Setting the right _kind_ and _intent_ was not emphasized before when we were synchronizing accounts.
 The `account` _kind_ is the default and midPoint is usually smart enough to use default _intent_.
 However, the defaults will no longer work when we go beyond the accounts.
 
@@ -1204,7 +1202,7 @@ Enable logging of _synchronization service_ (`com.evolveum.midpoint.model.impl.s
 MidPoint will log a reasonable amount of information about the synchronization process.
 That information is very likely to lead you to the solution.
 
-The configuration above will work for simple cases, but there is still a room for improvement.
+The configuration above will work for simple cases, yet there is still a room for improvement.
 The search filter in `assignmentTargetSearch` expression is quite simplistic.
 It will match orgs from several trees if they have the same identifier.
 The same problem is in the correlation query.
@@ -1300,14 +1298,14 @@ It is also very difficult to change data formats in the future, as they effectiv
 Take your time and get it right at the beginning.
 ====
 
-== Provisioning Organizational Structure
+== Organizational Structure Provisioning
 
 We have seen how we can synchronize organizational structure into midPoint.
 We are talking midPoint here.
 What goes in, can also go out.
 It is very simple to provision organizational structure to an ordinary target system, such as database table.
 However, we have already learned a thing or two, and doing that would be almost boring.
-Therefore let's do something more challenging.
+Therefore, let's do something a bit more challenging.
 Let us synchronize the organizational structure into an LDAP directory tree.
 
 The basic principles of organizational structure provisioning are the same as for users.
@@ -1322,7 +1320,7 @@ There are just few little differences:
 * We have to be a bit smarter about creating LDAP distinguished names (DNs) for the entries, as we want them to create a hierarchical data structure.
 
 Everything else is essentially the same as for users and accounts.
-However, let us go over all the details step by step.
+However, let us go over all the details, step by step.
 
 First of all, we need to add new `objectType` definition to the LDAP resource:
 
@@ -1401,9 +1399,9 @@ On the other hand, the `dn` mapping looks somehow scary.
 There is no need to be afraid.
 We are going to explain everything, and there are some really interesting parts here.
 
-The purpose of this mapping is to construct LDAP distinguished name in a hierarchical manner.
+The purpose of the `dn` mapping is to construct LDAP distinguished name in a hierarchical manner.
 We want to put the organizational tree under the `ou=org,dc=example,dc=com` entry, with the entry for ExAmPLE company at the top.
-Therefore the `dn` of Operations Division need to be `ou=Operations Division,ou=ExAmPLE,ou=org,dc=example,dc=com`.
+Therefore, the `dn` of Operations Division need to be `ou=Operations Division,ou=ExAmPLE,ou=org,dc=example,dc=com`.
 IT Department goes under the Operations Division, therefore we need its `dn` to be `ou=IT Department,ou=Operations Division,ou=ExAmPLE,ou=org,dc=example,dc=com`.
 We need to process the tree from the organizational unit all the way through all the parent units to the very top of organizational structure.
 That is exactly the thing that the Groovy expression does.
@@ -1413,7 +1411,7 @@ The first thing that the expression has to do is to figure out the "path" from t
 The expression gets the current organizational unit in the `focus` variable.
 However, the org object does not contain its complete path in the tree.
 All it has is a reference to its parent organizational unit (`parentOrgRef`).
-Therefore the expression has to iterate over all the levels in the tree until it gets to the top.
+Therefore, the expression has to iterate over all the levels in the tree until it gets to the top.
 The top organizational unit does not have any parent, that is where the iteration stops.
 Display names of each organizational unit at the "path" is collected in the `orgpath` list.
 As the org contains only a reference to the parent, we need to explicitly read the parent object from midPoint repository.
@@ -1426,14 +1424,15 @@ However, there are some intricate details about escaping the names as they are e
 It would be nice if someone else could do the encoding for us.
 Turns out, there is someone else to do it.
 Java platform comes with Java Naming and Directory Interface (JNDI), which is supposed to be a generic library to access broad range of directory services.
-JNDI is not the best library that the world has ever seen, but it is part of Java platform and it can do formatting of LDAP DN.
+JNDI is not the best library that the world has ever seen, but it is part of Java platform, and it can do formatting of LDAP DN.
 It will be good enough for us.
 We will take advantage of `LdapName` and `Rdn` classes to encode the DN.
 The `import` statements at the beginning made use of these classes quite convenient.
 The last detail is the ordering.
 We want our names in the DN to be in a different order, therefore we just reverse `orgpath` before processing.
 
-Clever reader has noticed a couple of interesting things in that mapping.
+.Tracing and logging
+TIP: Clever reader has noticed a couple of interesting things in that mapping.
 Especially the `<trace>` element looks very useful, which it is.
 It turns on detailed tracing of the mapping.
 MidPoint will record the details of mapping evaluation in the log file.
@@ -1448,7 +1447,7 @@ But nothing happens yet.
 MidPoint does not know that it is supposed to create LDAP objects for our organizational units.
 MidPoint does not automatically create accounts for all the users either.
 We need a _construction_ to do that.
-The orgs need to have an assignment with a constuction, similar to these that we have used to create accounts.
+The orgs need to have an assignment with a construction, similar to these that we have used to create accounts.
 However, we will need to use the right _kind_ and _intent_.
 We want to archive something like this:
 
@@ -1485,7 +1484,7 @@ The mapping will be an _inbound_ mapping in the `Organizational Chart` resource.
 It would not be entirely appropriate for this _inbound_ mapping to control provisioning (i.e. _outbound_ flow) of organizational structure.
 It will work, but such configuration will be difficult to understand and maintain.
 
-Clever reader is not thinking about the _metaroles_ that we have already mentioned in the RBAC chapter.
+Clever reader is now thinking about the _metaroles_ that we have already mentioned in the RBAC chapter.
 As usual, cleaver reader is right, or perhaps very close to the right solution.
 Creating a _metarole_ that could be applied to all the orgs would be almost an ideal solution:
 
@@ -1510,7 +1509,7 @@ In such case, it is perfectly good to have the mapping to assign the meta role e
 The metarole specifies type of the organizational unit.
 Therefore it is desirable to set the metarole when the org is created for the first time, which happens during organizational structure synchronization.
 
-This would be almost ideal solution.
+This would be _almost_ ideal solution.
 However, there is a better way still.
 We can use _archetype_ instead of metarole.
 Archetype will do the same trick as metarole does here.
@@ -1571,7 +1570,7 @@ We will go for the archetype, assigning it automatically in inbound mappings of 
 All we need to do now is to re-run the synchronization task.
 The result is a nice organizational structure in LDAP directory:
 
-.Organizational strucutre in LDAP
+.Organizational structure in LDAP
 image::09-11-ldap-org-tree.png[Organizational strucutre in LDAP]
 
 This is a nice result.
@@ -1581,7 +1580,7 @@ If you are going to try this scenario with a real LDAP server, you will need to 
 You will also need to update access control lists (ACLs).
 However, be warned that this is not a very ideal way how to maintain organizational structure in LDAP directory.
 We are using display names here, which are part of LDAP identifiers (DNs).
-Therefore even a minor correction in organizational unit name will trigger LDAP rename operation.
+Therefore, even a minor correction in organizational unit name will trigger LDAP rename operation.
 It will change the identifier of the organizational unit, and also all the organizational units below it.
 Perhaps the only thing that can make it worse is to place _users_ in that structure as well.
 Which some people actually do.
@@ -1589,16 +1588,19 @@ The only real reason to put organizational structure in this form is to satisfy 
 Avoid this approach whenever you can.
 
 The clever reader have surely noticed that the big Groovy expression above is explicitly fetching objects from the database.
-This may cause a performance problem in case that such expression is evaluated often or if the strucutre is very deep.
+This may cause a performance problem in case that such expression is evaluated often or if the structure is very deep.
 This is usually not the case with ordinary organizational structures, therefore this approach is usually not problematic.
 However, it is always a good thing to keep performance in mind, especially if your user population is bigger than few thousands of users.
 
 Finally, we still depend on ordering of the data feed.
 We want to create "higher" entries in LDAP first, otherwise an attempt to create "lower" entries would fail.
 This can be solved by using the "create on demand" approach mentioned above.
-However, it is going to be problematic and cumbersome when organizational unit display names are used instead of indetifiers.
-It does not matter that much anyway, as it is likely you will suffer for many different reasons if organizational display names are used.
+However, it is going to be problematic and cumbersome when organizational unit display names are used instead of identifiers.
+However, in that case this little details does not matter that much anyway, as it is likely you will suffer for many different reasons if organizational display names are used instead of identifiers.
 Always use organizational unit identifiers if you can.
+We really mean it.
+You can thank us later.
+
 
 == Focus and Projection
 
@@ -1622,7 +1624,7 @@ There may be user, org, service, role or almost any midPoint object on the midPo
 That may be synchronized with account, group, role, privilege, organizational unit or almost any resource object on resource side.
 As you can see, the terminology becomes quite cumbersome.
 Saying "almost any midPoint object" and "almost any resource object" is not very natural or precise.
-Therefore we have decided to use _focus_ and _projection_ terms:
+Therefore, we have decided to use _focus_ and _projection_ terms:
 
 .Focus and projections
 image::09-13-focus-projections.png[Focus and projections]
@@ -1635,7 +1637,7 @@ User is a typical focal object.
 Other midPoint objects can be focal objects as well, most notably org, role and service.
 
 The state of focal object is _projected_ back to the resources.
-Therefore the objects that reside on the resources are called _projections_.
+Therefore, the objects that reside on the resources are called _projections_.
 An account is a typical projection object, but there is wide variety of other object classes such as groups, organizational units, (resource-side) roles, privileges, access control lists, teams and so on.
 
 .Focus and projection

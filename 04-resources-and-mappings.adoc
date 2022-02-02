@@ -4,7 +4,6 @@
 include::chapter-include.adoc[]
 
 // Note: Reviewed for midPoint 4.4
-// TODO: except for 04-03-list-accounts.png, that still needs to be updated
 
 [quote,William Arthur Ward]
 The pessimist complains about the wind; the optimist expects it to change; the realist adjusts the sails.
@@ -324,8 +323,6 @@ Just click inside the _Object class_ input box and the suggestions will appear.
 Now click on the _Resource_ button on the right side.
 MidPoint connects to the resource, lists all the objects of the given object class and displays the list.
 Now you can click on any object to see the details.
-
-// TODO: need to update screenshot to 4.4.1 (MID-7596)
 
 image::04-03-list-accounts.png[List resource account]
 
