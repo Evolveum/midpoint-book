@@ -1692,29 +1692,29 @@ All we need is to set up the resource to use that connector:
     ...
 ----
 
-// TODO TODO TODO review progress HERE
-
 What we can see here is a slightly more sophisticated method to reference the connector.
-So far we have seen only a direct reference by OID. This works well for almost all the references in midPoint because OID never changes.
-But connectors are a bit tricky.
+So far we have seen only a direct connector reference by OID.
+This works well for almost all the references in midPoint, because OID never changes.
+However, connectors are somehow elusive objects.
 Objects that represent connectors are dynamically created by midPoint when a connector is discovered.
-Therefore the OID is generated at random when midPoint starts.
-There is no practical way how a system administrator can predict that OID. But we still want our resource definitions to refer to a particular connector when we import the definition.
-Therefore there is an alternative way how to specify object references.
+Therefore, the OID is generated at random when midPoint discovers new connector.
+There is no practical way how a system administrator can predict that OID.
+Yet, we still want our resource definitions to refer to a particular connector when we import the definition.
+Therefore, there is an alternative way to specify object references.
 This method is using a search filter instead of direct OID reference.
-When this resource definition is imported to midPoint then midPoint will use that filter and look for LDAP connector.
-If that connector is found then the OID of that connector is placed in the reference (`connectorRef`).
-Therefore the next time midPoint will be using this resource it can follow the OID directly.
+When this resource definition is imported to midPoint, then midPoint will use that filter and look for LDAP connector.
+If that connector is found, then the OID of that connector is placed in the reference (`connectorRef`).
+Therefore, the next time midPoint will be using this resource, it can follow the OID directly.
 This is a very convenient method.
-But there are few limitations.
+However, there are few limitations.
 Firstly, the filter is resolved only during import.
-That means it is resolved only once.
-If the connector is not present at import time then the reference needs to be corrected manually.
+Which means that it is resolved only once.
+If the connector is not present at import time, then the reference needs to be corrected manually.
 Secondly, this approach works if there is only one LDAP connector deployed to midPoint.
 This is usually the case.
-But the connector framework can contain several connectors of the same type in different versions.
+However, the connector framework can contain several connectors of the same type in different versions.
 This is a very useful feature for gradual connector upgrades, testing of new connector versions and so on.
-But in case that the filter matches more than one object the import will fail.
+Yet, in case that the filter matches more than one object, the import will fail.
 In that case the connector reference has to be set up manually.
 
 Once we have proper reference to LDAP connector we need to configure the connection:
@@ -1763,7 +1763,7 @@ The basic resource configuration above is sufficient to connect to the resource.
 Therefore, the test connection operation on resource details page should be successful.
 This configuration may also be used to list the accounts.
 However, LDAP servers support many object classes and midPoint does not yet know which object class represents account.
-Therefore we need to add schema handling section to our resource:
+Therefore, we need to add schema handling section to our resource:
 
 .resource-openldap.xml
 [source,xml]
@@ -1799,30 +1799,29 @@ Therefore we need to add schema handling section to our resource:
 ----
 
 There should be outbound mapping for each mandatory LDAP attribute for the `inetOrgPerson` object class.
-Those mapping are very typical for a target resource definition.
+Such mappings are very typical for a target resource definition.
 
 Once we set up the schema handling, we should be able to conveniently list LDAP accounts in midPoint.
 However, we need to switch to the _Resource_ view instead of _Repository_ view.
 The accounts are stored in the LDAP server and midPoint can access them.
-Therefore the accounts are listed in the _Resource_ view.
-But midPoint have not processed the accounts yet.
-Therefore there are no account shadows in midPoint repository.
-And that is the reason that the _Repository_ view is empty.
-But now we are going to do something about it.
+Therefore, the accounts are listed in the _Resource_ view.
+HOwever, midPoint have not processed the accounts yet.
+Therefore, there are no account shadows in midPoint repository yet.
+That is the reason that the _Repository_ view is empty.
+Now we are going to do something about it.
 
 We are going to import (or reconcile) the resource accounts.
-But if we try to do this now nothing would really happen.
-The accounts are not linked to users therefore midPoint will not synchronize the attributes.
-And midPoint was not told to do anything with the accounts.
-Therefore midPoint will do nothing.
+However, if we try to do this now, nothing would really happen.
+The accounts are not linked to users, therefore midPoint will not synchronize the attributes.
+MidPoint was not told to do anything with the accounts.
+Therefore, midPoint will do nothing.
 That is one of midPoint principles: midPoint will not change the accounts in any way unless it is explicitly told to do so.
-Default midPoint configuration is to do nothing.
 We would rather do nothing than to destroy the data.
 
-Before we can import the accounts we need to set up the synchronization configuration for this resource.
+Before we can import the accounts, we need to set up the synchronization configuration for this resource.
 There are accounts in the LDAP server that should belong to users that already exist in midPoint.
 We want to link them.
-But we do not want to do the linking manually.
+However, we do not want to do the linking manually.
 We would rather set up a correlation expression that does this automatically:
 
 .resource-openldap.xml
@@ -1868,17 +1867,17 @@ We want midPoint to link the account in this case, therefore we define appropria
 
 This will take care of accounts for whose we can find an owner.
 But what to do with other accounts?
-We will do nothing about that yet.
-Therefore we do not need to define any other reactions.
+We will do nothing about them just yet.
+Therefore, we do not need to define any other reactions.
 This may be somehow surprising.
-We do not want illegal accounts, do we?
+We do not want illegal accounts in our LDAP server, do we?
 Then perhaps we would like to see a reaction to delete unmatched accounts, right?
 That would be a good approach, but it is just too early for this.
 We do not want to delete unmatched account just now.
 There may be accounts that are perfectly legal, just the employeeNumber attribute is missing or mistyped.
 Data errors like those happen all the time, especially when the data were managed manually.
 We do not want to over-react and start deleting accounts too early.
-Therefore we will go just with this one synchronization reaction for now.
+Therefore, we will go just with this one synchronization reaction for now.
 
 Now it is the right time to start import or reconciliation task.
 After the task is finished the situation may look like this:
@@ -1889,20 +1888,20 @@ TIP: For the curious readers, the LDAP server has data equivalent to the content
 
 It looks like we had quite a good data in the LDAP server.
 Most of the accounts were successfully correlated and linked to their owners.
-But there are few accounts that were not correlated.
-Those accounts ended up in unmatched situation.
+Yet, there are few accounts that were not correlated.
+Those accounts ended up in _unmatched_ situation.
 You can resolve this situation by manually linking the unmatched accounts to their users.
-Simply click on the small triangle button next to the unmatched entry and select _Change owner_ from the context menu.
-Then select the right user (Isabella Irvine) in the dialog that appears.
+Simply click on the small triangle button next to the unmatched entry and select menu:Change owner[] from the context menu.
+Then select the right user (`Isabella Irvine`) in the dialog that appears.
 After that the account is linked to the user.
 Repeat this process to link all unmatched accounts.
 
 There is one interesting thing in the screenshot above.
 Have a look at the LDAP account identified by `uid=carol`.
 While most other accounts have their uid value taken from the surname of the user, this account is an exception.
-Even though the uid is obviously wrong, midPoint have linked the account correctly to the user (Carol Cooper).
-The reason is that we have set up midPoint to use employeeNumber for correlation.
-The result is that even accounts whose usernames violate the convention can be automatically linked to their owners - as long as there is any reliable piece of information that can be used for correlation.
+Even though the `uid` value is obviously wrong, midPoint have linked the account correctly to the user (`Carol Cooper`).
+The reason is that we have set up midPoint to use `employeeNumber` for correlation.
+Even accounts whose usernames violate the convention can be automatically linked to their owners - as long as there is any reliable piece of information that can be used for correlation.
 
 When all the accounts are linked to their owners, it is the right time to complete the synchronization policy.
 Now we can tell midPoint to delete any unmatched account.
@@ -1930,11 +1929,11 @@ We can also tell midPoint to unlink any account that was deleted in LDAP server:
 
 There may be some accounts in the LDAP server that have wrong attribute values.
 By "wrong" we mean that the attributes have different values than the values that are computed by the outbound mappings.
-But midPoint will not correct those values just yet.
+However, midPoint will not correct those values just yet.
 Remember the midPoint principle that it will not change the account unless we have explicitly told to do so?
-Those accounts are in the `linked` situation.
-And we have not configured any reaction for this situation.
-Therefore now we need to tell midPoint to synchronize the values:
+Those accounts are in the `linked` situation, and we have not configured any reaction for this situation.
+Therefore midPoint did nothing.
+Now we need to tell midPoint to synchronize the values:
 
 .resource-openldap.xml
 [source,xml]
@@ -1948,15 +1947,15 @@ Therefore now we need to tell midPoint to synchronize the values:
 ----
 
 A clever readers is now surely wondering whether we have forgotten something.
-And indeed we have.
+We have, indeed.
 Attribute values are synchronized by running reconciliation process.
-But our outbound mappings will not work in reconciliation.
-They do not have any explicit definition of strength, therefore midPoint assumes `normal` strength.
+However, our outbound mappings will not work in reconciliation.
+They do not have any explicit definition of _strength_, therefore midPoint assumes `normal` strength.
 Those mappings are supposed to implement the _last change wins_ strategy.
-Therefore reconciliation cannot overwrite the account data as midPoint does not know whether it was account attribute or user property that was the last to change.
-If midPoint is not sure about something then it will do nothing.
+Therefore, reconciliation cannot overwrite the account data, as midPoint does not know whether it was account attribute or user property that was the last to change.
+If midPoint is not sure about something, then it will assume a conservative position and do nothing.
 We do not want to destroy the data.
-Therefore what we need to do now is to let midPoint know that we really mean it, that the mappings are really `strong`:
+Therefore, what we need to do now is to let midPoint know that we really mean it, that the mappings are really `strong`:
 
 .resource-openldap.xml
 [source,xml]
@@ -1984,147 +1983,157 @@ What is this `limitations` thing here?
 Simply speaking, the limitations specify that the attribute is optional (`minOccurs=0`) and that it is single-valued (`maxOccurs=1`).
 But, isn’t midPoint supposed to be completely schema-aware and figure that all by itself?
 Yes, it is.
-And in fact, that is the reason why we need to override the information from the schema using this `limitations` element here.
+In fact, that is the reason why we need to override the information from the schema using this `limitations` element here.
 The `cn` attribute is specified in LDAP schema as a mandatory attribute.
 However, we have just specified outbound mapping for that attribute.
-Therefore even if midPoint user does not provide any value for attribute `cn`, we can still determine that value by using the expression.
-Therefore even though LDAP schema specifies attribute `cn` as mandatory, we want to present that attribute as optional in midPoint.
+Even if midPoint user does not provide any value for attribute `cn`, we can still determine that value by using the expression.
+Therefore, even though LDAP schema specifies attribute `cn` as mandatory, we want to present that attribute as optional in midPoint user interface.
 Hence the `minOccurs` limitation.
-And the `maxOccurs` limitation is immediately obvious to anyone who is intimately familiar with LDAP peculiarities.
+The `maxOccurs` limitation is immediately obvious to anyone who is intimately familiar with LDAP peculiarities.
 In the LDAP world, almost everything is multi-valued by default.
-Therefore even commonly used attributes for account identifiers and names are multi-valued.
-Nobody is really using them as multi-valued attributes because vast majority of applications will probably explode if they ever encounter two values in the `cn` attribute.
-But those attributes are formally defined as multi-valued in LDAP schema and that is what midPoint gets from LDAP connector.
-The `maxOccurs` limitation is overriding the schema and forcing midPoint to handle this attribute as if it was single-value attribute.
+Even commonly used attributes for account identifiers and names are multi-valued.
+Nobody is really using them as multi-valued attributes, because vast majority of applications will probably explode if they ever encounter two values in the `cn` attribute.
+Yet, those attributes are formally defined as multi-valued in LDAP schema, and that is what midPoint gets from LDAP connector.
+The `maxOccurs` limitation is overriding the schema, and forcing midPoint to handle this attribute as if it was single-value attribute.
 
 That is all.
 Now you can schedule reconciliation tasks to keep an eye on the LDAP server.
 The task will correct any attribute values that step out of line and delete any illegal accounts.
-This is how synchronization tasks can be useful even in case of pure target resources.
+This is how synchronization tasks can be useful, even in case of pure target resources.
 
 However, there is one last word of warning.
 Those accounts were synchronized and linked to existing midPoint users.
 The accounts were not created by midPoint.
-Therefore there is nothing in midPoint that would say that those accounts should exist.
-In midPoint parlance there are no _assignments_ for those accounts.
-MidPoint makes clear distinction between policy and reality.
-Therefore midPoint is aware that those accounts exist, but there is no policy statement that would justify their existence.
-By default midPoint does nothing and it will let the accounts live.
+Therefore, there is nothing in midPoint that would say that those accounts _should_ exist.
+In midPoint parlance, there are no _assignments_ for those accounts.
+MidPoint makes clear distinction between _policy_ and _reality_.
+Therefore, midPoint is aware that those accounts exist, but there is no policy statement that would justify their existence.
+By default, midPoint does nothing, and it will let the accounts live.
 The accounts will be created or deleted only if there is an explicit change in the assignments.
 There is no such change now, therefore the accounts are not deleted.
-But this is a fragile situation.
+However, this is quite a fragile situation.
 Accounts that are linked but not assigned can easily get deleted if midPoint administrator is not careful.
 Of course, there are methods to handle such situations.
 One way would be to create the assignments together with the links.
 Those that are interested in this method should look up keyword "legalize" in midPoint docs.
-But there are much better methods how to handle this.
+However, there are much better methods how to handle this.
 Perhaps the best approach would be to utilize the roles (RBAC).
 This is the topic of the <<07-rbac.adoc#07-rbac,Role-Based Access Control>> chapter later.
-But there are still more things to learn about synchronization until we get there.
+Yet, there are still more things to learn about synchronization until we get there.
 
-== Reconciliation
+== Peculiarities of Reconciliation
 
-// TODO: Move up to sync section?
-
-Reconciliation is a process of comparing current state of an account (reality) to a desired state of the account (policy).
-Reconciliation does not only compare the accounts, it is fixing the inconsistencies.
+Reconciliation is a process of comparing current state of an account (_reality_) to a desired state of the account (_policy_).
+Reconciliation does not only compare the accounts, it is actively fixing the inconsistencies.
 Reconciliation can correct wrong data on resources.
-But it also works the other way.
+Yet, it also works the other way.
 It can correct the data in midPoint.
 Therefore, reconciliation is one of the most useful tools in the identity management toolbox.
 
 Reconciliation can be used in a variety of ways.
 Reconciliation can be initiated for one specific user by using midPoint user interface.
-In that case midPoint compares the values of all user’s accounts to the values that were computed using the mappings.
-If there is difference midPoint corrects account values.
-This approach is perfect for testing reconciliation setting on just a single user.
+In that case, midPoint compares the values of all user’s accounts to the values that were computed using the mappings.
+If there is difference, midPoint corrects account values.
+This approach is perfect for testing reconciliation setting using just a single user.
 This feature is also useful for fixing values of one specific user.
 
 Reconciliation of a specific user may be useful, but it is an ad-hoc approach.
 We usually favor systemic approaches in identity management.
-Therefore reconciliation can be used in a form of a reconciliation task.
-Reconciliation task lists all the accounts on the resource and then it reconciles each account, one by one.
+Therefore, reconciliation is usually used in a form of a reconciliation task.
+Reconciliation task lists all the accounts on the resource, and then it reconciles each account, one by one.
 This is a way how to keep all resource accounts continuously synchronized.
 
 There is a couple of things about reconciliation that can be somehow surprising.
 Firstly, reconciliation of an account may cause modification of a user.
 This happens if there are inbound mappings for that account.
 This is perhaps quite expected.
-But if user is changed then such change may propagate to other accounts on other resources, usually by the means of outbound mapping.
-MidPoint does not like procrastination and therefore it will try to execute those changes immediately.
-But it means that reconciliation of one account may cause changes to other accounts.
+However, the operation does not stop there.
+If a user is changed, then such change may propagate to other accounts on other resources, usually by the means of outbound mappings.
+MidPoint does not like procrastination, and therefore it will try to apply all the changes immediately.
+It means that reconciliation of one account may cause changes to other accounts.
 Which makes a lot of sense, yet it may be quite surprising.
 Secondly, reconciliation will skip any normal-strength mappings.
 We have already explained the reasons for that, but this is something that can surprise even an experienced midPoint engineer from time to time.
 If we are sure that we want the mapped value to be present in the account all the time then strong mappings are the way to go.
 
 A curious reader that has already explored midPoint user interface has surely noticed _recompute_ function.
-What recompute does looks almost exactly the same as reconciliation.
-But there are subtle differences.
-Recompute will not force the fetch of account data.
-In this case the account attributes will be fetched from the resource only if midPoint inevitably needs them for the computation.
+To the untrained eye, _recompute_ does looks almost exactly the same as _reconciliation_.
+However, there are subtle differences.
+Firstly, recompute will not force the fetch of account data.
+When _recomputing_, the account attributes will be fetched from the resource, unless midPoint inevitably needs them for the computation.
 This usually happens if `weak` or `strong` mappings are used.
-But if there are `normal` mappings only then recompute may not read account data.
+However, if there are `normal` mappings only, then recompute may skip reading account data.
 MidPoint will compare and correct account attribute values only for those accounts that are fetched from resource during this process.
 That is how recompute works.
-The purpose of a recompute is to correct data of midPoint users, which means evaluation of object templates and other policies.
-Correcting account data is more or less just a side effect of a recompute.
-On the other hand, reconciliation always tries to read all the accounts regardless whether they are needed for computation or not.
-Therefore all the attributes on all the accounts are fixed.
-That is the purpose of reconciliation: correct the account data.
+The purpose of _recompute_ is to correct data of midPoint _users_, which means evaluation of object templates and other internal policies.
+Correcting _account_ data is more or less just a side effect of recompute.
+
+On the other hand, _reconciliation_ always tries to read all the accounts regardless whether they are needed for computation or not.
+Therefore, all the attributes on all the accounts are fixed.
+That is the purpose of reconciliation: correct the _account_ data.
 
 There is yet another difference between recompute and reconcile _tasks_.
-The purpose of a recompute task is to correct user data.
-Therefore recompute task will iterate over midPoint users.
-Recompute task will not detect new accounts on the resource and it may even overlook if an account is deleted.
-But reconciliation task is different.
+The purpose of _recompute_ task is to correct user data.
+Therefore, recompute task will iterate over midPoint _users_.
+Recompute task will not detect new accounts on the resource, and it may even overlook if an account is deleted.
+However, _reconciliation_ task is different.
 In fact reconciliation task has several stages.
 Main reconciliation stage lists all resource accounts.
-It determines owner of each account, compare the attributes and correct them.
-But as this process iterates over real accounts on a resource, it can also detect new accounts.
-When the main stage is completed then the next phase is looks at account shadows stored in midPoint.
+It determines owner of each account, compare the attributes and corrects them.
+As this process iterates over real accounts on a resource, it can easily detect new accounts.
+When the main stage is completed, then the next phase looks at account shadows stored in midPoint.
 The task looks for shadows that have not been processed in the main phase.
-Those are accounts that used to be on the resource some time ago but that have disappeared.
+Those are accounts that used to be on the resource some time ago, but have disappeared since.
 That is how reconciliation detects deleted accounts.
+
+Rule of the thumb for the _reconciliation_ versus _recompute_ dilemma is this:
+
+* Use _recompute_ if you want to update _users_.
+For example, use recompute after change of object templates or role definitions to apply the changes to all users.
+Recompute is usually initiated manually, on _as needed_ basis.
+
+* Use _reconciliation_ to keep _accounts_ synchronized.
+For example, run periodic reconciliation task to make sure accounts in your LDAP servers are up-to-date.
 
 == Deltas
 
 Reconciliation is really useful mechanism.
-It is reliable and thorough, but it is also quite slow and it consumes o lot of computational and network resources.
-And there are reasons why reconciliation is such a heavyweight beast.
+It is reliable and thorough, but it is also quite slow, and it consumes o lot of computational and network resources.
+There are good reasons why reconciliation is such a heavyweight beast.
 Reconciliation works with _absolute_ state of accounts.
 It means that reconciliation is reading all the accounts with all the values of all the attributes.
 Then it recomputes everything.
-Even those attributes and values that were not changed are recomputed.
-This is a very traditional and reliable way of computation and that is also the way how the most of older identity management systems work.
+Even the attributes and values that were not changed are recomputed.
+This is a very traditional and reliable way of computation, and that is also the way how the most of older identity management systems work.
 
-But there is also a better way.
+Yet, there is also a better way.
 If we know that just one attribute was changed, we can recompute that single attribute only.
 We do not need to care about other attributes.
-And if we know that attribute foo has changed in such a way, that there is a new value bar then it gets even better.
-We just need to recompute the value bar and do not care about any other values.
+Moreover, if we know that attribute `foo` has changed in such a way, that there is a new value `bar`, then it gets even better.
+We just need to recompute the value `bar`, and we need not care about any other values.
 This is what we like to call a _relative change_.
 We just care about the values that were changed.
 That is how midPoint works internally.
-We could say that MidPoint is _relativistic_.
+We could say that MidPoint is _relativistic_ system.
 
 This is where _delta_ comes in.
 Delta is a data structure that describes the change of a single midPoint object.
 _Add_ delta describes a new midPoint object that is about to be created.
 _Modify_ delta describes existing midPoint object where some properties have changed.
 _Delete_ delta describes an object that is going to be deleted.
+
 This is a very powerful mechanism.
 Just remember that everything in midPoint can be represented as an object: user, account, resource, role, security policy … everything.
-Therefore delta can represent any change.
+Therefore, delta can represent any change in midPoint.
 It may be a change of user password, deletion of an account, change of connector configuration or introduction of a new password policy.
-If all the changes can be represented in a uniform way then they can also be handled in a uniform way.
-Therefore it is easy for midPoint to record all the changes in an audit trail – including configuration changes.
+If all the changes can be represented in a uniform way, then they can also be handled in a uniform way.
+Therefore, it is easy for midPoint to record all the changes in an audit trail – including configuration changes.
 It is easy to route any change through an approval process.
 And so on.
-MidPoint can create a relatively simple mechanisms to handle changes and then those mechanisms can be applied to changes of (almost) any object.
+MidPoint can create a relatively simple mechanisms to handle changes, and then those mechanisms can be applied to any change of (almost) any object.
 
 Let’s have a closer look at an anatomy of a delta.
-There three types of delta: _add_, _modify_ and _delete_.
+There are three types of delta: _add_, _modify_ and _delete_.
 _Add delta_ is quite simple.
 It contains a new object to be created.
 
@@ -2137,7 +2146,7 @@ image::05-06-delta-delete.png[Delete delta]
 
 Last one is _modify delta_.
 This delta contains a description of modified properties of an existing object.
-But as the object can change in a variety of ways the modify delta is the most complex of the tree.
+As the object can change in a variety of ways, modify delta is the most complex of the three.
 Modify delta contains a list of _item deltas_.
 Each item delta describes how a particular part of an object changes.
 For example following delta describes that a new value `pirate` is added to a user property `employeeType`.
@@ -2150,76 +2159,78 @@ _Delete modification_ means that value or values are removed from an item.
 
 image::05-08-delta-modify-delete.png[Modify delta: delete]
 
-In both _add_ and _delete_ cases the values that are not mentioned in the delta are not affected.
+In both _add_ and _delete_ cases, the values that are not mentioned in the delta are not affected.
+They remain unchanged as they are.
 However, _replace_ modification is different.
-This means that all existing values of the item are going to be discarded and they are replaced with the value or values from the delta.
+This means that all existing values of the item are going to be discarded, and they are replaced with the value or values from the delta.
 
 image::05-09-delta-modify-replace.png[Modify delta: replace]
 
 The deltas are designed to work with both single-valued and multi-valued items.
-In fact _add modification_ and _delete modification_ deltas are specifically designed with multi-value items in mind.
+In fact, _add modification_ and _delete modification_ deltas are specifically designed with multi-value items in mind.
 Those deltas can work efficiently even in cases that there is a multi-valued attribute that has a very large number of values.
-And there is a good reason for this.
+There is a good reason for this.
 Multi-valued properties are quite common in the identity management field.
 Just think about how roles, groups, privileges and access control lists are usually implemented.
 Everybody that ever managed a large group in LDAP server will surely remember that experience in vivid colors.
-But midPoint is designed to handle situations like those.
+Fortunately, midPoint is designed to handle situations like these.
 
-Everything in midPoint is designed to work with deltas: user interface, mappings, authorizations, auditing … all the way down to the data storage components.
+Everything in midPoint is designed to work with deltas: user interface, mappings, authorizations, auditing ... all the way down to the low-level data storage components.
 Mappings are designed in a relativistic ways.
-That is the reason why we need to explicitly specify sources of the mapping.
+That is one of the reasons why we need to explicitly specify sources of the mapping.
 Mapping source definitions are matched with items in the delta to control execution of the mapping.
 Deltas permeate entire midPoint computation.
-Deltas are input to the mappings, but mapping produce other deltas as output.
-Therefore we can have a complete chain: deltas that are result of inbound mappings is applied to the user object, but those deltas are also input to outbound mappings.
+Deltas are input to the mappings, and mapping produce other deltas as output.
+Therefore, we can have a complete chain: deltas that are result of inbound mappings is applied to the user object, but those deltas are also input to outbound mappings.
 Everything is _relativistic_ in midPoint.
 
 This might seem to be a bit over-complicated at the beginning.
 But do not worry.
 You will get used to it.
-And clearly, this approach has major advantages.
-But a clever reader does not seem to be impressed.
+Clearly, this approach has major advantages.
+
+However, a clever reader does not seem to be impressed.
 How can this relativistic approach conserve any significant portion of computational resources?
 We usually fetch the entire account from the resource anyway.
-Therefore there is no harm to recompute all the attributes.
+Therefore, there is no harm to recompute all the attributes.
 The computation itself is fast, it is the fetch operation that is slow.
 Isn’t it?
 The clever reader is, of course, right.
-Or partially right at the very least.
-Most resources really fetch all the account attributes in a single efficient operation.
-And for those cases there is no big increase in efficiency if we go with the relativistic methods.
-But there are exceptions.
-For example some resources will not return all the values of big attributes, e.g. all the members of a large group.
+Or rather partially right at the very least.
+Most resources indeed fetch all the account attributes in a single efficient operation.
+For those cases, there is no big increase in efficiency if we go with the relativistic methods.
+However, there are exceptions.
+For example, some resources will not return all the values of big attributes, e.g. all the members of a large group.
 Additional requests are needed to fetch all the values – and there may be a lot of requests if the group is really large.
 Relativistic approach has significant benefit in those cases.
-And the benefits will be even more obvious when we get to the live synchronization in the next section.
-But performance is not the primary motivation for the relativistic approach.
+The benefits will be even more obvious when we get to the live synchronization in the next section.
+Yet, performance is not the primary motivation for the relativistic approach.
 There is one extremely strong reason to go relativistic: data consistency.
 Consistency is something that brings ugly nightmares to many engineers that try to design distributed system.
-And identity management solution is in fact a distributed system.
-But it is a very loosely-coupled distributed system.
+Identity management solution _is_ in fact a distributed system, managing data in many independent applications and databases.
+It is also a very _loosely-coupled_ distributed system.
 There is no support for locking or transactions in the connector.
-And even if there was some support, the vast majority of resource cannot provide those consistency mechanisms on their identity management APIs.
-This means that midPoint cannot rely on traditional consistency mechanisms.
-And that is why relativistic approach is so useful.
+Even if there was some support, the vast majority of resource cannot provide those consistency mechanisms on their identity management APIs.
+This means that midPoint cannot rely on traditional data consistency mechanisms.
+That is why relativistic approach is so useful.
 Relativistic computation has a very high probability of achieving correct result even without locking or transactions.
 This is more than acceptable for typical identity management deployments.
-And for those rare cases where relativistic computation can fluctuate there is always reconciliation as a last resort.
-But thanks to the relativistic nature of midPoint the need for reconciliation is significantly reduced.
+For those rare cases where relativistic computation can fluctuate there is always reconciliation as a last resort.
+Yet, thanks to the relativistic nature of midPoint, the need for reconciliation is significantly reduced.
 
 That was a lot of long words, but clever reader seems to be satisfied now.
 At least for a while.
-But there is quite a simple summary: relativistic approach of midPoint can do miracles.
+For the readers that are still scratching their heads there is quite a simple summary: relativistic approach of midPoint can do miracles.
 For example, midPoint resource can be both sources and targets, even a single attribute can be both source and target of information.
 It is the relativistic approach that allows features like this.
 The principle of relativity is relatively simple.
-But its effect in midPoint is nothing short of being revolutionary.
+Yet, its effect in midPoint is nothing short of being revolutionary.
 
 == Live Synchronization
 
 MidPoint has a range of synchronization mechanisms.
-Slow, brutal but reliable reconciliation is at one end.
-Live synchronization is on the other.
+Slow, brutal but reliable _reconciliation_ is at one end.
+_Live synchronization_ is on the other.
 Live synchronization is a lightweight mechanism that can provide almost-real-time synchronization capabilities.
 Live synchronization is specifically looking for recent changes on a resource.
 When such changes are detected, live synchronization mechanisms process those changes immediately.
@@ -2227,16 +2238,16 @@ The synchronization delay is usually in order of seconds or minutes if live sync
 
 Unlike reconciliation, live synchronization is not triggered manually.
 That would make very little sense.
-Live synchronization works in a long-running task repeatedly looking for fresh changes in short time intervals.
-If a resource is configured for synchronization then all that is needed to run live synchronization is to set up a live synchronization task.
+Live synchronization works in a long-running task, repeatedly looking for fresh changes in short time intervals.
+If a resource is configured for synchronization, then all that is needed to run live synchronization is to set up a live synchronization task.
 MidPoint user interface can be used to do that easily.
-And an example of live synchronization task was provided in the HR feed section above.
 
+An example of live synchronization task was provided in the HR feed section above.
 Live synchronization task wakes up at regular intervals.
-Each time the task waves up it invokes the connector.
-Connectors that are capable of live synchronization have special operation that is used to get fresh changes from the resource.
+Each time the task waves up, it invokes the connector.
+Connectors capable of live synchronization have special operation that is used to get fresh changes from the resource.
 The connector can support any reasonable change detection mechanism – in theory.
-But two mechanisms are commonly used in practice:
+Yet, two mechanisms are commonly used in practice:
 
 * *Timestamp-based synchronization:* Resource keeps track of last modification timestamp for each account.
 The connector looks for all accounts that have been modified since last scan.
@@ -2244,11 +2255,11 @@ This is very simple and relatively efficient method.
 But it has one major limitation: it cannot detect deleted accounts.
 If an account is deleted then there is no timestamp for that account and therefore the connector will not find it in the live synchronization scan.
 
-* *Changelog-based synchronization:* Resource keeps a “log” of recent changes.
-The connector is looking at the log and it is processing all the changes that were added to the log since the last scan.
+* *Changelog-based synchronization:* Resource keeps a "log" of recent changes.
+The connector is looking at the log, and it is processing all the changes that were added to the log since the last scan.
 This is a very efficient and flexible method.
-But it is not simple.
-And not many systems support it.
+Yet, it is not simple.
+Not many systems support it, and there are often hidden complexities.
 
 All live synchronization methods need to keep the track of what changes are "recent", i.e. which changes were already processed by midPoint and which were not processed yet.
 There is usually some value that needs to be remembered by midPoint: timestamp of last scan, last sequence number in the change log, serial number of last processed change and so on.
@@ -2256,50 +2267,51 @@ Each connector has a different value with a connector-specific meaning.
 MidPoint refers to those values as "tokens".
 The most recent token is stored in the live synchronization task.
 That is how midPoint keeps track of processed changes.
-There are (hopeful quite rare) cases when resource and midPoint token get out of alignment.
+There are (hopefuly quite rare) cases when resource and midPoint token get out of alignment.
 This may happen in cases such as the resource database is restored from a backup, if network time gets out of synchronization and so on.
-If that happen then deleting the token from the live synchronization task is usually all it takes to get the synchronization running again.
+If that happen, then deleting the token from the live synchronization task is usually all it takes to get the synchronization running again.
 
 Live synchronization is fast and very efficient.
-But it is not entirely reliable.
+However, it is not entirely reliable.
 MidPoint may miss some changes.
 This is quite a rare situation, but it may happen.
 Reconciliation will surely remedy the situation in such a case.
 Just remember, all the synchronization mechanism share the same configuration.
-And it is perfectly acceptable to run live synchronization and reconciliation on the same resource at the same time.
+It is perfectly acceptable to run live synchronization and reconciliation on the same resource at the same time.
 But of course, it would be a good idea to run reconciliation less frequently than live synchronization.
 
 == Conclusion
 
+// TODO TODO TODO review progress HERE
+
 Synchronization is one of the most important mechanisms in the entire identity management field.
-Primary purpose of synchronization is to get the data into midPoint.
-And that is really good approach when an identity management deployment begins: get your data into midPoint first.
+Primary purpose of synchronization is to get the data _into_ midPoint.
+That is good approach when an identity management deployment begins: feed your midPoint with data first.
 Get the data from the HR system.
-Correlate that with Active Directory.
-Connect all the major resources to midPoint and correlate the data.
+Correlate the data with Active Directory.
+Connect all the major resources to midPoint and correlate the data again.
 MidPoint does not need to make any changes at this stage.
 In fact, it is perfectly good approach to make all the resource read-only at this stage.
 The point is to let midPoint see the data.
-But why do we need that?
+Why do we need that?
 
-* We will see what is the real quality of the data.
+* We will see what is the real _quality_ of the data.
 Most system owners have at least some idea what data sets are there.
-But it is almost impossible to estimate data quality until the data are processed and verified.
+However, it is almost impossible to estimate data quality until the data are processed and verified.
 That is exactly what midPoint can do at this stage.
 This is essential information to plan data cleanup and sanitation.
 
 * We will learn how many accounts and account types are there.
-It is perhaps quite obvious that there are employee accounts.
-But are there accounts for contractors, suppliers, support engineers?
+It is perhaps quite obvious that there are _employee_ accounts.
+Are there also accounts for contractors, suppliers, support engineers?
 Are those accounts active?
 What is the naming convention?
-Do system administrators use employee accounts for administration.
-Or are they using dedicated high-privilege accounts?
+Do system administrators use employee accounts for administration, or are they using dedicated high-privilege accounts?
 This information is crucial to set up provisioning policies.
 
 * We will learn distribution of accounts and their entitlements.
 Do all employees have accounts in Active Directory?
-Are there any frequently-used groups?
+Are there any large user groups?
 How does organizational structure influence the accounts?
 This information is very useful to design a role-based access control structures and other policies.
 
@@ -2310,10 +2322,10 @@ Indeed, there is no security without identity management.
 
 This is a good start.
 But even if this is all that you do in the first step of the deployment it is still a major benefit.
-You will get better visibility and with that comes better security.
-And you have the data to analyze your environment and plan next step of the identity management deployment.
+You will get better visibility, and with that comes better security.
+You have the data to analyze your environment, and plan next step of the identity management deployment.
 You won’t be blind any longer.
-And that is really important.
+That is extremely important.
 It is indeed a capital mistake to theorize before one has data.
 
 ////
@@ -2321,4 +2333,3 @@ Tips for extension:
 * CRM resource, with some rogue accounts, manual correlation, orphan detection
 ... don't we have that already in LDAP?
 ////
-
