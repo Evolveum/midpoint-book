@@ -3,8 +3,6 @@
 
 include::chapter-include.adoc[]
 
-// Note: Reviewed for midPoint 4.4
-
 [quote,William Arthur Ward]
 The pessimist complains about the wind; the optimist expects it to change; the realist adjusts the sails.
 
@@ -25,12 +23,12 @@ MidPoint provides a practical solution to this problem.
 Application interfaces and their schemas need to be aligned or _mapped_ to a common identity schema that you choose to use for your deployment.
 This chapter will tell you how to do it.
 
-== Resource Definitions
+== Identity Resource Definitions
 
-_Resource_ is one of the most important concepts in midPoint.
-Any system connected to midPoint is a _resource_.
-Resources are typically target systems where midPoint manages accounts.
-But source systems such as HR databases are also considered to be resources.
+_Identity resource_ is one of the most important concepts in midPoint.
+Any system connected to midPoint is an _identity resource_.
+Identity resources (or just _resources_ for short) are typically target systems where midPoint manages accounts.
+Moreover, source systems such as HR databases are also considered to be resources.
 There is no strict distinction between the source and target resource in midPoint.
 Both source and target resources are defined in exactly the same way.
 Resource can even act as both source and target at the same time.

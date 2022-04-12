@@ -9,9 +9,9 @@ Many years ago we started a project.
 Because we had to.
 Back then we didn't think too much about business and markets and things like that.
 We were focused on the technology.
-Then the project simply went on.
+The project simply went on.
 It had its ups and downs – but all the time there was pure engineering passion.
-The effort brought fruits and now there is a product like no other: midPoint.
+The effort brought fruits, and now there is a product like no other: midPoint.
 
 MidPoint is an identity management and governance platform.
 We built it from scratch.
@@ -19,25 +19,26 @@ It is a comprehensive and feature-rich system.
 MidPoint can handle complete identity lifecycle management and some parts of identity governance and compliance.
 It can speed up the process that create accounts for new employee, student or customer.
 MidPoint can automatically disable accounts after the relation to the person has expired.
-MidPoint manages assignment of roles and privileges to employees, partners, agents, contractors, customers or students.
+MidPoint manages assignment of roles and privileges to employees, partners, agents, contractors, customers and students.
 MidPoint keeps an eye that the policies are continually maintained and enforced.
-It governs the processes of access reviews (attestations).
+It governs the processes of access certification (attestations).
 It provides auditing and reporting based on the identity data.
 
-MidPoint is a comprehensive system, and there are not that many products that can do what midPoint does.
-Yet, midPoint has one critical advantage over the competing products: midPoint is completely open source platform.
+MidPoint is a comprehensive system.
+There are not many products that can do what midPoint does.
+Yet, midPoint has one critical advantage over the competing products: midPoint is completely _open source_ platform.
 Open source is the fundamental philosophy of midPoint.
-We believe that open source is a critical aspect in the development of modern quality software.
-Open source principle is a guiding principle of midPoint community: partners, contributors supporters and in fact all the engineers that work with midPoint.
+We believe that open source is a critical aspect in the development of quality software.
+Open source principle is a guiding principle of midPoint community: partners, contributors supporters and all the engineers that work with midPoint.
 Open source character means that any engineer can completely understand how midPoint works.
-It also means that midPoint can be modified as needed, that issues can be fixed quickly and especially to ensure the continuity of midPoint development.
+It also means that midPoint can be modified as needed, that issues can be fixed quickly, and especially to ensure the continuity of midPoint development.
 After all these years with midPoint, we simply cannot imagine using any identity technology which is not open source.
 
 There are few engineers in our team who have been dealing with identity management deployments since early 2000s.
-The term "Identity and Access Management" (IAM) was not even invented at that time.
+The term "Identity and Access Management" (IAM) was not even invented back then.
 We have seen a lot of IAM solutions during our careers.
 The IDM system was the core of vast majority of these solutions.
-Whether it is given by our point of view or whether that is the generic rule we do not know for sure.
+Whether it is given by our point of view, or whether that is the generic rule, we do not know for sure.
 All we know is that midPoint is a really useful tool.
 When it is used by the right hands, midPoint can do miracles.
 This is exactly what this book is all about: the right use of midPoint to build a practical Identity Management solutions.
@@ -46,82 +47,84 @@ It will also tell you _why_ to do it in the first place.
 The book will explain not just the features and configuration options.
 It will also describe the motivation and the underlying principles of identity management.
 Understanding the principles is as at least as important as knowing the mechanics of an IDM product.
-The book usually describes _how_ the things work when they work.
+The book describes _how_ the things work when they work.
 It also tries to describe the limitations, drawbacks and pitfalls.
 The limitations are often much more important than the features, especially when designing a new solution on a green field.
 
 The first chapter is an introduction to the basic concepts of Identity and Access Management (IAM).
-It is very general and does not deal with midPoint at all.
-Therefore, if you are familiar with Identity and Access Management feel free to skip the first chapter.
-However, according to our experience, this chapter has many some things to tell even to an exprienced IAM engineers.
-If you are impatient and want to start directly with midPoint then skip the chapter (you would do that anyway, wouldn't you?).
+It is very general, and it does not deal with midPoint at all.
+Therefore, if you are familiar with Identity and Access Management, feel free to skip the first chapter.
+However, according to our experience, this chapter has many some things to tell even to exprienced IAM engineers.
+If you are impatient, and you want to start directly with midPoint, then skip the chapter (you would do that anyway, wouldn't you?).
 Just please try to find the time to return to the first chapter later.
 This chapter contains important information to put midPoint in broader context.
 You will need that information to build a complete IAM solution.
 
 The second chapter describes the midPoint big picture.
 It shows how midPoint looks like from the outside.
-It describes how midPoint is usually used and how it behaves.
+It describes how midPoint is usually used, and how it behaves.
 The purpose of this chapter is to familiarize the reader with midPoint workings and basic principles.
-It describes how midPoint is used.
+It describes how midPoint is _used_.
 
-The third chapter describes the basic concepts of midPoint deployment and configuration.
-It guides the reader through midPoint installation.
+The third chapter describes basic concepts of midPoint _configuration_.
+It guides the reader through midPoint _installation_.
 It describes how midPoint is customized to suit the needs of a particular deployment.
 However, midPoint customization is a very complex matter, and chapter describes just the basic principles.
 It will take most of the book to fill in the details.
 
-The fourth chapter describes the concepts of resource and mappings.
+The fourth chapter describes the concepts of _identity resource_ and _mappings_.
 This is the bread-and-butter of an identity management.
 This chapter will tell you how to create very basic midPoint deployment, how to connect target systems and how to map and transform the data.
 
-The fifth chapter is all about synchronization.
+The fifth chapter is all about _synchronization_.
 Primary purpose of synchronization is to get the data from the source systems such as HR system to midPoint.
 Yet, midPoint synchronization is much more powerful than that.
 This chapter also expands the explanation of underlying midPoint principles such as mappings and deltas.
 
-The sixth chapter talks about midPoint schema.
+The sixth chapter talks about midPoint _schema_.
 MidPoint has a built-in identity data model.
 Even though this data model is quite rich, it is usually not sufficient to cover all the real-world use cases.
-Therefore the data model is designed to be extensible.
+Therefore, the data model is designed to be extensible.
 This chapter describes the methods how a new data items can be defined in midPoint schema.
 
-The seventh chapter is all about role-based access control (RBAC).
+The seventh chapter is all about _role-based access control_ (RBAC).
 MidPoint role-based model is a very powerful tool to set up complex structures describing job roles, responsibilities, privileges and so on.
 The role model, and especially the concept of assignment, are generic mechanisms that are used in almost every part of midPoint.
 Organizational structure management and many identity governance features are built on the foundations described in this chapter.
 
-The eighth chapter is an introduction to object templates.
+The eighth chapter is an introduction to _object templates_.
 Those templates form a basis of an internal data consistency in midPoint.
 They can be used to set up simple policies and automation rules.
 Object templates are a basic workhorse that is used in almost all midPoint deployments.
 
-The ninth chapter describes organizational structures.
+The ninth chapter describes _organizational structures_.
 MidPoint organizational structure mechanisms are generic and very powerful.
 They can be used to model traditional organizational hierarchies, tree, and even structures that are not exactly trees.
 The same mechanism can be used to set up projects, teams, workgroups, classes or almost any conceivable grouping concept.
-This chapter describes how organizational structrures are synchronized with the outer world.
+This chapter describes how organizational structures are synchronized with the outer world.
 The concept of _generic synchronization_ can be applied to synchronize midPoint objects with almost any external data structure.
 
-The tenth chapter is about troubleshooting.
+The tenth chapter is about _troubleshooting_.
 To err is human.
-Given all the flexibility of midPoint mechanisms configuration mistakes just happen, and it may not be easy to figure out the root cause of problems.
+Given all the flexibility of midPoint mechanisms, configuration mistakes just happen, and it may not be easy to figure out the root cause of problems.
 Therefore, this chapter provides an overview of midPoint diagnostic facilities and recommendations for their use.
 
-The eleventh chapter provides overview of midPoint development process and overall approach.
+The eleventh chapter provides overview of midPoint _development_ process and overall approach.
 It is also explained how midPoint development is funded and how midPoint subscriptions work.
 
-The twelfth chapter is a collection of pointers to additional information.
+The twelfth chapter is a collection of pointers to _additional information_.
 This includes a pointer to sample files that accompany this book.
 
-The next chapters are not written yet.
-The description of policies, entitlements, authorizations, archetypes and all the other advanced topics is missing.
+Finally, there is a _glossary_, explaining all the strange and confusing terms used in identity management and governance field.
+
+The other chapters are not written yet.
+The description of policies, entitlements, authorizations, archetypes, deployment practices and all the other advanced topics is missing.
 This book is not finished yet.
-Just like midPoint itself this book is written in an incremental and iterative way.
+Just like midPoint itself, this book is written in an incremental and iterative way.
 Writing a good book is a huge task in itself, and it takes a lot of time.
 We cannot dedicate that much time to writing the book in one huge chunk.
 Obviously, a book like this is needed for midPoint community.
-Therefore we have decided not to wait until the book is complete.
+Therefore, we have decided not to wait until the book is complete.
 We will be continuously publishing those chapters that are reasonably well finished.
 It is better to have something than to have nothing, isn’t it?
 Please be patient.
@@ -133,8 +136,7 @@ There was a lot of people involved in midPoint during all these years.
 All these people pushed midPoint forward.
 Most of all, we would like to thank the people that were there when the midPoint project was young and that are still there until this day.
 We would like to thank Katka Stanovská, Katka Bolemant (née Valaliková), Igor Farinič, Ivan Noris, Vilo Repáň, Pavol Mederly and Radovan Semančík.
-Those were the people that were there when midPoint was young.
-And they are still the people who are the force that drives midPoint into the future.
+Those were the people that were there when midPoint was young, and they are still the people who are the force that drives midPoint into the future.
 
 Anything that is stated in this book are the opinions of the authors.
 We have tried really hard to remain objective.
@@ -146,7 +148,7 @@ You are the judge and the jury in this matter.
 You, the reader, will decide whether we have succeeded or not.
 You have free access to all the necessary information to do that: this book is freely available as is all the midPoint documentation and the source code.
 We are not hiding anything.
-Unlike many other vendors we do not want or need to hide any aspect of the software we are producing.
+Unlike many other vendors, we do not want or need to hide any aspect of the software we are producing.
 
 This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC{nbsp}BY-NC-ND).
 This essentially means that you can freely use this book for a personal use.
@@ -174,4 +176,3 @@ Following people have worked on the words and images that make up this book:
 
 Yet there is much more people whose work was needed to make this work happen: midPoint developers, contributors, analysts and deployment engineers, specialists and generalists, theoretical scientists and practical engineers, technical staff and business people, people of Evolveum and the people that work for our partners, our families, friends and all the engineers and scientists for generations and generations past.
 We indeed stand on the shoulders of giants.
-

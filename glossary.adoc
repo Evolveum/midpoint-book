@@ -1,31 +1,52 @@
-[#glossary]
+[glossary]
 = Glossary
 
-include::chapter-include.adoc[]
-
-[quote, Douglas Adams, "So Long, and Thanks for All the Fish"]
+[quote,"So Long, and Thanks for All the Fish by Douglas Adams"]
 Eskimos had over two hundred different words for snow, without which their conversation would probably have got very monotonous.
 
+Identity management and governance parlance may sound like an alien language to a newcomer.
+Therefore, perhaps preparing IDMish-to-english dictionary might be a good idea.
+
+There are a lot of terms listed in this part of the book.
+Many of the terms have several meanings, some of them might be confusing, and there are alternative terms and various "dialects".
+Identity management, similarly to many fields of technology, is also riddled by many buzzwords, invented by marketing departments rather than scientists and engineers.
+Therefore, compiling a clear, simple, exact and consistent terminology is almost an impossible task.
+We have tried to do our best here.
+
+Individual terms are accompanied by acronyms and alternative terms where appropriate.
+There is also a reference to vocabularies used by standards.
+Some terms have specific meaning when used in midPoint ecosystem.
+In that case the midPoint-specific meaning is explained as well.
+
+Although the glossary is certainly incomplete, and we reserve the right for our own interpretation, we hope that this will help you safely navigate the stormy waters of identity management letter soup.
 
 [glossary]
 [[glossterm-abac]]Attribute-Base Access Control (ABAC)::
-A mechanism for managing of user access to information systems based on values of user attributes. Attribute-Based Access Control (ABAC) evaluates the access dynamically, using an algorithm that takes "attributes" as an input, and outputs access decision (allow/deny). The attributes are usually user attributes from the user profile, supplemented with context attributes, such as time of access and user's current location.
+  A mechanism for managing of user access to information systems based on values of user attributes. Attribute-Based Access Control (ABAC) evaluates the access dynamically, using an algorithm that takes "attributes" as an input, and outputs access decision (allow/deny). The attributes are usually user attributes from the user profile, supplemented with context attributes, such as time of access and user's current location.
 +
 See also: <<glossterm-access-control,Access Control>>
+[[glossterm-abstract-role]]Abstract Role::
+
++
+In midPoint terminology: Abstract role means any type of object that acts as a role. This means that abstract tole can be used to hold inducements, which give privileges to other objects. Role, org, service, archetype are abstract roles in midPoint.
++
+See also link:https://docs.evolveum.com/midpoint/architecture/concepts/abstract-role/[more information at docs.evolveum.com].
++
+See also: <<glossterm-inducement,Inducement>>, <<glossterm-role,Role>>, <<glossterm-org,Org>>, <<glossterm-archetype,Archetype>>
 [[glossterm-access-certification]]Access Certification::
-Access certification helps with management of access rights. These rights also called privileges, role assignments, authorities or authorizations need to be assigned to the right users in the right systems at the right time. Access Certification means reviewing the settings such as assignments of roles to users to make sure that employees have accesses to the systems they need.
+  Access certification helps with management of access rights. These rights also called privileges, role assignments, authorities or authorizations need to be assigned to the right users in the right systems at the right time. Access Certification means reviewing the settings such as assignments of roles to users to make sure that employees have accesses to the systems they need.
 +
 Alternative terms: Access Re-certification, Re-certification, Attestation
 [[glossterm-access-control]]Access Control::
-Access control is an abstract concept of controlling access of users to applications. It is a very broad and general term, however it usually refers to a mechanism to define and evaluate authorization policies. Two commonly-used access control mechanisms are role-based access control (RBAC) and attribute-based access control (ABAC).
+  Access control is an abstract concept of controlling access of users to applications. It is a very broad and general term, however it usually refers to a mechanism to define and evaluate authorization policies. Two commonly-used access control mechanisms are role-based access control (RBAC) and attribute-based access control (ABAC).
 +
 X.1252 term: access control
 +
 See also: <<glossterm-rbac,Role-Base Access Control>>, <<glossterm-abac,Attribute-Base Access Control>>
 [[glossterm-access-management]]Access Management (AM)::
-Access Management (AM) is a security discipline that provides access to authorised users to enter particular resources. It also prevents non-authorised users from accessing the resources. Thus the goal of Access Management is to unify the security mechanisms that take place when a user is accessing specific system or functionality. Single Sign-On (SSO) is sometimes considered to be a part of Access Management.
+  Access Management (AM) is a security discipline that provides access to authorised users to enter particular resources. It also prevents non-authorised users from accessing the resources. Thus the goal of Access Management is to unify the security mechanisms that take place when a user is accessing specific system or functionality. Single Sign-On (SSO) is sometimes considered to be a part of Access Management.
 [[glossterm-account]]Account::
-Data structure in a database, file or a similar data store that describes characteristics of a user of a particular system (resource). Accounts are used to control access of users to applications, databases and so on. Account is a persistent data record, stored in an application or a database. This term is usually not used to describe ephemeral information about user's identity, such as information temporarily stored only for the duration of user's session. Such information is often referred to as "principal".
+  Data structure in a database, file or a similar data store that describes characteristics of a user of a particular system (resource). Accounts are used to control access of users to applications, databases and so on. Account is a persistent data record, stored in an application or a database. This term is usually not used to describe ephemeral information about user's identity, such as information temporarily stored only for the duration of user's session. Such information is often referred to as "principal".
 +
 Account is different from a generic data record (e.g. "identity" or "principal"). The purpose of account is to provide user's access to the system, generic data record may not provide such access.
 +
@@ -35,9 +56,9 @@ Alternative terms: User account
 +
 See also: <<glossterm-user,User>>, <<glossterm-principal,Principal>>
 [[glossterm-active-directory]]Active Directory::
-An identity repository created by Microsoft that stores and arranges identity information. Based on this information, it provides access and permissions to users to enter particular resources and therefore improves organization’s security.
+  An identity repository created by Microsoft that stores and arranges identity information. Based on this information, it provides access and permissions to users to enter particular resources and therefore improves organization’s security.
 [[glossterm-agent]]Agent::
-Active entity, usually a software component that plays an active part.
+  Active entity, usually a software component that plays an active part.
 +
 In identity management field, the term "agent" often means an active software component installed into a controlled system, used to mediate management of identities. It is similar in function to identity connector, however unlike the connector, the agent has to be installed into a controlled system.
 +
@@ -45,17 +66,37 @@ X.1252 term: agent
 +
 See also: <<glossterm-identity-connector,Identity Connector>>
 [[glossterm-anonymity]]Anonymity::
-A situation when an object cannot be distinguished from similar objects, where an identity of an object cannot be determined.
+  A situation when an object cannot be distinguished from similar objects, where an identity of an object cannot be determined.
 +
 X.1252 term: anonymity
 +
 See also: <<glossterm-identity,Identity>>
 [[glossterm-api]]Application Programming Interface (API)::
-Set of procedures, functions or methods that can be used by another program or component. APIs are usually interfaces exposed by an application, meant to be used by other application. Therefore APIs are important integration points between applications and services. In the past, APIs were usually created as a programming language library, such as C or Java library. Since c. 2010, APIs usually take form of HTTP-based RESTful service.
+  Set of procedures, functions or methods that can be used by another program or component. APIs are usually interfaces exposed by an application, meant to be used by other application. Therefore APIs are important integration points between applications and services. In the past, APIs were usually created as a programming language library, such as C or Java library. Since c. 2010, APIs usually take form of HTTP-based RESTful service.
 +
 See also: <<glossterm-restful-service,RESTful Service>>
+[[glossterm-archetype]]Archetype::
+
++
+In midPoint terminology: Archetype is a formal definition of object subtype in midPoint. Archetypes can give specific characters to basic midPoint types such as user, role or org. For example, archetypes can be used to further refine concept of user to represent employees, students, contractors and partners.
++
+See also link:https://docs.evolveum.com/midpoint/reference/schema/archetypes/[more information at docs.evolveum.com].
+[[glossterm-assignment]]Assignment::
+
++
+In midPoint terminology: Assignment is a relation that directly assigns privileges, organizational membership, policy elements or other midPoint concepts to assignment holder objects (usually users). Assignment is quite a rich, flexible and universal mechanism. Assignments can be conditional, there may be time constraints, parameters and other details specifying the relation between assignment holder (usually user) and target (usually role or org). Many types of objects can be a target of an assignment, allowing for a significant expressive power.
++
+See also link:https://docs.evolveum.com/midpoint/reference/roles-policies/assignment/[more information at docs.evolveum.com].
++
+See also: <<glossterm-inducement,Inducement>>, <<glossterm-assignment-holder,Assignment Holder>>, <<glossterm-focus,Focus>>
+[[glossterm-assignment-holder]]Assignment Holder::
+
++
+In midPoint terminology: An object that can hold assignments. Assignment holder can be considered a "source" of an assignment, a source of a relation that an assignmnt represents. Almost all object types in midPoint are assignment holder, capable of containing an assignment.
++
+See also: <<glossterm-assignment,Assignment>>, <<glossterm-focus,Focus>>
 [[glossterm-authentication]]Authentication::
-Authentication is a mechanism by which a computer system checks that the user is really the one she or he claims to be. Authentication can be implemented by a broad variety of mechanisms broadly divided into three categories: something you know, something you have, something you are. Traditionally, authentication is done by the means of by username and password. Authentication is often followed by authorization, however, authentication and authorization are two separate mechanisms.
+  Authentication is a mechanism by which a computer system checks that the user is really the one she or he claims to be. Authentication can be implemented by a broad variety of mechanisms broadly divided into three categories: something you know, something you have, something you are. Traditionally, authentication is done by the means of by username and password. Authentication is often followed by authorization, however, authentication and authorization are two separate mechanisms.
 +
 ISO 24760 term: authentication
 +
@@ -63,7 +104,7 @@ X.1252 term: authentication
 +
 See also: <<glossterm-identification,Identification>>, <<glossterm-authorization,Authorization>>
 [[glossterm-authenticated-identity]]Authenticated Identity::
-ISO 24760 term, describing "identity information" created to record result of authentication. This may mean data such as authentication strength, timestamps and similar information. In software development, it is often referred to as "authenticated user" or "authenticated principal".
+  ISO 24760 term, describing "identity information" created to record result of authentication. This may mean data such as authentication strength, timestamps and similar information. In software development, it is often referred to as "authenticated user" or "authenticated principal".
 +
 Alternative terms: Authenticated user, Authenticated principal
 +
@@ -71,7 +112,7 @@ ISO 24760 term: authenticated identity
 +
 See also: <<glossterm-authentication,Authentication>>, <<glossterm-principal,Principal>>
 [[glossterm-authorization]]Authorization::
-Authorization is a mechanism by which a computer system determines whether to allow or deny specific action to a user. Authorization is often controlled by rather complex rules and algorithms, usually specified as part of an access control model. Authorization often follows (and required) authentication, however, authentication and authorization are two separate mechanisms.
+  Authorization is a mechanism by which a computer system determines whether to allow or deny specific action to a user. Authorization is often controlled by rather complex rules and algorithms, usually specified as part of an access control model. Authorization often follows (and required) authentication, however, authentication and authorization are two separate mechanisms.
 +
 In rare cases, "authorization" is understood as a process of allowing access, granting permissions or giving approval. Such as "authorization" of a request to join a group.
 +
@@ -79,13 +120,13 @@ X.1252 term: authorization
 +
 See also: <<glossterm-authentication,Authentication>>, <<glossterm-rbac,Role-Base Access Control>>, <<glossterm-abac,Attribute-Base Access Control>>, <<glossterm-coarse-grain-authorization,Coarse-grain Authorization>>, <<glossterm-fine-grain-authorization,Fine-Grain Authorization>>, <<glossterm-access-control,Access Control>>
 [[glossterm-authorization-service]]Authorization Service::
-A system that provides authorization information to an application. It usually makes a decision whether a specific operation should be allowed or denied by the application. I.e. authorization system is performing the authorization decision instead of the application. Authorization systems often use complex policy, user roles or additional attributes to make the decision. Authorization servers usually implement functionality of Policy Decision Point (PDP). Typical protocols and frameworks: XACML, Open Policy Agent (OPA), SAML authorization assertions, proprietary mechanisms
+  A system that provides authorization information to an application. It usually makes a decision whether a specific operation should be allowed or denied by the application. I.e. authorization system is performing the authorization decision instead of the application. Authorization systems often use complex policy, user roles or additional attributes to make the decision. Authorization servers usually implement functionality of Policy Decision Point (PDP). Typical protocols and frameworks: XACML, Open Policy Agent (OPA), SAML authorization assertions, proprietary mechanisms
 +
 Alternative terms: Authorization Server
 +
 See also: <<glossterm-authorization,Authorization>>
 [[glossterm-biometrics]]Biometrics::
-Automated recognition of persons, based on their biological or behavioral characteristics.
+  Automated recognition of persons, based on their biological or behavioral characteristics.
 +
 Alternative terms: Biometric authentication
 +
@@ -93,35 +134,35 @@ X.1252 term: biometric recognition
 +
 See also: <<glossterm-authentication,Authentication>>
 [[glossterm-blinded-affirmation]]Blinded Affirmation::
-A method to provide strictly limited information to another party, without revealing any unintended information. Blinded affirmation is often used to demonstrate that a certain user is a member of an organization, without revealing any additional information about the user to a third party. Blinded affirmation usually relies on ephemeral identifiers or pseudonyms.
+  A method to provide strictly limited information to another party, without revealing any unintended information. Blinded affirmation is often used to demonstrate that a certain user is a member of an organization, without revealing any additional information about the user to a third party. Blinded affirmation usually relies on ephemeral identifiers or pseudonyms.
 +
 ISO 24760 term: blinded affirmation
 +
 See also: <<glossterm-ephemeral-identifier,Ephemeral Identifier>>, <<glossterm-pseudonym,Pseudonym>>
 [[glossterm-certificate-authority]]Certificate Authority (CA)::
-Entity that issues digital certificates. Certificate authority is usually a trusted third party, certifying correctness of the data presented in certificates that it issues. The most common form of certificate authority is an authority that issues X.509 digital certificates, containing public keys. Certificate authority signs the certificates, thus certifying that a specified public key belongs to a specified identity.
+  Entity that issues digital certificates. Certificate authority is usually a trusted third party, certifying correctness of the data presented in certificates that it issues. The most common form of certificate authority is an authority that issues X.509 digital certificates, containing public keys. Certificate authority signs the certificates, thus certifying that a specified public key belongs to a specified identity.
 +
 See also: <<glossterm-digital-certificate,Digital Certificate>>, <<glossterm-trusted-third-party,Trusted Third Party>>
 [[glossterm-cloud-computing]]Cloud Computing::
-Internet-based computing when resources like storage, applications or servers are used by organizations or users via Internet. Data could be accessed any time from any place, without any installations and is stored and processed in third-party data centers which could be located anywhere in the world. Cloud computing is considered to lower organization’s costs by avoiding the need of purchasing servers as well as to speed up the processes with less maintenance needed. Due to data being centralized at one place, it is considered to be secure and easily shared across bigger amount of users.
+  Internet-based computing when resources like storage, applications or servers are used by organizations or users via Internet. Data could be accessed any time from any place, without any installations and is stored and processed in third-party data centers which could be located anywhere in the world. Cloud computing is considered to lower organization’s costs by avoiding the need of purchasing servers as well as to speed up the processes with less maintenance needed. Due to data being centralized at one place, it is considered to be secure and easily shared across bigger amount of users.
 [[glossterm-coarse-grain-authorization]]Coarse-grain Authorization::
-Authorization concerning big architectural blocks, such as entire applications or systems. E.g. coarse-grain authorization usually decides whether a user can access an application, or access should be denied, without providing any additional details. Coarse-grained authentication is usually being made at the "perimeter" of the system, e.g. by infrastructure components, when a user is accessing an application. Typically, this authorization is based on simple policy rules, such as a role or group assigned to the user.
+  Authorization concerning big architectural blocks, such as entire applications or systems. E.g. coarse-grain authorization usually decides whether a user can access an application, or access should be denied, without providing any additional details. Coarse-grained authentication is usually being made at the "perimeter" of the system, e.g. by infrastructure components, when a user is accessing an application. Typically, this authorization is based on simple policy rules, such as a role or group assigned to the user.
 +
 See also: <<glossterm-authentication,Authentication>>
 [[glossterm-connid]]ConnId::
-ConnId is an open source identity connector framework project. It originated from Identity Connector Framework (ICF) developed by Sun Microsystems in late 2000s. ConnId is now an independent open source project, used by several identity management platforms.
+  ConnId is an open source identity connector framework project. It originated from Identity Connector Framework (ICF) developed by Sun Microsystems in late 2000s. ConnId is an now an independent open source project, used by several identity management platforms.
 +
 Alternative terms: ConnId Framework
 +
 See also: <<glossterm-identity-connector,Identity Connector>>, <<glossterm-identity-connector-framework,Identity Connector Framework>>
 [[glossterm-consent-for-personal-data-processing]]Consent for Personal Data Processing::
-Consent for personal data processing is given by a user, to indicate agreement for processing of personal data. In personal data protection frameworks (such as GDPR), consent has a strict structure, it is given for a very specific processing scope. Consent can be revoked by the user any time. Consent is just one of several personal data processing bases (lawful bases). Consent is perhaps the most well know, and also the most misused basis for personal data processing.
+  Consent for personal data processing is given by a user, to indicate agreement for processing of personal data. In personal data protection frameworks (such as GDPR), consent has a strict structure, it is given for a very specific processing scope. Consent can be revoked by the user any time. Consent is just one of several personal data processing bases (lawful bases). Consent is perhaps the most well know, and also the most misused basis for personal data processing.
 +
 Alternative terms: Consent
 +
 See also: <<glossterm-personal-data-protection,Personal Data Protection>>, <<glossterm-personal-data-processing-basis,Personal Data Processing Basis>>, <<glossterm-gdpr,General Data Protection Regulation>>
 [[glossterm-credential]]Credential::
-Information used to prove the identity during authentication. Credentials can be digital (information), physical (an object such as ID card) or a combination of both (an ID card with a tamper-proof chip containing cryptographic keys). Perhaps the most common type of digital credential is a password.
+  Information used to prove the identity during authentication. Credentials can be digital (information), physical (an object such as ID card) or a combination of both (an ID card with a tamper-proof chip containing cryptographic keys). Perhaps the most common type of digital credential is a password.
 +
 Alternative terms: Credentials
 +
@@ -131,25 +172,25 @@ X.1252 term: credential
 +
 See also: <<glossterm-authentication,Authentication>>
 [[glossterm-credential-issuer]]Credential Issuer::
-An entity that creates and provisions credentials to entities.
+  An entity that creates and provisions credentials to entities.
 +
 ISO 24760 term: credential issuer
 +
 See also: <<glossterm-credential,Credential>>
 [[glossterm-credential-service-provider]]Credential Service Provider (CSP)::
-ISO 24760 term, describing an entity responsible for management of credentials in a domain.
+  ISO 24760 term, describing an entity responsible for management of credentials in a domain.
 +
 ISO 24760 term: credential service provider
 +
 See also: <<glossterm-credential,Credential>>
 [[glossterm-cross-domain]]Cross-domain::
-Anything that involves interaction between two or more domains. Specifically in context of identity and access management, it usually means transfer of information between domains that are under separate control, or transfer of information that needs to be somehow limited (e.g. only a subset of attributes is transferred).
+  Anything that involves interaction between two or more domains. Specifically in context of identity and access management, it usually means transfer of information between domains that are under separate control, or transfer of information that needs to be somehow limited (e.g. only a subset of attributes is transferred).
 +
 Cross-domain techniques employ special mechanism to protect the information, or to make transfer between domains more reliable or secure. For example, special identifiers (often ephemeral pseudonyms) are used to refer to identity data.
 +
 See also: <<glossterm-domain,Domain>>, <<glossterm-identity-provider,Identity Provider>>, <<glossterm-relying-party,Relying Party>>, <<glossterm-identity-federation,Identity Federation>>
 [[glossterm-data-minimization]]Data Minimization::
-A process of reducing the amount of data to the necessary minimum required for processing.
+  A process of reducing the amount of data to the necessary minimum required for processing.
 +
 Data minimization often takes place in context of privacy and personal data protection, minimizing identity data to the necessary minimum.
 +
@@ -159,7 +200,7 @@ X.1252 term: data minimization
 +
 See also: <<glossterm-privacy,Privacy>>, <<glossterm-personal-data-protection,Personal Data Protection>>
 [[glossterm-data-origin]]Data Origin::
-Organization or entity that have created or assigned a particular value. Origin is often part of data provenance, description of the method how a value was acquired by a system.
+  Organization or entity that have created or assigned a particular value. Origin is often part of data provenance, description of the method how a value was acquired by a system.
 +
 Origin may be relative, describing only an immediate origin of the information, a "previous hop, a system that have relayed the information to our system. Such origin may not have created or assigned the information, it may have only relayed or copied the information originated in a third system. Origin is often recorded in a form of metadata.
 +
@@ -169,7 +210,7 @@ ISO 24760 term: domain of origin
 +
 See also: <<glossterm-digital-identity-attribute,Digital Identity Attribute>>, <<glossterm-data-provenance,Data Provenance>>
 [[glossterm-data-provenance]]Data Provenance::
-Description of the method how a value was acquired by a system. Provenance information almost always contains description of data origin. It is supplemented by additional information, such as timestamps and assurance information.
+  Description of the method how a value was acquired by a system. Provenance information almost always contains description of data origin. It is supplemented by additional information, such as timestamps and assurance information.
 +
 Provenance may be relative, describing only an immediate origin of the information, a "previous hop, a system that have relayed the information to our system. In other cases, provenance information may include a complete path from the ultimate origin of the information, describing all the systems that it has passed and all the transformations that were applied. Provenance is often recorded in a form of metadata.
 +
@@ -177,13 +218,23 @@ Alternative terms: Provenance
 +
 See also: <<glossterm-data-origin,Data Origin>>, <<glossterm-metadata,Metadata>>
 [[glossterm-decentralized-identifier]]Decentralized Identifier (DID)::
-An identifier that does not require centralized registration authority. Technologies supporting decentralized identifiers vary, many of them are based on distributed ledger technologies (e.g. blockchain).
+  An identifier that does not require centralized registration authority. Technologies supporting decentralized identifiers vary, many of them are based on distributed ledger technologies (e.g. blockchain).
 +
 X.1252 term: decentralized identifier
 [[glossterm-delegated-administration]]Delegated Administration::
-Type of administration where chosen users have administrator permissions. They can manage other users, create passwords for them, move them into groups, assign them roles, etc.
+  Type of administration where chosen users have administrator permissions. They can manage other users, create passwords for them, move them into groups, assign them roles, etc.
+[[glossterm-delta]]Delta::
+
++
+In midPoint terminology: Delta is a data structure describing a change in data. It describes the data items (and values) that were added, removed or replaced. Delta is a relativistic data structure, it contains only the data that were changed.
++
+See also link:https://docs.evolveum.com/midpoint/devel/prism/concepts/deltas/[more information at docs.evolveum.com].
++
+Alternative terms: Prism Delta
++
+See also: <<glossterm-prism,Prism>>
 [[glossterm-digital-identity]]Digital Identity::
-Digital representation of identity: set of characteristics, qualities, believes and behaviors of en entity, usually represented as a set of attributes.
+  Digital representation of identity: set of characteristics, qualities, believes and behaviors of en entity, usually represented as a set of attributes.
 +
 Digital identity should not be confused with identifier. Digital identity is a set of characteristics (complex data), while identifier is (usually simple) value used to refer to digital identity.
 +
@@ -195,7 +246,7 @@ X.1252 term: digital identity
 +
 See also: <<glossterm-identity,Identity>>, <<glossterm-digital-identity-attribute,Digital Identity Attribute>>, <<glossterm-entity,Entity>>
 [[glossterm-digital-identity-attribute]]Digital Identity Attribute::
-A value representing a characteristic or property of an entity. An attribute is a part of digital identity.
+  A value representing a characteristic or property of an entity. An attribute is a part of digital identity.
 +
 Alternative terms: Attribute
 +
@@ -205,7 +256,7 @@ X.1252 term: attribute
 +
 See also: <<glossterm-digital-identity,Digital Identity>>, <<glossterm-identifier,Identifier>>, <<glossterm-entity,Entity>>
 [[glossterm-digital-certificate]]Digital Certificate::
-Digital document, containing an information protected by cryptographic means. Digital certificates are usually used to bind an information to a digital identity. Perhaps the most common use of certificates are certificates of public keys, binding public key to identity of the owner, signed by a trusted third party (certificate authority). The most prominent specification of a format of such digital certificate is X.509.
+  Digital document, containing an information protected by cryptographic means. Digital certificates are usually used to bind an information to a digital identity. Perhaps the most common use of certificates are certificates of public keys, binding public key to identity of the owner, signed by a trusted third party (certificate authority). The most prominent specification of a format of such digital certificate is X.509.
 +
 Alternative terms: Certificate
 +
@@ -213,7 +264,7 @@ X.1252 term: certificate
 +
 See also: <<glossterm-certificate-authority,Certificate Authority>>, <<glossterm-trusted-third-party,Trusted Third Party>>
 [[glossterm-directory-service]]Directory Service::
-A database intended as a store of simple objects, shared between applications. Directory services are often used to store identity data. The data are used by other applications, that are accessing the directory service by using a well-known protocol. Lightweight Directory Access Protocol (LDAP) is the most common protocol used to access directory services.
+  A database intended as a store of simple objects, shared between applications. Directory services are often used to store identity data. The data are used by other applications, that are accessing the directory service by using a well-known protocol. Lightweight Directory Access Protocol (LDAP) is the most common protocol used to access directory services.
 +
 Directory services used to be the usual method to implement functionality of identity data store. However, other databases and technologies are used to implement similar functionality.
 +
@@ -221,7 +272,7 @@ Alternative terms: Directory Server
 +
 See also: <<glossterm-identity-data-store,Identity Data Store>>, <<glossterm-ldap,Lightweight Directory Access Protocol>>
 [[glossterm-domain]]Domain::
-An environment under an autonomous control. A domain is often an organization, managing a set of information systems and databases, keeping the information consistent. However, it may also refer to a smaller information set within an organization, such as a single database or directory server.
+  An environment under an autonomous control. A domain is often an organization, managing a set of information systems and databases, keeping the information consistent. However, it may also refer to a smaller information set within an organization, such as a single database or directory server.
 +
 Identifiers are often designed to be unique within a particular domain, such as an organization or a database.
 +
@@ -233,7 +284,7 @@ X.1252 term: domain
 +
 See also: <<glossterm-digital-identity,Digital Identity>>, <<glossterm-identifier,Identifier>>
 [[glossterm-enrollment]]Enrollment::
-A process of entering new identity data into a specific system (usually in a domain). Enrollment usually involves validation and verification of the information and its origin, such as verification of identity assertion that relied the information to the system.
+  A process of entering new identity data into a specific system (usually in a domain). Enrollment usually involves validation and verification of the information and its origin, such as verification of identity assertion that relied the information to the system.
 +
 The terms "enrollment", "registration" and "onboarding" are overlapping and they are often used as synonyms. Strictly speaking, "enrollment" is the verification process, "registration" is an act of recording information to data store, and "onboarding" is a complete business process making sure that a new person in an organization is well-equipped for activities within the organization.
 +
@@ -243,18 +294,15 @@ X.1252 term: enrollment
 +
 See also: <<glossterm-identity-registration,Identity Registration>>, <<glossterm-onboarding,Onboarding>>, <<glossterm-identity-assertion,Identity Assertion>>
 [[glossterm-entitlement]]Entitlement::
-A privilege or right of access given to the user.
-An "entitlement" is a very overloaded term.
-It can be used to represent any kind of privilege, ranging from a very high-level business role to the finest filesystem permission in a specific system.
+  A privilege or right of access given to the user. An "entitlement" is a very overloaded term. It can be used to represent any kind of privilege, ranging from a very high-level business role to the finest filesystem permission in a specific system.
 +
-In midPoint terminology: An Entitlement is a resource object representing privilege, access right, resource-side role, group or any similar concept.
-However, unlike account, the entitlement does not represent a user.
+In midPoint terminology: An Entitlement is a resource object representing privilege, access right, resource-side role, group or any similar concept. However, unlike account, the entitlement does not represent a user.
 +
 Alternative terms: Privilege, Access Right
 +
 X.1252 term: privilege
 [[glossterm-entity]]Entity::
-Being (su as person or animal), thing, concept or anything else that has recognizably distinct existence. An entity is usually described by a set of characteristics, known as its identity. An entity can have several identities.
+  Being (su as person or animal), thing, concept or anything else that has recognizably distinct existence. An entity is usually described by a set of characteristics, known as its identity. An entity can have several identities.
 +
 ISO 24760 term: entity
 +
@@ -262,23 +310,33 @@ X.1252 term: entity
 +
 See also: <<glossterm-identity,Identity>>, <<glossterm-digital-identity,Digital Identity>>
 [[glossterm-ephemeral-identifier]]Ephemeral Identifier::
-An identifier used only for a very short duration. Ephemeral identifiers are valid usually only during a single session, or even during a single protocol exchange (e.g. authentication). Ephemeral identifiers are almost always randomly-chosen. When ephemeral identifiers refer to a digital identity, they are efficiently a short-lived pseudonyms.
+  An identifier used only for a very short duration. Ephemeral identifiers are valid usually only during a single session, or even during a single protocol exchange (e.g. authentication). Ephemeral identifiers are almost always randomly-chosen. When ephemeral identifiers refer to a digital identity, they are efficiently a short-lived pseudonyms.
 +
 ISO 24760 term: ephemeral identifier
 +
 See also: <<glossterm-identifier,Identifier>>, <<glossterm-pseudonym,Pseudonym>>
 [[glossterm-federated-identity]]Federated Identity::
-Digital identity intended to be used in several domains, usually by the means of identity federation. Information about federated identity is transferred between domains, usually in a form of identity assertions exchanged between identity providers and relying parties.
+  Digital identity intended to be used in several domains, usually by the means of identity federation. Information about federated identity is transferred between domains, usually in a form of identity assertions exchanged between identity providers and relying parties.
 +
 ISO 24760 term: federated identity
 +
 See also: <<glossterm-identity-federation,Identity Federation>>, <<glossterm-digital-identity,Digital Identity>>
 [[glossterm-fine-grain-authorization]]Fine-Grain Authorization::
-Authorization made on very detailed information and is providing more detail control within the application operation. E.g. authorization to approve the transaction in an accounting system, with amount up to a certain limit. Typically, fine-grain authorization requires detailed knowledge of both the user profile (attributes) and the operation context (operation name, parameters and their meaning). Due to this requirement, fine-grain application is often implemented directly in application code.
+  Authorization made on very detailed information and is providing more detail control within the application operation. E.g. authorization to approve the transaction in an accounting system, with amount up to a certain limit. Typically, fine-grain authorization requires detailed knowledge of both the user profile (attributes) and the operation context (operation name, parameters and their meaning). Due to this requirement, fine-grain application is often implemented directly in application code.
 +
 See also: <<glossterm-authentication,Authentication>>
+[[glossterm-focus]]Focus::
+
++
+In midPoint terminology: An object that can is a focus of computation, an object central to midPoint computation. The focus is usually a user, but it can be a role, org or a service. Focus is the center of a computation, the hub in hub-and-spoke (star) data synchronization in midPoint. The "spokes" in the computation are represented by projections.
++
+See also link:https://docs.evolveum.com/midpoint/reference/schema/focus-and-projections/[more information at docs.evolveum.com].
++
+Alternative terms: Focal Object
++
+See also: <<glossterm-assignment,Assignment>>, <<glossterm-projection,Projection>>
 [[glossterm-fulfillment]]Fulfillment::
-Fulfillment is a functionality of identity management (IDM) system, making sure that users have appropriate access to systems. Simply speaking, this is the functionality that creates accounts, associates them with entitlements (e.g. groups), modifies passwords, enables/disables accounts and deletes them in the end. Fulfillment is a name used for identity provisioning together with deprovisioning and associated activities.
+  Fulfillment is a functionality of identity management (IDM) system, making sure that users have appropriate access to systems. Simply speaking, this is the functionality that creates accounts, associates them with entitlements (e.g. groups), modifies passwords, enables/disables accounts and deletes them in the end. Fulfillment is a name used for identity provisioning together with deprovisioning and associated activities.
 +
 See also link:https://docs.evolveum.com/iam/iga/fulfillment/[more information at docs.evolveum.com].
 +
@@ -286,15 +344,15 @@ Alternative terms: Provisioning/deprovisioning
 +
 See also: <<glossterm-identity-management,Identity Management>>, <<glossterm-identity-management-system,Identity Management System>>, <<glossterm-identity-provisioning,Identity Provisioning>>, <<glossterm-identity-deprovisioning,Identity Deprovisioning>>, <<glossterm-manual-fulfillment,Manual Fulfillment>>
 [[glossterm-gdpr]]General Data Protection Regulation (GDPR)::
-General Data Protection Regulation 2016/679 (GDPR) is European Union regulation on personal data protection and privacy. It defines rules for processing of personal data in European Union, European Economic Area, with provisions of the regulation applicable to other parties as well.
+  General Data Protection Regulation 2016/679 (GDPR) is European Union regulation on personal data protection and privacy. It defines rules for processing of personal data in European Union, European Economic Area, with provisions of the regulation applicable to other parties as well.
 +
 See also: <<glossterm-personal-data-protection,Personal Data Protection>>
 [[glossterm-generic-synchronization]]Generic Synchronization::
-Advanced model of synchronization where not only users and accounts are synchronized, but also groups to roles, organizational units to groups, roles to ACLs and so on.
+  Advanced model of synchronization where not only users and accounts are synchronized, but also groups to roles, organizational units to groups, roles to ACLs and so on.
 [[glossterm-grc]]Governance, risk management and compliance (GRC)::
-Governance, risk management and compliance (GRC) is a discipline that helps organizations to have more control over processes and be more effective. Governance is the set of decisions and actions by which individual processes as well as the whole organization are lead to achieve specific goals. Risk management identifies, predicts and prioritizes risks with aim to minimize them or avoid their negative influence on organizations' aims. Compliance means following certain rules, regulations or procedures. A GRC software facilitates this problematic by taking care of all three parts by one single solution. It is a very helpful tool for business executives, managers or IT directors. Thanks to it it is possible to define, enforce, audit and review policies responsible for the exchange of information between internal systems as well as between the external ones.
+  Governance, risk management and compliance (GRC) is a discipline that helps organizations to have more control over processes and be more effective. Governance is the set of decisions and actions by which individual processes as well as the whole organization are lead to achieve specific goals. Risk management identifies, predicts and prioritizes risks with aim to minimize them or avoid their negative influence on organizations' aims. Compliance means following certain rules, regulations or procedures. A GRC software facilitates this problematic by taking care of all three parts by one single solution. It is a very helpful tool for business executives, managers or IT directors. Thanks to it it is possible to define, enforce, audit and review policies responsible for the exchange of information between internal systems as well as between the external ones.
 [[glossterm-identifier]]Identifier::
-A value, or a set of values, that uniquely identify an identity in a certain scope.
+  A value, or a set of values, that uniquely identify an identity in a certain scope.
 +
 An identity usually have several identifiers, used in various situations and contexts. Identifiers may be compound, composed of several values.
 +
@@ -304,7 +362,7 @@ X.1252 term: identifier
 +
 See also: <<glossterm-identity,Identity>>, <<glossterm-digital-identity,Digital Identity>>, <<glossterm-digital-identity-attribute,Digital Identity Attribute>>, <<glossterm-entity,Entity>>
 [[glossterm-identification]]Identification::
-A process of recognizing an identity as distinct from other identities in a particular scope or context. Identification is almost always performed by processing identifiers, using them to reference an identity in an identity database.
+  A process of recognizing an identity as distinct from other identities in a particular scope or context. Identification is almost always performed by processing identifiers, using them to reference an identity in an identity database.
 +
 Identification is a process distinct from authentication. Authentication is a process of proving an identity (verification), whereas identification does not assume any such proof.
 +
@@ -316,7 +374,7 @@ X.1252 term: identification
 +
 See also: <<glossterm-digital-identity,Digital Identity>>, <<glossterm-identifier,Identifier>>, <<glossterm-authentication,Authentication>>, <<glossterm-identity-correlation,Identity Correlation>>
 [[glossterm-identity]]Identity::
-The fact of being who or what a person or thing is. Set of characteristics, qualities, believes, behaviors and other aspects of en entity. Identity can be applied to persons, things, even intangible concepts, known as entities. An entity can have several identities (often known as personas). In context of information technologies, parts of identity can be usually represented in a form of digital record, known as digital identity.
+  The fact of being who or what a person or thing is. Set of characteristics, qualities, believes, behaviors and other aspects of en entity. Identity can be applied to persons, things, even intangible concepts, known as entities. An entity can have several identities (often known as personas). In context of information technologies, parts of identity can be usually represented in a form of digital record, known as digital identity.
 +
 Identity should not be confused with identifier. Identity is a set of characteristics, while identifier is a value used to refer to identity.
 +
@@ -326,13 +384,13 @@ X.1252 term: identity
 +
 See also: <<glossterm-identifier,Identifier>>, <<glossterm-digital-identity,Digital Identity>>, <<glossterm-entity,Entity>>
 [[glossterm-identity-and-access-management]]Identity and Access Management (IAM)::
-Identity and access management (IAM) is a field concerned with managing identities (e.g. users) and their access to systems and applications. IAM is concerned with all the aspects dealing with "identity", with many subfields that specialize in selected aspects. Access management deals (AM) especially with access to applications, including authentication and (partially) authorization. Identity management and governance (IGA) deals with management of user data (e.g. user profiles), synchronization of identity data and applying policies. Other IAM subfields deal with storage of identity data, transfer of the data over the network and so on.
+  Identity and access management (IAM) is a field concerned with managing identities (e.g. users) and their access to systems and applications. IAM is concerned with all the aspects dealing with "identity", with many subfields that specialize in selected aspects. Access management deals (AM) especially with access to applications, including authentication and (partially) authorization. Identity management and governance (IGA) deals with management of user data (e.g. user profiles), synchronization of identity data and applying policies. Other IAM subfields deal with storage of identity data, transfer of the data over the network and so on.
 +
 See also link:https://docs.evolveum.com/iam/[more information at docs.evolveum.com].
 +
 See also: <<glossterm-identity-management,Identity Management>>, <<glossterm-iga,Identity Governance and Administration>>, <<glossterm-access-management,Access Management>>, <<glossterm-identity-data-store,Identity Data Store>>
 [[glossterm-identity-assertion]]Identity Assertion::
-Statement made by an identity provider regarding properties or behavior of an identity. Assertions are used by relying parties. The most common assertion is perhaps authentication assertion, relying information about authentication event from identity provider to relying party. Assertions may contain other information as well, usually identity attributes and authorization decisions.
+  Statement made by an identity provider regarding properties or behavior of an identity. Assertions are used by relying parties. The most common assertion is perhaps authentication assertion, relying information about authentication event from identity provider to relying party. Assertions may contain other information as well, usually identity attributes and authorization decisions.
 +
 Alternative terms: Assertion, Claim
 +
@@ -342,7 +400,7 @@ X.1252 term: claim
 +
 See also: <<glossterm-digital-identity-attribute,Digital Identity Attribute>>, <<glossterm-identity-provider,Identity Provider>>, <<glossterm-relying-party,Relying Party>>
 [[glossterm-identity-correlation]]Identity Correlation::
-Process of comparing identity information, with an aim to find a matching identity. Correlation is usually employed during identity enrollment or registration, when a system determines whether the new identity is already known to the system. For example, a system may compare registration data entered by the user with the content of its identity database, in an attempt to determine whether such user is already registered. If such a comparison involves simple and reliable identifiers (such as username or employee number), it is called "identification". However, in many cases such identifiers are not available, and the system needs to combine several identifiers or employ sophisticated techniques to find matching identity. Some identity correlation techniques involve probabilistic matching techniques or machine learning methods to find suitable candidates, which are later reviewed by human operator.
+  Process of comparing identity information, with an aim to find a matching identity. Correlation is usually employed during identity enrollment or registration, when a system determines whether the new identity is already known to the system. For example, a system may compare registration data entered by the user with the content of its identity database, in an attempt to determine whether such user is already registered. If such a comparison involves simple and reliable identifiers (such as username or employee number), it is called "identification". However, in many cases such identifiers are not available, and the system needs to combine several identifiers or employ sophisticated techniques to find matching identity. Some identity correlation techniques involve probabilistic matching techniques or machine learning methods to find suitable candidates, which are later reviewed by human operator.
 +
 Alternative terms: Identity Matching
 +
@@ -350,29 +408,29 @@ X.1252 term: correlation
 +
 See also: <<glossterm-identification,Identification>>, <<glossterm-enrollment,Enrollment>>, <<glossterm-identity-registration,Identity Registration>>, <<glossterm-identifier,Identifier>>
 [[glossterm-identity-information-authority]]Identity Information Authority (IIA)::
-ISO 24760 term, referring to an entity related to a particular domain that can make provable statements on the validity and/or correctness of one or more attribute values in an identity.
+  ISO 24760 term, referring to an entity related to a particular domain that can make provable statements on the validity and/or correctness of one or more attribute values in an identity.
 +
 ISO 24760 term: identity information authority
 +
 See also: <<glossterm-identity-provider,Identity Provider>>, <<glossterm-domain,Domain>>
 [[glossterm-identity-connector]]Identity Connector::
-Usually small and simple unit of code that connects to a remote system. The purpose of identity connector is to retrieve and manage identity information, such as information about user accounts, groups and organizational units. The connectors are usually written for and managed by a particular connector framework.
+  Usually small and simple unit of code that connects to a remote system. The purpose of identity connector is to retrieve and manage identity information, such as information about user accounts, groups and organizational units. The connectors are usually written for and managed by a particular connector framework.
 +
 Alternative terms: Connector
 +
 See also: <<glossterm-identity-connector-framework,Identity Connector Framework>>, <<glossterm-connid,ConnId>>
 [[glossterm-identity-connector-framework]]Identity Connector Framework::
-Generally speaking, a programing framework (library) for creating and managing identity connectors. However, this rather generic term often refers to the Identity Connector Framework (ICF), originally developed by Sun Microsystem in 2000s. The ICF was releases as an open source project by Sun, only to be later abandoned after Sun-Oracle merger. The ICF was a base for several forks, including ConnId and OpenICF.
+  Generally speaking, a programing framework (library) for creating and managing identity connectors. However, this rather generic term often refers to the Identity Connector Framework (ICF), originally developed by Sun Microsystem in 2000s. The ICF was releases as an open source project by Sun, only to be later abandoned after Sun-Oracle merger. The ICF was a base for several forks, including ConnId and OpenICF.
 +
 Alternative terms: Connector Framework, ICF
 +
 See also: <<glossterm-identity-connector,Identity Connector>>, <<glossterm-connid,ConnId>>
 [[glossterm-identity-data-source]]Identity Data Source::
-A system that is the source of identity data, usually data about users. The data are usually created and maintained in such systems manually. There are often multiple identity data sources in an organization with various characteristics. Some data sources are considered authoritative, providing reliable information about identities. Other data sources usually contain user-provided information, such as data entered by the user during registration process. Almost all data sources contain partial information only, information that is limited both in breadth (only some identity types) and depth (only some attributes). Data source may be an intermediary, providing information acquired from other systems.
+  A system that is the source of identity data, usually data about users. The data are usually created and maintained in such systems manually. There are often multiple identity data sources in an organization with various characteristics. Some data sources are considered authoritative, providing reliable information about identities. Other data sources usually contain user-provided information, such as data entered by the user during registration process. Almost all data sources contain partial information only, information that is limited both in breadth (only some identity types) and depth (only some attributes). Data source may be an intermediary, providing information acquired from other systems.
 +
 Alternative terms: Source System
 [[glossterm-identity-data-store]]Identity Data Store::
-A database, designed and/or dedicated to store identity-related data. Identity data store is usually shared among many applications, it is accessed by many systems reading the data. Applications read data from identity data stores, often using them for authorization, and sometimes even authentication purposes. Structure of data in the data store is often application-friendly, containing pre-processed and derived information. Identity data store also usually contain entitlements, or similar information that can be used for authorization purposes. There are usually several identity data stores in an organization, managed and synchronized by an identity management system.
+  A database, designed and/or dedicated to store identity-related data. Identity data store is usually shared among many applications, it is accessed by many systems reading the data. Applications read data from identity data stores, often using them for authorization, and sometimes even authentication purposes. Structure of data in the data store is often application-friendly, containing pre-processed and derived information. Identity data store also usually contain entitlements, or similar information that can be used for authorization purposes. There are usually several identity data stores in an organization, managed and synchronized by an identity management system.
 +
 Traditionally, directory servers (such as LDAP serves) are used as identity data stores.
 +
@@ -382,13 +440,13 @@ Alternative terms: Identity Store, Identity Database, Directory Service
 +
 See also: <<glossterm-identity-register,Identity Register>>
 [[glossterm-identity-deprovisioning]]Identity Deprovisioning::
-Identity deprovisioning is as well as identity provisioning a subfield of Identity and Access Management (IAM). It is an opposite to identity provisioning. While identity provisioning takes care of creating new accounts, determining the roles for individual users and their rights or making changes in them, deprovisioning works oppositely. When an employee leaves the company, his account is deactivated or deleted and he loses all the accesses to both internal and external systems. This way organization minimizes information theft and stays secure. Identity provisioning together with deprovisioning and associated activities is known as "fulfillment".
+  Identity deprovisioning is as well as identity provisioning a subfield of Identity and Access Management (IAM). It is an opposite to identity provisioning. While identity provisioning takes care of creating new accounts, determining the roles for individual users and their rights or making changes in them, deprovisioning works oppositely. When an employee leaves the company, his account is deactivated or deleted and he loses all the accesses to both internal and external systems. This way organization minimizes information theft and stays secure. Identity provisioning together with deprovisioning and associated activities is known as "fulfillment".
 +
 Alternative terms: Deprovisioning
 +
 See also: <<glossterm-fulfillment,Fulfillment>>
 [[glossterm-identity-evidence]]Identity Evidence::
-Data and documents that support verification of identity data (identity proofing). Identity evidence is used in identity proofing process to achieve higher level of assurance of identity information.
+  Data and documents that support verification of identity data (identity proofing). Identity evidence is used in identity proofing process to achieve higher level of assurance of identity information.
 +
 Alternative terms: Evidence of Identity, Identity Proof
 +
@@ -396,7 +454,7 @@ ISO 24760 term: identity evidence
 +
 See also: <<glossterm-identity-proofing,Identity Proofing>>, <<glossterm-level-of-assurance,Level of Assurance>>, <<glossterm-verification,Verification>>, <<glossterm-digital-identity-attribute,Digital Identity Attribute>>
 [[glossterm-identity-federation]]Identity Federation::
-Identity federation is an agreement between several domains, specifying the details of exchange and use of shared identity information. The information in identity federation is usually transferred by the means of identity assertions, exchanged between identity providers and relying parties.
+  Identity federation is an agreement between several domains, specifying the details of exchange and use of shared identity information. The information in identity federation is usually transferred by the means of identity assertions, exchanged between identity providers and relying parties.
 +
 From user's point of view, identity federation is a process of sharing user’s identification and personal data between multiple systems and between organizations, so the user doesn’t have to register for each organization separately and can seamlessly access systems in federated organizations.
 +
@@ -406,17 +464,17 @@ X.1252 term: federation
 +
 See also: <<glossterm-domain,Domain>>, <<glossterm-federated-identity,Federated Identity>>, <<glossterm-identity-assertion,Identity Assertion>>, <<glossterm-identity-provider,Identity Provider>>, <<glossterm-relying-party,Relying Party>>
 [[glossterm-identity-governance]]Identity Governance::
-Business aspect of managing identities including business processes, rules, policies and organizational structures. Any complete solution for management of identities consists of two major parts – identity governance and identity management.
+  Business aspect of managing identities including business processes, rules, policies and organizational structures. Any complete solution for management of identities consists of two major parts – identity governance and identity management.
 +
 Alternative terms: Governance
 +
 See also: <<glossterm-iga,Identity Governance and Administration>>, <<glossterm-grc,Governance, risk management and compliance>>, <<glossterm-identity-management,Identity Management>>
 [[glossterm-identity-lifecycle]]Identity Lifecycle::
-Set of identity stages from creation to its deactivation or deletion. It contains creation of an account, assignment of correct groups and permissions, setting and resetting passwords and in the end deactivation or deletion of the account.
+  Set of identity stages from creation to its deactivation or deletion. It contains creation of an account, assignment of correct groups and permissions, setting and resetting passwords and in the end deactivation or deletion of the account.
 +
 See also: <<glossterm-identity-deprovisioning, identity-provisioning,>>
 [[glossterm-identity-management]]Identity Management (IDM)::
-Identity Management (IDM) is a process of managing digital identities and their accesses to specific resources in the cyberspace. It ensures appropriate access in appropriate time and helps to manage user accounts as well as to synchronize data. Identity management deals with digital identity lifecycle, managing values of digital identity attributes and entitlements.
+  Identity Management (IDM) is a process of managing digital identities and their accesses to specific resources in the cyberspace. It ensures appropriate access in appropriate time and helps to manage user accounts as well as to synchronize data. Identity management deals with digital identity lifecycle, managing values of digital identity attributes and entitlements.
 +
 Alternative terms: Identity Administration, User management, User provisioning
 +
@@ -426,7 +484,7 @@ X.1252 term: identity management
 +
 See also: <<glossterm-access-management,Access Management>>, <<glossterm-identity-lifecycle,Identity Lifecycle>>, <<glossterm-identity-provisioning,Identity Provisioning>>, <<glossterm-iga,Identity Governance and Administration>>, <<glossterm-digital-identity,Digital Identity>>, <<glossterm-digital-identity-attribute,Digital Identity Attribute>>
 [[glossterm-identity-management-system]]Identity Management System (IDMS)::
-A system that provides identity management functionality: it is managing identities and their accesses to specific resources in the cyberspace. It ensures appropriate access in appropriate time and helps to manage user accounts as well as to synchronize data.
+  A system that provides identity management functionality: it is managing identities and their accesses to specific resources in the cyberspace. It ensures appropriate access in appropriate time and helps to manage user accounts as well as to synchronize data.
 +
 Identity management (IDM) systems are concerned about the "management" side, maintaining user data, policies, roles, entitlements and so on. IDM systems usually do not "apply" or enforce the policies. The policies are transformed as needed and provisioned to other systems (a.k.a. "target systems") that interpret and enforce the policies. The process of provisioning (and "deprovisioning") of data and policies is known as "fulfillment".
 +
@@ -440,7 +498,7 @@ ISO 24760 term: identity management system
 +
 See also: <<glossterm-identity-management,Identity Management>>, <<glossterm-identity-lifecycle,Identity Lifecycle>>, <<glossterm-identity-provisioning,Identity Provisioning>>, <<glossterm-iga,Identity Governance and Administration>>
 [[glossterm-identity-proofing]]Identity Proofing::
-Verification of evidence to make sure that identity information are true and up-to-date. Identity proofing is used to achieve higher level of assurance of identity information.
+  Verification of evidence to make sure that identity information are true and up-to-date. Identity proofing is used to achieve higher level of assurance of identity information.
 +
 Alternative terms: Initial Entity Authentication
 +
@@ -450,15 +508,21 @@ X.1252 term: identity proofing
 +
 See also: <<glossterm-digital-identity-attribute,Digital Identity Attribute>>, <<glossterm-level-of-assurance,Level of Assurance>>
 [[glossterm-identity-provider]]Identity Provider (IdP)::
-System that provides identity-related information to applications (known in this context as "relying party" or "service provider"). This is usually information related to authentication, such as identifiers of the user and strength of authentication mechanism. Identity provider is authenticating the user in its own capacity, it never reveals user's credentials to the application. Identity provider may provide also additional information of the user to the application, such as information about user attributes and entitlements. Identity provider is often managed by a different organization than the relying applications (service providers), thus providing cross-domain identity mechanism. Typical protocols and frameworks used by identity providers include: SAML, OpenID Connect, CAS
+  System that provides identity-related information to applications (known in this context as "relying party" or "service provider"). Such information usually includes user identifiers (which may be ephemeral), user name(s) and affiliation. The information is usually provided in form of identity assertions (claims).
++
+Identity providers are often authenticating the users. In that case, identity providers usually include information describing the authentication, such as statement that user was authenticated and indication of authentication mechanism strength. Identity provider authenticates the users in its own capacity, it never reveals user's credentials to the application (relying party). In fact, many identity providers are focused on authentication only, providing only a very minimal identity information (often just a single identifier), in which case the authentication-related information forms the most important part of provided information. Such identity providers effectively work as cross-domain single sign-on (SSO) systems.
++
+Although most identity providers include user authentication, there are also providers that do not (directly) authenticate the users, sometimes called "attribute providers". Identity provider may provide also additional information of the user to the application, such as information about user attributes and entitlements.
++
+Identity provider is often managed by a different organization than the relying applications (service providers), thus providing cross-domain identity mechanism. Typical protocols and frameworks used by identity providers include: SAML, OpenID Connect, CAS
 +
 ISO 24760 term: identity information provider
 +
 X.1252 term: identity service provider
 +
-See also: <<glossterm-relying-party,Relying Party>>, <<glossterm-identity-federation,Identity Federation>>
+See also: <<glossterm-relying-party,Relying Party>>, <<glossterm-identity-federation,Identity Federation>>, <<glossterm-cross-domain,Cross-domain>>, <<glossterm-identity-assertion,Identity Assertion>>
 [[glossterm-identity-provisioning]]Identity Provisioning::
-In broad sense, identity provisioning is a subfield of Identity Management (IDM), concerned with technical aspects of creating user accounts, groups and other objects in target systems. It is a technology thanks to which many identity stores are synchronized, merged and maintained. Identity provisioning takes care of technical tasks during the whole user lifecycle - when new employee is hired, when his responsibilities change or he leaves the company (deprovisioning). It helps the organization to work more effectively as its goal is to automate as much as possible.
+  In broad sense, identity provisioning is a subfield of Identity Management (IDM), concerned with technical aspects of creating user accounts, groups and other objects in target systems. It is a technology thanks to which many identity stores are synchronized, merged and maintained. Identity provisioning takes care of technical tasks during the whole user lifecycle - when new employee is hired, when his responsibilities change or he leaves the company (deprovisioning). It helps the organization to work more effectively as its goal is to automate as much as possible.
 +
 The provisioning system usually takes information about employees from the Human Resource (HR) system. When new employee is recorded into HR system, this information is detected and pulled by the provisioning system. After that, it is processed to determine set of roles each user should have. These roles determine and create accounts users should have, so everything is ready for new users on the very first day. If a user is transferred to another department or his privileges change, similar processes happen again. If an employee leaves the company, identity provisioning systems makes sure all his accounts are closed.
 +
@@ -468,7 +532,7 @@ Alternative terms: User provisioning, Provisioning
 +
 See also: <<glossterm-identity-management,Identity Management>>, <<glossterm-identity-lifecycle,Identity Lifecycle>>, <<glossterm-fulfillment,Fulfillment>>
 [[glossterm-identity-register]]Identity Register::
-A repository (database) of identity information, usually structured in a formal manner. Identity registers are almost always indexed using a reference identifier. They are usually designed for a specific purpose of being an authoritative data sources for other systems.
+  A repository (database) of identity information, usually structured in a formal manner. Identity registers are almost always indexed using a reference identifier. They are usually designed for a specific purpose of being an authoritative data sources for other systems.
 +
 Identity register is similar to identity data store, and in fact many identity registers function as identity data stores. The difference is that identity data store has less formal, usually application-friendly data structure, containing pre-processed and derived information. Identity data store also usually contain entitlements, or information that can be used for authorization purposes. However, the exact boundary between functions of identity register and identity data store is not exactly defined.
 +
@@ -478,7 +542,7 @@ ISO 24760 term: identity register
 +
 See also: <<glossterm-identity-registration,Identity Registration>>, <<glossterm-reference-identifier,Reference Identifier>>, <<glossterm-identity-data-source,Identity Data Source>>, <<glossterm-identity-data-store,Identity Data Store>>
 [[glossterm-identity-registration]]Identity Registration::
-A process of recording new identity data into identity register or identity data store. Registration process may involve storing the information is several distinct data stores or registers. The recording process may be indirect, e.g. mediated by synchronization process of an identity management system.
+  A process of recording new identity data into identity register or identity data store. Registration process may involve storing the information is several distinct data stores or registers. The recording process may be indirect, e.g. mediated by synchronization process of an identity management system.
 +
 Informally, the registration process often involves the data acquisition process as well, such as asking user for the data using a form.
 +
@@ -492,51 +556,71 @@ X.1252 term: registration
 +
 See also: <<glossterm-enrollment,Enrollment>>, <<glossterm-onboarding,Onboarding>>, <<glossterm-identity-register,Identity Register>>, <<glossterm-identity-data-store,Identity Data Store>>
 [[glossterm-identity-resource]]Identity Resource::
-In IAM field, a Resource is usually a network-accessible asset capable of managing identity information.
+  In IAM field, a Resource is usually an network-accessible asset capable of managing identity information.
 +
-In midPoint terminology: A Resource is a system that is either identity data source or provisioning target.
-IDM system (midPoint) is managing accounts in that system, feeding data from that system or doing any other combination of identity management operations.
-Identity resource should not be confused with "web resource" that is used by RESTful APIs.
+In midPoint terminology: An Resource is a system that is either identity data source or provisioning target. IDM system (midPoint) is managing accounts in that system, feeding data from that system or doing any other combination of identity management operations. Identity resource should not be confused with "web resource" that is used by RESTful APIs.
 +
 Alternative terms: Provisioning Resource, Resource
 +
 See also: <<glossterm-resource,Resource>>, <<glossterm-identity-connector,Identity Connector>>
 [[glossterm-iga]]Identity Governance and Administration (IGA)::
-Identity governance and administration (IGA) si a subfield of identity and access management (IAM) dealing with management and governance of identity-related information. IGA systems store, synchronize and manage identity information, such as user profiles. Complex data, entitlement and governance polices can be defined, applied to identity data. IGA system are responsible for evaluating the policies, making sure the data are compliant, addressing policy violations. IGA is often considered an umbrella term covering identity management, identity governance, compliance management, identity-based risk management and other aspects related to management of identities. Identity Governance and Administration (IGA) includes both the technical and business aspects of identity management.
+  Identity governance and administration (IGA) si a subfield of identity and access management (IAM) dealing with management and governance of identity-related information. IGA systems store, synchronize and manage identity information, such as user profiles. Complex data, entitlement and governance polices can be defined, applied to identity data. IGA system are responsible for evaluating the policies, making sure the data are compliant, addressing policy violations. IGA is often considered an umbrella term covering identity management, identity governance, compliance management, identity-based risk management and other aspects related to management of identities. Identity Governance and Administration (IGA) includes both the technical and business aspects of identity management.
 +
 See also link:https://docs.evolveum.com/iam/iga/[more information at docs.evolveum.com].
 +
 See also: <<glossterm-identity-management,Identity Management>>, <<glossterm-identity-governance,Identity Governance>>, <<glossterm-grc,Governance, risk management and compliance>>, <<glossterm-identity-and-access-management,Identity and Access Management>>
+[[glossterm-inducement]]Inducement::
+
++
+In midPoint terminology: Inducement is an indirect representation of an assignment, a relation that assigns privileges, organizational membership, policy elements or other midPoint concepts to assignment holder objects (usually users). Inducement has the same data structure as assignment, and very similar functionality. However, while assignment represents direct relation, inducement is indirect. For example, assignment can be used to assign an account or a group membership directly to a user. Inducement can facilitate the same functionality, however it is usually placed in role. As the role is assigned (using an assignment) to the user, inducements placed in the role are indirectly applied to a user.
++
+See also link:https://docs.evolveum.com/midpoint/reference/roles-policies/assignment/assignment-vs-inducement/[more information at docs.evolveum.com].
++
+See also: <<glossterm-assignment,Assignment>>, <<glossterm-role,Role>>
+[[glossterm-joiner-leaver]]Joiner-Leaver Processes::
+  Joiner-Leaver are human resources (HR) process, handling employees joining the organization and leaving the organization. They are constrained versions of joiner-mover-leaver processes, not considering movement of employees in organizational structure.
++
+Alternative terms: Joiners and Leavers
++
+See also: <<glossterm-joiner-mover-leaver,Joiner-Mover-Leaver Processes>>, <<glossterm-onboarding,Onboarding>>, <<glossterm-offboarding,Offboarding>>
+[[glossterm-joiner-mover-leaver]]Joiner-Mover-Leaver Processes (JML)::
+  Joiner-Mover-Leaver (JML) are human resources (HR) process, handling employees joining the organization, moving within organizational structure and leaving the organization. JML process can be understood as handling events of employee lifecycle from the point of view of organizational and business processes. Generally speaking, this process is not limited to employees. However, when similar processes are applied to other types of persons (students, contractors) they are often referred to as "on-boarding" and "off-boarding".
++
+JML processes are (manual) business processes in their nature. Despite that, the JML processes are important for identity management, as they provide the contextual framework for identity management technology to fit in. Moreover, identity management deployments are usually automating some parts of the JML processes.
++
+Alternative terms: Joiners, Movers and Leavers
++
+See also: <<glossterm-onboarding,Onboarding>>, <<glossterm-offboarding,Offboarding>>, <<glossterm-joiner-leaver,Joiner-Leaver Processes>>
 [[glossterm-ldap]]Lightweight Directory Access Protocol (LDAP)::
-Lightweight Directory Access Protocol (LDAP) is industry-standard protocol (RFC4510) for accessing directory services.
+  Lightweight Directory Access Protocol (LDAP) is industry-standard protocol (RFC4510) for accessing directory services.
 +
 See also: <<glossterm-directory-service,Directory Service>>, <<glossterm-identity-data-store,Identity Data Store>>
 [[glossterm-level-of-assurance]]Level of Assurance (LoA)::
-Measure of reliability of identity information. Information with low levels of assurance are usually user-provided information that were not verified in any significant way. Higher levels of assurance are usually achieved by identity proofing, a process of verifying the information. Level of assurance is usually stored as metadata, describing the specific value that was verified.
+  Measure of reliability of identity information. Information with low levels of assurance are usually user-provided information that were not verified in any significant way. Higher levels of assurance are usually achieved by identity proofing, a process of verifying the information. Level of assurance is usually stored as metadata, describing the specific value that was verified.
 +
 X.1252 term: assurance level
 +
 See also: <<glossterm-digital-identity-attribute,Digital Identity Attribute>>, <<glossterm-identity-proofing,Identity Proofing>>, <<glossterm-metadata,Metadata>>
 [[glossterm-linkability]]Linkability::
-Ability to determine that two digital identities represent the same entity. Linkability is usually deterministic, based on a reliable identifier.
+  Ability to determine that two digital identities represent the same entity. Linkability is usually deterministic, based on a reliable identifier.
 +
 X.1252 term: linkability
 +
 See also: <<glossterm-identity-correlation,Identity Correlation>>
 [[glossterm-manual-fulfillment]]Manual Fulfillment::
-Manual process of creating, updating and deleting accounts, entitlements and similar objects, driven by identity management system, but exexcuted by human operator. Manual fulfillment is initiated by an identity management system, usually as a consequence of change in user privileges or policies. Identity management system creates a ticket for system administrators, containing instructions to create/modify/delete an acccount or entitlement in a specific information system. Actual action is executed manually, by the system administrator. Manual fulfillment is used for systems, for which automatic identity connector is not available.
+  Manual process of creating, updating and deleting accounts, entitlements and similar objects, driven by identity management system, but exexcuted by human operator. Manual fulfillment is initiated by an identity management system, usually as a consequence of change in user privileges or policies. Identity management system creates a ticket for system administrators, containing instructions to create/modify/delete an acccount or entitlement in a specific information system. Actual action is executed manually, by the system administrator. Manual fulfillment is used for systems, for which automatic identity connector is not available.
 +
 Alternative terms: Manual Provisioning/deprovisioning, Manual resource, Manual connector
 +
 See also: <<glossterm-fulfillment,Fulfillment>>, <<glossterm-identity-provisioning,Identity Provisioning>>, <<glossterm-identity-deprovisioning,Identity Deprovisioning>>, <<glossterm-identity-connector,Identity Connector>>
 [[glossterm-metadata]]Metadata::
-Data about data. Metadata describe properties of data, such as the method how the data were acquired (a.k.a. "provenance"), how reliable the data are (e.g. level of assurance) and so on.
+  Data about data. Metadata describe properties of data, such as the method how the data were acquired (a.k.a. "provenance"), how reliable the data are (e.g. level of assurance) and so on.
 +
 Alternative terms: Meta-data, Meta data
 +
 See also: <<glossterm-data-origin,Data Origin>>, <<glossterm-data-provenance,Data Provenance>>, <<glossterm-level-of-assurance,Level of Assurance>>
 [[glossterm-minimal-disclosure]]Minimal Disclosure::
-A principle, stating that only the minimal amount of information is disclosed as is required to perform a specific function or provide a service. Minimal disclosure principle is often used in cross-domain data transfer, such as when using identity providers or identity federations. Only the information required to perform a service is disclosed to the other party, no extra information is provided.
+  A principle, stating that only the minimal amount of information is disclosed as is required to perform a specific function or provide a service. Minimal disclosure principle is often used in cross-domain data transfer, such as when using identity providers or identity federations. Only the information required to perform a service is disclosed to the other party, no extra information is provided.
 +
 Alternative terms: Minimal Disclosure of Personal Information
 +
@@ -544,57 +628,65 @@ ISO 24760 term: minimal disclosure
 +
 See also: <<glossterm-digital-identity,Digital Identity>>, <<glossterm-personal-data-protection,Personal Data Protection>>, <<glossterm-privacy,Privacy>>, <<glossterm-identity-provider,Identity Provider>>, <<glossterm-identity-federation,Identity Federation>>, <<glossterm-selective-disclosure,Selective Disclosure>>
 [[glossterm-mutual-authentication]]Mutual Authentication::
-Authentication process in which all involved parties authenticate to all other parties. Usually a two-sided process, where both sides of a connection authenticate to each other, i.e. server authenticates to client and client authenticates to server.
+  Authentication process in which all involved parties authenticate to all other parties. Usually a two-sided process, where both sides of a connection authenticate to each other, i.e. server authenticates to client and client authenticates to server.
 +
 X.1252 term: mutual authentication
 +
 See also: <<glossterm-mutual-authentication,Mutual Authentication>>
 [[glossterm-non-repudiation]]Non-Repudiation::
-Property of a system, protecting against denial from one of the parties. The involved parties cannot deny that an action took place.
+  Property of a system, protecting against denial from one of the parties. The involved parties cannot deny that an action took place.
 +
 X.1252 term: non-repudiation
 [[glossterm-offboarding]]Offboarding::
-Business process that takes place when a person leaves an organization. The aim of offboarding is making sure that the person no longer has access to sensitive data and premises of the organization. From IT point of view, this often means identity de-provisioning, e.i. deactivation of user accounts in various applications, databases and identity data stores. This process is often automated using an identity management system. However, a complete offboarding process is usually more complex, including non-IT steps such as returning the provided equipment.
+  Business process that takes place when a person leaves an organization. The aim of offboarding is making sure that the person no longer has access to sensitive data and premises of the organization. From IT point of view, this often means identity de-provisioning, e.i. deactivation of user accounts in various applications, databases and identity data stores. This process is often automated using an identity management system. However, a complete offboarding process is usually more complex, including non-IT steps such as returning the provided equipment.
 +
 Alternative terms: Off-boarding
 +
-See also: <<glossterm-identity-deprovisioning,Identity Deprovisioning>>
+See also: <<glossterm-identity-deprovisioning,Identity Deprovisioning>>, <<glossterm-joiner-mover-leaver,Joiner-Mover-Leaver Processes>>
 [[glossterm-onboarding]]Onboarding::
-Business process that takes place when a new person enters an organization. The aim of onboarding is making sure that the person is well-equipped for any tasks and activities within the organization. From IT point of view, this often means identity provisioning, e.i. creation of user accounts in various applications, databases and identity data stores. This process is often automated using an identity management system. However, a complete onboarding process is usually more complex, including non-IT steps such as providing the person with appropriate equipment and training.
+  Business process that takes place when a new person enters an organization. The aim of onboarding is making sure that the person is well-equipped for any tasks and activities within the organization. From IT point of view, this often means identity provisioning, e.i. creation of user accounts in various applications, databases and identity data stores. This process is often automated using an identity management system. However, a complete onboarding process is usually more complex, including non-IT steps such as providing the person with appropriate equipment and training.
 +
 The terms "enrollment", "registration" and "onboarding" are overlapping and they are often used as synonyms. Strictly speaking, "enrollment" is the verification process, "registration" is an act of recording information to data store, and "onboarding" is a complete business process making sure that a new person in an organization is well-equipped for activities within the organization.
 +
 Alternative terms: On-boarding
 +
-See also: <<glossterm-enrollment,Enrollment>>, <<glossterm-identity-registration,Identity Registration>>, <<glossterm-identity-provisioning,Identity Provisioning>>
+See also: <<glossterm-enrollment,Enrollment>>, <<glossterm-identity-registration,Identity Registration>>, <<glossterm-identity-provisioning,Identity Provisioning>>, <<glossterm-joiner-mover-leaver,Joiner-Mover-Leaver Processes>>
 [[glossterm-open-source]]Open Source (OSS)::
-The meaning of this term is very simple - it is something people can wilfully modify according to their own needs or wishes. Firstly, this term was known in the context of software, which code was publicly exposed and available for modification. Later open source spread widely. There are open source projects, products, participations and many others.
+  The meaning of this term is very simple - it is something people can wilfully modify according to their own needs or wishes. Firstly, this term was known in the context of software, which code was publicly exposed and available for modification. Later open source spread widely. There are open source projects, products, participations and many others.
 +
 Many organizations and people choose open source software, hence it is considered to be more secured and grants people more control over it. This software can also be more stable as many other people may contribute their own ideas, correct it or improve it.
 +
 Open source products are free and the creators usually charge other organizations for support or software services as implementation or deployment.
 +
 Alternative terms: Open Source Software, FOSS, Free and Open Source Software
+[[glossterm-org]]Org::
+
++
+In midPoint terminology: Org is a type of midPoint objects, object that represent various forms of organizational units and structures. Org can represent company, division, section, project, team, research group or any other grouping of identities. Orgs are not limited to grouping people, orgs can be used to group most midPoint objects (any assignment holder object).
++
+See also link:https://docs.evolveum.com/midpoint/reference/org/[more information at docs.evolveum.com].
++
+See also: <<glossterm-organizational-structure,Organizational Structure>>
 [[glossterm-organizational-structure]]Organizational Structure::
-A hierarchical arrangement of authority, rights or duties in an organization. It determines the assignment, control or coordination of roles, responsibilities and power. A character of the organizational structure is highly dependant on the organization’s strategy and goals.
+  A hierarchical arrangement of authority, rights or duties in an organization. It determines the assignment, control or coordination of roles, responsibilities and power. A character of the organizational structure is highly dependant on the organization’s strategy and goals.
 +
 The theme of organizational structure is closely linked to identity management. Organizing the company into this structure, assigning rights to individuals, working groups or project and controlling everything from one place – that are advantages that any high quality IDM solution is supposed to provide.
 [[glossterm-orphan-account]]Orphan Account::
-An account without an owner, an account that does not seem to belong to anybody. Orphan accounts often originate as testing accounts that are not deleted after the testing is done. They may also belong to former users, but were not properly deleted or disabled. Orphan accounts are almost always a security risk, especially testing accounts with weak passwords. Most identity management systems have processes that scan systems for orphan accounts.
+  An account without an owner, an account that does not seem to belong to anybody. Orphan accounts often originate as testing accounts that are not deleted after the testing is done. They may also belong to former users, but were not properly deleted or disabled. Orphan accounts are almost always a security risk, especially testing accounts with weak passwords. Most identity management systems have processes that scan systems for orphan accounts.
 +
 Alternative terms: Orphan
 [[glossterm-password-management]]Password Management::
-Gives the organization an opportunity to meet the highest security standards thanks to the ability of having access to business systems and networks under control. Most of the employees usually pick just simple passwords and use same ones in multiple systems or applications. Password management helps to compose strong and unique passwords for both users and resources and ideally takes care of them during the whole user life cycle.
+  Gives the organization an opportunity to meet the highest security standards thanks to the ability of having access to business systems and networks under control. Most of the employees usually pick just simple passwords and use same ones in multiple systems or applications. Password management helps to compose strong and unique passwords for both users and resources and ideally takes care of them during the whole user life cycle.
 +
 Alternative terms: Credential management
 +
 See also: <<glossterm-credential,Credential>>
 [[glossterm-pep]]Policy Enforcement Point (PEP)::
-Functional component with a responsibility to enforce policy decisions. The "policy" usually refers to access control and/or authorization policy. Policy enforcement points are usually part of applications or infrastructure components, with an ability to analyze and intercept policed operation. Policy enforcement point only enforces the policy, it does not interprets or decides the policy. PEP depends on policy decision point (PDP) to interpret the policy and make a decision.
+  Functional component with a responsibility to enforce policy decisions. The "policy" usually refers to access control and/or authorization policy. Policy enforcement points are usually part of applications or infrastructure components, with an ability to analyze and intercept policed operation. Policy enforcement point only enforces the policy, it does not interprets or decides the policy. PEP depends on policy decision point (PDP) to interpret the policy and make a decision.
 +
 See also: <<glossterm-authorization,Authorization>>, <<glossterm-access-control,Access Control>>, <<glossterm-pdp,Policy Decision Point>>, <<glossterm-pmp,Policy Management Point>>
 [[glossterm-persistent-identifier]]Persistent Identifier::
-An identifier that cannot be changed or re-assigned to another identity. Once assigned, the identifier always references the same identity. Persistent identifiers are usually used as reference identifiers, and reference identifiers are usually persistent, resulting in "persistent reference identifiers".
+  An identifier that cannot be changed or re-assigned to another identity. Once assigned, the identifier always references the same identity. Persistent identifiers are usually used as reference identifiers, and reference identifiers are usually persistent, resulting in "persistent reference identifiers".
 +
 Depending on a policy, persistent identifiers can be re-assign to another identity after the original identity was deleted (identifier re-use). However, there is usually relatively long interval during which the identifier cannot be re-assigned.
 +
@@ -602,31 +694,31 @@ Alternative terms: Non-reassignable identifier
 +
 See also: <<glossterm-identifier,Identifier>>, <<glossterm-reference-identifier,Reference Identifier>>
 [[glossterm-personal-data]]Personal Data::
-Data about a person, usually processed in an information system. The definition of "personal data" slightly differ from case to case. For example, GDPR defines personal data as "any information which are related to an identified or identifiable natural person". However, the general understanding is that "personal data" are any data that relate to a natural person, that describe the person in some way. This is different from personally identifiable information (PII), as personal data may not uniquely identify a person. For example, person's full name is considered personal data, however, a name such as "John Smith" is not entirely unique or identifiable in most contexts.
+  Data about a person, usually processed in an information system. The definition of "personal data" slightly differ from case to case. For example, GDPR defines personal data as "any information which are related to an identified or identifiable natural person". However, the general understanding is that "personal data" are any data that relate to a natural person, that describe the person in some way. This is different from personally identifiable information (PII), as personal data may not uniquely identify a person. For example, person's full name is considered personal data, however, a name such as "John Smith" is not entirely unique or identifiable in most contexts.
 +
 Alternative terms: Personal information, Identity data, Identity information, Personal profile
 +
 See also: <<glossterm-personal-data-protection,Personal Data Protection>>, <<glossterm-personally-identifiable-information,Personally Identifiable Information>>, <<glossterm-gdpr,General Data Protection Regulation>>
 [[glossterm-personal-data-erasure]]Personal Data Erasure::
-Erasure (deletion) of personal data, usually due to explicit request from user (e.g. "delete account" request), or due to lack of lawful basis for personal data processing.
+  Erasure (deletion) of personal data, usually due to explicit request from user (e.g. "delete account" request), or due to lack of lawful basis for personal data processing.
 +
 Alternative terms: Erasure, Data erasure
 +
 See also: <<glossterm-personal-data-protection,Personal Data Protection>>, <<glossterm-personal-data,Personal Data>>, <<glossterm-personal-data-processing-basis,Personal Data Processing Basis>>, <<glossterm-gdpr,General Data Protection Regulation>>
 [[glossterm-personal-data-processing-basis]]Personal Data Processing Basis::
-Basis for processing of personal data. Legal data protection frameworks (such as GDPR) usually mandate that personal data cannot be processed unless there is a basis for that processing. The basis may be a contract, legal obligation, consent, or similar legitimate interest for processing of the data. Some frameworks (such as GDPR) are enumerating the available processing bases.
+  Basis for processing of personal data. Legal data protection frameworks (such as GDPR) usually mandate that personal data cannot be processed unless there is a basis for that processing. The basis may be a contract, legal obligation, consent, or similar legitimate interest for processing of the data. Some frameworks (such as GDPR) are enumerating the available processing bases.
 +
 Alternative terms: Basis for processing, Legal basis, Lawful basis
 +
 See also: <<glossterm-personal-data-protection,Personal Data Protection>>, <<glossterm-personal-data,Personal Data>>, <<glossterm-gdpr,General Data Protection Regulation>>
 [[glossterm-personal-data-protection]]Personal Data Protection::
-Personal data protection is a field dealing with protection of personal information, rules for their processing, storage and erasure. It is closely related to privacy, as one of the main goals of personal data protection is to limit exposure of personal data, thus minimizing potential for their abuse.
+  Personal data protection is a field dealing with protection of personal information, rules for their processing, storage and erasure. It is closely related to privacy, as one of the main goals of personal data protection is to limit exposure of personal data, thus minimizing potential for their abuse.
 +
 Alternative terms: Data Protection, DP
 +
 See also: <<glossterm-personal-data,Personal Data>>, <<glossterm-gdpr,General Data Protection Regulation>>
 [[glossterm-personally-identifiable-information]]Personally Identifiable Information (PII)::
-Information that allows a person to be (directly or indirectly) identified. Obviously, government-issued identifiers, such as birth numbers, social security numbers or serial numbers of various identity documents are usually considered to be personally identifiable information. However, interpretation of what information is "personally identifiable" depends on the context. Even a simple full name of a person may be considered personally identifiable information in some contexts. Personally identifiable information usually require special protection or processing regime. Personally identifiable information should not be confused with personal data. PII are used as an identifier, pointing out a specific person in a group of other persons. Personal data describe certain person, there is no requirement for personal data to be "identifiable".
+  Information that allows a person to be (directly or indirectly) identified. Obviously, government-issued identifiers, such as birth numbers, social security numbers or serial numbers of various identity documents are usually considered to be personally identifiable information. However, interpretation of what information is "personally identifiable" depends on the context. Even a simple full name of a person may be considered personally identifiable information in some contexts. Personally identifiable information usually require special protection or processing regime. Personally identifiable information should not be confused with personal data. PII are used as an identifier, pointing out a specific person in a group of other persons. Personal data describe certain person, there is no requirement for personal data to be "identifiable".
 +
 Alternative terms: Personal identifiers
 +
@@ -634,15 +726,15 @@ X.1252 term: personally identifiable information
 +
 See also: <<glossterm-personal-data,Personal Data>>
 [[glossterm-pdp]]Policy Decision Point (PDP)::
-Functional component with a responsibility to interpret policy and make decisions. The "policy" usually refers to access control and/or authorization policy. Policy decision point (PDP) can be part of applications, or they may be provided by dedicated infrastructure components (authorization services). PDP interprets the policy and make a decision, which is usually allow/deny decision. PDP does not enforce the decision, it relies on policy enforcement point (PEP) to enforce it. PDP does not define or manage the policy either, it depends on policy management point (PMP) to set the policy.
+  Functional component with a responsibility to interpret policy and make decisions. The "policy" usually refers to access control and/or authorization policy. Policy decision point (PDP) can be part of applications, or they may be provided by dedicated infrastructure components (authorization services). PDP interprets the policy and make a decision, which is usually allow/deny decision. PDP does not enforce the decision, it relies on policy enforcement point (PEP) to enforce it. PDP does not define or manage the policy either, it depends on policy management point (PMP) to set the policy.
 +
 See also: <<glossterm-authorization,Authorization>>, <<glossterm-access-control,Access Control>>, <<glossterm-authorization-service,Authorization Service>>, <<glossterm-pep,Policy Enforcement Point>>, <<glossterm-pmp,Policy Management Point>>
 [[glossterm-pmp]]Policy Management Point (PMP)::
-Functional component with a responsibility to specify, manage and maintain the policy. The "policy" usually refers to access control and/or authorization policy. Policy management point (PMP) can be part of applications, or they may be provided by dedicated infrastructure components (identity management and governance components). PMP specifies the policy, usually as a result of interaction with an administrator by the means user interface. PMP does not make policy decisions or enforce them, that is a responsibility of policy decision point (PMP) and policy enforcement point (PEP) respectively.
+  Functional component with a responsibility to specify, manage and maintain the policy. The "policy" usually refers to access control and/or authorization policy. Policy management point (PMP) can be part of applications, or they may be provided by dedicated infrastructure components (identity management and governance components). PMP specifies the policy, usually as a result of interaction with an administrator by the means user interface. PMP does not make policy decisions or enforce them, that is a responsibility of policy decision point (PMP) and policy enforcement point (PEP) respectively.
 +
 See also: <<glossterm-authorization,Authorization>>, <<glossterm-access-control,Access Control>>, <<glossterm-pep,Policy Enforcement Point>>, <<glossterm-pdp,Policy Decision Point>>, <<glossterm-iga,Identity Governance and Administration>>
 [[glossterm-policy-management]]Policy Management::
-Set of operations defining the authorization roles or policies, or assigning roles to the particular users. This is often manual or semi-manual operation performed in identity management system or identity data store. Policy management is implementing the functionality of Policy Management Point (PMP).
+  Set of operations defining the authorization roles or policies, or assigning roles to the particular users. This is often manual or semi-manual operation performed in identity management system or identity data store. Policy management is implementing the functionality of Policy Management Point (PMP).
 +
 This term is often confused with authorization itself. However, policy management aims at definition of the policy, while authorization is interpreting the policy.
 +
@@ -652,9 +744,9 @@ Alternative terms: Management of Authorization Policies, Policy and Role Managem
 +
 See also: <<glossterm-authorization,Authorization>>
 [[glossterm-polystring]]Polystring::
-A built-in data type for polymorphic string maintaining extra values in addition to its original value. The extra values are derived from the original value automatically using a normalization code. PolyString supports national characters in strings. It contains both the original value (with national characters) and normalized value (without national characters). This can be used for transliteration of national characters in usernames. All the values are stored in the repository, therefore they can be used to look for the object. Search ignoring the difference in diacritics or search by transliterated value can be used even if the repository itself does not support such feature explicitly.
+  A built-in data type for polymorphic string maintaining extra values in addition to its original value. The extra values are derived from the original value automatically using a normalization code. PolyString supports national characters in strings. It contains both the original value (with national characters) and normalized value (without national characters). This can be used for transliteration of national characters in usernames. All the values are stored in the repository, therefore they can be used to look for the object. Search ignoring the difference in diacritics or search by transliterated value can be used even if the repository itself does not support such feature explicitly.
 [[glossterm-principal]]Principal::
-An entity or identity, information about which is managed in an information system.
+  An entity or identity, information about which is managed in an information system.
 +
 Usage of the term "principal" varies significantly. Depending on context, it may refer to entity (person), its identity or data structure describing parts of the identity (digital identity). In information security frameworks (such as X.509), "principal" usually refers to entity or identity, such as owner of credentials. In programming frameworks, "principal" usually refers to ephemeral information about user, maintained during user's session. This is usually different from "account", as accounts are usually persistent (stored in database), while principal may be ephemeral, or may refer to entities that are not users of the system (may not be able to log in). In some contexts, "principal" is equivalent to "subject".
 +
@@ -665,12 +757,20 @@ ISO 24760 term: principal
 X.1252 term: principal
 +
 See also: <<glossterm-subject,Subject>>, <<glossterm-entity,Entity>>, <<glossterm-identity,Identity>>, <<glossterm-account,Account>>
+[[glossterm-prism]]Prism::
+
++
+In midPoint terminology: Prism is a name of a data representation library, which is used by midPoint to access data in its repository. The concepts of Prism permeates all of midPoint, giving structure to midPoint objects, and their representation in XML/JSON/YAML. Prism defines a concept of object, container, property, item, delta and many other useful concepts.
++
+See also link:https://docs.evolveum.comhttps://docs.evolveum.com/midpoint/devel/prism/[more information at docs.evolveum.com].
++
+See also: <<glossterm-delta,Delta>>
 [[glossterm-privacy]]Privacy::
-The right to be left alone. In IT context, privacy is an ability of individuals to control the information about themselves, to choose how the information is used to express their individuality. Technologies that support the concept of privacy are known as privacy-enhancing technologies (PET).
+  The right to be left alone. In IT context, privacy is an ability of individuals to control the information about themselves, to choose how the information is used to express their individuality. Technologies that support the concept of privacy are known as privacy-enhancing technologies (PET).
 +
 See also: <<glossterm-privacy-enhancing-technology,Privacy-Enhancing Technology>>, <<glossterm-personal-data-protection,Personal Data Protection>>
 [[glossterm-privacy-enhancing-technology]]Privacy-Enhancing Technology (PET)::
-Technologies that support and enhance privacy. This usually means technologies that give an individual an effective control over personal data, and the way how that are use to express one's individuality.
+  Technologies that support and enhance privacy. This usually means technologies that give an individual an effective control over personal data, and the way how that are use to express one's individuality.
 +
 Most privacy-enhancing technologies are focused on limiting the spread of personal data, making sure that only a minimal amount of data is disclosed (minimal disclosure), making sure that user approves data transfer (consent), using pseudonyms and various anonymization techniques to limit data exposure.
 +
@@ -678,21 +778,29 @@ Privacy-enhancing technologies are somewhat different from personal data protect
 +
 See also: <<glossterm-privacy,Privacy>>, <<glossterm-personal-data-protection,Personal Data Protection>>, <<glossterm-minimal-disclosure,Minimal Disclosure>>, <<glossterm-pseudonym,Pseudonym>>
 [[glossterm-privacy-policy]]Privacy Policy::
-A policy that sets rules for processing of personal data, respecting privacy of an individual.
+  A policy that sets rules for processing of personal data, respecting privacy of an individual.
 +
 X.1252 term: privacy policy
 +
 See also: <<glossterm-privacy,Privacy>>, <<glossterm-privacy-enhancing-technology,Privacy-Enhancing Technology>>
 [[glossterm-private-key]]Private Key::
-In an asymmetric cryptosystem (a.k.a. "public-key cryptosystem), a part of the key pair that is known only to the key owner.
+  In an asymmetric cryptosystem (a.k.a. "public-key cryptosystem), a part of the key pair that is known only to the key owner.
 +
 X.1252 term: private key
 +
 See also: <<glossterm-public-key,Public Key>>
 [[glossterm-product-architecture]]Product Architecture::
-Concept, design and description of the products part which are assigned into subsystems. It is also way how these subsystems interact with each other.
+  Concept, design and description of the products part which are assigned into subsystems. It is also way how these subsystems interact with each other.
+[[glossterm-projection]]Projection::
+
++
+In midPoint terminology: Projection is a part of midPoint computation that represents the objects in identity resources, usually accounts, entitlements or organizational units. Projection are the "spokes" in hub-and-spoke (star) data synchronization in midPoint. Projections are represented in the computation in a form of shadows (shadow objects), usually supplemented with real-time data from the resource objects.
++
+See also link:https://docs.evolveum.com/midpoint/reference/schema/focus-and-projections/[more information at docs.evolveum.com].
++
+See also: <<glossterm-shadow,Shadow>>, <<glossterm-focus,Focus>>, <<glossterm-assignment,Assignment>>
 [[glossterm-pseudonym]]Pseudonym::
-An identifier designed to avoid any inherent information about identity or entity. Pseudonyms are meant to hide or modify perception of the entity or identity, as presented to other parties.
+  An identifier designed to avoid any inherent information about identity or entity. Pseudonyms are meant to hide or modify perception of the entity or identity, as presented to other parties.
 +
 In user experience sense, pseudonyms can be chosen by the user to hide or alter their real identity in information systems.
 +
@@ -704,13 +812,13 @@ X.1252 term: pseudonym
 +
 See also: <<glossterm-identifier,Identifier>>, <<glossterm-personal-data-protection,Personal Data Protection>>, <<glossterm-privacy,Privacy>>
 [[glossterm-public-key]]Public Key::
-In an asymmetric cryptosystem (a.k.a. "public-key cryptosystem), a part of the key pair that can be shared with other entities.
+  In an asymmetric cryptosystem (a.k.a. "public-key cryptosystem), a part of the key pair that can be shared with other entities.
 +
 X.1252 term: public key
 +
 See also: <<glossterm-private-key,Private Key>>
 [[glossterm-rbac]]Role-Base Access Control::
-A mechanism for managing of user access to information systems based on a concept of roles. Role-Based Access Control (RBAC) is using roles to group privileges. Roles usually represent meaningful entities, such as job positions, organizational affiliations or similar business concepts. One of the basic assumptions of RBAC is that management of roles is much easier as management of individual entitlements.
+  A mechanism for managing of user access to information systems based on a concept of roles. Role-Based Access Control (RBAC) is using roles to group privileges. Roles usually represent meaningful entities, such as job positions, organizational affiliations or similar business concepts. One of the basic assumptions of RBAC is that management of roles is much easier as management of individual entitlements.
 +
 A form of RBAC is standardized in a series of NIST standards (INCITS 359-2012).
 +
@@ -720,7 +828,7 @@ Alternative terms: RBAC
 +
 See also: <<glossterm-role,Role>>, <<glossterm-entitlement,Entitlement>>, <<glossterm-role-management,Role Management>>, <<glossterm-access-control,Access Control>>
 [[glossterm-reference-identifier]]Reference Identifier (RI)::
-An identifier that reliably references an identity in a particular scope. Once assigned, the identifier always references the same identity, it cannot be assigned to a different identity. Reference identifiers are often persistent, however, they can change, as long as the identifier is not re-assigned to other identity.
+  An identifier that reliably references an identity in a particular scope. Once assigned, the identifier always references the same identity, it cannot be assigned to a different identity. Reference identifiers are often persistent, however, they can change, as long as the identifier is not re-assigned to other identity.
 +
 Depending on a policy, reference identifiers can be re-assign to another identity after the original identity was deleted (identifier re-use). However, there is usually relatively long interval during which the identifier cannot be re-assigned.
 +
@@ -730,25 +838,25 @@ ISO 24760 term: reference identifier
 +
 See also: <<glossterm-identifier,Identifier>>, <<glossterm-persistent-identifier,Persistent Identifier>>, <<glossterm-reference-identifier-generator,Reference Identifier Generator>>
 [[glossterm-reference-identifier-generator]]Reference Identifier Generator::
-ISO 24760 term, used to describe the tool that generates reference identifier, usually during an enrollment and registration.
+  ISO 24760 term, used to describe the tool that generates reference identifier, usually during an enrollment and registration.
 +
 ISO 24760 term: reference identifier generator
 +
 See also: <<glossterm-reference-identifier,Reference Identifier>>, <<glossterm-enrollment,Enrollment>>, <<glossterm-identity-registration,Identity Registration>>
 [[glossterm-referential-integrity]]Referential Integrity::
-Consistency constraint in a database, mandating that every reference points to a valid object. Simply speaking, when an identifier is used to reference another object, such objects should exist.
+  Consistency constraint in a database, mandating that every reference points to a valid object. Simply speaking, when an identifier is used to reference another object, such objects should exist.
 +
 Referential integrity is often a concern in group management and directory services. Systems that provide referential integrity make sure that a group points to valid members (user that exist), or that a list of user groups points to valid groups. In case a user who is a member of a group is removed, a system with referential integrity will either automatically remove the user from the group, or it will deny the operation until user is explicitly removed from all groups first. Systems that do not provide referential integrity would allow such operation, leaving invalid identifier in the database, an identifier that does not point to any existing object.
 +
 See also: <<glossterm-schema,Schema>>, <<glossterm-digital-identity-attribute,Digital Identity Attribute>>, <<glossterm-verification,Verification>>
 [[glossterm-registration-authority]]Registration Authority (RA)::
-An entity that gathers and verifies identity information, for the purposes of enrollment and identity registration. Registration authority is usually the organization that carries out identity proofing by verifying identity evidence, such as national identity cards.
+  An entity that gathers and verifies identity information, for the purposes of enrollment and identity registration. Registration authority is usually the organization that carries out identity proofing by verifying identity evidence, such as national identity cards.
 +
 ISO 24760 term: registration authority
 +
 See also: <<glossterm-identity-registration,Identity Registration>>, <<glossterm-enrollment,Enrollment>>, <<glossterm-identity-proofing,Identity Proofing>>, <<glossterm-identity-evidence,Identity Evidence>>
 [[glossterm-relying-party]]Relying Party (RP)::
-System that relies on other party (identity provider) to provide identity information. Relying party (also known as "service provider") usually relies on identity provider to authenticate the user, and relay the information to the relying party. Relying party has no access to credentials (e.g. passwords), it only knows that the authentication was successful. Identity provider may transfer identity attributes and additional information (such as authorization decisions) to the relying party. Relying party usually has a trust relationship with identity provider.
+  System that relies on other party (identity provider) to provide identity information. Relying party (also known as "service provider") usually relies on identity provider to authenticate the user, and relay the information to the relying party. Relying party has no access to credentials (e.g. passwords), it only knows that the authentication was successful. Identity provider may transfer identity attributes and additional information (such as authorization decisions) to the relying party. Relying party usually has a trust relationship with identity provider.
 +
 Alternative terms: Service Provider
 +
@@ -758,13 +866,13 @@ X.1252 term: relying party
 +
 See also: <<glossterm-identity-provider,Identity Provider>>, <<glossterm-sso,Single Sign-On>>, <<glossterm-identity-federation,Identity Federation>>
 [[glossterm-repository]]Repository::
-A database, often a database of self-contained objects. In identity and access management context, it usually means a database of identity information.
+  A database, often a database of self-contained objects. In identity and access management context, it usually means a database of identity information.
 +
 In midPoint terminology: MidPoint internal database. It is used to store all internal midPoint data and vast majority of midPoint configuration.
 +
 Alternative terms: MidPoint repository
 [[glossterm-resource]]Resource::
-In generic terms, a Resource is any information asset, system or a service that can be meaningfully used to obtain an information, or to initiate an action. Web resources are often used to access information across World Wide Web, e.g. in a form of RESTful interfaces. In IAM field, a Resource (Identity Resource) is usually a network-accessible asset capable of managing identity information.
+  In generic terms, a Resource is any information asset, system or a service that can be meaningfully used to obtain an information, or to initiate an action. Web resources are often used to access information across World Wide Web, e.g. in a form of RESTful interfaces. In IAM field, a Resource (Identity Resource) is usually an network-accessible asset capable of managing identity information.
 +
 In midPoint terminology: A Resource is a system that is either identity data source or provisioning target.
 +
@@ -772,31 +880,31 @@ Alternative terms: Information Resource, Data Resource
 +
 See also: <<glossterm-identity-resource,Identity Resource>>
 [[glossterm-rest]]REST::
-Architectural style that describes fundamental principles of World Wide Web (WWW). REST architectural style was used to develop HTTP protocol, fundamental building block of WWW. REST specifies a concept of resource (web resource), identified by Unified Resource Locator (URL), access by unified interface. Although REST is designed for hypertext applications, some of the REST principles are used for general-purpose programming interfaces, known as "RESTful" services or APIs.
+  Architectural style that describes fundamental principles of World Wide Web (WWW). REST architectural style was used to develop HTTP protocol, fundamental building block of WWW. REST specifies a concept of resource (web resource), identified by Unified Resource Locator (URL), access by unified interface. Although REST is designed for hypertext applications, some of the REST principles are used for general-purpose programming interfaces, known as "RESTful" services or APIs.
 +
 Alternative terms: Representational State Transfer
 +
 See also: <<glossterm-restful-service,RESTful Service>>, <<glossterm-api,Application Programming Interface>>, <<glossterm-resource,Resource>>
 [[glossterm-restful-service]]RESTful Service::
-Usually a general-purpose programming interface (API) or network service, exposed by one application to be used by another application. RESTful services are based on operations of HTTP protocols such as GET, PUT and POST. RESTful services are using Unifier Resource Locators (URLs) as addressing scheme, and also for the purposes of conveying some parameters. Despite the name, RESTful services actually do not strictly follow principles of REST architectural style. REST architectural style is designed for use in hypertext applications, while most RESTful services are procedural in nature. Therefore most RESTful services adapt and bind the REST principles for their purposes. Despite such deformations, RESTful services provide a very popular method for application-to-application interaction over the Internet.
+  Usually a general-purpose programming interface (API) or network service, exposed by one application to be used by another application. RESTful services are based on operations of HTTP protocols such as GET, PUT and POST. RESTful services are using Unifier Resource Locators (URLs) as addressing scheme, and also for the purposes of conveying some parameters. Despite the name, RESTful services actually do not strictly follow principles of REST architectural style. REST architectural style is designed for use in hypertext applications, while most RESTful services are procedural in nature. Therefore most RESTful services adapt and bind the REST principles for their purposes. Despite such deformations, RESTful services provide a very popular method for application-to-application interaction over the Internet.
 +
 Alternative terms: REST Service, REST API
 +
 See also: <<glossterm-rest,REST>>, <<glossterm-api,Application Programming Interface>>
 [[glossterm-role]]Role::
-Abstract concept that usually groups entitlements (privileges, access rights) in a single object. The purpose of grouping entitlements in roles is to make access control policies manageable, usually using Role-Based Access Control (RBAC) principles.
+  Abstract concept that usually groups entitlements (privileges, access rights) in a single object. The purpose of grouping entitlements in roles is to make access control policies manageable, usually using Role-Based Access Control (RBAC) principles.
 +
 X.1252 term: role
 +
 See also: <<glossterm-entitlement,Entitlement>>, <<glossterm-rbac,Role-Base Access Control>>, <<glossterm-role-management,Role Management>>
 [[glossterm-role-management]]Role Management::
-A process of managing role definitions. It usually includes creating role definitions, maintenance of role definitions, adapting to changed environment and decommissioning role definitions. Role management is concerned with role definitions only, in contrast with Role-Based Access Control (RBAC), which is mostly concerned in using the definitions to control the access.
+  A process of managing role definitions. It usually includes creating role definitions, maintenance of role definitions, adapting to changed environment and decommissioning role definitions. Role management is concerned with role definitions only, in contrast with Role-Based Access Control (RBAC), which is mostly concerned in using the definitions to control the access.
 +
 Alternative terms: Role Modeling
 +
 See also: <<glossterm-role,Role>>, <<glossterm-rbac,Role-Base Access Control>>
 [[glossterm-schema]]Schema::
-Description of a structure of information, such as description of data types, attribute names and types, attribute structure and multiplicity, often supplemented by additional information such as documentation and presentation metadata.
+  Description of a structure of information, such as description of data types, attribute names and types, attribute structure and multiplicity, often supplemented by additional information such as documentation and presentation metadata.
 +
 In information systems designed to process identity information, the schema usually refers to structure of digital identity data, names of identity attributes, their types, multiplicity, optionality and similar properties.
 +
@@ -804,11 +912,11 @@ Alternative terms: Data model, Identity model
 +
 See also: <<glossterm-digital-identity-attribute,Digital Identity Attribute>>, <<glossterm-verification,Verification>>, <<glossterm-referential-integrity,Referential Integrity>>
 [[glossterm-security-audit]]Security Audit::
-Independent review of a system, in order to assess adequacy of security controls, evaluate compliance with policies, regulations and operational procedures.
+  Independent review of a system, in order to assess adequacy of security controls, evaluate compliance with policies, regulations and operational procedures.
 +
 X.1252 term: security audit
 [[glossterm-selective-disclosure]]Selective Disclosure::
-A mechanism that gives person a control over the sharing of data, usually between domains. Selective disclosure is sometimes applied in cross-domain data transfer, such as when using identity providers or identity federations. In case of data transfer, the user is prompted to select that data that can be disclosed to the other domain. This process is sometimes automatic, governed by a pre-defined data disclosure policy.
+  A mechanism that gives person a control over the sharing of data, usually between domains. Selective disclosure is sometimes applied in cross-domain data transfer, such as when using identity providers or identity federations. In case of data transfer, the user is prompted to select that data that can be disclosed to the other domain. This process is sometimes automatic, governed by a pre-defined data disclosure policy.
 +
 Alternative terms: Selective Disclosure of Personal Information
 +
@@ -816,21 +924,35 @@ ISO 24760 term: selective disclosure
 +
 See also: <<glossterm-digital-identity,Digital Identity>>, <<glossterm-personal-data-protection,Personal Data Protection>>, <<glossterm-privacy,Privacy>>, <<glossterm-identity-provider,Identity Provider>>, <<glossterm-identity-federation,Identity Federation>>, <<glossterm-minimal-disclosure,Minimal Disclosure>>
 [[glossterm-self-asserted]]Self-Asserted::
-An assertion (claim) made by an entity about itself. It usually means a claim that was not verified or certified by any other party.
+  An assertion (claim) made by an entity about itself. It usually means a claim that was not verified or certified by any other party.
 +
 See also: <<glossterm-self-asserted-identity,Self-Asserted Identity>>
 [[glossterm-self-asserted-identity]]Self-Asserted Identity::
-An identity (usually a digital identity) that an entity declares about itself. It usually means a set of digital identity attributes that an entity claimed about itself, without being verified of certified by any other party.
+  An identity (usually a digital identity) that an entity declares about itself. It usually means a set of digital identity attributes that an entity claimed about itself, without being verified of certified by any other party.
 +
 X.1252 term: self-asserted identity
 +
-See also: <<glossterm-self-asserted,Self-Asserted>>, <<glossterm-decentralized-identity,>>, <<glossterm-identity-assertion,Identity Assertion>>
+See also: <<glossterm-self-asserted,Self-Asserted>>, <<glossterm-decentralized-identifier,Decentralized Identifier>>, <<glossterm-identity-assertion,Identity Assertion>>
+[[glossterm-shadow]]Shadow::
+
++
+In midPoint terminology: Shadow objects are objects in midPoint repository representing objects in identity resources, such as accounts or groups. Shadow objects are used by midPoint as a proxy objects, or data adapters for real accounts, groups or organizational units in identity resources. MidPoint stores identifiers of resource objects in shadow objects, together with meta-data, policy-related information and operational data that relate to the resource object that the shadows represent. The identifiers stored in shadow objects are used to locate the correct resource object even in cases that is renamed or it moves. Shadow objects may contain copies of the data of real resource objects. However, in default configuration, only identifiers are stored in shadow objects.
++
+See also link:https://docs.evolveum.com/midpoint/reference/resources/shadow/[more information at docs.evolveum.com].
++
+Alternative terms: Shadow Object
++
+See also: <<glossterm-projection,Projection>>
 [[glossterm-sso]]Single Sign-On (SSO)::
-Single sign-on (SSO) is an authentication process based on user logging into multiple systems with single username and password. It is used for systems that require authentication for each application while using the same credentials. SSO works on central service from where the user gains access to different applications without logging in again.
+  Single sign-on (SSO) is an authentication process based on user logging into multiple systems with single set of credentials (usually username and password)s. It is used for systems that require authentication for each application while using the same credentials. SSO works on central service from where the user gains access to different applications without logging in again.
++
+Unlike identity providers, SSO systems usually operate within a single domain. Both the SSO server and the applications being controlled by the same organization. Implicit trust of such arrangement allows SSO systems to be much simpler than identity federation systems, albeit both classes of systems provide similar services and mechanisms.
 +
 Alternative terms: Single Log-On
++
+See also: <<glossterm-authentication,Authentication>>, <<glossterm-identity-provider,Identity Provider>>, <<glossterm-identity-federation,Identity Federation>>
 [[glossterm-subject]]Subject::
-An entity or identity, which is active in information system, typically a user. It is assumed that subject has an agency, directly or indirectly. Subjects can represent organizations or similar "legal persons" that cannot act on their own, users have to act on their behalf. In this case the organization is the "subject", while the person that acts on organization behalf is the "user".
+  An entity or identity, which is active in information system, typically a user. It is assumed that subject has an agency, directly or indirectly. Subjects can represent organizations or similar "legal persons" that cannot act on their own, users have to act on their behalf. In this case the organization is the "subject", while the person that acts on organization behalf is the "user".
 +
 The term "subject" is often used in context of authorization, as part of subject-action-object triple. Subject is the active part, a user executing certain action on a specific object. In some contexts, "subject" is equivalent to "principal".
 +
@@ -838,25 +960,25 @@ Alternative terms: Principal
 +
 See also: <<glossterm-principal,Principal>>, <<glossterm-user,User>>, <<glossterm-entity,Entity>>, <<glossterm-identity,Identity>>, <<glossterm-account,Account>>, <<glossterm-authorization,Authorization>>
 [[glossterm-target-system]]Target System::
-In IAM field, it is any system in which identity management (IDM) system is managing identity data. IDM system is usually using identity connectors to manage data in target systems.
+  In IAM field, it is any system in which identity management (IDM) system is managing identity data. IDM system is usually using identity connectors to manage data in target systems.
 +
 Some target systems can also be (partial) identity data sources, IDM system both managing and reading the data.
 +
 See also: <<glossterm-identity-management-system,Identity Management System>>, <<glossterm-identity-connector,Identity Connector>>, <<glossterm-identity-data-source,Identity Data Source>>
 [[glossterm-trust]]Trust::
-Confidence in or reliance on some person or quality. In information technology world, it usually means a confidence in a correctness of an information. It is often a long-term relationship between entities, one of the entity trusting in correctness of a whole class of information claimed by other entity (trusted third party).
+  Confidence in or reliance on some person or quality. In information technology world, it usually means a confidence in a correctness of an information. It is often a long-term relationship between entities, one of the entity trusting in correctness of a whole class of information claimed by other entity (trusted third party).
 +
 X.1252 term: trust
 +
 See also: <<glossterm-trusted-third-party,Trusted Third Party>>
 [[glossterm-trusted-third-party]]Trusted Third Party::
-An entity which makes a claims, claims that are trusted by other parties. Usually a central entity in a system that is trusted by many entities.
+  An entity which makes a claims, claims that are trusted by other parties. Usually a central entity in a system that is trusted by many entities.
 +
 X.1252 term: trusted third party
 +
 See also: <<glossterm-trust,Trust>>
 [[glossterm-user]]User::
-Generally speaking, a person that is using a computing system.
+  Generally speaking, a person that is using a computing system.
 +
 In midPoint terminology: A user means a data structure in midPoint that describes a person. Similar data structure in source/target system (identity resource) is called an "account".
 +
@@ -866,14 +988,11 @@ X.1252 term: user
 +
 See also: <<glossterm-account,Account>>, <<glossterm-principal,Principal>>, <<glossterm-subject,Subject>>
 [[glossterm-user-centric]]User-Centric::
-A system that is oriented towards the user, having user in control.
-In identity and access management context it usually means a system, where users are in control of their data.
+  A system that is oriented towards the user, having user in control. In identity and access management context it usually means a system, where users are in control of their data.
 +
 X.1252 term: user-centric
 [[glossterm-verification]]Verification::
-A process establishing that a particular information is correct, while the meaning of "information" and "correct" varies from context to context.
-When dealing with identity information, this usually means formal verification of identity attributes, checking the schema, identifier uniqueness and referential integrity.
-However, verification may mean deeper verification, such as checking that the information is true and up-to-date.
+  A process establishing that a particular information is correct, while the meaning of "information" and "correct" varies from context to context. When dealing with identity information, this usually means formal verification of identity attributes, checking the schema, identifier uniqueness and referential integrity. However, verification may mean deeper verification, such as checking that the information is true and up-to-date.
 +
 ISO 24760 term: verification
 +
@@ -881,7 +1000,7 @@ X.1252 term: verification
 +
 See also: <<glossterm-digital-identity-attribute,Digital Identity Attribute>>, <<glossterm-schema,Schema>>, <<glossterm-referential-integrity,Referential Integrity>>
 [[glossterm-verifier]]Verifier::
-ISO 24760 term, denoting entity that performs verification.
+  ISO 24760 term, denoting entity that performs verification.
 +
 ISO 24760 term: verifier
 +

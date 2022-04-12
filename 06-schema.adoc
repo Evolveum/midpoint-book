@@ -3,11 +3,6 @@
 
 include::chapter-include.adoc[]
 
-// TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO
-// TODO: This chapter needs to be updated to midPoint 4.4
-// TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO
-
-
 [quote, Henry David Thoreau]
 If you have built castles in the air, your work need not be lost, that is where they should be. Now put the foundations under them.
 
@@ -639,7 +634,7 @@ However, if there is ever a need to explicitly disable the user, administrative 
 ----
 
 In this case the user is still in its validity interval.
-Hence the in value of `validityStatus`.
+Hence the `in` value of `validityStatus`.
 But the administrative status is explicitly set to `disabled`.
 Therefore the resulting effective status is also `disabled`.
 
@@ -677,19 +672,20 @@ TIP: Why XSD?
 Why did we choose to use the XML Schema Definition format for midPoint schema?
 There are historic reasons and there are pragmatic reasons.
 Back in early 2010s when midPoint was born XML was perhaps the only sensible choice to build a complex system.
-Alternatives such as JSON were young and their schema languages ranged from "very limited" through "useless" to "non-existent".
-Therefore XML and XSD were a natural choice.
+Alternatives such as JSON were young, and their schema languages ranged from _very limited_ through _useless_ to _non-existent_.
+Therefore, XML and XSD were a natural choice.
 However, quite early in midPoint development we have discovered limitations of XSD and especially limitations of Java libraries that work with XML and XSD.
 We had to extend XSD with custom features.
-But fortunately, XSD allowed that.
+Fortunately, XSD allowed that.
 We also had to rewrite parts of the XML/XSD-processing code.
 We have also invented a way how to use XSD to describe generic data structures (a.k.a. "Prism objects") that can be represented in XML, JSON and YAML.
-Therefore XSD does not really hold us back that much.
-And despite all the limitations, XSD worked for us quite well during all those years.
-We expect that we will replace XSD with something better in the future.
-The problem is that right now there is nothing that is significantly better.
-And it does not make any sense for us to switch one buzzword for another only to remain cool.
-Therefore we will stick to XSD as long as it works for us.
+Therefore, XSD did not really hold us back that much.
+Despite all the limitations, XSD worked for us quite well during all those years.
+However, we are getting very close to the very limits of what XSD (or any similar schema language) can do.
+We are already working on a replacement: _Axiom_ data modeling language.
+Axiom is a next-generation language, supporting not just a _data_ schema, but also _meta-data_ schema.
+Axiom is still very young, it needs more work and time to mature.
+However, it is certainly a future for midPoint.
 
 Every deployment engineer that takes midPoint deployments seriously should be aware of the schema.
 Hardcore engineer will surely open the XSD files in their favorite text editor in the terminal and analyze the definitions line-by-line.
@@ -817,23 +813,23 @@ The namespace is used to differentiate between them.
 Therefore, if there is an expectation that several schema extensions will be used in the same deployment then the use of namespaces in object extension is more than recommended.
 
 TIP: Why is there an `extension` container?
-Why are not the properties simply mixed among other static properties?
+Why are the properties not mixed among other static properties?
 This is related to the intricacies of XML and XML schema.
 Theoretically, XML is completely extensible.
 However, when XML Schema is applied to XML, some extensibility scenarios do not work very well.
-And that is also the case for mixing of static XML elements and dynamic XML elements.
-We are hitting what is called “Unique Particle Resolution” limitation of XML schema.
+That is also the case for mixing of static XML elements and dynamic XML elements.
+We are hitting what is called "Unique Particle Resolution" limitation of XML schema.
 This was further amplified by limitations of Java XML libraries.
 The easiest and perhaps even most correct way to resolve this limitation was to create a dedicated XML element for schema extensions.
 That is what we have done in early midPoint versions.
-The schema processing code in midPoint has significantly improved since and now we are almost at the point where we could remove the `extension` element.
+The schema processing code in midPoint has significantly improved since, and now we are almost at the point where we could remove the `extension` element.
 But we are not yet there.
-And there is still an aspect of compatibility to consider.
-Therefore the `extension` element stays for now.
-But we are trying hard to hide its existence from the end user.
+Moreover, there is still an aspect of compatibility to consider.
+Therefore, the `extension` element stays for now.
+However, we are trying hard to hide its existence from the end user.
 
 MidPoint schema does not just specify the "core" data model.
-MidPoint schema goes a bit further and it can also specify the details of data _presentation_.
+MidPoint schema goes a bit further, and it can also specify the details of data _presentation_.
 This means that the schema can specify a label that should be used for particular data item, help text and so on.
 The XML Schema (XSD) cannot do this.
 But fortunately, XSD schema can be extended by _annotations_.
@@ -1189,8 +1185,9 @@ This is a report definition.
 It is a report “template” that can be executed and it produces data.
 The output data are referred to by report output objects.
 
-|`ReportOutputType`
-|Object that refers to specific output of the report.
+|`ReportDataType`
+|Object that refers to data of the report.
+This is usually a report of the output, but it may also refer to input data that are to be imported to midPoint.
 It also contains metadata, e.g. when the report was created, what definition was used, etc.
 
 |`SequenceType`

@@ -140,9 +140,6 @@ This chapter will be different.
 There will be complete examples of practical midPoint solutions.
 After all, the way that copying and pasting is one the best ways how to learn.
 
-* *Glossary:* Identity management and governance parlance may sound like an alien language to a newcomer.
-Therefore, perhaps preparing IDMish-to-english dictionary might be a good idea.
-
 Those chapters are still missing.
 They are not written yet.
 Obviously, the best people to write those chapters are the people from the Evolveum team: people that designed and implemented midPoint, people that support midPoint deployments, people that work with midPoint every day, people that eat, breathe and sleep midPoint.

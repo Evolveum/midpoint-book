@@ -3,8 +3,6 @@
 
 include::chapter-include.adoc[]
 
-// Note: Reviewed for midPoint 4.4
-
 [quote, Mentat conundrum, "Dune: House Corrino by Brian Herbert"]
 Simplicity is the most complex of all concepts.
 

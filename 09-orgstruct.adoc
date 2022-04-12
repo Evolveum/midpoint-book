@@ -3,8 +3,6 @@
 
 include::chapter-include.adoc[]
 
-// Note: Reviewed for midPoint 4.4
-
 [quote, Douglas Adams, "The Restaurant At The End Of The Universe"]
 If life is going to exist in a Universe of this size, then the one thing it cannot afford to have is a sense of proportion.
 

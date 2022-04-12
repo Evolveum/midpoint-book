@@ -3,8 +3,6 @@
 
 include::chapter-include.adoc[]
 
-// Note: Reviewed for midPoint 4.4
-
 [quote, Theodore von Kármán]
 Scientists study the world as it is; engineers create the world that has never been.
 
