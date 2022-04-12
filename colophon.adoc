@@ -21,6 +21,5 @@ ifdef::backend-html5[]
 image::evolveum-web.png[Evolveum]
 endif::[]
 ifndef::backend-html5[]
-// TODO: replace by SVG
-image::evolveum.png[Evolveum, scaledwidth="50%"]
+image::evolveum.svg[Evolveum, scaledwidth="50%"]
 endif::[]
