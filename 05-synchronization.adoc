@@ -6,11 +6,6 @@ include::chapter-include.adoc[]
 [quote,Sherlock Holmes,"The Adventures of Sherlock Holmes by Arthur Conan Doyle"]
 It is a capital mistake to theorize before one has data.
 
-// TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO
-// TODO: This section needs to be re-structured for the next review of the book
-// See TODOs inside the text
-// TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO
-
 Data are the lifeblood of any software system.
 Ensuring proper management of the data is one of the primary responsibilities of a software architect.
 But data management can be very tricky – as any experienced software architect knows only too well.
@@ -2281,8 +2276,6 @@ It is perfectly acceptable to run live synchronization and reconciliation on the
 But of course, it would be a good idea to run reconciliation less frequently than live synchronization.
 
 == Conclusion
-
-// TODO TODO TODO review progress HERE
 
 Synchronization is one of the most important mechanisms in the entire identity management field.
 Primary purpose of synchronization is to get the data _into_ midPoint.
