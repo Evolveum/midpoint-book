@@ -1,28 +1,24 @@
-2.1
+
+2.3
 ---
 
-* Intro
+* Intro: Digital identity
 
-** Data protection introduction
-
-** Remove first/second generation for IDM.
-The first generation is old history now.
-It is no longer relevant.
-
-
-* Orgstruct
-
-** Finish chapter
-
-
-2.2
----
+* MidPoint Studio
 
 * Deployment/IAM program (first iteration)
 
 
+LATER
+-----
 
-CHANGES FOR MIDPOINT 4.4 LTS
------------------------------
+* Data protection introduction
 
-MidPoint Studio
+
+MAYBE
+-----
+
+* Remove first/second generation for IDM.
+The first generation is old history now.
+It is no longer relevant.
+

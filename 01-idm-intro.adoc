@@ -2077,30 +2077,30 @@ However, pretty much all IDM systems much evolve and develop new features.
 Therefore it is crucial to choose and IDM platform that can evolve.
 
 
-== Digital Identity
-
-Strictly speaking, _digital identity_ is any digital representation of one's identity.
-It is a set of characteristics, qualities, believes and behaviors of en entity, usually represented as a set of attributes.
-Digital identity is a data record, usually structured, intended for machine processing.
-Such identity usually describes a person, however it can describe a non-person entities as well.
-
-That is a dictionary definition of _digital identity_.
-However, this is IAM field, it would be just too easy if one simple definition can fully describe a concept.
-It is perhaps not a big surprise that in practice _digital identity_ is many things to many people.
-Academics and identity experts would probably be happy with the dictionary definition of digital identity.
-However, the term have got a slightly different meaning when dealing with a broader audience.
-
-Generally speaking, the term _digital identity_ is understood as a data records on a person's identity, together with appropriate tools to manage it.
-This is usually an application that allows to control and manage the identity data by the user.
-It is the _user-centric_ approach which is usually considered a distinguishing factor between _digital identity_ and other IAM technologies.
-The basic idea is to keep user in control.
-Idealistically, the user should be able to see and manage all the aspects of her or his digital identity, modify identity attributes, manage the relationships with other entities, control how the identity is presented.
-The user should be able to control how the data are shared with other sites and applications, log into other sites without a need to use passwords, manage consents, initiate data erasure and so on.
-That is the idea.
-However, the reality is far from being ideal, and there are some practical obstacles.
-
-While a person's identity is intangible, the _digital_ identity is composed of data.
-The data need to reside somewhere.
+//== Digital Identity
+//
+//Strictly speaking, _digital identity_ is any digital representation of one's identity.
+//It is a set of characteristics, qualities, believes and behaviors of en entity, usually represented as a set of attributes.
+//Digital identity is a data record, usually structured, intended for machine processing.
+//Such identity usually describes a person, however it can describe a non-person entities as well.
+//
+//That is a dictionary definition of _digital identity_.
+//However, this is IAM field, it would be just too easy if one simple definition can fully describe a concept.
+//It is perhaps not a big surprise that in practice _digital identity_ is many things to many people.
+//Academics and identity experts would probably be happy with the dictionary definition of digital identity.
+//However, the term have got a slightly different meaning when dealing with a broader audience.
+//
+//Generally speaking, the term _digital identity_ is understood as a data records on a person's identity, together with appropriate tools to manage it.
+//This is usually an application that allows to control and manage the identity data by the user.
+//It is the _user-centric_ approach which is usually considered a distinguishing factor between _digital identity_ and other IAM technologies.
+//The basic idea is to keep user in control.
+//Idealistically, the user should be able to see and manage all the aspects of her or his digital identity, modify identity attributes, manage the relationships with other entities, control how the identity is presented.
+//The user should be able to control how the data are shared with other sites and applications, log into other sites without a need to use passwords, manage consents, initiate data erasure and so on.
+//That is the idea.
+//However, the reality is far from being ideal, and there are some practical obstacles.
+//
+//While a person's identity is intangible, the _digital_ identity is composed of data.
+//The data need to reside somewhere.
 
 // TODO: centralized identity, social media
 

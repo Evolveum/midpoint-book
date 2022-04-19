@@ -8,6 +8,9 @@ A ship in harbor is safe, but that is not what ships are built for.
 
 TODO
 
+TODO: Siloes may be necessary (Conway's law).
+IDM may keed the siloes synchronized.
+
 == Iterative and Incremental Approach
 
 TODO: intro to I&I.
@@ -484,6 +487,16 @@ E.g. there is pracically no LDAP server deployment that is fully compliant with 
 
 
 == TODO
+
+Application inventory
+
+Onboarding/offboarding porcesses (joiner-mover-leaver).
+
+Processes: Contrary to the popular opinion, IDM is *not* about processes.
+It is all abound data and policies.
+Processes are human concept.
+E.g. we do not have approval "process", we have approval _policy_.
+Sequence of approval steps is computed dynamically.
 
 Plan ahead, especially if you need new features.
 MidPoint has 6 months development cycles.
