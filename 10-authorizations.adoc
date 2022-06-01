@@ -6,19 +6,164 @@ include::chapter-include.adoc[]
 [quote, Socrates]
 What you cannot enforce, do not command.
 
-There is a view that all the Identity management systems do is management of identities.
-This view is easy to understand
+There is a view that all the identity management systems do is management of identities.
+This view is simple, easy to understand and wrong.
+Of course, a lot of functionalities of identity management system are indeed designed to manage identities.
+However, identity management systems are information systems too.
+As information systems, identity management systems have to do all the usual boring stuff that all self-respecting information systems do.
+Such as controlling access to data and operations.
 
-TODO
+We are talking about controlling access to data and operations _within_ midPoint.
+We do not want any user to see a list of all the data of all the other users,
+and we definitely do not want any user to modify the data.
+As pretty much any other information system, midPoint needs an ability to deliberately limit access to data stored in its repository.
+However, as midPoint is an identity management platform, the requirements for access control to data are quite demanding.
+Following scenarios are quite common in identity and access management world:
+
+* Allow any user to see its own user profile, allow editing selected set of properties.
+A user can see significant part of _own_ user profile.
+However, when looking at other users, only a very minimal set of properties is displayed.
+
+* Allow members of an organizational unit to see more details about people in the same organizational unit.
+For example, team members would like to see e-mail addresses and telephone numbers of other members of the same team.
+
+* Allow managers to see more details about people in their organizational unit, maybe even allow them to edit some user properties.
+
+* Allow project managers and research leaders to assign members to projects they are managing.
+
+* Allow call center agents to change limited set of properties for any user, except for users marked as sensitive (such as superusers).
+
+* Allow system administrators to see configuration details, but only for the system that they own.
+Also allow to see all account information that midPoint keeps for that particular system.
+
+* Allow ordinary users to browse roles, select them to form an access request.
+Let the users see only a limited set of role properties, to let them effectively select a role, but do not reveal too much about role composition and specific privileges.
+
+* Allow role administrator to see all details of roles that he owns.
+Also, allow editing of roles that he owns, but only the roles in a `draft` lifecycle state.
+We do not want to have uncontrolled changes to roles that are actively used.
+
+* Allow auditors to see everything - except for sensitive personal data.
+Although the auditor can see almost everything, he can change nothing.
+
+These are common scenarios.
+Then there is exotica, such as a very custom and fine-tuned access for some administrators, support engineers, business power users and so on.
+This is further complicated with the access given to other _systems_ instead _users_.
+MidPoint has to be able to support all such scenarios.
+Quite obviously, the access control mechanism needs to be very flexible, customizable and fine-grained.
+And indeed, it is.
+
+Access to midPoint data is controlled by _authorizations_.
+_Authorizations_ are small access control statements that are located in midPoint roles.
+Authorization statements from all the roles assigned to a users are combined, specifying access control policy and privileges of that particular user.
+
+Albeit authorizations are relatively small, they may be quite complex.
+This is perhaps no surprise for anyone that ever worked with flexible access control system.
+This chapter attempts to explain the intricacies of midPoint authorizations, starting from the simple cases, working towards the complex ones.
 
 == Subject, Action and Object
 
+In theory, the essence of any authorization scheme is very simple.
+An authorization statement has three basic parts: _subject_, _action_ and _object_:
+
+* *Subject* is the active part of an operation.
+It usually represents the user initiating an operation.
+
+* *Action* specifies what the operation does.
+The action is usually specifying read or write data operations, such as `read`, `add`, `modify` or `delete`.
+
+* *Object* is the passive part of an operation.
+It is the "thing" that is being affected by an operation.
+
+Authorization allows _action_ to be performed on _object_ by _subject_.
+For example, it allows user `aanderson` (subject) to _modify_ (action) organizational unit `Project Enigma` (object).
+
+image::10-01-subject-action-object.png[Subject\, action and object]
+
+The basic idea of the subject-action-object approach is to create authorization statements that allow operations for specific subject-action-object combinations.
+However, it would be quite difficult to maintain large set of authorization statements if they are maintained on just one place.
+Therefore, we have integrated midPoint authorization model with the role-based access control (RBAC) mechanisms.
+Authorization statements are placed inside midPoint roles, which are in turn assigned to users.
+A user that has a role with an authorization statement is automatically considered to be a subject of the statements.
+This allows very scalable and maintainable authorization configurations.
+
+image::10-02-role-project-maintainer.png[Authorization in a role]
+
+TODO: XML example of authorization statement
+
+TODO: authorizations are stored in roles
+
+TODO: example of simple authorization
+
+TODO: action and object are "multi-valued", e.g. filter for objects, multiple actions.
+
+TODO: table with subject-action-object examples
+
+TODO: use of filters in subject/object
+
 TODO: ... sometimes also _target_
 
-== Authorizations and Roles
+== Authorizations in Roles
+
+TODO: default deny
 
 TODO: Roles for everything
+
+TODO: allow vs deny
+
+TODO: authorizations are supposed to be additive, avoid using deny unless there is a very good reason
+
+TODO: big picture: user, role, authorization, action, object (from docs)
+
+== Enforcing Authorizations
+
+TODO: Authorization apply to midPoint, are enforced in midPoint.
+Applied to other system only indirectly.
+
+TODO: note how to apply authorizations in other systems (entitlements).
+They can be in the same role.
+
+== Request and Execution
+
+TODO: effect of mappings
+
+== Fine-Grained Access Control
+
+TODO: access to items
+
+== Self-Service Authorizations
+
+TODO: changing my own password
+
+== Authorizations for Assignment of Roles
+
+TODO: assign and unassign authorizations, access request
+
+TODO: this is where _target_ is often used
+
+The same for orgunits, services and other "assignment holders".
+
+
+== Object Access Authorizations
+
+TODO: All the authorizations that were mentioned so far are _object access authorization_, or _data_ access authorization if you will.
+
+== User Interface Authorizations
+
+TODO
 
 == Delegated Administration
 
 TODO: authorizations and orgstruct
+
+== Remote Access Authorizations
+
+TODO: Authorization for REST
+
+== Troubleshooting Authorizations
+
+TODO: it is hard
+
+== Conclusion
+
+TODO
