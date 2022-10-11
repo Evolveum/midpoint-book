@@ -6,7 +6,7 @@ include::chapter-include.adoc[]
 [quote, Socrates]
 What you cannot enforce, do not command.
 
-There is a view that all the identity management systems do is management of identities.
+Many people think that all the identity management systems do is management of identities.
 This view is simple, easy to understand and wrong.
 Of course, a lot of functionalities of identity management system are indeed designed to manage identities.
 However, identity management systems are information systems too.
@@ -18,7 +18,7 @@ We do not want any user to see a list of all the data of all the other users,
 and we definitely do not want any user to modify the data.
 As pretty much any other information system, midPoint needs an ability to deliberately limit access to data stored in its repository.
 However, as midPoint is an identity management platform, the requirements for access control to data are quite demanding.
-Following scenarios are quite common in identity and access management world:
+For example, following scenarios are quite common in identity and access management world:
 
 * Allow any user to see its own user profile, allow editing selected set of properties.
 A user can see significant part of _own_ user profile.
@@ -48,17 +48,17 @@ Although the auditor can see almost everything, he can change nothing.
 
 These are common scenarios.
 Then there is exotica, such as a very custom and fine-tuned access for some administrators, support engineers, business power users and so on.
-This is further complicated with the access given to other _systems_ instead _users_.
+This is further complicated with the access given to other _systems_ instead of _users_.
 MidPoint has to be able to support all such scenarios.
-Quite obviously, the access control mechanism needs to be very flexible, customizable and fine-grained.
+Quite obviously, midPoint access control mechanism needs to be very flexible, customizable and fine-grained.
 And indeed, it is.
 
 Access to midPoint data is controlled by _authorizations_.
 _Authorizations_ are small access control statements that are located in midPoint roles.
-Authorization statements from all the roles assigned to a users are combined, specifying access control policy and privileges of that particular user.
+Authorization statements from all the active roles assigned to a users are combined, specifying access control policy and privileges of that particular user.
 
-Albeit authorizations are relatively small, they may be quite complex.
-This is perhaps no surprise for anyone that ever worked with flexible access control system.
+Despite authorizations being relatively small, they may be quite complex.
+Such complexity that comes from simplicity is perhaps no surprise for anyone that ever worked with flexible access control system.
 This chapter attempts to explain the intricacies of midPoint authorizations, starting from the simple cases, working towards the complex ones.
 
 == Subject, Action and Object
@@ -80,20 +80,74 @@ For example, it allows user `aanderson` (subject) to _modify_ (action) organizat
 
 image::10-01-subject-action-object.png[Subject\, action and object]
 
-The basic idea of the subject-action-object approach is to create authorization statements that allow operations for specific subject-action-object combinations.
-However, it would be quite difficult to maintain large set of authorization statements if they are maintained on just one place.
-Therefore, we have integrated midPoint authorization model with the role-based access control (RBAC) mechanisms.
+The basic idea of this approach is to create authorization statements that allow operations for specific subject-action-object combinations.
+However, it would be quite difficult to maintain large set of authorization statements if they are maintained in a single place.
+Therefore, midPoint has authorization model integrated with the role-based access control (RBAC) mechanisms.
 Authorization statements are placed inside midPoint roles, which are in turn assigned to users.
 A user that has a role with an authorization statement is automatically considered to be a subject of the statements.
-This allows very scalable and maintainable authorization configurations.
+This approach allows very scalable and maintainable authorization configurations.
 
-image::10-02-role-project-maintainer.png[Authorization in a role]
+image::10-02-role-project-maintainer-single.png[Authorization in a role]
+
+Authorization placed in a role looks like follows in XML notation.
+The `orgRef` clause refers to `Project Enigma` org.
+This authorization allows read and modify operation for project Enigma.
+
+[source,xml]
+----
+<role>
+    <name>Project Enigma Maintainer</name>
+    <authorization>
+        <action>http://midpoint.evolveum.com/xml/ns/public/security/authorization-model-3#read</action>
+        <action>http://midpoint.evolveum.com/xml/ns/public/security/authorization-model-3#modify</action>
+        <object>
+            <type>OrgType</type>
+            <orgRef oid="9b909ef0-2deb-11ed-a421-971f0aad86d0"/> <!-- Project Enigma -->
+        </object>
+    </authorization>
+</role>
+----
+
+TODO: several causes in authorization (`type` and `orgRef`) -> all must match
+
+However, this simple scenario is not very practical.
+We usually do not want to grant permission to modify a single project.
+That approach does not scale well.
+Therefore, single authorization statement often grants permission to modify many objects.
+For example, we may want to have a `Project Maintainer` role which allows a user to modify any project.
+
+image::10-03-role-project-maintainer.png[Authorization in a role]
+
+While extending the authorization a bit, the result looks like follows in XML notation.
+
+[source,xml]
+----
+<role>
+    <name>Project Maintainer</name>
+    <authorization>
+        <action>http://midpoint.evolveum.com/xml/ns/public/security/authorization-model-3#read</action>
+        <action>http://midpoint.evolveum.com/xml/ns/public/security/authorization-model-3#modify</action>
+        <action>http://midpoint.evolveum.com/xml/ns/public/security/authorization-model-3#add</action>
+        <action>http://midpoint.evolveum.com/xml/ns/public/security/authorization-model-3#delete</action>
+        <object>
+            <type>OrgType</type>
+            <orgRef oid="832e37e4-edfd-11ea-9f8c-ef736d6646a2"/> <!-- "Projects" org hierarchy root -->
+        </object>
+    </authorization>
+</role>
+----
+
+TODO: many subjects, using a filter -> maintainer of all projects (all subnodes of Projects top node (832e37e4-edfd-11ea-9f8c-ef736d6646a2))
+
+TODO: giving abiliy to add and delete projects as well.
+
+TODO: NOTE: orgRef may be too powerful. It grants transitive rights. Use with care. Good for simple delegated administration, but not for fine-grain control. Use filters instead.
+
+TODO: example of simple authorization: allow modify any Org
 
 TODO: XML example of authorization statement
 
-TODO: authorizations are stored in roles
-
-TODO: example of simple authorization
+TODO: TIP: authorizations are stored in roles: aligning RBAC and internal access control: benefits
 
 TODO: action and object are "multi-valued", e.g. filter for objects, multiple actions.
 
@@ -167,3 +221,6 @@ TODO: it is hard
 == Conclusion
 
 TODO
+
+
+TODO: Do not overdo it. The more complex policy, the harder to understand and troubleshoot. May result in insecure system.

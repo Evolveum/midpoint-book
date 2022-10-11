@@ -58,6 +58,8 @@ include::08-object-templates.adoc[]
 
 include::09-orgstruct.adoc[]
 
+include::10-authorizations.adoc[]
+
 include::90-troubleshooting.adoc[]
 
 include::91-devel.adoc[]
