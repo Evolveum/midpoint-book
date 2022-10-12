@@ -623,7 +623,7 @@ If you want midPoint to manage users but you also want your applications to have
 Connect LDAP server to midPoint as a resource and let midPoint populate and maintain the LDAP sever data.
 The application will not talk to midPoint directly.
 They will talk to the LDAP server.
-This is better for everybody: LDAP is a standard protocol well supported in many applications.
+This is better for everybody: LDAP is a standard protocol well-supported in many applications.
 LDAP servers are also extremely fast and scalable ad nauseam.
 Therefore use the combination of midPoint and an LDAP server of your choice.
 That’s what people usually do and it works perfectly.

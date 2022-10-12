@@ -530,7 +530,7 @@ There are several _operational properties_ in the activation data structure that
 |`disableReason`
 |URI
 |URL that identifies a reason for disable.
-This may be indication that that identity was disabled explicitly, that the disable status was computed or other source of the disabled event.
+This may be indication that that identity was disabled explicitly, that the `disabled` status was computed, or it may indicate other source of the disable event.
 
 |`disableTimestamp`
 |dateTime
@@ -546,7 +546,7 @@ This may be indication that that identity was disabled explicitly, that the disa
 
 |`validityChangeTimestamp`
 |dateTime
-|Timestamp of last modification of the effective validity state, i.e. last time the validity state was recomputed with result that was different than the previous recomputation.
+|Timestamp of last modification of the effective validity state, i.e. last time the validity state was recomputed with a result that was different from the previous recomputation.
 It is used to avoid repeated validity change deltas.
 |===
 
@@ -1299,7 +1299,7 @@ But `activation` is a single-valued container.
 There is no danger of ambiguity.
 Therefore the identifier is not needed in this case.
 
-This form of item path works fine if need to identity an item in a particular object.
+This form of item path works fine if we need to identify an item in a particular object.
 But sometimes we have a lot of objects and other data structures to choose from.
 For example a mapping can have several sources.
 And then there are expression variables.
@@ -1309,7 +1309,7 @@ In such case the path can start with an optional variable identifier:
 [source]
 $focus/activation/administrativeStatus
 
-The path above explicitly states that is should be applied to the content of variable `focus`.
+The path above explicitly states that it should be applied to the content of variable `focus`.
 Therefore there is no danger that this path could be applied to a shadow object which also has the `activation` container.
 This form of item path is often used in path expression evaluators.
 

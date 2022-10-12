@@ -497,7 +497,7 @@ As managers usually control funding of software development, it is perfectly und
 This is a way how a manager of the direct sales department gets special privileges.
 The `orderConstraint` makes sure that only the users that have `manager` relation to this organization units will get the privileges.
 
-But wait s minute!
+But wait a minute!
 Clever reader does not like that.
 This approach to manager privileges is not going to be very practical.
 Managers usually do not have special privileges in each organizational unit.
@@ -610,7 +610,7 @@ This relation is designed specifically for that purpose.
 
 The `meta` relation is not mandatory.
 Metarole functionality will work just fine without it.
-In fact, almost all of the metarole configuration are not using this relation.
+In fact, almost all the metarole configuration are not using this relation.
 But it may come handy if the situation becomes too complicated.
 |===
 
@@ -736,7 +736,7 @@ That also applies the other way around: an organizational unit may have many man
 MidPoint fully supports all such cases.
 By default, MidPoint is very flexible when it deals with organizational structure.
 However, you may not like all this liberalism in organizational management.
-_Ordnung muss sien!_
+_Ordnung muss sein!_
 If you want to constraint organizational management to allow only a single manager for each organizational unit, you can do it.
 But you have to explicitly specify a policy by setting up _policy rules_ and _archetypes_.
 _Policy rules_ provide a very generic and very powerful mechanism how to constraint and control midPoint in many ways, and _archetypes_ provide flexible typing mechanism.
@@ -778,7 +778,7 @@ Nevertheless, the organizational structure is a powerful mechanism to systematic
 MidPoint can manage organizational structure.
 But where that structure comes from?
 Back in 20^th^ century there were entire teams dedicated to drawing organizational chart on paper.
-It is 21^st^ century now, we do not use paper any more.
+It is 21^st^ century now, we do not use paper anymore.
 We are using computers to manage organizational charts now.
 Which means that dedicated teams are drawing organizational charts in Excel and distributing them by e-mail.
 
@@ -1147,7 +1147,7 @@ How to do we nest organizational units to create organizational tree?
 
 In midPoint, organizational tree is formed by _assignments_.
 Therefore, the answer is quite simple: create the right assignments.
-Clever reader is not paying attention any more, being busy re-reading the sections on automatic role assignments in object template.
+Clever reader is not paying attention anymore, being busy re-reading the sections on automatic role assignments in object template.
 However, even a clever reader should be paying attention now, as there is an easier way how to do it.
 The assignments can be set up in the inbound mappings:
 

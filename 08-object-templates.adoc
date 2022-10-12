@@ -380,7 +380,7 @@ Assignments are multi-valued.
 Therefore it is important to know when to add a value and when to remove one.
 MidPoint evaluates the condition twice.
 The condition is evaluated for an object before a change is applied (old object) first.
-The the condition is evaluated for an object after the change is applied (new object) once again.
+The condition is evaluated for an object after the change is applied (new object) once again.
 When the condition changes from `false` to `true`, `Hatter` role is assigned.
 When the condition changes from `true` to `false`, `Hatter` role is unassigned.
 Other assignments values are not changed by this mapping.
@@ -396,7 +396,7 @@ And we really hate maintenance nightmares.
 Therefore it is perhaps no big surprise that there is a better way to do this.
 
 The most common use case for automatic role assignment is to look up the role using some of its properties.
-For example, let’s have suppose that our HR system provides job codes for our employees.
+For example, let’s suppose that our HR system provides job codes for our employees.
 Therefore we have extended midPoint schema with a custom property `jobCode`:
 
 [source,xml]
@@ -578,7 +578,7 @@ So when the expression is processed for Bob then the final filter looks like thi
 
 That filter is used to look for a role.
 The `Sales Agent` role is found.
-And this roles is used to construct an assignment with the role as a target:
+This role is used to construct an assignment with the role as a target:
 
 [source,xml]
 ----
@@ -679,7 +679,8 @@ But wait, why is there this strange `norm` thing in the condition?
 Remember about Polystrings?
 The `organizationalUnit` property is a polystring.
 Therefore it has `orig` part and `norm` part.
-In this case we want to compare the `norm` part, as the organizational unit name may spelled as `Kitchen` or `KITCHEN`. But in all those cases the `norm` part will be `kitchen`.
+In this case we want to compare the `norm` part, as the organizational unit name may be spelled as `Kitchen` or `KITCHEN`.
+But in all those cases the `norm` part will be `kitchen`.
 
 If fact, there is little trap for the unwary here.
 The obvious way to specify the expression would be like this:
@@ -760,7 +761,7 @@ There are some use cases that pop out in IDM solutions all the time.
 One such case is the problem of finding a unique identifier.
 This is a concern for almost any identifier, but it is particularly painful when it comes to usernames.
 In midPoint world this means finding a value for name property.
-This property much be unique for almost all the data types that midPoint supports.
+This property must be unique for almost all the data types that midPoint supports.
 
 The rational way would be to base usernames on something that is already unique and immutable such as employee numbers or student identifiers.
 But those tend to be long numbers and people often hate them.
@@ -1113,7 +1114,7 @@ More on that later.
 Overall, the best strategy is to avoid using those generated human-friendly identifiers altogether.
 The best choice would be something that is already unique, immutable and reasonably short.
 Something like employee number, student identifier or partner ID are usually suitable.
-If that is not acceptable, then the second best approach is to keep the algorithms simple.
+If that is not acceptable, then the second-best approach is to keep the algorithms simple.
 The simpler it is the less likely it is to fail.
 
 == Includes

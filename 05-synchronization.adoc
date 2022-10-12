@@ -514,7 +514,7 @@ Most of the configuration is perhaps self-explanatory.
 This is a typical authoritative resource.
 If there is a new account on the resource, and we do not have an owner (situation: `unmatched`), then create a new user (action: `addFocus`).
 If the account is deleted from the resource (situation: `deleted`), then delete the user as well (action: `deleteFocus`).
-If we happen to find an account which should be linked but it is not (situation: unlinked), then link it (action: `link`).
+If we happen to find an account which should be linked but is not (situation: unlinked), then link it (action: `link`).
 The only think that deserves special explanation is the reaction to `linked` situation.
 In this case there is not much to do.
 Everything seems to be in order.
@@ -663,7 +663,7 @@ First, we will use a simple setup to import the data into midPoint.
 This is an operation that is executed only once.
 Then the configuration will be updated to run scheduled reconciliation task.
 Reconciliation compares all the data records every time, and it makes any necessary updates.
-Even though this method would be perfectly acceptable for the company of this size, we are still goging set up a live synchronization task.
+Even though this method would be perfectly acceptable for a company of this size, we are still going set up a live synchronization task.
 
 The core of the configuration is contained in a single resource definition file.
 Following paragraphs explain individual parts of the file.
@@ -2052,7 +2052,7 @@ We have already explained the reasons for that, but this is something that can s
 If we are sure that we want the mapped value to be present in the account all the time then strong mappings are the way to go.
 
 A curious reader that has already explored midPoint user interface has surely noticed _recompute_ function.
-To the untrained eye, _recompute_ does looks almost exactly the same as _reconciliation_.
+To the untrained eye, _recompute_ looks almost exactly the same as _reconciliation_.
 However, there are subtle differences.
 Firstly, recompute will not force the fetch of account data.
 When _recomputing_, the account attributes will be fetched from the resource, unless midPoint inevitably needs them for the computation.

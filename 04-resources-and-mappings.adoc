@@ -1145,7 +1145,7 @@ This block specifies connector configuration properties such as hostname, port, 
 ----
 
 The last part of this block defines that the ConnId framework result handlers should be disabled.
-ConnId result filtering is a legacy mechanism and most connectors do not need that any more.
+ConnId result filtering is a legacy mechanism and most connectors do not need that anymore.
 It may even be harmful in many cases.
 Unfortunately this mechanism is turned on by default.
 Therefore most resource configurations contain this part to explicitly turn all the handlers off.

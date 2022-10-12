@@ -270,7 +270,7 @@ image::03-06-user-projection-details.png[Projection details]
 Account details display is shown in place of user details.
 This may be slightly confusing.
 But account details can be often complex, therefore all the available screen space is needed to display them.
-The btn:[Cancel] and btn:[Done] buttons at the bottom can be used to return back to list of projections.
+The btn:[Cancel] and btn:[Done] buttons at the bottom can be used to return to list of projections.
 Click on btn:[Done] button will not start the operation yet, it only changes the view.
 Therefore, do not confuse those buttons with btn:[Back] and btn:[Save] buttons located in the control panel.
 
@@ -303,7 +303,7 @@ Checking or unchecking these options influences the way how midPoint executes th
 
 The principle of midPoint configuration is quite different from what would a typical system administrator expect.
 There are almost no configuration files in midPoint.
-MidPoint is storing vast majority of its configuration in its configuration database.
+MidPoint is storing the vast majority of its configuration in its configuration database.
 There are several reasons for this:
 
 * MidPoint configuration is *complex*.
@@ -319,7 +319,7 @@ Managing thousands of roles in plain text files simply won’t work.
 
 * MidPoint configuration needs to be *available*.
 There are midPoint deployments with several nodes working together in a cluster.
-Configuration change done on one node has to be seem by other nodes.
+Configuration change done on one node has to be seen by other nodes.
 Simple configuration files would not work here.
 
 Therefore midPoint has a completely different approach to configuration.
@@ -514,11 +514,11 @@ For that purpose midPoint has a small configuration file called `config.xml`.
 MidPoint also needs a place where to store other data that cannot be in the database, such as cryptographic keys, connector binaries and so on.
 
 MidPoint needs a special directory on a filesystem for that purpose.
-We call it midPoint home directory.
-New directory with the name var is created in directory where midPoint distribution package was installed, i.e. at the same level as the bin directory where midPoint start start scripts are located.
+We call it _midPoint home directory_.
+New directory with the name `var` is created in directory where midPoint distribution package was installed, i.e. at the same level as the `bin` directory where midPoint start scripts are located.
 Assuming that midPoint was installed in `/opt/midpoint` directory then midPoint home will be located in `/opt/midpoint/var` directory.
 
-The location of midPoint home directory can be changed by using the midpoint.home Java system property.
+The location of midPoint home directory can be changed by using the `midpoint.home` Java system property.
 This is done by specifying `-Dmidpoint.home` in the JVM command-line.
 Or in case that the default midPoint start scripts are used `MIDPOINT_HOME` environment variable can be used to set the location of midPoint home directory.
 

@@ -37,7 +37,7 @@ After all these years with midPoint, we simply cannot imagine using any identity
 There are few engineers in our team who have been dealing with identity management deployments since early 2000s.
 The term "Identity and Access Management" (IAM) was not even invented back then.
 We have seen a lot of IAM solutions during our careers.
-The IDM system was the core of vast majority of these solutions.
+The IDM system was the core of the vast majority of these solutions.
 Whether it is given by our point of view, or whether that is the generic rule, we do not know for sure.
 All we know is that midPoint is a really useful tool.
 When it is used by the right hands, midPoint can do miracles.
@@ -54,7 +54,7 @@ The limitations are often much more important than the features, especially when
 The first chapter is an introduction to the basic concepts of Identity and Access Management (IAM).
 It is very general, and it does not deal with midPoint at all.
 Therefore, if you are familiar with Identity and Access Management, feel free to skip the first chapter.
-However, according to our experience, this chapter has many some things to tell even to exprienced IAM engineers.
+However, according to our experience, this chapter has many some things to tell even to experienced IAM engineers.
 If you are impatient, and you want to start directly with midPoint, then skip the chapter (you would do that anyway, wouldn't you?).
 Just please try to find the time to return to the first chapter later.
 This chapter contains important information to put midPoint in broader context.

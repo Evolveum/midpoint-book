@@ -150,7 +150,7 @@ See also: <<glossterm-digital-certificate,Digital Certificate>>, <<glossterm-tru
 +
 See also: <<glossterm-authentication,Authentication>>
 [[glossterm-connid]]ConnId::
-  ConnId is an open source identity connector framework project. It originated from Identity Connector Framework (ICF) developed by Sun Microsystems in late 2000s. ConnId is an now an independent open source project, used by several identity management platforms.
+  ConnId is an open source identity connector framework project. It originated from Identity Connector Framework (ICF) developed by Sun Microsystems in late 2000s. ConnId is now an independent open source project, used by several identity management platforms.
 +
 Alternative terms: ConnId Framework
 +
@@ -488,7 +488,7 @@ See also: <<glossterm-access-management,Access Management>>, <<glossterm-identit
 +
 Identity management (IDM) systems are concerned about the "management" side, maintaining user data, policies, roles, entitlements and so on. IDM systems usually do not "apply" or enforce the policies. The policies are transformed as needed and provisioned to other systems (a.k.a. "target systems") that interpret and enforce the policies. The process of provisioning (and "deprovisioning") of data and policies is known as "fulfillment".
 +
-In a broad sense, IDM systems are used to manage the policies and data in all connected systems in the organization. IDM systems make sure that the data are consistent, that all the policies are applied, that user profile data are up to date, detecting and removing illegal access and generally keep all identity-related information in order across all the systems.
+In a broad sense, IDM systems are used to manage the policies and data in all connected systems in the organization. IDM systems make sure that the data are consistent, that all the policies are applied, that user profile data are up-to-date, detecting and removing illegal access and generally keep all identity-related information in order across all the systems.
 +
 Note: ISO 24760 definition seems to include identification and authentication as functions of identity management systems. While almost all IDM systems implement such functions, they are mostly used for internal purposes, e.g. for system administration access. IDM system usually do not provide identification and authentication services to other systems. ISO 24760 definition is closer to definition of identity and access management (IAM) system. However, complete IAM functionality is usually provided by a combination of several systems in practice.
 +
@@ -556,7 +556,7 @@ X.1252 term: registration
 +
 See also: <<glossterm-enrollment,Enrollment>>, <<glossterm-onboarding,Onboarding>>, <<glossterm-identity-register,Identity Register>>, <<glossterm-identity-data-store,Identity Data Store>>
 [[glossterm-identity-resource]]Identity Resource::
-  In IAM field, a Resource is usually an network-accessible asset capable of managing identity information.
+  In IAM field, a Resource is usually a network-accessible asset capable of managing identity information.
 +
 In midPoint terminology: An Resource is a system that is either identity data source or provisioning target. IDM system (midPoint) is managing accounts in that system, feeding data from that system or doing any other combination of identity management operations. Identity resource should not be confused with "web resource" that is used by RESTful APIs.
 +
@@ -668,7 +668,7 @@ See also link:https://docs.evolveum.com/midpoint/reference/org/[more information
 +
 See also: <<glossterm-organizational-structure,Organizational Structure>>
 [[glossterm-organizational-structure]]Organizational Structure::
-  A hierarchical arrangement of authority, rights or duties in an organization. It determines the assignment, control or coordination of roles, responsibilities and power. A character of the organizational structure is highly dependant on the organization’s strategy and goals.
+  A hierarchical arrangement of authority, rights or duties in an organization. It determines the assignment, control or coordination of roles, responsibilities and power. A character of the organizational structure is highly dependent on the organization’s strategy and goals.
 +
 The theme of organizational structure is closely linked to identity management. Organizing the company into this structure, assigning rights to individuals, working groups or project and controlling everything from one place – that are advantages that any high quality IDM solution is supposed to provide.
 [[glossterm-orphan-account]]Orphan Account::
@@ -682,7 +682,7 @@ Alternative terms: Credential management
 +
 See also: <<glossterm-credential,Credential>>
 [[glossterm-pep]]Policy Enforcement Point (PEP)::
-  Functional component with a responsibility to enforce policy decisions. The "policy" usually refers to access control and/or authorization policy. Policy enforcement points are usually part of applications or infrastructure components, with an ability to analyze and intercept policed operation. Policy enforcement point only enforces the policy, it does not interprets or decides the policy. PEP depends on policy decision point (PDP) to interpret the policy and make a decision.
+  Functional component with a responsibility to enforce policy decisions. The "policy" usually refers to access control and/or authorization policy. Policy enforcement points are usually part of applications or infrastructure components, with an ability to analyze and intercept policed operation. Policy enforcement point only enforces the policy, it does not interpret or decides the policy. PEP depends on policy decision point (PDP) to interpret the policy and make a decision.
 +
 See also: <<glossterm-authorization,Authorization>>, <<glossterm-access-control,Access Control>>, <<glossterm-pdp,Policy Decision Point>>, <<glossterm-pmp,Policy Management Point>>
 [[glossterm-persistent-identifier]]Persistent Identifier::
@@ -770,7 +770,7 @@ See also: <<glossterm-delta,Delta>>
 +
 See also: <<glossterm-privacy-enhancing-technology,Privacy-Enhancing Technology>>, <<glossterm-personal-data-protection,Personal Data Protection>>
 [[glossterm-privacy-enhancing-technology]]Privacy-Enhancing Technology (PET)::
-  Technologies that support and enhance privacy. This usually means technologies that give an individual an effective control over personal data, and the way how that are use to express one's individuality.
+  Technologies that support and enhance privacy. This usually means technologies that give an individual an effective control over personal data, and the way how these data are used to express one's individuality.
 +
 Most privacy-enhancing technologies are focused on limiting the spread of personal data, making sure that only a minimal amount of data is disclosed (minimal disclosure), making sure that user approves data transfer (consent), using pseudonyms and various anonymization techniques to limit data exposure.
 +
@@ -818,7 +818,7 @@ X.1252 term: public key
 +
 See also: <<glossterm-private-key,Private Key>>
 [[glossterm-rbac]]Role-Base Access Control::
-  A mechanism for managing of user access to information systems based on a concept of roles. Role-Based Access Control (RBAC) is using roles to group privileges. Roles usually represent meaningful entities, such as job positions, organizational affiliations or similar business concepts. One of the basic assumptions of RBAC is that management of roles is much easier as management of individual entitlements.
+  A mechanism for managing of user access to information systems based on a concept of roles. Role-Based Access Control (RBAC) is using roles to group privileges. Roles usually represent meaningful entities, such as job positions, organizational affiliations or similar business concepts. One of the basic assumptions of RBAC is that management of roles is much easier than management of individual entitlements.
 +
 A form of RBAC is standardized in a series of NIST standards (INCITS 359-2012).
 +
@@ -868,11 +868,11 @@ See also: <<glossterm-identity-provider,Identity Provider>>, <<glossterm-sso,Sin
 [[glossterm-repository]]Repository::
   A database, often a database of self-contained objects. In identity and access management context, it usually means a database of identity information.
 +
-In midPoint terminology: MidPoint internal database. It is used to store all internal midPoint data and vast majority of midPoint configuration.
+In midPoint terminology: MidPoint internal database. It is used to store all internal midPoint data and the vast majority of midPoint configuration.
 +
 Alternative terms: MidPoint repository
 [[glossterm-resource]]Resource::
-  In generic terms, a Resource is any information asset, system or a service that can be meaningfully used to obtain an information, or to initiate an action. Web resources are often used to access information across World Wide Web, e.g. in a form of RESTful interfaces. In IAM field, a Resource (Identity Resource) is usually an network-accessible asset capable of managing identity information.
+  In generic terms, a Resource is any information asset, system or a service that can be meaningfully used to obtain an information, or to initiate an action. Web resources are often used to access information across World Wide Web, e.g. in a form of RESTful interfaces. In IAM field, a Resource (Identity Resource) is usually a network-accessible asset capable of managing identity information.
 +
 In midPoint terminology: A Resource is a system that is either identity data source or provisioning target.
 +
@@ -880,7 +880,7 @@ Alternative terms: Information Resource, Data Resource
 +
 See also: <<glossterm-identity-resource,Identity Resource>>
 [[glossterm-rest]]REST::
-  Architectural style that describes fundamental principles of World Wide Web (WWW). REST architectural style was used to develop HTTP protocol, fundamental building block of WWW. REST specifies a concept of resource (web resource), identified by Unified Resource Locator (URL), access by unified interface. Although REST is designed for hypertext applications, some of the REST principles are used for general-purpose programming interfaces, known as "RESTful" services or APIs.
+  Architectural style that describes fundamental principles of World Wide Web (WWW). REST architectural style was used to develop HTTP protocol, fundamental building block of WWW. REST specifies a concept of resource (web resource), identified by Unified Resource Locator (URL), access by unified interface. Although REST is designed for hypertext applications, some REST principles are used for general-purpose programming interfaces, known as "RESTful" services or APIs.
 +
 Alternative terms: Representational State Transfer
 +

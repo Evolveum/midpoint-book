@@ -333,7 +333,7 @@ Each level has a precise definition of the amount of details it provides.
 The system cannot continue operation, will crash or stop working
 |This is bad.
 The system is going down.
-There is not way that the system can run.
+There is no way that the system can run.
 Big problem.
 This should not happen.
 
@@ -364,7 +364,7 @@ It will provide reasonable amount of messages that can be used to find configura
 
 |`TRACE`
 |Fine-grained messages about execution details.
-|This log level will provide a lot of data, lot of details.
+|This log level will provide a lot of data, lots of details.
 Its primary purpose is to allow developers to find a bug in production systems.
 However, this can also provide precious details for system administrators when troubleshooting really tricky problems.
 |===
@@ -381,7 +381,7 @@ Engineers that understand midPoint architecture and source code have a huge adva
 Logging package names are directly derived from Java packages and classes used in midPoint source code.
 But even non-developers can learn how to use the package names efficiently.
 
-The first thing to keep in mind is that midPoint is composed from subsystems and components.
+The first thing to keep in mind is that midPoint is composed of subsystems and components.
 Each subsystem and component has its own package name.
 Those can be used to control logging of individual parts of midPoint.
 Following table provides an overview of those architectural blocks.
@@ -857,7 +857,7 @@ Such name would be confusing.
 Therefore, we have chosen a concept of _projecting_ user data to accounts in the same way as movie is projected to a screen in a theater.
 That was also a reason for "focus" and "projection" and to use name "lens" for the whole package.
 Some time later we needed a name for a controller that will drive the projector.
-We though about a planetarium or a telescope driven by a clockwork mechanism.
+We thought about a planetarium or a telescope driven by a clockwork mechanism.
 MidPoint has evolved since then and those names may no longer be a perfect metaphor.
 But they are there and we got used to them.
 
@@ -971,7 +971,7 @@ It works like this:
 ----
 
 Such messages are recorded in the system log using special-purpose logger `com.evolveum.midpoint.expression` and the appropriate level.
-The message itself is composed from several parts using `{}` placeholders.
+The message itself is composed of several parts using `{}` placeholders.
 
 == Troubleshooting Connectors
 
@@ -1069,7 +1069,7 @@ The connector returns the result to ConnId.
 . `...api.operations.CreateApiOp Return`: Operation is finished and post-processed by the framework.
 Framework returns the result to midPoint.
 
-This is quite straightforward and it applies to vast majority of connector operations.
+This is quite straightforward and it applies to the vast majority of connector operations.
 However, there are some peculiarities.
 For example, there are four update operations:
 
@@ -1133,7 +1133,7 @@ Entry
             Diagnostic message : ''
 ----
 
-This logging can be used in two connectors that are used in majority of midPoint deployments: LDAP connector and Active Directory connector.
+This logging can be used in two connectors that are used in the majority of midPoint deployments: LDAP connector and Active Directory connector.
 This logging is much more natural and easier to understand than the ConnId framework logging.
 Therefore, a look at this log should be the first thing to do when there are problems with LDAP and AD connectors.
 
@@ -1249,7 +1249,7 @@ The data from this structure are used to figure out which fields are displayed a
 The _object security constraints_ structure is always produced by the same algorithm in the security component.
 Therefore, the interaction of authorizations and GUI forms can be diagnosed in the same way as the _get_ operations.
 
-Search operations are very different than common operations such as _add_ or _delete_ and they are also different than _get_ operations.
+Search operations are very different from common operations such as _add_ or _delete_ and they are also different than _get_ operations.
 Search operations will *not* result in an access denied error (except for few special cases).
 If the user that is searching has access only to some objects, then only those objects will be returned.
 There is no error, because this is a perfectly normal situation.
@@ -1364,7 +1364,7 @@ The rest of this section will describe the recommended procedure.
 
 *Diagnostics* is the first step that is absolutely mandatory.
 Troubleshooting techniques described in this chapter should be used to find out what is going on.
-MidPoint is a very flexible product and vast majority of midPoint issues are caused by wrong configuration.
+MidPoint is a very flexible product and the vast majority of midPoint issues are caused by wrong configuration.
 Therefore, please make sure that the problem is not one of those.
 Simple mis-configuration may easily look like a bug.
 Try to go through midPoint documentation and understand how midPoint works.
@@ -1377,7 +1377,7 @@ They are usually very helpful.
 *Reproducing the problem* is a second step.
 The easiest way for us to fix a problem is being able to reproduce it.
 In such case, we do not just blindly fix the problem but we can also make sure it is really gone.
-In most cases we create a test case in our automated test suite to make sure the problem will gone and it will not appear again.
+In most cases we create a test case in our automated test suite to make sure the problem is gone and it will not appear again.
 Therefore, your best strategy to make sure that the problem is fixed quickly and does not appear again is to show us how to reproduce the problem in our environment.
 Saying that “this and that does not work” usually does not help as the same use case will work perfectly in other configurations.
 Please describe your configuration in the report.
@@ -1431,7 +1431,7 @@ We prefer if you reproduce the problem with the simplest configuration possible 
 The exception stack trace is usually a very efficient pointer to likely cause of the problem.
 
 * Relevant part of the log files.
-You may want to have a look at the list of useful loggers above to correctly setup your logging to get the most useful data in the logs.
+You may want to have a look at the list of useful loggers above to correctly set up your logging to get the most useful data in the logs.
 
 * Your environment: operating system, Java platform version, target system version.
 You do not need to bother with this if the bug is obviously not environment-specific.
@@ -1478,7 +1478,7 @@ When it comes to troubleshooting logfiles are your best friends.
 
 There is one troubleshooting method that is universally applicable to almost any problem.
 The method involves some specialist equipment.
-However, this methods provides surprising, almost unbelievable results.
+However, this method provides surprising, almost unbelievable results.
 To make this method work you have to strictly follow those steps:
 
 . Describe your problem to a rubber duck.

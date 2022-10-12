@@ -79,7 +79,7 @@ Timing of maintenance releases is influenced by midPoint subscribers.
 
 Every couple of years there is a special long-term support (LTS) release.
 This release is supported for a longer time than usual.
-This release is ideal for people that prefer stability over new features.
+This release is ideal for people who prefer stability over new features.
 
 == MidPoint Support and Subscriptions
 
@@ -91,7 +91,7 @@ Obviously this includes assistance with diagnostics of difficult issues where it
 Simply speaking, midPoint support service is a way how to make sure that your midPoint deployment will run without any problems.
 There are also subscription offerings designed to help you deploy midPoint in the first place.
 Some subscription offerings also contain feature development and improvements (a.k.a. 4^th^-line support).
-Those subscriptions are ideal way to make sure midPoint will be able to do anything that you need for your project.
+Those subscriptions are an ideal way to make sure midPoint will be able to do anything that you need for your project.
 
 MidPoint support and subscription services provide significant funding for midPoint development and maintenance.
 Therefore, it is perfectly natural that midPoint subscribers get high priority for resolution of their issues, feature requests and so on.

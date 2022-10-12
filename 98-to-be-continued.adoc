@@ -101,7 +101,7 @@ There is always need to integrate the systems together.
 Integration runs through midPoint veins, because that is what the connectors really do.
 But often there is a need to integrate midPoint with other systems that is beyond the capabilities of a connector.
 Maybe there is a password reset application that needs to interact with midPoint.
-Maybe there is a analytic software that needs to get midPoint data.
+Maybe there is an analytic software that needs to get midPoint data.
 MidPoint was designed from the day one to be a service-based application.
 Therefore there are REST and SOAP services packed with features.
 Actually almost anything that midPoint does can be controlled by using those services.
@@ -115,9 +115,9 @@ But, as this is midPoint, even those features may be extremely useful.
 This chapter may also be interesting to people who would like to extended midPoint in an unusual way or those that want to contribute to midPoint development.
 
 * *MidPoint Deployment:* There are many paths from downloading midPoint packages to a working system.
-Some of those paths are easier than other.
+Some of those paths are easier than others.
 MidPoint design was build on many years of practical identity management experience.
-Therefore, midPoint has mechanisms that can be used to efficiently overcome some of the notorious problems in identity management – provided that midPoint is used correctly.
+Therefore, midPoint has mechanisms that can be used to efficiently overcome some notorious problems in identity management – provided that midPoint is used correctly.
 This chapter aims at giving advice how midPoint should be used in practical projects.
 How to plan the project, what information to gather, how to design the deployment, how to prepare the environment, plan the migration, handle project extensions and changes and so on.
 
@@ -138,7 +138,7 @@ How to keep identity management solution sustainable.
 But those are examples designed to demonstrate one specific aspect of midPoint functionality.
 This chapter will be different.
 There will be complete examples of practical midPoint solutions.
-After all, the way that copying and pasting is one the best ways how to learn.
+After all, the way that copying and pasting is one of the best ways how to learn.
 
 Those chapters are still missing.
 They are not written yet.

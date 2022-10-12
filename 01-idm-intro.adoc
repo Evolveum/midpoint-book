@@ -25,7 +25,7 @@ Almost every computer system has some means of authentication and authorization.
 Perhaps the most widespread form of authentication is a password-based "log in" procedure.
 The user presents an identifier and a password.
 The computer checks whether the password is valid.
-For this procedure to work the computer needs an access to the database of all valid users and passwords.
+For this procedure to work the computer needs access to the database of all valid users and passwords.
 Early stand-alone information systems had their own databases that were isolated from the rest of the cyberspace.
 The data were maintained manually.
 But the advent of computer networking changed everything.
@@ -293,7 +293,7 @@ Many authorization schemes rely on a specific business logic, which is very diff
 Then there are implementation constraints.
 In theory, the authorization system should make only allow/deny decisions.
 However, this is not enough to implement an efficient application.
-The application cannot afford to list all the objects in the database, pass them to authorization server, and the realize that the authorization server denied access to almost all of them.
+The application cannot afford to list all the objects in the database, pass them to authorization server, and then realize that the authorization server denied access to almost all of them.
 Authorization has to be processes _before_ the search operation and additional search filters have to be applied.
 Which means that authorization mechanisms need to be integrated deep into the application logic.
 This significantly limits the applicability of centralized authorization mechanisms.
@@ -303,7 +303,7 @@ Unfortunately, such broad promises are seldom fulfilled.
 The AM system can theoretically evaluate and enforce some authorization statements.
 This may work well during demonstrations and even in very simple deployments.
 Yet in complex practical deployments, this capability is extremely limited.
-The vast majority of the authorization decisions is carried out by each individual application and is completely outside of the reach of an AM system.
+The vast majority of the authorization decisions is carried out by each individual application and is completely outside the reach of an AM system.
 
 
 === SAML and OpenID Connect
@@ -371,7 +371,7 @@ The most important part of the response is a token.
 The token directly or indirectly asserts user's identity.
 
 . The target site will parse the authentication response and process the token.
-The token may by just a reference to the real token (SAML artifact) or it may be access key to another service that provides the identity (OIDC UserInfo).
+The token may be just a reference to the real token (SAML artifact) or it may be access key to another service that provides the identity (OIDC UserInfo).
 In that case the target site makes another request (6a).
 This request is usually a direct one and does not use browser redirects.
 One way or another, the target site now has claims about user identity.
@@ -613,7 +613,7 @@ And each island needs to be managed.
 Unifying access management system, Single Sign-On, cross-domain identity federation, social login, universally-applicable 2-factor authentication – there are the things that people usually want when they think about Identity and Access Management (IAM).
 These are all perfectly valid requirements.
 However, everything has its cost.
-It is notoriously difficult to estimate the cost of access management solutions, because majority of the cost is not in the AM software.
+It is notoriously difficult to estimate the cost of access management solutions, because the majority of the cost is not in the AM software.
 Huge part of the total cost is hidden inside existing applications, services and clients.
 All of this has to be considered when planning an access management project.
 
@@ -917,7 +917,7 @@ Even though the real life is harder than a story in a book, the IDM system remai
 === How Does The Technology Work?
 
 Obviously identity management systems have a lot of advantages for business, processes, efficiency and all that stuff.
-But how does it really works on a technological level?
+But how does it really work on a technological level?
 The basic principle is very simple: identity management system is just a sophisticated data synchronization engine.
 
 Identity management system takes data from the source systems, such as HR databases.
@@ -1633,7 +1633,7 @@ Risk models are a set of complex mathematical formulas that transform data on _a
 In theory, the risk model can tell us that we have a high risk in network security, especially when dealing with customer data - and we should really do something about it!
 
 The results of risk assessment are meant to drive the implementation of countermeasures and risk mitigation plans.
-There are too many countermeasures and mitigation strategies to choose from, we cannot possible implement them all.
+There are too many countermeasures and mitigation strategies to choose from, we cannot possibly implement them all.
 We want only the really efficient ones.
 We do not want to waste time and money on sophisticated encryption of data that are just copies of public information, do we?
 The risk assessment is supposed to tell us what is important and what is not.
@@ -1822,7 +1822,7 @@ Therefore it needs reliable, very scalable and absolutely consistent identity da
 This is usually provided by the directory service.
 Performance and availability are the obvious obstacles here.
 But there is one more obstacle which is less obvious but every bit as important: data quality.
-The data in the directory service must be up to date and properly managed.
+The data in the directory service must be up-to-date and properly managed.
 But that is only part of the picture.
 As most applications store some pieces of identity data locally, these data also need to be synchronized with the directory database.
 No access management system can do this well enough.
@@ -1834,7 +1834,7 @@ Therefore yet another component is needed.
 This is the real brain of the whole solution.
 The IDM system maintains the data.
 It is the component that keeps the entire system from falling apart.
-It makes sure the data are up to date and compliant with the policies.
+It makes sure the data are up-to-date and compliant with the policies.
 It synchronizes all the pieces of identity data that those pesky little applications always keep creating.
 It maintains groups, privileges, roles, organizational structures and all the other things necessary for the directory and the access management to work properly.
 It maintains order in the system.
@@ -2002,7 +2002,7 @@ Even though zero trust approach is not new, it dramatically gained on importance
 Many functions provided by traditional corporate applications are provided by cloud services now.
 Such applications need data to work, therefore, the very use of "as a service" applications is by itself a breach of the perimeter.
 Cloud applications need to work together with on-premise applications.
-Traditional enterprise integration patterns based on _soft interior_ do not work in this brave new world any more.
+Traditional enterprise integration patterns based on _soft interior_ do not work in this brave new world anymore.
 All of that is driving the _zero trust_ concepts.
 
 Of course, "zero trust" is more a wish rather than a strict rule.

@@ -73,7 +73,7 @@ In the ideal world _reality_ and _policy_ should be in accord.
 They should describe the same state of things.
 But we do not live in ideal world.
 Perfectly good accounts may be deleted by mistake, illegal accounts may be created, entitlements may get mixed up, attribute values destroyed – there are many dangers in the big wild world out there.
-And then there are scenarios when we actually want reality to be different than policy for some period of time.
+And then there are scenarios when we actually want reality to be different from policy for a given period of time.
 Those may be migration scenarios when a new system is being connected to midPoint and the data needs to be cleaned up.
 _Reality_ and _policy_ do not match exactly in practice.
 We all know that only too well.
@@ -332,7 +332,7 @@ If a role specifies that an account should have value A, that account will have 
 It can also have values B and C given by other roles.
 But A will always be there, no matter what other roles do (unless those roles are involved in some really dark magic).
 This may seem quite limiting.
-But it is sufficient for vast majority of cases.
+But it is sufficient for the vast majority of cases.
 It only needs a change in your way of thinking about privileges.
 Do not think about removing a privilege.
 Think about _not adding_ a privilege.
@@ -944,7 +944,7 @@ This leads to another big problem of ABAC and similar "flexible" access control 
 Even if HR are data are correct, the data usually do not provide all the information needed to completely provision the user with privileges.
 The HR data are often limited to organizational unit and formal code of the work position.
 However, this is often miles away from the job that user really does.
-The usual solution to this problem is that the user requests the privileges that are needed to to a job.
+The usual solution to this problem is that the user requests the privileges that are needed to do a job.
 Such request is then routed through appropriate approval process.
 And that _request_ is a big problem for ABAC. What should the user request to get the privileges?
 Should the user request a change in ABAC policy?
