@@ -28,17 +28,17 @@ However, there are some differences, given by the nature of the format:
  In fact, current EPUB handling in asciidoctor quite strictly requires file-per-chapter structure and relies on it.
  It also relies on chapter numbering.
  Therefore `ifdef`s in `master.adoc` are used to set up the numbering needed for EPUB rendering.
- 
+
 * Cross-references are handled differently in every output format.
  Overall, handling of cross-references is very sensitive and tricky.
  The method that is used in the text now is the only way that seems to work well in all three output formats.
- It is important to main this precise way of cross-referencing. 
+ It is important to main this precise way of cross-referencing.
 
 ## Building The Book
 
 The book can be built using asciidoctor.
 The `master.adoc` is the master file used for building entire book.
-All the chapters, introduction, conclusion, colophon and everything else is "included" from the master file. 
+All the chapters, introduction, conclusion, colophon and everything else is "included" from the master file.
 
 Plain asciidoctor can be used to build HTML version of the book:
 
@@ -56,7 +56,7 @@ There is a `build.sh` script that builds all the versions of the book, sets corr
 
 ## Copyright
 
-© 2015-2020 Radovan Semančík and Evolveum, s.r.o. All rights reserved.
+© 2015-2022 Radovan Semančík and Evolveum, s.r.o. All rights reserved.
 
 This book is **not** open source.
 Finished version of this book is distributed under the terms of Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND).
@@ -64,4 +64,10 @@ However, the Creative Commons license **does not** apply to the source code.
 Full copyright stated above applies to the source code.
 You may use this source code only in accordance with a special license granted to you by Evolveum.
 If you do not have such a license, you must not use this source code at all.
- 
+
+## Contributing
+
+You may submit contributions to the book source code, provided such contributions are not interfering with copyright.
+For example, spelling corrections, minor wording improvements and formatting fixes are acceptable contributions, assuming the author is not claiming copyright on any part of the book.
+Other (more substantial) contributions that interfere with the copyright might be acceptable.
+However, in such case, please contact Evolveum to settle the legal issue before making a contribution.
