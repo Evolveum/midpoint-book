@@ -16,7 +16,7 @@ The effort brought fruits, and now there is a product like no other: midPoint.
 MidPoint is an identity management and governance platform.
 We built it from scratch.
 It is a comprehensive and feature-rich system.
-MidPoint can handle complete identity lifecycle management and some parts of identity governance and compliance.
+MidPoint can handle complete identity lifecycle management, identity governance and some parts of compliance. 
 It can speed up the process that create accounts for new employee, student or customer.
 MidPoint can automatically disable accounts after the relation to the person has expired.
 MidPoint manages assignment of roles and privileges to employees, partners, agents, contractors, customers and students.
