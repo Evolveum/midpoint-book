@@ -1023,7 +1023,6 @@ Maybe there was a crash in one of the applications and the data were restored fr
 So an account that was deleted few hours ago is unexpectedly resurrected.
 It stays there, alive, unchecked and dangerous.
 Maybe an administrator manually created an account for a new assistant because the HR people were all busy to process the papers.
-And the new assistant had such pretty eyes.
 When the record finally gets to the HR system and it is processed the IDM system discovers that there is already a conflicting account and it simply stops with an error.
 Maybe few (hundred) accounts get accidentally deleted by junior system administrator trying out an innovative system administration routine.
 There are simply too many ways how things can go wrong.
