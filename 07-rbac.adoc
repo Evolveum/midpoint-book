@@ -511,76 +511,213 @@ Each of them was different, and it was managed in a different way.
 It was quite difficult to create a unified and consistent policy.
 This is one of many aspects where midPoint provides a seemingly simple mechanism, but that mechanisms simplifies a lot of things and provides an elegant solution to a difficult problem.
 
-== Role Hierarchy Structure
+== Role Engineering
 
 There are many ways how a role hierarchy can be structured.
 One way is to create all roles as "end user" roles that are supposed to be directly assigned to user.
 The clerk-supervisor example above is that case.
-However, there are other approaches that are often used.
-For example, the low level roles are often modeled as _application roles_.
-Those roles deal with access to a single application, but they are not meant to be assigned directly to users.
-They are supposed to be abstract, to be the base "material" used to create other roles.
-Those higher-level roles are often called _business roles_, as they reflect the needs of the business, such as specific job or responsibility in a business process.
-Those roles are assigned to users.
-However, those are just two of many conventions and recommendations on designing a role structure.
-We will not dive deep into role modeling topics in this book.
-There is a plenty of literature on that topic already.
-We will rather focus on a technical implementation of role hierarchy in midPoint.
+The low-level roles (e.g. `Clerk`) should contain all the privileges necessary for that role to function in an organization, such as all the necessary access to all the applications, networks, services and devices.
+Then combine the elemental roles into a bigger roles, combining business responsibilities as needed.
+Repeat the process until the entire access control landscape is covered with beautiful roles.
 
-However, there are few cases that are frequent pain points in RBAC deployments.
-The philosophy of midPoint is to make IDM deployment easier, therefore it is quite natural that midPoint tries to address those particular issues.
+That is the theory.
 
-One of the big troubles are application roles.
-There is usually a huge number of them, and they need to be maintained manually.
-It is usual practice that there is one application role for every privilege in the target system (resource), for every group for every organizational unit and so on.
-Application roles duplicate the information that is already present on the resource side.
-And as application roles are maintained manually, it is almost certain that this information will become inconsistent.
-This approach is sometime even recommended as a best practice.
-But the reality it is a maintenance nightmare.
+It is perhaps no big surprise that the practice is quite different.
+There is one big problem with the theoretical approach described above.
+It assumes that the person who defines roles _knows_ what privileges should be included in that role.
+I.e. it assumes that business processes and especially business responsibilities are clearly defined.
+It is a very reasonable assumption.
+It is also an assumption that is almost always utterly false.
 
-This behavior is motivated by several factors.
-But perhaps the strongest factor is that it was very difficult to set up the privileges in older (first generation) IDM systems.
-Setup of an application role often required intimate knowledge of the entire IDM configuration as various tricks were used to implement entitlement management.
-Heavy connector support and customization were often necessary to provide even the very basic entitlement management.
-However, midPoint is different.
-There is a clean concept of _construction_, which is designed in such a way that a system (resource) administrator can understand.
-E.g. the construction refers to the native (non-mapped) names of resource attributes, it is referring to native object classes that are used on the resource, native identifiers and so on.
-The construction is built to use the language of the target system (resource), not the language of midPoint.
-Therefore, there is a good chance that system administrators can set up constructions easily.
-In addition to that, midPoint has a native support for entitlements such as groups and resource-side roles.
-Those are designed to be easy to use in constructions.
-Therefore there is very little need for application roles in midPoint.
-Higher-level roles can contain the constructions directly.
+Oh no!
+How can we proceed if one of our fundamental assumptions is false?
+Is role-based access control doomed to failure?
+Certainly, there are people that proclaim that role-based approach is useless, suggesting many innovative approaches that are usually even more useless in practice.
+Role-based access control is not dead, not even close.
+It is just much harder than it may seem.
 
-However, application roles may still be needed and in some cases they may even be useful.
-For example, there may be a common combination of privileges that is always assigned together.
-In that case it makes a lot of sense to create an application role.
-There may still be a need for application roles if strong governance or role lifecycle management is required, often as a means to govern the _entitlements_ such as groups.
-Application roles might even be a legacy from a previous IDM system.
-As always, the best recommendation would be to analyze the RBAC policies and to use pragmatic thinking.
-Be careful about generic RBAC recommendations and be even more careful about recommendations that are meant for older IDM systems.
-MidPoint is different.
-Of course, midPoint can implement all those old-fashioned RBAC models.
-However, it will be a pain to maintain them.
-MidPoint can do better.
-Try to understand how midPoint works with the roles first, then apply those mechanisms to your RBAC policies.
-You might be surprised how midPoint can simplify the implementation of the policies.
+Yes, it is true that nobody knows exactly what privileges a clerk should have.
+However, it is known what privileges Harry Harris needs to do his day-to-day work.
+Harry is a clerk.
+Therefore, it is perhaps fair to assume that the privileges that Harry has are pretty much the same privileges that should be included in clerk role.
+This _bottom-up_ approach may not be perfect for business analytics puritans, but it is a practical approach, favored by almost all practical organizations.
 
-In case that application roles are still needed, you may consider automating the management of such roles.
-MidPoint synchronization mechanism is really powerful.
-It can synchronize users and accounts, but it is designed to synchronize almost anything with anything.
-Therefore, it can be used to automatically create application roles from all the LDAP groups.
-While this approach still have some drawbacks, it automates the most painful parts of application role’s maintenance.
+However, it is not practical to start with roles that have business meaning.
+I.e., it is not practical to start with `Clerk` role, as we do not yet know what privileges should be in that role, as we do not know what privileges Harry has, and we may not even know that Harry is a clerk.
+There are too many missing pieces to start solving the business puzzle yet.
 
-There is yet another practice that is quite common, but mostly wrong.
-Many IDM deployments create "login roles" or "default roles" for each application (resource).
-Those roles are supposed to define basic properties of the account.
-And in some cases they are supposed to keep account in existence when such account is unassigned.
-While this practice is very common, it is complicated, messy and very difficult to maintain.
-MidPoint was specifically designed tn such a way that this practice is not necessary in midPoint deployments.
-Default account attributes are easy to set up by using resource definition.
-And even the ability to keep unassigned account is directly supported in midPoint by using existence mapping, which will be described later.
-Therefore, such "login roles" are not needed at all in midPoint deployments, and they are generally considered to be a bad practice.
+We start by creating _application roles_.
+Those roles deal with access to a single application.
+An application role may be quite broad, as giving access to the entire application, or it may be quite narrow giving access to small parts of the application.
+
+The usual start is to create an application role for every _group_ in Active Directory or a similar central directory system.
+Groups are good starting material.
+They tend to be the right granularity, not too broad or too narrow.
+Users are already assigned to groups, as they need the privileges given by the group membership to carry out their work.
+Therefore, the groups form some kind of basic vocabulary to start access control conversation among application administrators, business people and role engineers.
+Starting with groups makes sense from a business continuity perspective as well.
+Good start, indeed.
+
+Let us create application role for every Active Directory group.
+An application role will grant account in Active Directory, as well as membership in one specific group.
+MidPoint _entitlements_ mechanism is an ideal tool to do this.
+
+.Entitlements and synchronization of application roles
+NOTE: Indeed, midPoint _entitlements_ mechanism is an ideal tool for building application roles.
+Unfortunately, the _Entitlements_ chapter of this book is not written yet.
+MidPoint reference documentation can provide the necessary information in the meantime.
+Similarly, _generic synchronization_ is an ideal tool to keep _groups_ and _application roles_ consistent.
+There are some information about _generic synchronization_ in the Organizational Structure chapter.
+
+Strictly speaking, application roles are not meant to be assigned directly to users.
+They are supposed to be abstract, to be the base "material" used to create higher-level roles.
+However, we are not at that maturity level yet.
+We have to accept that application roles are assigned directly to users, for now.
+Although we are not strictly doing any serious role-based access control yet, we can already do some role-based magic even at this point.
+Once we have application roles, users can request them, we can review and approve the request, assign some roles automatically and so on.
+Owners can be assigned to application roles, keeping an information who is responsible for each particular group.
+There is still a lot of value even at this point.
+
+// TODO: later: concept of Application, application vs resource
+
+.Misery of application roles
+NOTE: Obviously, there are some downsides to using application roles.
+Application roles duplicate the information that is already present in the resource.
+E.g. there is one application role for each Active Directory group.
+When an information is duplicated, there is potential for the copies to become inconsistent.
+As there is usually a huge number of application roles, automatic synchronization is an absolute must to make long-term maintenance of application roles feasible.
+Strictly speaking, application roles may not be necessary in midPoint.
+MidPoint has a clean concept of _construction_ that can refer to _entitlements_, which can be directly used in business role.
+However, this method is difficult to combine with the _bottom-up_ approach, therefore it is not used often.
+During the early years of midPoint we had hope to avoid using application roles at all.
+Even earlier versions of this book advocated such approach.
+However, the practice of application roles seems to be well established already.
+Even though application roles are not perfect, they are practical.
+We have to admit that.
+
+Once we have the application roles, we can start combining them into roles that have a business meaning.
+Those higher-level roles are called _business roles_, as they reflect the needs of the business, such as specific job or responsibility in a business process.
+
+Here comes the `Clerk` role at last.
+The `Clerk` role is created by combing several application roles.
+How do we know what roles to combine into `Clerk` role?
+We have a look at Harry Harris, who is a clerk.
+Application roles that Harry has are probably the application roles that should be included in `Clerk` business role.
+This is the way we can create our business roles, working from the bottom up.
+
+This sounds easy, yet it never really is that simple.
+Harry may have other responsibilities besides being a clerk.
+Therefore, the `Clerk` role is not supposed to contain all the Harry's application roles.
+We may need to have a look at the roles of Violet Vickers who is also a clerk in the same organization unit and compute an intersection of Harry's and Violet's application roles.
+Even that may not be entirely precise, as both Harry and Violet may have other responsibilities, and they may share a common application role purely by chance.
+Also, there may be roles that Harry and Violet have, and they do not actually need them.
+It is very hard to get this exactly right.
+However, it is perhaps better to have not-entirely-precise yet somehow manageable system than to have no system at all.
+
+It may be daunting task to do this analysis for every user (or combination of users), manually, with just a rudimentary tooling.
+This smells like huge spreadsheets that get outdated even sooner than the analysis is done.
+In fact, it is usually feasible to define just a small subset of business roles, leaving many application roles assigned directly to users.
+This is not entirely right, not right at all.
+Yet, it is feasible, while complete business role coverage is usually not.
+Once again, it is better to have working partial solution than to have non-working perfect solution.
+
+Yet, there is some hope.
+So-called "artificial intelligence" methods have quite improved lately, creating practical tools.
+Such techniques can be applied to role engineering as well, usually in a form of _role mining_.
+Role mining is an automated process that detects similarities in role assignments.
+It can detect that a specific combination of application roles is assigned to a specific group of users.
+Such combination could make a good candidate for a business role.
+Role mining can do this at scale, analyzing many users and roles in one session.
+This is a great tool to speed up role engineering process.
+The tooling is quite rudimentary for now, and it may look somehow complex to use.
+Yet, it is practical, for those that have the courage to try it.
+MidPoint 4.8 has a role mining capability that is worth trying.
+
+Sometimes there are also more types of role, not just _application_ and _business_ roles.
+The other roles are much less common, yet they are used from time to time.
+The table below summarizes role types:
+
+|===
+|Role type |Description |Content |Should be assigned to users? |Example
+
+|Application role
+|Role describing access to a single application.
+Usually represents one specific _entitlement_ in the application, such as application group, privilege or role.
+It is bound to one specific application (hence the name).
+
+Application roles are often created automatically by importing/synchronizing entitlements, e.g. by importing Active Directory groups.
+|Access to a single application.
+
+MidPoint `construction` with reference to a single resource.
+| No.
+
+Yet, they are quite often assigned to users.
+|Active Directory Domain Administrators
+
+Company Website Editors
+
+Database `foo` read-only access
+
+|Technical role
+
+IT role
+|Combines several application roles or low-level privileges into one unit that is easier to manage.
+Often used for application roles that depend on each other, e.g. when operating system access is needed to perform database administration.
+They are considered to be somewhere between application roles and business roles.
+They are not application roles, as they can give access to several applications.
+They are not business role either, as they do not describe a complete business responsibility, and they often use very technical and non-business-friendly terminology, which makes them a separate species on their own.
+They are not used very often.
+|Access to a couple of application that depend on each other, or make sense together.
+
+Several midPoint `construction`s, referencing couple of resources.
+| In exceptional cases, e.g. very specific and complex IT responsibility.
+| Database `bar` administration with OS access
+
+Backup/restore management
+
+|Authorization role
+|Provides internal authorizations or privileges in the system where it is defined.
+In midPoint, these are roles that provide access to parts of midPoint itself.
+Authorization roles do not grant access to any other systems.
+|MidPoint `authorization` statements.
+|No.
+
+Yet, some roles may be assigned to users in early stages of the deploment when business roles are not fully formed yet.
+Especially the `Superuser` role.
+|MidPoint `Superuser` role
+
+MidPoint `Approver` role
+
+
+|Business role
+|Business role represent a business responsibility, function in a business process, business-related work position or similar business concept.
+Business roles are supposed to be a combination of smaller "elemental" roles.
+|Any other role type, including other business roles.
+|Yes
+|`Clerk`
+
+`Branch Supervisor`
+
+`Marketing Assistant`
+
+`Call Center Operator`
+
+|===
+
+// TODO: mention archetypes ... reference to the unwritten chapter?
+
+// TODO: mention certifications?
+
+// TODO: assigning business roles to users automatically? Point to object template chapter, and explain details there?
+
+Overall, role engineering an art rather than a science.
+It is not strictly a technological job.
+Entire identity management and governance is about business-IT cooperation, which is never easy.
+Role engineering is even harder, as there is even bigger overlap to business.
+Much more cooperation, patience and persistence is necessary to get practical results.
+However, the results are well worth the effort.
+More on that later, in future versions of this book.
+
 
 == Assignment Gets Complicated
 

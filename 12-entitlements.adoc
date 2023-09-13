@@ -18,7 +18,9 @@ TODO
 
 == Role Synchronization
 
-TODO
+TODO: generic sync to create application roles
+
+TODO: add reference to this section in RBAC chapter ("Role engineering")
 
 == Entitlements and Metaroles
 
