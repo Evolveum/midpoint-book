@@ -6,30 +6,41 @@ include::chapter-include.adoc[]
 [quote, Mentat conundrum, "Dune: House Corrino by Brian Herbert"]
 Simplicity is the most complex of all concepts.
 
-Basic idea of Role-based access control (RBAC) is very simple: instead of assigning the same privileges to users over and over again, let’s group such privileges into roles.
+Basic idea of role-based access control (RBAC) is very simple: instead of assigning the same privileges to users over and over again, let’s group such privileges into roles.
 Then assign roles to users.
 This often aligns with organizational roles such as _manager_, _assistant_ or _analyst_.
 Therefore, roles are quite easy to understand even on an intuitive level.
-And RBAC should make your life easier - at least in theory.
+RBAC should make your life easier - at least in theory.
 
 Role-based access control principles are present in almost all identity management systems.
-Therefore it is no surprise that RBAC is one of the basic midPoint mechanisms to organize privileges in midPoint.
+Therefore, it is no surprise that RBAC is one of the basic midPoint mechanisms to organize privileges in midPoint.
 MidPoint supports all the usual RBAC features such as role hierarchies, an automatic assignment of roles, entitlement definition etc.
-But midPoint goes beyond traditional RBAC. MidPoint roles can be smart.
+However, midPoint goes beyond traditional RBAC.
+MidPoint roles can be smart.
 There may be dynamic expression inside midPoint roles, such as attribute mappings.
-The roles may be conditional, so one role is included in another role, but only in case that a specific condition is satisfied.
-The roles may be parametric, so the role can determine the specific set of entitlements based on the user data or a parameter of a role assignment.
+The roles may be conditional: one role is included in another role, but only in case that a specific condition is satisfied.
+The roles may be parametric: the role can determine the specific set of entitlements based on the user data or a parameter of a role assignment.
 
-But midPoint role dynamics goes even one step further.
+Role dynamics in midPoint goes even one step further.
 The RBAC system can be applied to the roles themselves, thus creating _meta-roles_.
 It is quite common that the roles are divided into several types: application roles, business roles, technical roles and so on.
 However, all the business roles have common characteristics such as common approval processes, common life-cycle policies etc.
-Instead of copying the common parts into each and every business role, the business roles may be assigned a common meta-role.
-The meta-role defines all the common characteristics of all business roles, therefore the RBAC system is much easier to maintain.
-And this concept is extended even further with _archetypes_.
-But more on that later.
+Instead of copying the common parts into each and every business role, the business roles may be assigned a common _archetype_ which acts as a meta-role.
+Archetype defines all the common characteristics of all business roles, therefore the RBAC system is much easier to maintain.
+More on that later.
 
-.Terminology.
+MidPoint advanced RBAC mechanism, together with role auto-assignment capabilities and other policy mechanisms create a very powerful combination to express complex policies.
+Although midPoint policy mechanisms are based on RBAC principles, its capabilities are similar to other popular access control models, such as attribute-based access control (ABAC) or policy-based access control (PBAC).
+For the curious, there is a discussion of midPoint approach in light of other access control models at the end of this chapter.
+
+Powerful RBAC mechanisms in midPoint are flexible enough to handle very complex scenarios.
+However, we will start small.
+We begin with simple scenarios, building our way up.
+This chapter describes basic midPoint RBAC mechanism.
+It provides enough information to start with the usual role-based approach.
+Following chapters will build on that, describing more and more advanced use of the RBAC mechanism.
+
+.Terminology
 NOTE: The term _RBAC_ is many things to many people.
 We use the term _RBAC_ in quite a broad sense.
 We do not strictly mean NIST RBAC model.
@@ -1014,7 +1025,7 @@ As meta-roles are often used in midPoint, we will get back to the meta-roles on 
 Meta-roles often allow simplification of complex problems by creating a very elegant solutions.
 For now, it is enough to remember that roles can be applied to almost anything in midPoint, including themselves.
 
-== RBAC, ABAC And The Wildlife
+== RBAC, ABAC, PBAC And Other Wildlife
 
 This section is where we will get all thoughtful and philosophical.
 The people that are bored with philosophical questions should skip the rest of this chapter.
@@ -1022,86 +1033,91 @@ We will also throw some dirt on almost every access control model in existence.
 Therefore, the people that maintain dogmatic beliefs about IAM mechanisms should skip this section as well.
 On the other hand, open-minded people are quite likely to enjoy it.
 
-Role-based Access Control (RBAC) is just one of many access control models.
+Role-based access control (RBAC) is just one of many access control models.
 There many variants of RBAC and there are other access control models that are based on a completely different paradigm.
 One such popular model is Attribute-Based Access Control (ABAC).
 ABAC is based on an idea that access to the systems can be determined dynamically just based on "attributes".
 Simply speaking, we can imagine ABAC as a one big algorithm that takes "attributes" as an input and decides whether access should be allowed or denied.
 
+Policy-based access control (PBAC) is similar to ABAC.
+PBAC extends the notion of attribute-based decisions to an abstract concept of _policy_.
+Access decisions are still supposed to be algorithmic, although the algorithm is not limited to attributes.
+
 ABAC is very popular in the access management (AM) community because of its simplicity.
-And it all makes much sense as it is much simpler and faster to evaluate one expression than to sift through a mountain of roles.
-The problem with ABAC is manageability.
-ABAC assumes that all access control decisions could be based on algorithms and that they can be made anytime a decision is needed.
+PBAC, as an extension of the idea is also gaining traction.
+It all makes much sense, as it is much simpler and faster to evaluate one policy expression than to sift through a mountain of roles.
+The problem with ABAC and PBAC is manageability.
+ABAC and PBAC assume that all access control decisions could be based on algorithms, that they can be made anytime a decision is needed.
 However, that is almost never the case in larger practical deployments.
 
-Many professionals responsible for identity management dream about complete automation of access control.
-It would be a marvel if an IDM system could automatically determine the privileges of every person simply based on the organizational unit and work responsibilities of that person.
+Too many identity professionals dream about complete automation of access control.
+It would be a marvel if an IDM system could automatically determine the privileges of every person simply based on the organizational unit, work responsibilities or any other attributes of that person.
 It would be perfect to get that information from an HR system, process it through a set of algorithms and automatically provision correct privileges to everybody.
-That is a very nice dream.
-But reality has a different idea.
+That is a very nice dream, indeed.
+However, reality has a different idea.
 Such automated approach never really works in practice.
 
 First problem is at the very start: HR data are almost never correct.
 There is very little motivation for the HR data to be completely correct.
 It is not a big issues if someone has a wrong job code or organizational unit code in the HR system.
 The business goes on, the salary is paid, everybody is happy.
-There is no really efficient feedback loop that would force corrections in HR data.
-Until the IDM system is deployed, that is.
-But it takes years or decades for a typical company to get to deployment of IDM system.
+There is no efficient feedback loop that would force corrections in HR data - until the IDM system is deployed, that is.
+It takes years or decades for a typical company to deploy an IDM system.
 At that point the HR data are beyond repair.
 The corrections that need to be done in the HR system are substantial.
-Even in small organizations it is very difficult to correct HR data manually.
+It is very difficult to correct HR data manually, even in small organizations.
 Bigger deployments absolutely require proper tooling to do that job.
-But even with good tooling it can take a lot of time.
-Many IDM deployments were significantly delayed or even canceled because of data quality problems.
-This method does not work very well.
+However, even with good tooling, it usually takes a lot of time to get the data right.
+Many IDM deployments were significantly delayed, or even canceled, because of data quality problems.
+Reliance on correct input data is dangerous.
+Identity system should not fail when the input data are wrong.
 
-The fundamental problem here is in the overall approach.
-IDM system should not fail when the input data are wrong.
-There should be procedures how to correct those data.
-And the IDM deployment should not be delayed because of wrong input data.
-That would be like refusing to use your reading glasses because the text you are reading is wrong.
-IDM systems are essential tools that help you to clean up the data.
-The IDM system should be deployed and it should be used to manage data quality on day-to-day basis.
-It is naive to think that once the data are cleaned up they will stay clean.
-The processes that lead to data errors will continue, therefore data errors will appear all the time.
+The IDM deployment should not be delayed because of wrong input data.
+That would be like refusing to use your reading glasses because the text you are reading is misspelled.
+IDM systems are essential tools that assist you in the process of data clean-up.
+The IDM system should be deployed using whatever data are available, and it should be used to manage data quality on day-to-day basis.
+It is naive to think that once the data are cleaned-up they will stay clean.
+The processes that crated data errors are still there, therefore data errors will appear all the time.
 The crucial insight is to accept that there will be data errors and to design the mechanisms to detect and correct them.
 
 There are many manual and ad-hoc decisions that need to be made in practical IDM deployments.
-And not just during the deployment.
+This is not limited to IDM deployment project.
 Many ad-hoc decisions must be made during routine operation.
 Privileges need to be assigned manually to compensate for missing input data.
 Privileges need to be corrected, input data need to be temporarily overridden, policy exceptions has to be made.
-There are many things that need to do manually.
+There are many things that need to be done manually.
 Such decisions are made almost on day-to-day basis.
-For ABAC and similar systems this would mean that a policy needs to be updated on a day-to-day basis.
-And ABAC is not designed for that.
+For ABAC, PBAC and similar systems this would mean that a policy needs to be updated on a day-to-day basis.
+However, these systems are not designed for such flexibility.
 
-This leads to another big problem of ABAC and similar "flexible" access control models.
+Then there is another big problem: the data are incomplete.
 Even if HR are data are correct, the data usually do not provide all the information needed to completely provision the user with privileges.
 The HR data are often limited to organizational unit and formal code of the work position.
 However, this is often miles away from the job that user really does.
 The usual solution to this problem is that the user requests the privileges that are needed to do a job.
 Such request is then routed through appropriate approval process.
-And that _request_ is a big problem for ABAC. What should the user request to get the privileges?
-Should the user request a change in ABAC policy?
+That _request_ is a big problem for ABAC and PBAC.
+What should the user request to get the privileges?
+Should the user request a change in the "policy"?
 That would not be practical.
 Should the user request a new value for an attribute?
 Which attribute?
-And what value that should be?
-Can be somehow create a catalog of the things that a user can request?
-Once again, ABAC is not designed for this.
-But all those problems are very easy to solve in RBAC. User is expected to request a role.
-And it is quite easy to create a role catalog.
-But as ABAC does not have roles, there is nothing that a user can get a grip on.
-There is no "handle" that would allow the user to make sense from the ABAC policies.
+What value that should be?
+Can we somehow create a catalog of the things that a user can request?
+Once again, ABAC and PBAC are not designed for this.
+Yet, all those problems are very easy to solve in RBAC.
+User is expected to request a _role_.
+It is quite easy to create a role catalog.
+_Role_ is a concept that users are familiar with.
+However, as ABAC and PBAC do not rely on roles, there is nothing that a user can get a grip on.
+There is no "handle" that would allow the user to make much sense from the abstract policies.
 
-This is all a consequence of yet another ABAC problem.
-While ABAC policy may be easy to set up, it is quite difficult to analyze and maintain.
+This is all a consequence of yet another ABAC/PBAC problem.
+While ABAC/PBAC policy may be easy to set up, it is quite difficult to analyze and maintain.
 Which users are affected by this particular policy statement?
-How many users will be affected if I make this change to ABAC policy?
-ABAC systems would need a complex simulation algorithms to answer those questions.
-However, it is all quite trivial in RBAC.
+How many users will be affected if I make this change to policy?
+ABAC/PBAC systems would need a complex simulation algorithms to answer those questions.
+However, it is all quite easy in RBAC.
 Policies are encapsulated into roles.
 Therefore, only the users that have those roles are affected.
 The roles also divide the policy to a smaller, manageable pieces.
@@ -1110,54 +1126,55 @@ Therefore, it is not that difficult to work with two versions of the same role a
 Old version is still assigned to some users, but we are deprecating that and slowly migrating to a new version.
 Such continuous processes are difficult to do in ABAC.
 
-And there is still one crucial problem when ABAC is used in provisioning scenarios.
-ABAC policies often benefit from the fact that complete data about the user accessing the system are available when the access control decision is made.
+Then there is still one crucial problem when ABAC/PBAC is used in provisioning scenarios.
+The "policies" often benefit from the fact that complete data about the user accessing the system are available when the access control decision is made.
 The crucial part of that data is called _context_.
 This includes data such as time of day, network location of the user, recent events related to the user, real-time estimate of the risk and so on.
 However, such data are simply not available in provisioning scenarios.
 Accounts are usually provisioned long before the first access to the account is made.
-Therefore, many of the advantages of ABAC are useless in identity management scenarios that rely on provisioning.
+Therefore, many of the advantages of ABAC/PBAC are useless in identity management scenarios that rely on provisioning.
 
-However, ABAC is not a complete failure.
-ABAC is very useful in customer-oriented identity and access management (CIAM).
+However, ABAC and PBAC are not complete failures.
+They are very useful in customer-oriented identity and access management (CIAM).
 Customer identities are usually "lightweight" and the policies are simple.
-But when there is a need to manage employees, teachers, contractors and similar "heavyweight" identities then ABAC almost always fails.
+However, when there is a need to manage employees, teachers, contractors and similar "heavyweight" identities then ABAC/PBAC approach almost always fails.
 
-The fact that ABAC fails in complex practical IDM deployments does not mean that RBAC is ideal.
+The fact that ABAC/PBAC fails in complex practical IDM deployments does not mean that RBAC is ideal.
 Quite the contrary.
 RBAC has problems of its own and the applicability of pure RBAC in practical IDM deployments is very limited.
-Many of the problems of RBAC model motivated engineers to develop ABAC and similar models.
-In fact, the "algorithmic" idea of ABAC is not entirely bad.
-Only if we had a way how to combine ABAC and RBAC ... Oh, but there is a way!
+Many of the problems of RBAC model motivated engineers to develop ABAC, PBAC and similar models.
+In fact, the "algorithmic" idea of ABAC/PBAC is not entirely bad.
+Only if we had a way how to combine ABAC/PBAC and RBAC ... Oh, but there is a way!
 We did it already.
 
-MidPoint combines RBAC and ABAC by putting expressions into roles.
+MidPoint combines RBAC and ABAC/PBAC by putting expressions into roles.
 We have seen that already.
 When role is assigned, the expressions in the role gets evaluated.
-And there can be any complex algorithm in the expression, even a complete ABAC policy.
+And there can be any complex algorithm in the expression, even a complete ABAC/PBAC policy.
 At least in theory.
 MidPoint expressions do not make access control decisions, because it is not the job of an IDM system to make such decisions.
 IDM system should set up the account.
 It provides the "material" for an authorization system to make a correct decisions.
-Therefore, midPoint goes as close to ABAC as a provisioning system can go.
-In an extreme case the entire ABAC policy can be implemented in outbound expressions in resource definition.
-But there is a good reason nobody does that.
+Therefore, midPoint goes as close to ABAC/PBAC as a provisioning system can go.
+In an extreme case the entire ABAC/PBAC policy can be implemented in outbound expressions in resource definition.
+Yet, there are a good reasons nobody does that.
 
 Dividing the policy into smaller parts brings substantial advantage.
-Therefore many midPoint deployments are very RBAC-like.
+Therefore, many midPoint deployments are very RBAC-like.
 There are many roles and rich role hierarchies.
 Role expressions are used in moderation.
-But there are also deployments that are using parametric roles and role expressions extensively.
+Yet, there are also deployments that are using parametric roles and role expressions extensively.
 In such cases there is a smaller number of roles, almost no role hierarchy, but the roles are smarter.
-Those are more ABAC-like deployments.
-But roles are still there.
+Those are more PBAC-like deployments.
+Yet, roles are still there.
 The roles act as "handles" for users to understand the policies, to give names to relevant parts of the policy.
 This combined approach works surprisingly well.
 
 Of course, this idea is not new.
 Many RBAC-like systems use some kind of "smart" behavior inside the roles.
 However, so far we haven’t seen anything as comprehensive as midPoint role-based access control model.
-Therefore we had to invent an impressive marketing name for our creation.
-Due to a momentary lapse of imagination we dubbed it Advanced Hybrid RBAC.
-But whatever you choose to call it, the fact is that this approach is very useful in practice.
+Therefore, we had to invent an impressive marketing name for our creation.
+Due to a momentary lapse of imagination we dubbed it _Advanced Hybrid RBAC_.
+Whatever you choose to call it, the fact is that this approach is very useful in practice.
 It can transform apparent chaos into something that can be efficiently managed.
+After all, that is the whole point of identity management and governance.
