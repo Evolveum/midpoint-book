@@ -358,7 +358,7 @@ And so far we have been successful.
 == Role Hierarchy
 
 Ability to group privileges into roles is quite useful.
-But it is still not good enough unless your access control policy is extremely simple.
+However, it is still not good enough unless your access control policy is extremely simple.
 Most practical policies require placing roles into roles, thus creating role hierarchy.
 
 Let’s consider two work positions: clerk and supervisor.
@@ -376,7 +376,7 @@ Any person maintaining such a structure will need superhuman precision and patie
 A more natural idea would be to include clerk’s role into a supervisor’s role.
 If clerk’s privileges change, then also supervisor’s privileges are automatically updated.
 Maintenance is much easier.
-And that is the basic idea of role hierarchy.
+This is the basic idea of role hierarchy.
 Basic privileges are placed into low-level roles.
 Low-level roles are combined to create a higher-level roles.
 Then those roles are combined as well.
@@ -615,6 +615,8 @@ How do we know what roles to combine into `Clerk` role?
 We have a look at Harry Harris, who is a clerk.
 Application roles that Harry has are probably the application roles that should be included in `Clerk` business role.
 This is the way we can create our business roles, working from the bottom up.
+
+image::07-07-role-hierarchy-application-business.png[Role hierarchy - application and business roles]
 
 This sounds easy, yet it never really is that simple.
 Harry may have other responsibilities besides being a clerk.

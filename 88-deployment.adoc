@@ -9,7 +9,7 @@ A ship in harbor is safe, but that is not what ships are built for.
 TODO
 
 TODO: Siloes may be necessary (Conway's law).
-IDM may keed the siloes synchronized.
+IDM may keep the siloes synchronized.
 
 == Iterative and Incremental Approach
 
@@ -28,6 +28,8 @@ TODO: midPoint is built to support this approach, including open source (zero up
 you need to know what you want to do.
 
 Cheshire cat: If you do not know where you want to get, then it does not matter which way you go.
+
+Business vs technology: both have to adapt/align.
 
 === Proposal
 
@@ -56,7 +58,7 @@ Answering RFP: Try to find out the priorities (questions).
 Try to propose iterative approach, even if the requests looks like waterfall.
 Waterfall does not make sense, such project would fail anyway.
 
-*Always* do PoC. Internally or externally. 2 weeks are usually appropriate.
+*Always* do PoC or a prototype. Internally or externally. 2 weeks are usually appropriate.
 
 General: Build up trust.
 Look at our source code, commits, number of developers, etc.
@@ -69,10 +71,14 @@ Smart small (PoC), grow up.
 TODO: trainings (ideally before project)
 Make sure there is someone that can help you (Evolveum support subscription is not meant for this).
 
+INVOLVE BUSINESS PEOPLE!
+
 === Plan and Vision
 
 TODO: short-term plan (1-3 iterations)
 long-term vision (2-7 years)
+
+Business vs technology: both have to adapt/align.
 
 == Deployment and Operation Tooling
 
@@ -131,6 +137,7 @@ HR data are usually quite good, but they are also wrong.
 
 Recommendation: proceed slowly.
 Validate the data before rolling out.
+INVOLVE BUSINESS PEOPLE!
 
 == Iteration Structure
 
@@ -141,6 +148,7 @@ Later iterations will be heavy on testing.
 === Analysis
 
 TODO: short intro to iteration analysis
+INVOLVE BUSINESS PEOPLE!
 
 === Implementation
 
@@ -163,7 +171,7 @@ Keep asking.
 
 Listen to the customer.
 TODO: make sure you understand the (business) goal of the solution
-
+INVOLVE BUSINESS PEOPLE!
 
 === Understand Current Environment
 
@@ -303,12 +311,15 @@ Perhaps the best strategy is to make all potential identifier values consistent 
 
 |====
 
+TODO: AD full name (`cn`) has to be unique: "first steps" full name scheme for AD ("John Novak (jnovak3)")
+
 
 === Role Management
 
 TODO: How to design and create roles.
 
-Try to avoid application roles unless you need to.
+INVOLVE BUSINESS PEOPLE!
+
 The purpose of IDM is to bridge applications.
 Construction and entitlement associations can be used instead of application roles.
 In theory.
@@ -473,6 +484,8 @@ TODO: This is not a project, it is a program (see later). Proceed in steps, iter
 TODO: Good communication is absolutely essential.
 Required information is seldom documented.
 Difficulty for remote projects.
+
+INVOLVE BUSINESS PEOPLE!
 
 == Good Practices
 
@@ -808,5 +821,9 @@ Following table provides summary and clarification of border cases, specifying f
 
 This chapter is not complete. Maybe it will never be complete.
 Similarly to midPoint project, this chapter is developed in an iterative and incremental fashion.
+
+INVOLVE BUSINESS PEOPLE!
+
+Business vs technology: both have to adapt/align.
 
 // TODO
