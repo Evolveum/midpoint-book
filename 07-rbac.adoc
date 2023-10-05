@@ -695,7 +695,7 @@ Authorization roles do not grant access to any other systems.
 |MidPoint `authorization` statements.
 |No.
 
-Yet, some roles may be assigned to users in early stages of the deploment when business roles are not fully formed yet.
+Yet, some roles may be assigned to users in early stages of the deployment when business roles are not fully formed yet.
 Especially the `Superuser` role.
 |MidPoint `Superuser` role
 
