@@ -5,12 +5,12 @@
 :revdate: {localdate}
 :revnumber: 2.3-SNAPSHOT
 :doctype: book
-:keywords: Identity management, IDM, Identity and Access Management, IAM, Identity Governance, IGA, Open source, OSS, midPoint, Evolveum
+:keywords: Identity management, IDM, Identity and Access Management, IAM, Identity Governance, Identity Governance and Administration, IGA, Open source, OSS, midPoint, Evolveum
 :copyright: CC-BY-NC-ND 4.0
 :creator: {author}
 :producer: Evolveum
 :sectnumlevels: 1
-:midpointversion: 4.4
+:midpointversion: 4.8
 :xrefstyle: full
 :source-highlighter: coderay
 :icons: font
