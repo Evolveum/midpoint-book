@@ -6,96 +6,114 @@ include::chapter-include.adoc[]
 [quote, Henry Adams]
 Chaos was the law of nature; Order was the dream of man.
 
-MidPoint is an open source identity management (IDM) and identity governance platform.
+MidPoint is an open source identity governance and administration (IGA) platform.
 It is a very rich and sophisticated system that provides many advanced features.
 MidPoint is maintained by Evolveum – a company dedicated to open source development.
 All midPoint core developers work for Evolveum.
 However, there are also partners and other engineers that are contributing to midPoint development.
 
-One of the main differences between midPoint and other IDM systems is that midPoint is designed and implemented with one primary goal in mind: practicality.
-It goes very deep into the very foundations of midPoint.
-To be more concrete, practicality means:
+One of the main differences between midPoint and other IGA systems is that midPoint is designed and implemented with one primary goal in mind: _practicality_.
+This goal goes deep into the very foundations of midPoint.
+To be more concrete, we understand _practicality_ as:
 
 * Things that are simple or frequently used should be easy to configure.
-Propagation of changed password, user enable/disable, account synchronization – these should be as easy as possible.
-As simple as flicking a switch or setting few configuration properties.
+Propagation of password changes, enable/disable of user, account synchronization – these should be as easy as possible.
+As simple as flicking a switch, or setting few configuration properties.
 
 * Things that are more complex or used less frequently may be a bit harder.
-Such as editing XML or JSON file or writing few lines of Groovy or Python script.
+Such as editing XML, YAML or JSON file, or writing few lines of Groovy script.
 
 * Things that are very complex or very unusual should be still possible.
 However, these might not be easy.
-It may require longer scripts or implementing some Java classes.
-It may require forking and modifying the source code.
-But it must be possible to do almost anything.
-
-This means that simple solutions which do not deviate from the usual requirements will be easy to implement.
-Most IAM programs start simple, solving common problems.
-Quick start allows to gain the benefits very early in the project.
-The effort grows as the requirements are getting more complex and more unusual.
-But the effort is still much lower than implementing everything from scratch.
-And there is always an option to stop the project at any point where the costs are getting too high to justify the benefits.
-
-MidPoint is an open source system.
-Therefore, there is no license cost that would offset the initial costs.
-Even small projects are feasible with midPoint.
+It may require longer scripts, or implementing some Java classes.
+In extreme case, it may even require forking and modifying the source code.
+However, it must be possible to do almost anything.
 
 Simply speaking, midPoint is following the Pareto principle: 20% effort brings 80% benefits.
 There are many mechanisms that support this approach.
 Some are based in midPoint design, some originate from midPoint development practices and some are even supported by the Evolveum business model.
-But more about that later.
+
+Simple solutions which do not deviate from the usual requirements must be easy to implement.
+Good identity and access management programs start simple, solving common problems.
+The start should be relatively easy, granting benefits early in the project.
+The project then proceeds in iterations, each iteration improving upon the previous one.
+Each iteration is bringing tangible results.
+As the requirements get more complex, the implementation effort may grow.
+The project may eventually reach a point where the effort outweighs the benefits.
+This is the right place to stop, maybe return to the project later.
+
+This is known as _iterative and incremental_ process.
+It is proven to be efficient and practical approach many times over.
+MidPoint is designed for this process, right from its very beginning.
+It is at the core of midPoint development philosophy.
+
+MidPoint is an open source system.
+Therefore, there is no license cost that would offset the initial costs.
+Even small projects are feasible with midPoint.
+You can start prototype or proof-of-concept projects today.
+There is no need for any paperwork.
+Just download midPoint and start.
+Right now.
+You can see for yourself what midPoint can do.
 
 == How MidPoint Works
 
 MidPoint does what any identity management system is supposed to do: it manages identities.
-The very basic functionality of midPoint is the synchronization of identity data that are stored in various applications, databases, directory servers, text files and so on.
-We call all these systems _identity resources_ or _resources_ for short.
-MidPoint is using _connectors_ to reach the resources.
-MidPoint can propagate a change that happened in one resource to other resources.
+The very basic functionality of midPoint is the synchronization of identity data that are stored in various applications, databases, directory servers and cloud data stores.
+We call all these systems _identity resources_, or _resources_ for short.
+MidPoint is using _connectors_ to reach the identity resources.
+MidPoint can propagate a change that happened in one identity resource to other identity resources.
 E.g. an employee record appears in the HR system, it is picked up by midPoint, processed, transformed and then new Active Directory and CRM accounts are created.
 This is the process that we call _synchronization_.
+It is at the core of everything else that midPoint does.
 
 image::02-01-midpoint.png[midPoint]
 
 MidPoint has a rich graphical user interface (GUI) that can be used to manage the identities.
-Changes made by system administrators are automatically propagated to all affected resources.
-E.g. security officer disables a user by clicking on disable button in midPoint user interface.
+Changes made by system administrators are automatically propagated to all affected identity resources.
+E.g. security officer disables a user by clicking on btn:[Disable] button in midPoint user interface.
 Then MidPoint makes sure that all accounts that belong to the user are immediately disabled.
 
 image::02-02-midpoint-gui.png[midPoint GUI]
 
 This is the essence of midPoint operation.
-This may sound simple, but this description is extremely simplified.
+It sounds simple, because this description is extremely simplified.
 The reality is much more complicated.
 Most of the important things happen inside midPoint before the changes are applied to target resources.
 For each change that midPoint detects it needs to evaluate:
 
-* *Roles:* MidPoint computes where the user should have access.
+* *Roles:* MidPoint computes where the user _should_ have access.
 This is usually given by the roles that the user has.
-The role structure is often quite rich.
-There may be hierarchical roles, parametric roles, conditional roles and a lot of other advanced mechanisms.
+The role structure is often quite rich and dynamic.
+There may be role hierarchies, parameters, expressions and policies to consider.
 
-* *Organizational structure:* Users usually belong to some organizational units, projects, teams or groups.
-Some of them may give additional privileges to the user.
+* *Organizational structure:* Users usually belong to organizational units, projects, teams or groups.
+Some of them may give additional privileges to the user, or they may apply policies.
 
 * *Status and life cycle:* Accounts can be created, enabled, disabled, archived or deleted.
-There are many situations that need to be processed.
+There are many situations in the _lifecycle_ that need to be considered.
 E.g. we may want to create a disabled account one week before a new employee starts his work, enable the account on his first day, disable the account on his last day and delete it three months after he leaves.
 
-* *Attributes and identifiers:* Simple synchronization scenarios assume that attributes and values will be the same in all the synchronized systems.
-That is a nice theory, bit it almost never works like that in real world.
+* *Attributes and identifiers:* Simple synchronization scenarios assume that attributes and values should be the same in all the synchronized systems.
+That is a nice theory, but it almost never works like that in real world.
+In reality there are incompatible attribute names, data formats and conventions to take into consideration.
 Attribute names need to be translated, values need to be transformed, data types need to be converted.
-This is different for each system and even for each instance of each system.
-Small algorithms in form of scripting expressions are usually needed to properly transform the values.
+This is different for each system, and even for each instance of each system.
+Small algorithms in form of scripting expressions are often needed to properly transform the values.
 
-* *Credential management:* Password changes need to be propagated to the resources.
+* *Credential management:* Password changes need to be propagated to the target systems.
 Sometimes we want to synchronize password with all systems, sometimes we want just a subset of systems.
-Password policies need to be evaluated, password history needs to be checked, password may need to be encoded and hashed before storage.
+Password policies need to be evaluated, password history needs to be checked, password may need to be encoded, encrypted and/or hashed before storage.
 
 * *Policy rules:* Policies are evaluated, each rule applied to current situation.
 The rules may prohibit illegal situations, such as dangerous combination of roles.
 Policy rules may mark the object for later inspection by administrator.
 The rules may do almost anything to make sure the system is compliant.
+
+* *Authorizations:* Some users are more powerful than others.
+There are midPoint administrators with very powerful privileges, there are delegated administrators that can manage only a small part of the data, and there are end users with access to self-service only.
+MidPoint has a very flexible authorization mechanism, allowing thousands shades of privileges to be applied to arbitrary subset of data and operations.
+The authorizations need to be evaluated for every operation that midPoint makes.
 
 * *Consistency:* The account in the target application might have changed since midPoint has updated it.
 The current change may no longer be applicable to the current state of the account.
@@ -103,12 +121,12 @@ The change that midPoint wants to make may conflict with the native change, the 
 MidPoint has to detect such situations and react accordingly, e.g. by re-creating a deleted account before applying the changes.
 
 * *Approvals:* MidPoint determines if any of the changes need to be approved before they are applied.
-If that is the case then midPoint drives the request through an approval process.
+If that is the case, then midPoint drives the request through an approval process.
 There may be multiple stages of approval, approver groups, optional approvers, the request can be escalated if approvers do not take action in time and so on.
 Approval process may be quite complicated, the actual steps are computed individually for each request, based on approval policies.
 
-* *Notifications:* MidPoint notifies the user that he can access a new account.
-It notifies the administrator if something goes wrong.
+* *Notifications:* MidPoint can notify users when important events happen.
+E.g. it notifies the user that he can access a new account, or it notifies the administrator if something goes wrong.
 
 * *Audit:* MidPoint records all the changes into an audit trail.
 This can be used by security officers or specialized analytic engines later to investigate past situations and changes.
@@ -116,83 +134,96 @@ Audit trails provides _accountability_.
 
 This is a lot of things to process, evaluate and execute.
 Some of these steps are quite complex.
-And indeed there are many complex algorithms implemented in midPoint.
-There are algorithms that evaluate complex role structures, organizational structures, temporal constraints, password policies and so on.
+Indeed, there are many sophisticated algorithms implemented in midPoint.
+There are algorithms that evaluate role structures, organizational structures, temporal constraints, policy rules, password policies and so on.
+MidPoint does all that for you.
 The only thing that is needed is to configure them properly.
 
 However, midPoint does even more than that.
 MidPoint does not only manage identities, it can also manage any object that is anyhow related to identity management.
-MidPoint can manage roles, role catalogs, organizational structures, groups, projects, teams, services, devices and almost any other object.
+MidPoint can manage roles, role catalogs, organizational structures, groups, projects, teams, services, devices and almost anything else you can imagine.
 
 MidPoint is also an _identity governance system_.
 The job of identity management features is to make sure that the policies are consistently applied through the organization.
 The governance features assist with the maintenance and evolution of those policies.
-MidPoint implements access certification process.
+MidPoint implements _access certification_ process.
 This is a recurring process that asks managers to confirm that the users still need the privileges that they have previously received.
 MidPoint contains mechanism to sort roles into hierarchies and categories.
 That is necessary to maintain order during role engineering and maintenance of role definitions.
 MidPoint has mechanisms for selective enforcement of role which comes very useful during migrations and when new system is connected to midPoint.
 MidPoint has support for policy lifecycle, general policy rules and so on.
-And more work in that direction is planned in future midPoint versions.
+Even more work in that direction is planned in future midPoint versions.
 We fully understand that it is not enough to simply apply the policies.
 Policies are living things and they need to evolve.
 
+Last, but certainly not least, midPoint provides _visibility_.
+Identity data often look like a huge maze, a labyrinth or users, roles, organizational units, entitlements and policies.
+It is too easy to get lost there.
+However, there are treasures in that labyrinth.
+There are patterns and structures hidden in that huge pile of data.
+Roles and policies buried there, as well as risks and dangerous anomalies lurking behind the corners.
+MidPoint provides _identity analytic_ capabilities to uncover them.
+There are powerful _reporting_ and _simulation_ mechanisms.
+Recent midPoint versions introduced _role mining_, a capability to find role patterns in the data.
+MidPoint gives identity professionals capability to see inside identity data.
+
+
 == Case Study
 
-This book is about practical identity management.
+This book is about _practical_ identity management.
 Therefore, we will get very close to a practice by demonstrating midPoint features using a case study.
 This is a case study of a fictional company ExAmPLE, Inc.
 The name stands for "Exemplary Amplified Placeholder Enterprise".
 ExAmPLE is a mid-sized financial company.
 Its operation heavily relies on information technologies, therefore there is a diverse set of applications and information systems ranging from legacy applications to cloud services.
-As ExAmPLE has few thousand employees and there is a good potential for growth the management has decided to start an IAM program.
-The first step of the program is deployment of midPoint as the identity management system.
+As ExAmPLE has few thousand employees and there is a good potential for growth, the management has decided to start an identity and access management program.
+The first step of the program is deployment of midPoint as the identity governance and administration platform.
 
 Eric is an IT engineer at ExAmPLE, Inc.
 He has taken the responsibility to install and configure midPoint.
-Eric spins up a new Linux virtual machine for midPoint.
-He downloads midPoint distribution package and follows the installation instructions.
-Couple of minutes later midPoint instance starts up.
+Eric spins up a new container with midPoint in it.
+Couple of minutes later, midPoint instance starts up.
 Eric logs in to the midPoint user interface.
 
-// TODO:4.4 screenshot
 image::02-03-dashboard.png[Dashboard]
 
 MidPoint instance is almost empty after fresh installation.
 It contains only a couple of essential objects.
-But Eric is a smart engineer.
+Luckily, Eric is a smart engineer.
 He has already read through this book, and he knows exactly what he needs to do.
 
 First thing to do is to populate midPoint with employee data.
 The primary source of ExAmPLE employee data is an HR system.
-The HR system is quite big piece of software, it is not easy to connect to that system directly.
+The HR system is quite big and not entirely flexible piece of software.
+It is not easy to connect to that system directly.
 Fortunately, it is quite easy to get a text export of the employee data in comma-separated (CSV) format.
 Eric plans to use this file to get employee data to midPoint.
 
+
 == Connectors and Resources
 
-MidPoint communicates with all the source and target systems by the means of connectors.
+MidPoint communicates with all the source and target systems by the means of _connectors_.
 Connectors are relatively small Java components that are plugged into midPoint.
 There is usually one connector for each type of the connected system.
-There are connectors for LDAP servers, Active Directory, databases, UNIX operating systems and so on.
+There are connectors for LDAP servers, Active Directory, databases, cloud applications, UNIX operating systems and so on.
 The responsibility of a connector is to translate protocols.
-E.g. LDAP connector will translate midPoint search commands to LDAP search requests.
-The UNIX connector will create an SSH session and translate midPoint create command to the invocation of Linux useradd binary.
-Database connector will translate the requests to SQL language.
+E.g. LDAP connector translates midPoint search commands to LDAP search requests.
+Database connector translates the requests to SQL language.
+Cloud connectors translate midPoint search commands to HTTPS requests for their respective cloud APIs.
+The UNIX connector creates an SSH session and translate midPoint create command to the invocation of Linux `useradd` binary.
 And so on.
 Each connector talks using its own communication protocol on one side.
-But on the other side the connectors translate the information to a common format that is understood by midPoint.
+On the other side, the connectors translate the information to a common format that is understood by midPoint.
 
 There is no distinction between source and target system when it comes to the connector.
 The same connectors are used for source and target systems.
 The difference is only in midPoint configuration.
 
 The connectors are distributed as Java binaries (JAR files).
-To deploy them to midPoint you just need to place them in the correct directory and restart midPoint.
-MidPoint will automatically discover and examine the connectors during start-up.
-A handful of frequently used connectors is bundled into midPoint distribution.
-These connectors do not need to be deployed.
-They are automatically available.
+To deploy them to midPoint you just need to place them in the correct directory.
+MidPoint automatically discovers and examines the connectors during start-up.
+A handful of frequently-used connectors is even bundled right into midPoint distribution.
+These connectors do not need to be deployed, they are automatically available.
 
 image::02-04-connectors-resources.png[Connectors and resources]
 
@@ -201,18 +232,17 @@ E.g. LDAP connector works for all the LDAP-compliant servers.
 Connector is a very generic piece of code.
 It does not know the hostname, port or passwords that are needed to establish a connection to a particular server.
 The configuration that specify connection parameters for individual server is stored in special configuration object called _resource_.
-The term _resource_ in midPoint terminology generally means any system which is connected to a midPoint instance.
+The term _resource_ in midPoint terminology means _identity resource_, any system which contains identity data and is connected to a midPoint instance.
 
-Therefore, Eric the Engineer needs to define a new resource in midPoint in order to get ExAmPLE employees into midPoint.
-This resource represents the CSV file exported from the HR system.
+Therefore, Eric the Engineer needs to define a new _resource_ in midPoint in order to get ExAmPLE employees into midPoint.
+This _resource_ represents the CSV file exported from the HR system.
 MidPoint distribution contains CSV file connector already, therefore there is no need to deploy the connector binary package.
-All that Eric has to do is to create a new resource definition.
+All that Eric has to do is to create a new _resource_ definition.
 There are (at least) two ways to do it.
-Firstly, there is a configuration wizard in midPoint user interface.
+Firstly, there is a _resource configuration wizard_ in midPoint user interface.
 Eric can use the wizard to configure a new resource from scratch.
-As you will see later in this book, the resource definition is quite complex, it has many configuration options.
-The abundance of options and choices makes the configuration wizard very rich, and the wizard may be quite confusing for new users.
-Therefore it is better for Eric to use the other approach: start from an example.
+However, Eric is quite an experienced professional, and he is also a little bit impatient.
+Therefore, he decides to use the other approach: start from an example.
 There are examples of various resource definitions in the midPoint distribution package, and even more examples are available on-line.
 Eric quickly locates an XML file that contains a complete example of a CSV resource.
 He edits the file to change the filesystem path to his CSV file and adjusts the names of the columns to match the format of his file.
@@ -238,16 +268,15 @@ TIP: If you are a hands-on type of engineer you probably want to follow what Eri
 All the files that Eric is using are provided in a form of ready-to-use samples.
 Please see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter at the end of this book for the details.
 
-Then Eric navigates to _Configuration_ section of midPoint user interface and imports the XML file into midPoint.
+Then Eric navigates to menu:Configuration[] section of midPoint user interface and imports the XML file into midPoint using menu:Import object[] tool.
 Import operation creates new resource definition in midPoint.
-Eric now navigates to _Resources_ section of the midPoint user interface.
+Eric now navigates to menu:Resources[All resources] in menu:Administration[] section of the midPoint user interface.
 The new CSV resource is there.
 When Eric clicks on the resource name a resource details screen appears.
 
-// TODO:4.4 screenshot
 image::02-05-resource-hr.png[HR resource]
 
-Eric can click on the button at the bottom of the screen to test connection to the resource.
+Eric can click on btn:[Test connection] button to test connection to the resource.
 As this is a local CSV file, there is no real connection.
 The test checks that the filesystem path is correct, that the file exists and that it can be opened.
 The connector reads the CSV file header to discover the structure of the data in the CSV file, and presents the information to midPoint.
@@ -259,84 +288,127 @@ We need to explain a couple of essential midPoint concepts before moving forward
 
 == User and Accounts
 
-The concept of user is perhaps the most important concept in the entire IDM field.
+The concept of _user_ is perhaps the most important concept in the entire identity management field.
 The term _user_ represents physical person: an employee, support engineer, temporary worker, student, teacher, customer, etc.
-On the other hand the term _account_ refers to the data structure that allows the user to access applications.
+On the other hand, the term _account_ refers to the data structure that allows the user to access applications.
 This may be an account in the operating system, LDAP entry, row in the database table and so on.
-Typically, one user has many accounts – usually one account for each resource.
+Typically, one _user_ has many _accounts_ – usually one account for each resource.
 
 image::02-06-user-account.png[User and accounts]
 
-The data that represent users are stored directly in midPoint.
-While the data that represent accounts are stored "on the resource side".
-Which means accounts are stored in the connected applications, databases, directories and operating systems.
-Accounts are not stored in midPoint.
-Under normal circumstances MidPoint keeps just account identifiers and some meta-data about the accounts.
-All other attributes are retrieved when needed.
-MidPoint is using the connectors to fetch account data.
+The data that represent _users_ are stored in midPoint, while the data that represent _accounts_ are stored "on the resource side".
+Which means that _accounts_ are stored in the connected applications, databases, directories and operating systems.
+_Accounts_ are not stored in midPoint.
+Under normal circumstances, MidPoint keeps just account identifiers and some meta-data about the accounts.
+All other account attributes are retrieved when needed.
+MidPoint is using the _connectors_ to fetch _account_ data.
 
-We will strictly distinguish the terms _user_ and _account_ in this book.
+.Terminology
+NOTE: We will strictly distinguish the terms _user_ and _account_ in this book.
 Such a strong distinction is also made in the midPoint user interface and documentation.
 It is very useful to get used to this terminology.
 
-Accounts are linked to users that own the accounts.
+Accounts are _linked_ to users that own the accounts.
 MidPoint knows which account belongs to which user.
 MidPoint can list all the accounts for any user, it can synchronize the data, it can disable all the accounts of a particular user and so on.
 This user-account _link_ is almost always automatically established and maintained by midPoint.
 
-MidPoint comes with a built-in data model (schema) for users.
-It contains properties that are very often used to describe users such as full name, e-mail address and telephone number.
+MidPoint comes with a built-in data model (_schema_) for _users_.
+It contains properties that are frequently used to describe users such as full name, e-mail address and telephone number.
 There is a reasonable set of properties that should be a good starting point for most deployments.
 Of course, as most midPoint objects, the user schema can be extended with custom properties if needed.
 
-However, there is no built-in data model for accounts.
+However, there is no built-in data model for _accounts_.
 Such data model would not be possible.
-Every resource may have different account attributes.
-There may be different names, different types and the values may have different meaning.
+Every resource may support different account attributes.
+Account attributes may have different names, different types and the values may have different meaning.
 MidPoint is designed to handle those differences.
+
+_Account schema_ may significantly differ from resource to resource.
+Yet midPoint must be able to synchronize all the accounts from any kind of resource imaginable.
+In this case the _user schema_ works as a unifying data model.
+The schema of each account is _mapped_ to the user schema.
+
+image::02-07-user-account-mapping.png[User-account mapping]
+
 Schema for resource accounts is dynamically discovered when midPoint connects to the resource for the first time.
 MidPoint interprets the schema and automatically adapts to it.
 E.g. when midPoint displays information about an account, the user interface fields are dynamically generated from the discovered schema.
 MidPoint does that all by itself.
 No extra configuration and no coding is necessary.
+Except for one thing.
+We need to tell midPoint which _type_ of account is the right one.
 
-_Account schema_ may significantly differ from resource to resource.
-Yet midPoint must be able to synchronize all the accounts from any kind of resource imaginable.
-In this case the _user schema_ works as a unified data model.
-The schema of each account is mapped to the user schema.
+Many systems support variety of object types: accounts, groups, roles, organizational units.
+We call such types _object classes_ in midPoint.
+Similarly to account attributes, _object classes_ vary from resource to resource.
+Therefore, we need to specify which _object class_ is the right one to use for accounts.
+Resource definition has `schemaHandling` section which is designed for this kind of specifications:
 
-image::02-07-user-account-mapping.png[User-account mapping]
+.`resource-csv-hr-minimal.xml`
+[source,xml]
+----
+<resource oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf">
+    <name>HR System</name>
+    <connectorRef type="ConnectorType"> ...</connectorRef>
+    <connectorConfiguration>
+        <configurationProperties>
+            <filePath>/opt/midpoint/var/resources/hr.csv</filePath>
+            <uniqueAttribute>empno</uniqueAttribute>
+        </configurationProperties>
+     </connectorConfiguration>
+
+    <schemaHandling>
+        <objectType>
+            <displayName>HR Record</displayName>
+            <default>true</default>
+            <objectClass>ri:AccountObjectClass</objectClass>
+        </objectType>
+    </schemaHandling>
+
+</resource>
+----
+
+This is how we tell midPoint that resource supports object type (using `objectType` clause) that is interesting for us.
+This object type should be labeled as `HR Record` in midPoint user interface.
+It is a default object type, midPoint will use this object type when no other object type is explicitly specified.
+The connector will use `AccountObjectClass` object class when dealing with this type of accounts.
+MidPoint now knows how to access our HR records in a form of _accounts_ in `HR System` resource.
 
 Getting back to our ExAmPLE story, Eric has an HR resource configured.
 Now he can see the "accounts" that the users have in the HR system.
-Eric opens the resource detail page in the midPoint GUI, clicks on menu:Accounts[] tab and then on the btn:[Resource] button (we'll explain that later).
+Eric opens the resource detail page in the midPoint GUI and navigates to menu:Accounts[] panel.
+There is not much to see yet.
+We would like to see all the HR records here.
+However, reading all the accounts may be quite a demanding task, therefore midPoint does not do it automatically.
+Eric has to click on btn:[Reload] button to initiate the process for the first time.
 The list of accounts appears:
 
-// TODO:4.4 screenshot
 image::02-08-resource-hr-accounts.png[Resource HR accounts]
 
 All that can be seen in this list are just employee numbers, because employee number is set as the primary identifier for the HR system.
-Clicking on the link will display more details.
-In fact these are not real accounts.
+Click on the employee number displays more details about the respective "account".
+However, these data are not real accounts in this particular case.
 These are lines in the CSV file exported from the HR database.
-But they describe some aspects of _identity_ and therefore midPoint interprets them as accounts.
+However, they describe some aspects of user's _identity_, therefore midPoint interprets them as _accounts_.
 For midPoint, "account" is a generic term used to describe any resource-side data structure that represents the user.
 
 == Initial Import
 
-The _user_ is a central concept for any IDM system and midPoint is no exception.
+The _user_ is a central concept for any identity management system, and midPoint is no exception.
 MidPoint needs reliable information about users to work correctly.
 The HR system is usually a relatively good source of user information.
 Eric needs to get that information from the HR system into midPoint.
 He has already set up a resource that connects to the CSV file exported from the HR system.
-But the resource does not do anything by default.
-It has to be configured to pull the information from the file into midPoint.
+However, the resource does not do anything interesting by default.
+It has to be configured to pull the information from the HR file into midPoint.
 What Eric needs is a set of _mappings_.
-_Mapping_ is a mechanism for synchronization of attribute values between user and linked accounts.
-In this case Eric needs _inbound_ mappings to import the data.
+_Mapping_ is a mechanism for synchronization of attribute values between _user_ and _accounts_.
+In this case, Eric needs _inbound_ mappings to import the data.
 Inbound mappings synchronize the value in the direction from the resource into midPoint.
-Eric can open the resource definition in the configuration wizard in GUI and he can add the mappings there.
-Or he can simply look at the configuration samples again and add the mappings in the XML form.
+Eric can open the resource definition in the configuration wizard in GUI, and he can add the mappings there.
+However, Eric likes to know how things work.
+He looks at the configuration samples again, and he adds the mappings in the XML form.
 Inbound mapping looks like this:
 
 .`resource-csv-hr.xml`
@@ -352,11 +424,11 @@ Inbound mapping looks like this:
    </attribute>
 ----
 
-This is a mapping that maps the account (HR) attribute `firstname` to user (midPoint) property `givenName`.
+This is a _mapping_ that maps the account (HR) attribute `firstname` to user (midPoint) property `givenName`.
 This tells midPoint to always update a value of user's given name when the mapped HR attribute changes.
 Eric adds similar mappings for all the attributes in the HR export file.
 Eric also needs to add _synchronization_ section to the resource definition.
-The synchronization section instructs midPoint to create a new user for each new account.
+The synchronization section instructs midPoint to create a new _user_ for each new _account_ that midPoint discovers.
 This is exactly what Eric wants: create a user for each HR account.
 Eric then re-imports the modified XML file into midPoint.
 
@@ -364,12 +436,15 @@ TIP: For the curious and impatient readers, complete definition of HR resource i
 Please see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for the details.
 
 MidPoint is now ready to synchronize the attributes.
-But we still need a _task_ to pull all the data from the HR system.
+MidPoint is ready, however it does not do anything yet.
+We still need a _task_ to pull all the data from the HR system.
 Eric navigates to the page that shows the list of HR accounts.
-At the bottom of that page there is a big btn:[Import] button that can be used to manage the import tasks.
-Eric clicks on that button and creates a new import task.
-The task is started, and it runs for a couple of seconds.
-After the task is done Eric can look at users in midPoint:
+There is a btn:[Tasks] button which can be used to manage tasks that manage the accounts.
+Eric clicks on that button and creates a new import task by menu:Create task[] option in the drop-down menu.
+He creates an _Import_ task.
+All he needs to do is fill out task name (e.g. `HR Import`) in the task wizard, everything else is pre-set to reasonable default values.
+When Eric clicks on btn:[Save & Run] button, the task is started, and it runs for a couple of seconds.
+After the task is done Eric can look at users in midPoint by navigating menu:Users[All users] in main menu:
 
 image::02-09-users.png[Users]
 
@@ -387,24 +462,24 @@ These properties are stored in midPoint repository.
 MidPoint has quite a rich data model that can be used out-of-the-box, but the GUI only shows those properties that are actually used.
 The "name", given name and family name were imported from the HR resource and that's what the page shows.
 
-Let's have a look at the second tab now:
+Let's have a look at the second tab now, clicking on menu:Projections[] in the details menu:
 
 image::02-11-user-projections.png[User projections]
 
-The menu:Projections[] tab shows user's accounts.
+The menu:Projections[] panel shows user's _accounts_.
 Currently, there is only one account.
-It is the HR account that was used to import the data.
+It is the HR record that was used to import the data.
 Account details are displayed by clicking on account identifier:
 
 image::02-12-user-projection-hr.png[User HR projection]
 
 The data that are displayed here are really fresh.
 Account details were retrieved from the resource at the very moment that the account was displayed.
-This is the difference between user data and account data: user data are kept in midPoint repository, while account data are retrieved from the resource as needed.
+This is the difference between _user_ data and _account_ data: user data are kept in midPoint repository, while account data are retrieved from the resource as needed.
 
-The user and the account are linked.
-MidPoint remembers that this user originated from this specific HR account.
-If the HR account is modified then the change is synchronized and applied to the user data.
+The _user_ and the _account_ are _linked_.
+MidPoint remembers that this _user_ originated from this specific HR _account_.
+If the HR account is modified, then the change is synchronized and applied to the user data.
 The mappings are not just for the import.
 They can work continually and keep the account and user data synchronized all the time.
 
@@ -412,28 +487,29 @@ They can work continually and keep the account and user data synchronized all th
 
 The concepts of an account is all about the reality: it shows the data that are there at this very moment.
 It shows what _is_ there.
-But identity management is all about policies.
+However, identity management is all about policies.
 Policies, by definition, specify what _should be_ there.
 Policies specify what is right.
-But as every citizen knows all too well, the things that _are_ and the things that _should be_ do not always match perfectly.
+However, as every citizen knows all too well, the things that _are_ and the things that _should be_ do not always match perfectly.
 We are no idealists.
-Therefore we have designed midPoint from the day one to acknowledge that there may be a difference between reality and policy.
-Primary role of midPoint is to manage that difference.
-And completely align policy and reality in the long run.
+Therefore, we have designed midPoint from the day one to acknowledge that there may be a difference between reality and policy.
+It is a prime responsibility of midPoint to manage that difference - and align policy and reality as much as possible in the long run.
 
 This kind of thinking is easy to see in midPoint user interface.
-There is menu:Projections[] tab in the user details page.
-It shows the accounts that the user has right now.
-It shows the real state in which the accounts are.
-It shows the reality.
-And then there is menu:Assignments[] tab.
-This tab shows the policy.
-This tab shows what accounts, roles, organizations, or services are assigned to the user.
-This tab shows what user should have.
+There is menu:Projections[] panel in the user details page.
+It shows the accounts that the user _has_ right now.
+It shows the real state in which the accounts _are_.
+It shows the _reality_.
+Then there is menu:Assignments[] panel.
+This panel shows the _policy_.
+It shows what accounts, roles, organizations, or services are _assigned_ to the user.
+It shows what user _should_ have.
 
 image::02-13-assignments-empty.png[Assignments]
 
-To demonstrate how the assignments work we need a new resource.
+// TODO: -----------------------------------------------------------------------------------------------
+
+To demonstrate how the assignments work, we need a new resource.
 Therefore, let Eric connect a new resource to midPoint.
 This time it will be new, clean and empty LDAP server.
 So Eric once again locates the proper example, modifies the configuration and imports it to midPoint.
