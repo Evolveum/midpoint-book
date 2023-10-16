@@ -127,7 +127,11 @@ We will be continuously publishing those chapters that are reasonably well finis
 It is better to have something than to have nothing, isn’t it?
 Please be patient.
 The whole book will be finished eventually.
-As always – your support, contributions and sponsoring may considerably speed up things here.
+As always, your support, contributions and sponsoring may considerably speed up things here
+
+Even though the first version of this book was published in 2015, we are regularly updating the book to reflect new midPoint versions as well as changes in IT environment and trends.
+Similarly to midPoint itself, the book has to be kept up-to-date to deliver value.
+The book is usually reviewed at the time new long-term-support (LTS) version of midPoint is released.
 
 We would like to thank all the midPoint developers, contributors and supporters.
 There was a lot of people involved in midPoint during all these years.
