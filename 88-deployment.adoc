@@ -86,6 +86,12 @@ TODO: midPoint Studio
 TODO: ninja
 TODO: python CLI
 
+TODO: Configuration vs data
+
+TODO: configuration in studio, however still use wizards (new resource, roles)
+
+TODO: Configuration in git
+
 == Environment
 
 === Relational Databases
@@ -826,4 +832,6 @@ INVOLVE BUSINESS PEOPLE!
 
 Business vs technology: both have to adapt/align.
 
-// TODO
+// TODO:
+
+* Devel, testing, production environments; migrating configuration (cannot be completely automatized); devops, gitops, etc.

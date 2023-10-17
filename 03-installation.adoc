@@ -156,6 +156,7 @@ The breadcrumbs can be used to "find your way home" and back to the previous pag
 The use of browser btn:[Back] button is not recommended.
 Please use the btn:[Back] buttons that are present in midPoint user interface, or use breadcrumbs.
 
+
 == User Interface Areas
 
 MidPoint user interface is quite rich.
@@ -211,6 +212,7 @@ These pages typically deal with scheduled printable reports.
 
 * *Repository object* pages for accessing objects in midPoint repository, used for low-level manipulation of midPoint configuration and data.
 
+
 == User Interface Concepts
 
 MidPoint user interface is using the same concepts and controls in all its parts.
@@ -252,6 +254,7 @@ MidPoint will handle users, roles, organizational units and services in the same
 The lists used to display these objects are the same, the pages that display object details are the same.
 All the objects have properties, they can be enabled/disabled in the same way, they are subject to authorizations in the same way and so on.
 It is a midPoint philosophy to design several powerful principles, and then apply them over and over again.
+
 
 == Object Details Page
 
@@ -346,6 +349,7 @@ There is an option to reconcile the data even if midPoint thinks that reconcilia
 And so on.
 Checking or unchecking these options influences the way how midPoint executes the operation.
 
+
 == MidPoint Configuration Basics
 
 The principle of midPoint configuration is quite different from what would a typical system administrator expect.
@@ -372,6 +376,7 @@ Simple configuration files would not work here.
 Therefore, midPoint has a completely different approach to configuration.
 The configuration is stored in a form of well-defined structured objects in the midPoint database.
 We call that database _midPoint repository_.
+
 
 == Configuration Objects
 
@@ -415,6 +420,7 @@ You can see midPoint configuration objects in midPoint user interface by navigat
 The following picture shows objects of type "Role":
 
 image::03-07-repository-objects.png[Repository objects]
+
 
 == XML, JSON and YAML
 
@@ -504,92 +510,92 @@ The XML form is almost always simplified for clarity: there are no namespace def
 The complete files with all the details can be found in midPoint distribution package, midPoint source code or in other places.
 See <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for more details.
 
+
 == Maintaining MidPoint Configuration
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
-When it comes to maintenance of midPoint configuration there are two practical methods how to do that.
+When it comes to maintenance of midPoint configuration, there are two practical methods.
 
 First method is to maintain the configuration in midPoint: use midPoint wizards and user interface tools to create new objects and modify them.
-Export the objects in regular intervals, so they are backed up, placed under version control and so on.
+Export the objects in regular intervals to backed them up.
 This is an easy method to start with.
-But sooner or later you will probably figure out that you need the ability to copy and paste parts of the configuration.
-That you need to share the configuration with other team members.
-And that no user interface is ever as efficient as an experienced engineer with a good text editor.
 
-Then there is a second method: maintain the configuration files in text form outside midPoint.
-Import them to midPoint as needed.
+However, sooner or later you will probably figure out that you need the ability to copy and paste parts of the configuration, compare differences and review configuration history.
+You will need to share parts of the configuration with other team members.
+As we all know, no user interface is ever as efficient as an experienced engineer with a good text editor.
+
+Then there is a second method: maintain the configuration in text form: XML, JSON or YAML.
+Import the configuration to midPoint as needed.
 The objects can be imported in midPoint user interface by going to menu:Configuration[Import object] page.
-There are also import buttons in almost all the object list tables that also lead to that page.
 
-It is much easier to maintain a proper version control and a good teamwork using the import method.
+It is much easier to maintain a proper version control and a good teamwork using this method.
 It also seems to be more efficient once you get used to midPoint: pieces of configuration can be copied from samples, documentation or from other projects.
 This makes the work efficient.
-Although work with midPoint is "just" configuration and there is usually almost no programming, this method of work is quite close to the methods that software developers use.
-And we know that these methods work quite efficiently.
+Although work with midPoint is "just" configuration, and there is usually almost no programming, this method of work is quite close to the methods that software developers use.
+We know that these methods work quite efficiently, as we are using them every day.
 
-If you maintain the configuration files out of midPoint, you can import them individually using midPoint user interface.
-This may seem like quite an uncomfortable way.
-But it works surprisingly well even for a mid-size projects.
-However, there is also a much better way.
+However, maintaining configuration in _files_ and importing them individually using midPoint user interface may look a bit uncomfortable.
+However, there is a better way.
 There is _MidPoint Studio_, an integrated development environment (IDE) based on IntelliJ IDEA.
-MidPoint Studio allows you to maintain the configuration files in form of development project.
-You can edit the files with all the usual luxury of IDE such as syntax highlight and autocompletion.
+MidPoint Studio allows you to maintain the configuration files in a form of a _development project_.
+You can edit the files with all the usual luxury of IDE, such as syntax highlight and autocompletion.
 Studio allows easy download and upload of changed configuration files to midPoint instance.
-As the IntelliJ platform has good integration for version control systems and other development tools this seems like an ideal approach for large and complex projects.
+As the IntelliJ platform has good integration for version control systems and other development tools, this seems like an ideal approach, especially for large and complex projects.
+If you plan to use midPoint professionally, _MidPoint Studio_ is certainly worth trying.
+
 
 == Looking Around MidPoint Installation
 
-Now we have a running midPoint installation, and you should have some understanding of how to configure it.
-But before we plunge into the details about configuration let’s have a look at midPoint installation.
+Now we have a running midPoint instance, and you should have some theoretical understanding how to configure it.
+However, before we plunge deep into configuration details, let’s have a look at midPoint installation.
 There are few things that need to be understood before going on.
-It will save a lot of time later on.
+It will save a lot of time later.
 
 MidPoint needs its own database to work.
 We call that database _midPoint repository_.
 The database is used to store the configuration, users, resource definitions, account links, audit trails and a lot of other things.
-Proper relational database (PostgreSQL) is strongly recommended for production deployment.
-But for development and demonstration purposes midPoint contains an embedded database engine (H2 database).
+Proper relational database (PostgreSQL) is a must for production deployment.
+However, for development and demonstration purposes, midPoint contains an _embedded_ database engine (H2 database).
 This embedded database is initialized by default when midPoint is installed.
-And it is that embedded database that is used to store the configuration objects right now in your fresh midPoint deployment.
+It is that embedded database that is used to store the configuration objects right now, in your fresh midPoint deployment.
 This database does not need any special configuration, the database schema is applied automatically, and it is started and stopped together with midPoint.
 Therefore, it is ideal for demonstration and development purposes.
 
-Vast majority of midPoint configuration is stored in the database.
-But there are few things that cannot be stored there.
-Such as connection parameters to the database itself.
+While almost all of midPoint configuration is stored in the database, there are few things that cannot be stored there - such as connection parameters to the database itself.
 For that purpose midPoint has a small configuration file called `config.xml`.
 MidPoint also needs a place where to store other data that cannot be in the database, such as cryptographic keys, connector binaries and so on.
 
 MidPoint needs a special directory on a filesystem for that purpose.
 We call it _midPoint home directory_.
-New directory with the name `var` is created in directory where midPoint distribution package was installed, i.e. at the same level as the `bin` directory where midPoint start scripts are located.
-Assuming that midPoint was installed in `/opt/midpoint` directory then midPoint home will be located in `/opt/midpoint/var` directory.
+When a new midPoint instance starts for the first time, new directory with the name `var` is created to act as _home_ directory.
+It is located in directory where midPoint distribution package was installed, i.e. at the same level as the `bin` directory, where midPoint start scripts are located.
+Assuming that midPoint was installed in `/opt/midpoint` directory then default _midPoint home_ will be located in `/opt/midpoint/var` directory.
 
 The location of midPoint home directory can be changed by using the `midpoint.home` Java system property.
 This is done by specifying `-Dmidpoint.home` in the JVM command-line.
-Or in case that the default midPoint start scripts are used `MIDPOINT_HOME` environment variable can be used to set the location of midPoint home directory.
+Or in case that the default midPoint start scripts are used, `MIDPOINT_HOME` environment variable can be used to set the location of midPoint home directory.
 
-When midPoint starts for the first time it starts with an empty database.
+When midPoint starts for the first time, it starts with an empty database.
 MidPoint populates the database with a minimal set of configuration objects.
+We call them _initial objects_.
 This set contains objects such as the `Superuser` role and user `administrator`.
-These objects get imported automatically because if they are not there you will not be able to log into the new midPoint instance.
+These objects get imported automatically, because if they are not there, you will not be able to log into the new midPoint instance.
 These objects are imported only if they are not already present in the database.
-If you modify them later then midPoint will not overwrite them.
+If you modify them later, midPoint will not overwrite them.
+
 
 == Logging
 
 Logging is perhaps the most important mechanism to diagnose any issues with midPoint.
 Logging should be _the_ thing that comes to your mind anytime you cast a puzzled look at midPoint user interface.
-We try to make midPoint user interface convenient to use and we pay a lot of attention to good error reporting.
-But there are always some limits.
+We try to make midPoint user interface convenient to use, and we pay a lot of attention to good error reporting.
+However, there are always some practical limits what the user interface can do.
 The error that the user interface displays may be just a result of a long chain of causes and effects.
 Error messages in the user interface may not directly point to the primary cause.
-Or maybe there is no error at all, just midPoint does not do what it is supposed to do.
-That is the point where logging comes to the rescue.
+Perhaps there is no error at all, just midPoint does not do what it is supposed to do.
+That is the point where _logging_ comes to the rescue.
 
 MidPoint is using Java logging facilities to log its messages.
-MidPoint log file name is `midpoint.log` and it is stored in the log subdirectory in midPoint home directory (`/opt/midpoint/var/log/midpoint.log`).
+MidPoint log file name is `midpoint.log`, and it is stored in the `log` subdirectory in midPoint home directory (`/opt/midpoint/var/log/midpoint.log` by default).
 The default logging level is set up more-or-less to suit normal midPoint operation.
 This means that the messages on level `INFO` and above are logged while the finer levels are not logged.
 If you want to diagnose midPoint issues you will need to switch the logging levels to `DEBUG`, or in extreme cases even to `TRACE`.
@@ -598,5 +604,6 @@ Navigate to menu:Configuration[System > Logging].
 
 MidPoint is not a simple system.
 There are complex interactions, there is usually a lot of custom configuration, customizations, expressions and so on.
-Diagnostics of midPoint issues is in itself no easy task.
+Diagnostics of midPoint issues is no easy task.
 Therefore, there is a dedicated <<90-troubleshooting.adoc#90-troubleshooting,Troubleshooting>> chapter in this book.
+That chapter is your best friend when things do not go as expected.
