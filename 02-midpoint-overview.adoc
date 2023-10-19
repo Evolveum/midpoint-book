@@ -364,7 +364,7 @@ Resource definition has `schemaHandling` section which is designed for this kind
         <objectType>
             <displayName>HR Record</displayName>
             <delineation>
-                <objectClass>ri:AccountObjectClass</objectClass>
+                <objectClass>AccountObjectClass</objectClass>
             </delineation>
         </objectType>
     </schemaHandling>
@@ -417,7 +417,7 @@ Inbound mapping looks like this:
 [source,xml]
 ----
     <attribute>
-        <ref>ri:firstname</ref>
+        <ref>firstname</ref>
         <inbound>
             <target>
                 <path>givenName</path>
@@ -522,7 +522,7 @@ We have two resources now:
 
 image::02-14-resources.png[Resources]
 
-TIP: For the curious, LDAP resource configuration is located in `resource-openldap.xml` in samples directory.
+TIP: For the curious, LDAP resource configuration is located in `resource-ldap.xml` in samples directory.
 
 How do we create an account on that LDAP resource?
 The right way to do this is to let midPoint know that a user _should have_ an account on that resource.

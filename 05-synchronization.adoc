@@ -1670,11 +1670,11 @@ First task is to set up the connector for this resource.
 As LDAP servers are used for identity management purpose all the time, MidPoint comes with a really good LDAP connector.
 All we need is to set up the resource to use that connector:
 
-.resource-openldap.xml
+.resource-ldap.xml
 [source,xml]
 ----
 <resource oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c">
-    <name>OpenLDAP</name>
+    <name>LDAP</name>
 
     <connectorRef type="ConnectorType">
         <filter>
@@ -1714,7 +1714,7 @@ In that case the connector reference has to be set up manually.
 
 Once we have proper reference to LDAP connector we need to configure the connection:
 
-.resource-openldap.xml
+.resource-ldap.xml
 [source,xml]
 ----
     ...
@@ -1760,7 +1760,7 @@ This configuration may also be used to list the accounts.
 However, LDAP servers support many object classes and midPoint does not yet know which object class represents account.
 Therefore, we need to add schema handling section to our resource:
 
-.resource-openldap.xml
+.resource-ldap.xml
 [source,xml]
 ----
     ...
@@ -1819,7 +1819,7 @@ We want to link them.
 However, we do not want to do the linking manually.
 We would rather set up a correlation expression that does this automatically:
 
-.resource-openldap.xml
+.resource-ldap.xml
 [source,xml]
 ----
     ...
@@ -1846,7 +1846,7 @@ Simply speaking: if account and user employee numbers match then we assume that 
 In that case midPoint decides that synchronization situation is unlinked (they should be linked, but they are not yet linked).
 We want midPoint to link the account in this case, therefore we define appropriate reaction:
 
-.resource-openldap.xml
+.resource-ldap.xml
 [source,xml]
 ----
             ...
@@ -1903,7 +1903,7 @@ Now we can tell midPoint to delete any unmatched account.
 That is the case when an illegal account is created in LDAP server.
 We can also tell midPoint to unlink any account that was deleted in LDAP server:
 
-.resource-openldap.xml
+.resource-ldap.xml
 [source,xml]
 ----
             ...
@@ -1930,7 +1930,7 @@ Those accounts are in the `linked` situation, and we have not configured any rea
 Therefore midPoint did nothing.
 Now we need to tell midPoint to synchronize the values:
 
-.resource-openldap.xml
+.resource-ldap.xml
 [source,xml]
 ----
             ...
@@ -1952,7 +1952,7 @@ If midPoint is not sure about something, then it will assume a conservative posi
 We do not want to destroy the data.
 Therefore, what we need to do now is to let midPoint know that we really mean it, that the mappings are really `strong`:
 
-.resource-openldap.xml
+.resource-ldap.xml
 [source,xml]
 ----
             ...

@@ -1322,7 +1322,7 @@ However, let us go over all the details, step by step.
 
 First of all, we need to add new `objectType` definition to the LDAP resource:
 
-.resource-openldap.xml
+.resource-ldap.xml
 [source,xml]
 ----
         <objectType>

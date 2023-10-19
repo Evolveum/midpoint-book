@@ -6,52 +6,67 @@ include::chapter-include.adoc[]
 [quote,William Arthur Ward]
 The pessimist complains about the wind; the optimist expects it to change; the realist adjusts the sails.
 
-Reading and writing resource objects, attribute synchronization, mapping of attribute values, their transformation using scripts – these are the basic midPoint features.
-These features are absolutely essential for any self-respecting IDM deployment and all IDM engineers should be more than familiar with them.
-And this is exactly the purpose of this chapter: describe the necessary configuration to use midPoint as a provisioning engine.
+Reading and modifying accounts, account attribute synchronization, mapping of attribute values, their transformation using scripts – these are the very basic midPoint features.
+These are _provisioning_ features (or rather _fulfilment_ features as analysts like to have it).
+These features are absolutely essential for any self-respecting identity management deployment.
+Explaining the very basic mechanisms of identity management deployment is the primary purpose of this chapter.
+It covers the necessary configuration to use midPoint as a _provisioning engine_.
 
+The first thing that engineers notice about identity management is that the systems we need to integrate are not exactly homogeneous.
 It is not very realistic to expect that all the systems will agree on the same interface, communication protocol and schema for identity management.
-There were several attempts to unify the IAM landscape, but none of them was entirely successful.
+There were several attempts to unify the identity and access management landscape, but none of them was entirely successful.
 The LDAP protocol was created in the 1990s.
-But even for such a mature protocol the LDAP implementations are sill not 100% interoperable.
+However, even for such a mature protocol, the implementations are sill not 100% interoperable.
 The situation is even worse for identity provisioning protocols.
-There were several attempts to specify a standard provisioning protocol, but all of them failed to deliver complete interoperability.
-The worst pain point of identity integration is undoubtedly the schema.
+There were several attempts to specify a standard provisioning protocol since early 2000s, but all of them failed to deliver complete interoperability.
+SCIM version 2 is the latest attempt.
+SCIM 2 is, quite successfully, used for some cloud applications and simple cross-organizational scenarios.
+However, as almost all deployments of SCIM are using local variations, the interoperability is quite poor.
+Moreover, SCIM still lacks capabilities to cover all aspects of a complete provisioning solution.
+
+The worst pain point of identity integration is undoubtedly the _schema_.
 Every application has its own data model for representation of accounts, groups, privileges and other identity-related objects.
-Even if the application tries to expose that data model using some kind of standard schema there will always be small (but important) differences.
-MidPoint provides a practical solution to this problem.
-Application interfaces and their schemas need to be aligned or _mapped_ to a common identity schema that you choose to use for your deployment.
-This chapter will tell you how to do it.
+Even if the application tries to expose that data model using some kind of standard schema (such as SCIM schema), there will always be small (but important) differences, special cases and local peculiarities.
+Such deviations are a major obstacle to interoperability.
+
+Instead of insisting on an idealistic universal schema for all applications, midPoint provides a _practical_ solution to this problem.
+MidPoint admits the reality: every system and application has its own schema and local variations.
+Yet, we still need a _common_ schema to be able to understand what is going on, to process and analyze the data.
+MidPoint has a _common identity schema_ inside.
+Application schemas with all their peculiarities are aligned or _mapped_ to the common schema.
+Once the _mappings_ are in place, midPoint automatically translates the data as needed, maintaining a consistent data among all the systems.
+This chapter will tell you how to do it, how to set up the _mappings_.
+
 
 == Identity Resource Definitions
 
 _Identity resource_ is one of the most important concepts in midPoint.
 Any system connected to midPoint is an _identity resource_.
-Identity resources (or just _resources_ for short) are typically target systems where midPoint manages accounts.
-Moreover, source systems such as HR databases are also considered to be resources.
-There is no strict distinction between the source and target resource in midPoint.
+Identity resources (or just _resources_ for short) are typically _target_ systems where midPoint manages accounts.
+Moreover, _source_ systems, such as HR databases, are also considered to be identity resources.
+There is no strict distinction between the _source_ and _target_ resource in midPoint.
 Both source and target resources are defined in exactly the same way.
 Resource can even act as both source and target at the same time.
 
-MidPoint needs a way how to communicate with the resource.
-MidPoint has to know communication protocol, hostname, passwords, etc.
+MidPoint needs a way to communicate with the identity resource.
+MidPoint has to know communication protocol, hostname, keys and passwords, and all other communication parameters.
 For that purpose midPoint has _resource definition objects_.
-These are ordinary midPoint configuration objects stored in midPoint repository.
-Resource definition usually contains:
+These are midPoint configuration objects stored in midPoint repository.
+_Resource definition_ usually contains:
 
-* *Name* of the resource and its description
+* *Name* of the identity resource and its description.
 
-* *Reference to the connector* which is used to communicate with the resource
+* *Reference to the connector* which is used to communicate with the resource.
 
-* *Connector configuration properties* that define resource host name, port, communication settings and so on.
+* *Connector configuration properties* that define resource hostname, port, communication settings and so on.
 Those properties are used to initialize the connector.
 
 * Definition of *object types* that are interesting for midPoint.
 This is typically a definition that describes how a typical account looks like.
-But there may be much more: groups, roles, organizational units, …
+However, there may be much more than just accounts: groups, entitlements, organizational units, ...
 
 * Object type definitions typically contain *mappings*.
-Mappings define how attributes are synchronized from midPoint to resource or from resource to midPoint.
+Mappings define how are the attributes moved and transformed from midPoint to resource, or from resource to midPoint.
 
 * *Synchronization* settings that define what midPoint should do if it discovers unknown account, if the account is deleted on the resource and so on.
 
@@ -64,8 +79,8 @@ Resource definition looks like this in its XML form (simplified):
     <connectorRef oid="028159cc-f976-457f-be70-9e9fa079bcf7"/>
     <connectorConfiguration>
         <configurationProperties>
-            <port>389</port>
             <host>localhost</host>
+            <port>389</port>
             <baseContext>dc=example,dc=com</baseContext>
             ...
         </configurationProperties>
@@ -74,7 +89,9 @@ Resource definition looks like this in its XML form (simplified):
         <objectType>
             <kind>account</kind>
             <default>true</default>
-            <objectClass>ri:inetOrgPerson</objectClass>
+            <delineation>
+                <objectClass>inetOrgPerson</objectClass>
+            </delineation>
             ...
         </objectType>
     </schemaHandling>
@@ -82,45 +99,61 @@ Resource definition looks like this in its XML form (simplified):
 ----
 
 Resource definition is a very rich (and powerful) configuration object.
-It is maybe the richest configuration object in the entire midPoint system.
+It is maybe the richest configuration object in the entire midPoint platform.
 Creating resource definition from scratch is usually no easy task.
-There is a lot of things to consider: connector configuration, identifier conventions, mandatory attributes, attribute value formats and so on.
-What we usually do is to locate a resource definition sample for a similar resource.
-Then we modify the sample to suit our needs.
-However, you need to understand how the resource definitions work to do this efficiently.
-Next few sections will explain the structure and function of resource definitions.
+There is a lot of things to consider: connector configuration, identifier conventions, mandatory attributes and attribute value formats to name just few.
+There are two practical ways to create resource definitions:
 
+* *Start from a sample*.
+Locate a resource definition sample for a similar resource.
+Then modify the sample to suit your needs.
+This is the usual midPoint method: edit the XML/JSON/YAML file, them import it to midPoint.
+Navigate to menu:Administration[Resources > Import resource definition].
++
+There are many resource samples to start from.
+Most of them are located in midPoint distribution package.
+However, there are other places to look for samples.
+Please see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for suggestions.
+
+* *Resource wizard*.
 Believe it or not, there are people that do not like XML/JSON/YAML.
 There are also people that really want to start creating the resource from scratch.
 For all those people there is a resource wizard in the midPoint user interface.
 The wizard can be used to create and edit resource using a graphical user interface.
+Navigate to menu:Administration[Resources > New resource], select menu:From Scratch[] option.
++
+image::04-01-resource-wizard.png[Resource wizard]
 
-image::04-01-resource-wizard.png[Applications]
+.Resource lifecycle state
+TIP: Resource wizard is creating resources as `proposed` by default.
+The `proposed` state is a _lifecycle state_, specifying that this object is not ready for production yet.
+It is just _proposed_, i.e. it is a candidate, to be commissioned as a production configuration when properly tested.
+We will deal with lifecycle states later.
+All that is needed for now it to switch the resource to `active` state to operate correctly.
+This can be done in the first step of the wizard, or it can be changed later when editing the resource.
 
-However, even if the resource wizard is your preferred way, it may still be easier to start with an existing sample.
-Find the sample that is the best match for your situation, import it in midPoint and then use the wizard to modify it.
+However, you need to understand how the resource definitions work to do this efficiently - even if you start with resource wizard.
+Next few sections will explain the structure and function of resource definitions.
 
-There are many resource samples to start from.
-Most of them are located in midPoint distribution package.
-But there are other places to look for samples.
-Please see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for suggestions.
 
 == Connectors
 
-Every resource needs a connector to work.
-Connectors are small pieces of Java code that are used to communicate with the resource.
-MidPoint looks for available connectors when it starts up.
-MidPoint will automatically create new configuration object for each connector that it discovers during the startup.
-The list of discovered connectors can be seen in midPoint user interface in menu:Configuration[Repository objects > All objects] and select menu:Connector[] in the type field located at the top of the screen.
+Every resource needs a _connector_ to work.
+Connectors are small pieces of Java code that are used to communicate with the source and target systems.
+Few popular connectors are part of midPoint distribution package (_bundled_ connectors), other connectors can be downloaded and deployed in midPoint home directory.
+
+MidPoint automatically looks for available connectors.
+MidPoint creates new configuration object for each connector that it discovers.
+The list of discovered connectors can be seen in midPoint user interface in menu:Configuration[Repository objects > All objects], selecting menu:Connector[] in the type field located at the top of the screen.
 The connector objects look like this:
 
 [source,xml]
 ----
 <connector oid="028159cc-f976-457f-be70-9e9fa079bcf7">
-  <name>ConnId com.evolveum.polygon.connector.ldap.LdapConnector v2.0</name>
+  <name>ConnId com.evolveum.polygon.connector.ldap.LdapConnector v3.7</name>
   <framework>http://midpoint.evolveum.com/xml/ns/public/connector/icf-1</framework>
   <connectorType>com.evolveum.polygon.connector.ldap.LdapConnector</connectorType>
-  <connectorVersion>2.0</connectorVersion>
+  <connectorVersion>3.7</connectorVersion>
   <connectorBundle>com.evolveum.polygon.connector-ldap</connectorBundle>
   <namespace>http://midpoint.evolveum.com/xml/ns/…</namespace>
   <schema>
@@ -130,7 +163,7 @@ The connector objects look like this:
 ----
 
 The resource definition needs to point to the appropriate connector object.
-Therefore select the right connector from the connector list and remember its OID.
+Therefore, select the right connector from the connector list and remember its OID.
 Then use the connector OID in the resource configuration like this:
 
 [source,xml]
@@ -142,14 +175,18 @@ Then use the connector OID in the resource configuration like this:
 </resource>
 ----
 
-This is a straightforward way how to link connector and resource.
+.Resource wizard
+TIP: Of course, resource wizard does all that connector stuff for you.
+All you need is to select the right connector.
+
+This is a straightforward way how to link _connector_ and _resource_.
 However, it is not the most convenient one.
 MidPoint creates connector objects automatically.
-Therefore the OIDs of the connector objects are not fixed.
+Therefore, the OIDs of the connector objects are not fixed.
 Every midPoint instance will have different OID for the discovered connectors.
-Therefore, if we want a resource that is always using the LDAP connector in all the midPoint instances we cannot do that by just using OIDs.
-But there is another way.
-You can use search filter instead of fixed OID:
+Therefore, if we want a resource that is always using the LDAP connector in all the midPoint instances, we cannot do that by just using OIDs.
+There is another way.
+You can use _search filter_ instead of fixed OID:
 
 [source,xml]
 ----
@@ -157,10 +194,7 @@ You can use search filter instead of fixed OID:
     <name>My LDAP Server</name>
     <connectorRef type="ConnectorType">
         <filter>
-            <q:equal>
-                <q:path>connectorType</q:path>
-                <q:value>com.evolveum.polygon.connector.ldap.LdapConnector</q:value>
-            </q:equal>
+            <q:text>connectorType = "com.evolveum.polygon.connector.ldap.LdapConnector"</q:text>
         </filter>
     </connectorRef>
     ...
@@ -168,34 +202,35 @@ You can use search filter instead of fixed OID:
 ----
 
 The detailed explanation of the search filters will come later.
-For now it is important to know just few basic principles.
+For now, it is important to know just few basic principles.
 When this resource definition is imported, midPoint notices that there is no OID in the `connectorRef` reference.
-It also notices that there is a search filter.
-Therefore midPoint executes that search filter.
+It also notices that there is a _search filter_.
+Therefore, midPoint executes that search filter.
 In this case it looks for an object of `ConnectorType` type that has property `connectorType` with value `com.evolveum.polygon.connector.ldap.LdapConnector`.
-Therefore midPoint finds LDAP connector regardless of the OID that was generated when midPoint discovered that connector.
+Therefore, midPoint finds LDAP connector, regardless of the OID that was generated when midPoint discovered that connector.
 Then midPoint takes the OID of the object that it has found.
-The OID is placed to the `connectorRef` reference, so midPoint can find the connector directly and it does not need to execute the search every time the resource is used.
+The OID is placed to the `connectorRef` reference, so midPoint can find the connector directly, and it does not need to execute the search every time the resource is used.
 
 This is the method that is frequently used to bind resource definition to a specific connector type.
 It has the advantage that it works in all midPoint deployments.
-Therefore it is also used in the configuration samples.
+Therefore, it is also used in the configuration samples.
+
 
 == Bundled and Deployed Connectors
 
-Each class of resources needs its own connector.
+Each type of resources needs its own connector.
 There is an LDAP connector that supports all the common LDAP servers.
 There are connectors that work with generic database tables.
 These connectors are quite generic.
-But most connectors are built for a specific application or software system: Linux servers, SAP R/3, Siebel, etc.
+However, most connectors are built for a specific application or software system: Linux servers, SAP, Zoom, etc.
 
 There is a handful of connectors that are so generic that they are used in almost all midPoint deployments.
-These connectors are bundled with midPoint.
-That means that they are part of the midPoint application package and they are always available.
+These connectors are _bundled_ with midPoint.
+It means that they are part of the midPoint application package, and they are always available.
 These three connector bundles are part of midPoint:
 
 * LDAP Connector bundle, which contains:
-** *LDAP* connector that works with most LDAPv3-compliant servers.
+** *LDAP* connector that works with common LDAP servers.
 ** *Active Directory* connector that can work with Microsoft Active Directory over LDAP protocol.
 * *DatabaseTable* connector bundle with a connector that can connect to a generic relational database table.
 * *CSV* connector bundle with a connector that works with comma-separated (CSV) text files.
@@ -206,18 +241,19 @@ Connector deployment is a very straightforward process:
 
 . Locate the connector binary (JAR file).
 
-. Copy the binary into the `icf-connectors` directory which is located in midPoint home directory.
+. Copy the binary into the `connid-connectors` directory which is located in midPoint home directory.
 
-. Restart midPoint
+. Wait few moments for midPoint to discover the connector.
 
-MidPoint will scan the `icf-connectors` directory when it starts up.
-It will discover any new connectors and create a connector configuration objects for them.
+MidPoint periodically scans the `connid-connectors` directory.
+It discovers any new connectors, and creates a connector configuration objects for them.
+
 
 == Connector Configuration Properties
 
 Connector needs a configuration to be able to work with the resource.
 This configuration usually consists of connection parameters such as hostname, port, administrative username, password, connection security settings and so on.
-The connector configuration properties are specified in the resource definition object.
+The connector configuration properties are specified in the _resource definition object_.
 In a simplified from it looks like this:
 
 [source,xml]
@@ -238,30 +274,29 @@ In a simplified from it looks like this:
 ----
 
 There may be a very broad range of configuration properties - and every connector has its own set.
-While working just with the text representation of the resource definition you will need to find out the names
-of the configuration properties by looking at the samples, connector documentation or maybe even connector source code.
-It may look difficult but this is a perfectly viable approach.
+While working just with the XML/JSON/YAML representation of the resource definition, you will need to find out the names of the configuration properties by looking at the samples, connector documentation or maybe even connector source code.
+It may look difficult, but this is a perfectly viable approach.
 However, there are other ways.
-Firstly, there is the resource wizard.
-The wizard knows all the connector configuration properties and it will present the properties in a configuration form.
+Firstly, there is the _resource wizard_.
+The wizard knows all the connector configuration properties, and it will present the properties in a configuration form.
 The wizard takes the definition of the configuration properties from the _connector schema_.
-The connector schema is a definition of the properties that the connector supports: their names, types, multiplicity and so on.
-The connector schema is stored in the connector configuration object under the schema tag.
-Therefore even if you are working only with the XML/JSON/YAML files you can have a look at that schema
+The _connector schema_ is a definition of the properties that the connector supports: their names, types, multiplicity and so on.
+The _connector schema_ is stored in the _connector configuration object_ in the `schema` element.
+Therefore, even if you are working only with the XML/JSON/YAML files, you can have a look at that schema
 to figure out what connector configuration properties are supported.
 
 The connector schema also defines the connector namespace.
-Generally speaking namespaces in midPoint are used to isolate schema extensions that might conflict, and they are also used for data model versioning.
-The use of namespaces is optional in almost all parts of midPoint - but not yet in all the parts.
-Connector configuration is one of the few parts where namespaces should still be used.
-And it also makes some sense, as namespaces are used here as an additional safety mechanism.
+Generally speaking, namespaces in midPoint are used to isolate schema extensions that might have conflicting element names.
+The use of namespaces is optional in almost all parts of midPoint - but not in all the parts yet.
+Connector configuration is one of the few parts where namespaces must still be used.
+It also makes some sense, as namespaces are used here as an additional safety mechanism.
 To keep a long story short, the configuration properties should be properly namespace-qualified:
 
-.resource-openldap-minimal.xml
+.resource-ldap.xml
 [source,xml]
 ----
 <resource oid="690f9f44-8027-11e6-a248-3b5fe08dea36">
-    <name>LDAP Minimal</name>
+    <name>LDAP</name>
     <connectorRef oid="028159cc-f976-457f-be70-9e9fa079bcf7"/>
     <connectorConfiguration
             xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3"
@@ -278,73 +313,70 @@ To keep a long story short, the configuration properties should be properly name
 ----
 
 The use of namespaces will be completely optional in later midPoint versions.
-For now just copy the namespace URIs from the samples.
+For now, just copy the namespace URIs from the samples.
 You do not have to completely understand what is going on.
 Just one thing: the namespace of the configuration properties should be the same as the namespace defined in the connector object.
 This is a long URI that is composed of connector bundle name and connector name.
 
 For example: `http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/bundle/com.evolveum.polygon.connector-ldap/com.evolveum.polygon.connector.ldap.LdapConnector`
 
-If the namespace does not match then the connector will refuse to work.
-This is a safety mechanism that prohibits accidental use of configuration from one connector in another connector where the configuration properties may have the same name but a completely different meaning.
+If the namespace does not match, then the connector will refuse to work.
+This is a safety mechanism that prohibits accidental use of configuration from one connector in another connector, where the configuration properties may have the same name but a completely different meaning.
+
+.Resource wizard
+TIP: Resource wizard has a very convenient way to specify connector configuration properties.
+Resource wizard also support _discovery_ of some configuration properties.
+For example, it can discover _base context_ of an LDAP server, by connecting to the server and getting that information from server meta-data.
+
 
 == Testing the Resource
 
-Minimal resource definition has just the name, connector reference and connector configuration properties.
-After that the resource should show the first signs of life.
-Therefore select a suitable sample file now.
+Minimal resource definition has just the _name_, _connector reference_ and _connector configuration properties_.
+After that, the resource should show the first signs of life.
+Therefore, go ahead and select a suitable sample file now.
 Strip it down to the minimum, modify connector configuration properties and import the resource into midPoint.
-You should be able to see your resource in the list in _Resources > List resources_.
+You should be able to see your resource in the list in menu:Administration[Resources > All resources].
 The icon next to your resource is most likely black - not green and not red.
 Green icon means that the resource is working, red icon means that there is an error, black means "I do not know yet".
 Click on the resource label.
-The resource details page should appear.
-There is a _Test Connection_ button at the bottom of the page.
+The resource details page appears.
+There is a btn:[Test Connection] button at the top of the page.
 Click on that button.
 It may take a while now.
 MidPoint is initializing the connector with the configuration properties that you have specified.
-Then the connector will be used to check connection to the resource.
-If the parameters were correct and midPoint can reach the resource you will see the green lights:
+Then the connector is used to check connection to the resource.
+If the parameters were correct, and midPoint can reach the resource, you will see the green lights:
 
-image::04-02-test-resource.png[Test resource]
+image::04-02-test-resource.png[Test connection]
 
 If there are any errors during connector initialization, configuration or network connection you will see the errors here.
-In that case correct the configuration properties and try again.
-If everything works well then the resource icon turns green.
-Now we have a minimal working resource.
+In that case, correct the configuration properties, and try again.
+If everything works well, then the resource icon turns green.
+Now we have a very minimal working resource.
 
-There are a few more things that you can do with such a minimal resource.
-For example, you can look at the resource content.
-Navigate to the resource details page and switch to _Uncategorized_ tab.
-Select one of the object classes that the resource supports.
-Just click inside the _Object class_ input box and the suggestions will appear.
-Now click on the _Resource_ button on the right side.
-MidPoint connects to the resource, lists all the objects of the given object class and displays the list.
-Now you can click on any object to see the details.
+The _test connection_ procedure is testing whether connector can connect to the resource.
+However, can the connector access the data as well?
+We would like to see some data now, to make sure that everything works fine.
+We cannot do that just yet.
+We have to talk about the _schema_ first.
 
-image::04-03-list-accounts.png[List resource account]
 
-That is a very useful feature for several reasons.
-Firstly, you can check that not just the resource connection works, but that the connector can actually retrieve the objects.
-Secondly, you will get some idea about the object classes that the resource supports.
-And thirdly, by looking at several objects you can get a basic overview of how the data are structured: what attributes are used and what are the typical values.
-You will appreciate that information later on when we will be setting up mappings.
+== Resource Schema
 
-== Resource Schema Basics
-
-The only resource object that early identity management systems dealt with was an _account_.
-That is not sufficient anymore.
-Good identity management system needs to manage may different types of resource objects: accounts, groups, organizational units, privileges, roles, access control lists and so on.
-In midPoint these are the _object classes_: types of resource objects that are made accessible to midPoint by the connector.
-A minimal resource supports at least the _account_ object class, but a typical resource supports more object classes.
-Each object class may have a completely different set of attributes: different names, different types, some may be mandatory, some optional.
+The only thing that early identity management systems dealt with was an _account_.
+The world have evolved a lot since the early days of identity management in the 2000s.
+Today, identity management systems need to manage many different types of resource objects: _accounts_, _groups_, _organizational units_, _privileges_, _roles_, _access control lists_ and so on.
+In midPoint, these are the _object classes_: types of resource objects that are made accessible to midPoint by the connector.
+A minimal resource supports at least one _account_ object class, but a typical resource supports more object classes.
+Each object class may have a completely different set of attributes: different attribute names, different data types, some may be mandatory, some optional, single-valued or multi-valued.
 
 The collective definition of the object classes and their attributes is what we call _resource schema_.
 Obviously, resource schema is different for every resource.
-Even resources that are using the same connector may have different resource schema (e.g. two LDAP servers with different custom schema extensions).
-MidPoint is a smart system and it is capable of automatic resource schema discovery.
-MidPoint will reach out to the resource and retrieve the schema when the resource is used for the first time.
-Retrieved resource schema is stored under the schema tag in resource definition object.
+Even resources that are using the same connector may have different resource schema.
+For example two LDAP servers with different custom schema extensions or two business systems with different customizations.
+MidPoint is a smart system, and it is capable of automatic _resource schema discovery_.
+MidPoint reaches out to the resource and retrieves the schema when the resource is used for the first time.
+Retrieved resource schema is stored as the `schema` element in resource definition object.
 You can have a look and examine the schema there.
 But beware, the schema may be quite rich and big.
 
@@ -352,69 +384,125 @@ Resource schema is an absolutely crucial concept.
 MidPoint takes advantage of resource schema whenever it needs to work with resource objects such as accounts or groups.
 MidPoint uses resource schema to validate mappings.
 The schema is used for automatic type conversions.
-And most importantly of all: resource schema is used to display resource objects in user interface.
+Most importantly of all: resource schema is used to display resource objects in user interface.
 MidPoint adapts to resource schema automatically.
 Not a single line of custom code is needed to do that.
 
+
+== Accessing Resource Data
+
+We would like to have a look at resource data before going on with configuration.
+It would be nice to make sure that the connector is configured correctly, that there are appropriate access rights in place for the connector to access the data and that everything works fine.
+However, some resources are very flexible and generic.
+LDAP servers are a prime example.
+They have lots of object classes to choose from, their _resource schema_ is quite bit.
+We need only a couple of object classes from that huge LDAP schema.
+However, LDAP connector is very generic, it does not know which object classes are the right ones.
+Therefore, we have to tell midPoint which object class to choose from the schema.
+
+.resource-ldap.xml
+[source,xml]
+----
+<resource oid="690f9f44-8027-11e6-a248-3b5fe08dea36">
+    <name>LDAP</name>
+    <connectorRef oid="028159cc-f976-457f-be70-9e9fa079bcf7"/>
+    <connectorConfiguration>
+        ...
+    </connectorConfiguration>
+
+    <schemaHandling>
+        <objectType>
+            <kind>account</kind>
+            <displayName>Normal Account</displayName>
+            <default>true</default>
+            <delineation>
+                <objectClass>inetOrgPerson</objectClass>
+            </delineation>
+        </objectType>
+    </schemaHandling>
+</resource>
+----
+
+We will learn about the `schemaHandling` section later.
+For now, this declaration of _object type_ tells midPoint, that there are _accounts_ on this resource.
+The _accounts_ are using `inetOrgPerson` object class.
+
+Now, as midPoint knows what "Normal LDAP Account" means exactly, we can have a look at such accounts.
+Navigate to the menu:Accounts[] panel in resource details page.
+This is the place to browse accounts on this resource.
+However, the list is empty!
+It is empty, as midPoint have not tried to access the accounts yet.
+Click on btn:[Reload] button does the trick.
+MidPoint is using the connector to list all the accounts (objects with `inetOrgPerson` object class) in our LDAP server.
+
+image::04-03-list-accounts.png[List resource account]
+
+Now you can click on any object to see the details.
+This is a very useful feature for several reasons.
+By looking at several objects, you can get a basic overview of how the data are structured: what attributes are used and what are the typical values.
+You will appreciate that information later on when we will be setting up mappings.
+
+
 == Hub and Spoke
 
-MidPoint topology is a star (a.k.a. "hub and spoke") with midPoint at the center.
+MidPoint topology is a _star_ (a.k.a. "hub and spoke") with midPoint at the center.
 This is both physical and logical topology of midPoint deployments.
 
 image::04-04-hub-and-spoke.png[Hub and spoke]
 
-This means that the _account A_ can be synchronized with midPoint user and then midPoint user can be synchronized with _account B_.
-But _account A_ cannot be synchronized directly to _account B_.
-This is a deliberate decision that was made very early in midPoint design, and we have very good reasons for it.
+This means that the _account A_ can be synchronized with midPoint _user_ and then midPoint _user_ can be synchronized with _account B_.
+However, _account A_ cannot be synchronized directly to _account B_.
+This is a deliberate decision that was made very early in midPoint design.
+We have very good reasons for it.
 
-_Accounts_ and user that represent the same person are _linked_ together.
+_Accounts_ and _user_ that represent the same person are _linked_ together.
 This _link_ is a relation that midPoint creates and maintains.
-Therefore, midPoint knows who is the owner of a particular account.
+Therefore, midPoint knows who is the _owner_ of a particular account.
 MidPoint also knows which accounts the user has.
 That is how midPoint knows which account needs to be synchronized with which user.
-It is critical for the links to be correct otherwise midPoint cannot reliably synchronize the data.
+It is critical for the links to be correct, otherwise midPoint cannot reliably synchronize the data.
 For that reason, midPoint takes great care to maintain the links.
-And that is not always an easy task.
-There are strange corner cases such as renamed accounts or accounts that were deleted by mistake and re-created.
-But midPoint is built to handle such cases.
+That is not always an easy task.
+There are strange corner cases, such as renamed accounts, or accounts that were deleted by mistake and re-created.
+Yet, midPoint is built to handle such cases.
 The links are always maintained.
-And it is the link that allows midPoint to list all user’s accounts in the user interface.
+It is the link that allows midPoint to list all user’s accounts in the user interface.
 
 image::04-05-user-bob-projections.png[Projections]
 
 The user in midPoint is known as _focus_ in midPoint terminology.
 The accounts are known as _projections_.
 You can imagine a light projector that sends many light beams from its focal point to create a projection on the screen.
-This is the metaphor that we have chosen when building midPoint.
-And for the lack of better words this terminology remains in use even now.
-We will get back to the concept of focus and projections many times in this book.
-For now you just need to remember that _projection_ means an _account_.
+This is the metaphor that we have chosen when developing midPoint.
+For the lack of better words, this terminology remains in use even today.
+We will get back to the concept of _focus_ and _projections_ many times in this book.
+For now, you just need to remember that _projection_ means an _account_.
 
-MidPoint knows which account belongs to which user by following links that it maintains.
-But how does midPoint know which attributes to synchronize?
+MidPoint knows which account belongs to which user by following _links_ that it maintains.
+However, how does midPoint know which attributes to synchronize?
 How to transform the values?
-And which side is the authoritative one?
-Mappings take care of that.
-Mapping is like a flexible data replication recipe.
+Which side is the authoritative one?
+_Mappings_ take care of that.
+_Mapping_ is like a flexible data replication recipe.
 MidPoint allows to define mappings for each attribute in any direction.
 The mappings are used to control the synchronization on a very fine granularity.
 
 Perhaps the best way to summarize synchronization principles is to illustrate them using a couple of examples.
 The first example is a modification of user properties in midPoint user interface.
-When the Save button is pressed then midPoint user interface sends the modification to midPoint core engine.
+When the btn:[Save] button is pressed, midPoint user interface sends the modification to midPoint core engine.
 The synchronization code in midPoint core follows the links to find all the accounts that belong to this specific user.
-Then the mappings are applied to synchronize the changed user properties to the accounts.
-Account changes are propagated to the resources and user changes are stored in midPoint repository.
+Then the _mappings_ are applied to synchronize the changed user properties to the accounts.
+Account changes are propagated to the resources, and user changes are stored in midPoint repository.
 
 image::04-06-user-account-gui.png[User-account GUI change]
 
 The second example is slightly different.
 This case starts with a change of account data.
 This may be a change of an employee record in HR system.
-MidPoint detects that change and reads the changed account.
-MidPoint follows the link to find the user to which the account belongs.
+MidPoint detects that change, and reads the changed account.
+MidPoint follows the _link_ to find the user to which the account belongs.
 Then it follows other links from the user to find all the other accounts that may be affected.
-Similarly to the previous case the mappings are applied.
+Similarly to the previous case, the _mappings_ are applied.
 The mappings from the HR account to the user are applied first.
 The result is a modification of user properties.
 Then a process identical to the previous case takes place.
@@ -422,50 +510,52 @@ User modifications are automatically applied to all affected accounts.
 
 image::04-07-user-account-inbound.png[User-account GUI inbound mapping]
 
-Those two cases look to be quite different.
+Those two cases might look to be quite different.
 First case is a manual change of data by system administrator.
 Second case is an automatic data feed from the HR system.
-But as you can see the principles that are used to implement those two cases are almost exactly the same.
+However, as you can see, the principles that are used to implement those two cases are almost exactly the same.
 This is the consequence of midPoint philosophy: radical reuse of functionality and generic application of principles.
-You just need to define what you want to do (the policy).
+You define what you want to do (the policy) by setting up the _mappings_.
 MidPoint takes care that it is done when it needs to be done.
 
 .Why the star topology?
-TIP: The star or "hub and spoke" were (and still are) the big buzzwords of system integration.
-And the basic idea makes a lot of sense.
-If every node needs to be synchronized with every other node then the number of required connections grows quite steeply.
-It is in fact proportional to the square of the number of nodes.
+TIP: The _star_ or "hub and spoke" were (and still are) the big buzzwords of system integration.
+Rightfully so, as the basic idea of star topology makes a lot of sense.
+If every node needs to be synchronized with every other node, then the number of required connections grows quite steeply.
+It is in fact proportional to the _square_ of the number of nodes.
 Mathematicians say that is has O(n^2^) complexity.
-However, if you rearrange the connections so that they all point to the central "hub" then the number of connections is significantly reduced.
+However, if you rearrange the connections so that they all point to the central "hub", then the number of connections is significantly reduced.
 It is proportional to the number of nodes: O(n) complexity.
 This is a huge difference, especially in deployments with many resources.
 However, this approach works well only if the star topology is both physical and logical.
 I.e. it makes very little sense to connect all resources to a central “hub” if that hub still internally needs O(n^2^) policies to synchronize the data.
-That would only hide the complexity in a black box, but the complexity is still there.
+That would only hide the complexity in a black box, yet the complexity would still be there.
 However, midPoint is different.
 MidPoint is a real "hub".
 This is the reason why midPoint does not support synchronization of accounts directly with each other.
 We want to have simple, clean and maintainable system, both externally and internally.
 
+
 == Schema Handling
 
-Resource schema is a very important concept.
+_Resource schema_ is a very important concept.
 It defines what object classes are supported by the resource and how they look like.
-But it is important to know not only how the objects look.
-It is also important to know what to do with them.
-And that is what the _schema handling_ is all about.
+Yet, it is important to know not only how the objects look like.
+It is also important to know what to _do_ with them.
+That is what the _schema handling_ is all about.
 
 _Schema handling_ is a part of the resource definition object.
 It specifies which object classes from the resource schema are actually used by midPoint.
-And most importantly of all it specifies how they are used.
-This is the place where mappings are stored.
-This is the place where account-group associations are defined.
+Most importantly of all, it specifies _how_ they are used.
+This is the place where _mappings_ are stored.
+This is the place where account-group _associations_ are defined.
 This is the place where schema can be augmented and tweaked.
-Simply speaking, this is the place where most of the resource-related configuration takes place.
+Consequently, this is the place where most of the resource-related configuration takes place.
 
 _Schema handling_ section contains definition of several _object types_.
 Each _object type_ refers to one "thing" that midPoint works with: default account, testing account, group, organizational unit and so on.
-Let’s start with something simple and let’s define just one object type now: default account.
+Let’s start with something simple.
+Let’s define just one object type now: default account.
 It looks like this:
 
 [source,xml]
@@ -477,7 +567,9 @@ It looks like this:
         <objectType>
             <kind>account</kind>
             <default>true</default>
-            <objectClass>ri:inetOrgPerson</objectClass>
+            <delineation>
+                <objectClass>inetOrgPerson</objectClass>
+            </delineation>
         </objectType>
     </schemaHandling>
 </resource>
@@ -489,18 +581,17 @@ Resources such as LDAP servers may have dozens of object classes.
 Most of them are not used at all.
 There are often several alternative object classes that can be used to create accounts.
 It is important to tell midPoint which object class is the right one.
-And that’s what this definition does.
-Once this definition is in place, the accounts appear on the _Accounts_ tab of the resource details page (they were visible only on the _Generics_ tab before).
+That’s what this definition does.
+Once this definition is in place, the accounts appear on the menu:Accounts[] panel of the resource details page.
 This is a sign that the definition works correctly.
 
 A clever reader surely noticed definition of _kind_ in the above example.
-Setting _kind_ to `account` indicates that this object type definition represents (surprisingly) an account.
+Setting _kind_ to `account` indicates that this object type definition represents (quite surprisingly) an account.
 MidPoint supports many types of objects.
-But two types have a special place: _accounts_ that represents the users and _entitlements_ that give privileges to the accounts.
-MidPoint can handle the objects in a smart way if it knows that it is either account or entitlement.
-And the _kind_ definition tells just that.
-There is also optional _intent_ setting that can be used to define subtypes.
-But more on that later.
+However, two types have a special place: _accounts_ that represents the users and _entitlements_ that give privileges to the accounts.
+MidPoint can handle the objects in a smart way if it knows that it is either _account_ or _entitlement_.
+The _kind_ definition tells just that.
+There is also optional _intent_ setting that can be used to define subtypes - but more on that later.
 
 The schema handling section can also be used to augment (or even override) some parts of the resource schema.
 E.g. following example sets a display name for this object type.
@@ -516,7 +607,9 @@ The display name will be used by the user interface when it displays the account
             <kind>account</kind>
             <displayName>Default account</displayName>
             <default>true</default>
-            <objectClass>ri:inetOrgPerson</objectClass>
+            <delineation>
+                <objectClass>inetOrgPerson</objectClass>
+            </delineation>
         </objectType>
     </schemaHandling>
 </resource>
@@ -525,13 +618,14 @@ The display name will be used by the user interface when it displays the account
 However, the most powerful feature that is used in the schema handling is the ability to deal with attributes.
 Following sections are all about that.
 
+
 == Attribute Handling
 
 Resource objects such as accounts or groups are mostly just a bunch of attributes.
-Almost all of the IDM magic is about setting the correct attribute to the correct value.
-The schema handling section of the resource definition is the place where the basic attribute behavior is defined.
+Almost all the IDM magic is about setting the correct attribute to the correct value.
+The _schema handling_ section of the resource definition is the place where that magic happens.
 
-The object type definition contains sections that define behavior of each attribute that we care about:
+The _object type_ definition contains sections that define behavior of each attribute that we care about:
 
 [source,xml]
 ----
@@ -542,13 +636,15 @@ The object type definition contains sections that define behavior of each attrib
         <objectType>
             <kind>account</kind>
             <default>true</default>
-            <objectClass>ri:inetOrgPerson</objectClass>
+            <delineation>
+                <objectClass>inetOrgPerson</objectClass>
+            </delineation>
             <attribute>
-                <ref>ri:dn</ref>
+                <ref>dn</ref>
                 <!-- behavior of "dn" attribute defined here -->
             </attribute>
             <attribute>
-                <ref>ri:cn</ref>
+                <ref>cn</ref>
                 <!-- behavior of "cn" attribute defined here -->
             </attribute>
             ...
@@ -557,10 +653,13 @@ The object type definition contains sections that define behavior of each attrib
 </resource>
 ----
 
-There is an `attribute` element for every attribute that we need.
-Lot of details can be defined here: display name of the attribute that will be used by the user interface, limitations and schema augmentation, override settings and so on.
-But the most important things that go there are the mappings.
-In the simplest form a mapping looks like this:
+There is an `attribute` element for every attribute that we need to handle.
+The `attribute` elements are used to set up the attributes that a typical user account has.
+They are used to assign identifiers, set up full name, set description and telephone number attributes and things like that.
+Lot of details can be defined here: display name of the attribute for use by the user interface, limitations, override settings and so on.
+However, the most important things that go there are the _mappings_.
+MidPoint evaluates the mappings in `attribute` elements to populate account attributes with the correct values.
+In the simplest form, a mapping looks like this:
 
 [source,xml]
 ----
@@ -571,10 +670,10 @@ In the simplest form a mapping looks like this:
         <objectType>
             <kind>account</kind>
             <default>true</default>
-            <objectClass>ri:inetOrgPerson</objectClass>
+            <objectClass>inetOrgPerson</objectClass>
             ...
             <attribute>
-                <ref>ri:cn</ref>
+                <ref>cn</ref>
                 <outbound>
                     <source>
                         <path>$focus/fullName</path>
@@ -587,65 +686,63 @@ In the simplest form a mapping looks like this:
 </resource>
 ----
 
-This means that the value of the cn attribute will be taken from the `fullName` property of the focal object (which is typically a user).
+The mapping specifies that the value of the `cn` attribute will be taken from the `fullName` property of the focal object (which is typically a user).
 This a very simple mapping, there is no value transformation, no condition – nothing complicated at all.
 This is how a lot of mappings look like.
-But mappings can also be very powerful and complex.
+However, mappings can also be very powerful and complex.
 That will be described in next section.
 
-The `attribute` sections are used to set up the attributes that a typical user account on the resource has.
-Those will assign identifiers, set up full name, set description and telephone number attributes and things like that.
-It is a very convenient approach to have this directly in the resource definition.
-We can simply assign the accounts to the user without specifying any details.
-MidPoint evaluates the mappings in `attribute` sections to populate account attributes with the correct values.
-Now it is perhaps a good time to have a look at some sample resource definitions to get a feel how a real-world resource definition looks like.
-The samples are located in the midPoint distribution package or you can find them on-line.
-See <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for more details.
+.Namespace prefixes `ri` and `icfs`
+TIP: You may have noticed that `ri` and `icfs` namespace prefixes are used in some sample files when referring to object classes or attributes.
+Object classes and attributes are defined in _resource schema_, and the `ri` is the namespace prefix used for that schema.
+The `ri` stands for "resource instance", which refers to _resource schema_.
+Similarly, some attributes are defined in fixed schema originating in the old identity connector framework (ICF), a predecessor to ConnId.
+Such attributes are denoted by `icfs` prefix, which stands for "identity connector framework schema".
+This is used mostly by older connectors that were not yet fully updated to ConnId standards.
+The use of the `ri` namespace, similarly to almost all other namespaces, is almost always optional.
+The prefixes are kept in some sample files mostly due to nostalgic reasons.
+The use of `icfs` and `ri` prefixes may still be needed in case that attribute names in fixed `icfs` schema conflict with attribute names in resource schema.
+In such case the prefixes are used to resolve the ambiguity.
 
-.The "ri" namespace.
-TIP: You may have noticed that "ri" namespace prefix is used whenever we refer to the object classes or attributes.
-In a strict sense this is the correct notation.
-Object classes and attributes are defined in resource schema and the "ri" is the namespace of that schema.
-While the use of namespaces should be optional in almost all parts of midPoint, we are still using the "ri" namespace in samples.
-Mostly due to the nostalgic reasons.
-By the way, "ri" stands for "resource instance".
 
 == Mappings
 
-Mapping is a very flexible mechanism that takes one or more input properties, transforms them and puts the result in another property.
+_Mapping_ is a very flexible mechanism that takes one or more input properties, transforms them, and puts the result in another property.
 Mappings are used all over midPoint.
-But perhaps the most important use of mappings is in the schema handling part of the resource definition where they set up account attribute values.
+However, perhaps the most important use of mappings is in the _schema handling_ part of the resource definition, where they are used to set up account attribute values.
 We have already seen a very simple mapping that simply copies the values from one place to another.
-Now it is the time to look at mapping in its entirety.
+Now it is the time to look at mappings in their entirety.
 
 Mapping consists of the three basic parts:
 
 * *Source* part defines the data sources of the mapping.
-These are usually understood as mapping input variables.
-Source defines where mapping gets its data from.
+These are usually understood as mapping _input_ variables.
+_Source_ defines where mapping gets its data from.
 
 * *Expression* part defines how the data are transformed, generated or passed on to the "other side".
 This is the most flexible part of the mapping as it contains the logic.
 There is a broad variety of possibilities, including support for scripting expressions.
 
 * *Target* part defines what to do with the results of the mapping, where the computed values should go.
+It specifies where mapping _output_ should go.
 
-The three parts of the mapping as well as the basic principle is illustrated in the following diagram:
+The three parts of the mapping, as well as the basic principle, is illustrated in the following diagram:
 
 image::04-08-mapping.png[Mapping]
 
 The diagram shows a mapping that takes `employeeNumber` user property and transforms it to `description` account attribute by using a simple Groovy script expression.
 
-The `source` part of the mapping defines that there is a single source which is based on `employeeNumber` user property.
-Source definitions are important for the mapping to correctly process relative changes (deltas), mapping dependencies, etc.
+The `source` part of the mapping specifies that there is a single source, which is based on `employeeNumber` user property.
+Source definitions are important for the mapping to correctly process relative changes (deltas), resolve mapping dependencies, etc.
 The source definition tells mapping that the value of `employeeNumber` user property should be passed to an expression.
 
-The `expression` part contains a simple Groovy script that prepends the prefix `emp#` to the employee number value specified by the source definition.
-The `expression` part of the mapping is very flexible and there is a lot of ways that can be used to transform a value, generate new value, use a fixed value, pass a value without any change and so on.
+The `expression` part contains a simple Groovy script that prepends the prefix `emp#` to the employee number value, specified by the source definition.
+The `expression` part of the mapping is very flexible.
+There is a lot of ways that can be used to transform a value, generate new value, use a fixed value, pass a value without any change and so on.
 
 The `target` part defines how the result of the expression should be used.
-In this case the result is to be used as a `description` account attribute.
-The `target` definition is necessary so the mapping can locate appropriate definition of the target property and therefore make sure that the expression produces a correct data type and that other schema constraints are maintained (e.g. single vs multiple values).
+In this case, the result is to be used as a new value for `description` account attribute.
+The `target` definition is necessary, so the mapping can locate appropriate definition of the target property, and make sure that the expression produces a correct data type, and that other schema constraints are maintained (e.g. single vs multiple values).
 
 This mapping can be expressed in XML:
 
@@ -667,18 +764,23 @@ This mapping can be expressed in XML:
 ----
 
 Not all parts of the mapping are mandatory.
-If the expression is not present then "as is" expression is assumed.
+If the expression is not present, then "as is" expression is assumed.
 Such expression simply copies the source to target without any transformation.
 Some parts of the mapping may be implicitly defined by the surrounding context.
-E.g. target or source is implicit if the mapping is used to define attribute behavior in the schema handling section.
-Therefore it is usually sufficient to define either source or target for mappings in `schemaHandling`:
+E.g. _target_ or _source_ is implicit if the mapping is used to define attribute behavior in the _schema handling_ section.
+Therefore, it is usually sufficient to define either _source_ or _target_ for mappings in _schema handling_.
+
+The following example specifies a mapping in element `outbound`.
+There is explicit definition of mapping source, specifying that mapping input is `familyName` property of a focal object (which is usually _user_).
+The mapping has no _expression_ defined, therefore it defaults to the "as is" expression.
+Because the mapping is specified in `attribute` element, the mapping has an implicit _target_, which is the `sn` attribute.
 
 [source,xml]
 ----
 <schemaHandling>
     ...
     <attribute>
-        <ref>ri:sn</ref>
+        <ref>sn</ref>
         <outbound>
              <source>
                   <path>$focus/familyName</path>
@@ -689,21 +791,16 @@ Therefore it is usually sufficient to define either source or target for mapping
 </schemaHandling>
 ----
 
-This is the notation that you have seen in the previous section.
-Mapping source is explicitly specified as the `familyName` property of the user.
-Mapping target is implicitly set to be the attribute for which the mapping is defined.
-As no expression is explicitly defined it defaults to a simple copy of the value without any transformation (`asIs`).
-
-Mapping notation can even be shortened a bit more in this case.
+In this case, the mapping notation can even be shortened even further.
 It is quite clear that the mapping source will be one of the properties of the focal object (user).
-Therefore the `$focus` prefix can be omitted:
+Therefore, the `$focus` prefix can be omitted:
 
 [source,xml]
 ----
 <schemaHandling>
     ...
     <attribute>
-        <ref>ri:sn</ref>
+        <ref>sn</ref>
         <outbound>
             <source>
                  <path>familyName</path>
@@ -715,13 +812,13 @@ Therefore the `$focus` prefix can be omitted:
 ----
 
 Those examples are still very simple.
-Mappings can do much more – as you will learn later on.
-But there is one more thing that we need to explain here.
+Mappings can do much more – as you will learn in a while.
+However, there is one more thing that we need to explain before going on.
 Mappings are designed to work with more than just a single source.
-Following diagram illustrates a mapping that takes two arguments: given name and family name.
-The mapping produces full name by concatenating these value with a space in between.
+Following diagram illustrates a mapping that takes two arguments: _given name_ and _family name_.
+The mapping produces _full name_ by concatenating these value with a space in between.
 This is the kind of mapping that is frequently used to construct user’s full name from its components.
-While the mapping may seem simple there are some sophisticated mechanisms hidden inside.
+While the mapping may seem simple, there are some sophisticated mechanisms hidden inside.
 
 image::04-09-mapping-multisource.png[Mapping with two sources]
 
@@ -747,29 +844,29 @@ The mapping is represented in the XML form as follows:
 </mapping>
 ----
 
-There are two sources specified by the source definitions: user property `givenName` and another user property `familyName`.
-The mapping is using _script expression_ to combine the values into a single value which is used to populate user's `fullName` property.
+There are two _sources_, specified by the source definitions: user property `givenName` and another user property `familyName`.
+The mapping is using _script expression_ to combine the values into a single value, which is used to populate user's `fullName` property.
 
-This example also illustrates that the mappings are smart.
-The mapping may be evaluated only if one of the sources changes or if a full recompute is requested.
-In case that neither `givenName` not `familyName` changes there is no need to re-evaluate that expression.
+This example also illustrates that the mappings are quite smart.
+The mapping may be evaluated only if one of the sources changes, or if a full recompute is requested.
+In case that neither `givenName` not `familyName` changes, there is no need to re-evaluate that expression.
 This is one of the reasons for requiring explicit source definition in the mappings.
 Without such definitions it is not (realistically) possible to reliably determine when and how the expression should be re-evaluated.
 
-.`$user` and `$account` variables.
-TIP: Variables `$focus` and `$projection` were introduced in midPoint 3.0 as a consequence of the generic synchronization feature.
-The objects that the expression works with might not be just user or account.
+.Obsolete `$user` and `$account` variables
+TIP: Variables `$focus` and `$projection` were introduced way back in midPoint 3.0 as a consequence of the generic synchronization feature.
+The objects that the expression works with might not be just _user_ or _account_.
 A much broader range of objects may be used.
-Therefore generic concepts of focus and projections were introduced and the variable names were changed to reflect that.
+Therefore, generic concepts of _focus_ and _projections_ were introduced, and the variable names were changed to reflect that.
 The old variables `$user` and `$account` can still be used, but their use is deprecated.
-Despite that they are still used in some older examples.
-It is never easy to completely eliminate the burden of history, is it?
+Despite that, they are still used in some older examples.
+It is never easy to completely eliminate historical baggage, is it?
 
 Mappings are used all over midPoint, in many places and situations.
 Sometimes a mapping needs to be really authoritative.
 It has to enforce the value to the target.
-But sometimes we want to provide a default value and the mapping should never change the target value once it is set.
-Therefore mapping can be set to various levels of _strength_: from weak to strong.
+Yet sometimes, we want to provide a default value, and the mapping should never change the target value once it is set.
+Therefore, mapping can be set to various levels of _strength_: from _weak_ to _strong_.
 Following table describes how that works:
 
 |===
@@ -777,27 +874,27 @@ Following table describes how that works:
 
 |`weak`
 |Mapping is applied only if the target has no value.
-Weak mappings are usually used to set _default values_.
+Weak mappings are used to set _default values_.
 
 |`normal`
 |Mapping is applied only if there is a change in source properties.
 Normal-strength mappings are used to implement the _last change wins_ strategy.
-If the value was modified in midPoint then the mapping is applied and target is modified.
-If the target is modified directly then the mapping does not overwrite the target value – until the next change in midPoint.
+If the source value was modified in midPoint, then the mapping is applied, and target is modified.
+If the target is modified directly, then the mapping does not overwrite the target value – until the next change in midPoint.
 This is the default behavior of mappings.
-If no strength is specified then `normal` is assumed.
+If no strength is specified, then `normal` strength is assumed.
 
 |`strong`
 |Mapping is always applied.
 Strong mappings _enforce_ particular values.
 |===
 
-The strength can be specified in any mapping by using the `strength` tag:
+The strength can be specified in any mapping, by using the `strength` element:
 
 [source,xml]
 ----
 <attribute>
-    <ref>ri:sn</ref>
+    <ref>sn</ref>
     <outbound>
         <strength>strong</strength>
         <source>
@@ -807,18 +904,19 @@ The strength can be specified in any mapping by using the `strength` tag:
 </attribute>
 ----
 
-When it comes to mapping strength then the following rule of the thumb may be useful: If you want to enforce policy use _strong_ mappings.
-If you just want to set a default value use _weak_ mapping.
-If you are not sure what you are doing then _normal_ mappings will probably work just fine.
+When it comes to mapping strength, the following rule of the thumb may be useful:
+If you want to enforce policy, use _strong_ mappings.
+If you just want to set a default value, use _weak_ mapping.
+If you are not sure what you are doing, then _normal_ mappings will probably work just fine.
 
 == Expressions
 
-Expression is the most flexible part of the mapping.
-There are approximately dozen different type of expressions ranging from the simplest _as is_ expression through the _scripting expressions_ all the way to a special purpose expressions that search through midPoint repository.
-Expression type is determined by the element that is used inside the `expression` section of the mapping.
+_Expression_ is the most flexible part of the mapping.
+There is approximately a dozen different types of expressions ranging from the simplest _as is_ expression, through the _scripting expressions_, all the way to a special purpose expressions that search through midPoint repository.
+Expression type is determined by the element that is used inside the `expression` part of the mapping.
 We refer to those elements as _expression evaluators_.
-You can find detailed description of expression evaluators in midPoint docs.
-We are going to deal only with few types that are most frequently used now:
+You can find detailed description of expression evaluators in midPoint documentation.
+We are going to deal only with few popular types:
 
 |===
 |Expression Evaluator |Element |Description
@@ -841,16 +939,16 @@ We are going to deal only with few types that are most frequently used now:
 |===
 
 The simplest expression evaluator is `asIs`.
-It simply takes the source and copies that to the target.
+It simply takes the source, and copies the value to the target.
 It obviously works only if there is just one source.
 It is also the default expression evaluator.
-If no expression is specified in the mapping then `asIs` is assumed.
+If no expression is specified in the mapping, then `asIs` is assumed.
 It is used like this:
 
 [source,xml]
 ----
 <attribute>
-    <ref>ri:sn</ref>
+    <ref>sn</ref>
     <outbound>
         <source>
              <path>familyName</path>
@@ -862,15 +960,30 @@ It is used like this:
 </attribute>
 ----
 
-Literal expression evaluator is used to place a constant value in the target.
-This expression does not need any source at all.
-It always produces the same value.
-It looks like this:
+In the example above, the `asIs` expression was specified explicitly.
+As `asIs` is the default expression evaluator, we can save some typing and shorten the notation:
 
 [source,xml]
 ----
 <attribute>
-    <ref>ri:o</ref>
+    <ref>sn</ref>
+    <outbound>
+        <source>
+             <path>familyName</path>
+        </source>
+    </outbound>
+</attribute>
+----
+
+_Literal_ expression evaluator is used to place a constant value in the target.
+This expression does not need any source at all.
+It always produces the same value.
+Following code sets the attribute `o` to fixed value `ExAmPLE, Inc.`:
+
+[source,xml]
+----
+<attribute>
+    <ref>o</ref>
     <outbound>
         <expression>
             <value>ExAmPLE, Inc.</value>
@@ -886,10 +999,10 @@ We will deal with that expression later when we will be dealing with credentials
 == Script Expressions
 
 The most interesting expression evaluator is undoubtedly the `script` expression evaluator.
-It allows to execute arbitrary scripting code to transform the value.
-Basic principle is simple: values from source properties are stored in the script variables.
-Script is executed and it produces an output.
-The output is stored in the target.
+It allows execution of arbitrary scripting code to transform the value.
+Basic principle is simple: values from _source_ properties are stored in the script _variables_.
+Script is executed, and it produces an output.
+Return value of the script is stored in the _target_.
 
 We have already seen a mapping that has a scripting expression:
 
@@ -915,22 +1028,31 @@ We have already seen a mapping that has a scripting expression:
 
 There are two sources: `givenName` and `familyName`.
 The values of these user properties are placed in variables used by the script.
-The variables that have the same names: `givenName` and `familyName`.
-Then the script may do whatever it does with the variables.
-At the end the script has to return a value.
-The script above is written in Groovy, therefore the return value is the value of the last evaluated expression.
-In this case it is the only expression in the script which concatenates the two variables with a space in between.
-Script return value is placed in the output, which in this case is `fullName` user property.
+The variables have the same names as the sources: `givenName` and `familyName`.
+Then the script may do whatever it needs to do.
+It may use input variables, or it may use any other data available in the platform.
+At the end, the script has to return a value.
+The script above is written in _Groovy_, therefore the return value is the value of the last evaluated expression.
+In this case it is the only expression in the script, which concatenates the two variables with a space in between.
+Script return value is placed in the _target_, which in this case is `fullName` user property.
+
+.Groovy
+TIP: _Groovy_ is a scripting language similar to Java programming language.
+That is also the reason Groovy is a default scripting language in midPoint.
+As midPoint is written in Java, Groovy was an obvious choice.
+Groovy interpreter is readily available in Java ecosystem, it has familiar syntax (at least for midPoint developers) and all of midPoint functionality could be re-used in scripts.
+Since the early times of midPoint, support for more scripting languages was added, most notably JavaScript and Python.
+However, midPoint community seems to like Groovy, therefore it still remains the most popular choice.
 
 Scripts are often used to transform the values before they are stored in account attributes.
 One very common case is construction of LDAP distinguished name (DN).
 The DN is a complex value in the form of `uid=foobar,ou=people,dc=example,dc=com`.
-However it is easy to construct such value using a simple script:
+However, it is easy to construct such value using a simple script:
 
 [source,xml]
 ----
 <attribute>
-    <ref>ri:dn</ref>
+    <ref>dn</ref>
     <outbound>
         <source>
              <path>name</path>
@@ -946,10 +1068,10 @@ However it is easy to construct such value using a simple script:
 </attribute>
 ----
 
-(A clever reader surely has a suspicious look on his face now.
-Of course, this is not entirely correct way how to compose LDAP DN.
-But please bear with us.
-We will correct that later.)
+NOTE: A clever reader surely has a disapproving look on his face now.
+Of course, this is not entirely correct way to compose LDAP DN.
+Please bear with us.
+We will correct that later.
 
 Midpoint supports three scripting languages:
 
@@ -957,8 +1079,7 @@ Midpoint supports three scripting languages:
 * *JavaScript* (ECMAscript)
 * *Python* (must be explicitly installed)
 
-All three languages can be arbitrarily mixed even in a single midPoint deployment.
-Although quite understandably such a practice is not recommended.
+All three languages can be arbitrarily mixed even in a single midPoint deployment - although, quite understandably, such a practice is not recommended.
 The language can be selected for each individual expression by using language URI:
 
 [source,xml]
@@ -973,37 +1094,37 @@ The language can be selected for each individual expression by using language UR
 </expression>
 ----
 
-When writing scripting expression, please keep in mind that some characters must be properly escaped in the text format that you are using (XML, JSON or YAML).
+.Escaping
+TIP: When writing scripting expression, please keep in mind that some characters must be properly escaped in the text format that you are using (XML, JSON or YAML).
 E.g. the ampersand character (`&`) so frequently used for logical operations needs to be escaped as `&amp;amp;` in XML.
 
 Scripting expressions can do almost anything.
-And there is still more to them that meets the eye.
+There is still more to them that meets the eye.
 This section provides only the very basic description to get you started.
 Will get back to the scripting expressions many times in this book.
 
 == Activation
 
-The term _activation_ is used in midPoint to denote a set of properties that describe whether an object is active.
-This includes properties that describe whether the user is enabled, disabled, archived, since when he should be enabled, to what date he should be active and so on.
-The simple enabled/disabled flag might have been sufficient in the 1990s.
-But that was a long time ago.
+In midPoint, the term _activation_ is used to denote a set of properties that describe whether an object is _active_.
+This includes properties that describe whether the user is enabled or disabled, since when he should be enabled, to what date he should be active, and so on.
+The simple binary enabled/disabled flag might have been sufficient in the 1990s.
+That was a long time ago.
 We need much more than that.
-Therefore the _activation_ is quite a rich data structure in midPoint.
+Therefore, midPoint _activation_ is quite a rich data structure.
 We are going to describe just the basic idea now, the details will follow later.
 
 The most important activation concept is _administrative status_.
-Administrative status defines "administrative state" of the object (user).
-I.e. the explicit decision of an administrator whether the user is enabled or disabled.
-Except for administrative status there are also validity times, lockout status, various timestamps and metadata.
-But we will get to that later.
+Administrative status defines "administrative state" of the object (user), i.e. the _explicit decision_ of an administrator whether the user is enabled or disabled.
+Except for administrative status, there are also _validity times_, _lockout status_, various timestamps and metadata.
+We will get to that later.
 
-The important thing to realize is that both user and the accounts have activation properties - and they are almost the same.
-The user and account activation are using the same property names, meaning and data formats.
-This is important, because you would probably want account activation to follow user activation.
-E.g. if user is disabled then also all his accounts should be disabled.
-This is very easy to do in midPoint because the user and account activation are compatible.
-Therefore all it takes is a very simple mapping.
-There is a special place in the resource schema handling section for that:
+The important thing to realize is that both _user_ and the _accounts_ have activation properties - and they are almost the same.
+The _user_ and _account_ activation are using the same property names, meaning and data formats.
+This is important, because you would probably want _account activation_ to follow _user activation_.
+E.g. if user is disabled, then also all his accounts should be disabled.
+This is very easy to do in midPoint, because the _user_ and _account_ activation are compatible.
+Therefore, all it takes is a very simple mapping.
+There is a special place in the resource _schema handling_ section for that:
 
 [source,xml]
 ----
@@ -1014,7 +1135,9 @@ There is a special place in the resource schema handling section for that:
         <objectType>
             <kind>account</kind>
             <default>true</default>
-            <objectClass>ri:inetOrgPerson</objectClass>
+            <delineation>
+                <objectClass>inetOrgPerson</objectClass>
+            </delineation>
             <!-- attribute handling comes here -->
             <activation>
                 <administrativeStatus>
@@ -1028,23 +1151,49 @@ There is a special place in the resource schema handling section for that:
 
 It is as simple as that.
 Just an empty mapping represented by empty `outbount` element.
-User has `administrativeStatus` property, account has `administrativeStatus` property, therefore midPoint knows what is the source and target of the mapping.
+User has `administrativeStatus` property, account has `administrativeStatus` property, therefore midPoint knows what is the _source_ and _target_ of the mapping.
+We do not need to specify these.
 The values of the `administrativeStatus` property has the same type and meaning on both sides.
-Therefore the default `asIs` mapping is just fine.
-All that midPoint needs to know is that the mapping exists at all.
-That we want to map the value.
-That is a reason for having empty `outbound` element there.
+Therefore, the default `asIs` mapping is just fine.
+We do not need to specify that either.
+All that midPoint needs to know is that the mapping _exists_ at all - that we want to pass the value from user to account.
+That is a reason for having `outbound` element there, even an empty one.
 MidPoint will fill in all the details.
 
 When this mapping is in place and the user gets disabled, the account will be disabled as well.
 When the user gets enabled, the account will follow suit.
 
+.Lifecycle state
+TIP: _Activation_ is a common concept.
+Accounts could be _enabled_ or _disabled_ since time immemorial.
+However, in the 21^st^ century, simple enabled/disabled binary state somehow lacks in expressive power.
+There is much more that we would like to say about the _user_, not just that it is active or inactive.
+User may not be fully active yet (e.g. before his first day at work), user may be temporarily inactive (e.g. maternal leave or sabbatical), user may be retired, and so on.
+Therefore, midPoint objects support a concept of _lifecycle_, which is composed of several states, with controlled transitions between them.
+However, unlike _users_, _accounts_ seldom support anything more complex than enabled/disabled binary state.
+That is the reason we are ignoring _lifecycle_ for a moment, and we are focusing on _activation_ instead.
+Yet, _lifecycle_ and _activation_ are related, as we will see later.
+
+
 == Credentials
 
 Credential management is important part of identity management.
-MidPoint is built to easily synchronize credentials to many accounts.
-Similarly to activation, credential data structures of user and accounts are aligned.
-Therefore all that is needed to synchronize password to an account is a simple empty mapping:
+There are many systems in an organization, almost all of them require a password.
+Users set up a password, then they forget the password, then they request password reset, setting a new password, which they forget as well.
+The endless cycle continues.
+While there is probably no magic formula to completely solve this problem (perhaps except for removing passwords altogether), the situation can be made less painful.
+
+The usual method is to _synchronize_ the passwords among all the systems in one organization.
+This does not make the problem go away.
+However, it reduces many set-forget-reset-forget cycles to just one.
+Moreover, as users are using that one password quite often, they are less likely to forget it.
+Of course, having the same password on many systems is not exactly the best security practice.
+However, security is all about trade-offs.
+Having the same password set for all systems _in one organization_ is an acceptable risk in vast majority of cases.
+
+MidPoint is designed to easily synchronize credentials to many accounts.
+Similarly to _activation_, _credential_ data structures of _user_ and _account_ are aligned.
+Therefore, all that is needed to synchronize password to an account is a simple empty mapping:
 
 [source,xml]
 ----
@@ -1055,7 +1204,9 @@ Therefore all that is needed to synchronize password to an account is a simple e
         <objectType>
             <kind>account</kind>
             <default>true</default>
-            <objectClass>ri:inetOrgPerson</objectClass>
+            <delineation>
+                <objectClass>inetOrgPerson</objectClass>
+            </delineation>
             <!-- attribute handling comes here -->
             <credentials>
                 <password>
@@ -1067,7 +1218,13 @@ Therefore all that is needed to synchronize password to an account is a simple e
 </resource>
 ----
 
-When the user password in midPoint is changed the changed password will be propagated to all the resources that have a mapping like this.
+When the user password in midPoint is changed, the changed password will be propagated to all the resources that have a mapping like this.
+
+.MidPoint sample collection
+TIP: Now it is perhaps a good time for you to have a look at some sample resource definitions, to get a feel how a real-world resource definition looks like.
+The samples are located in the midPoint distribution package, or you can find them on-line.
+See <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for more details.
+
 
 == Complete Provisioning Example
 
@@ -1082,11 +1239,12 @@ Complete file in a form directly usable in midPoint can be found at the same pla
 Resource definition begins with object type, OID, name and description.
 These are self-explanatory:
 
+.resource-ldap.xml
 [source,xml]
 ----
 <resource oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c">
 
-    <name>OpenLDAP</name>
+    <name>LDAP</name>
 
     <description>
         LDAP resource using a ConnId LDAP connector. It contains configuration
@@ -1101,26 +1259,25 @@ Connector reference comes next.
 We want to point to the LDAP connector.
 Here we use dynamic reference that is using search filter to locate the connector:
 
+.resource-ldap.xml
 [source,xml]
 ----
     ...
     <connectorRef type="ConnectorType">
         <filter>
-            <q:equal>
-                <q:path>c:connectorType</q:path>
-                <q:value>com.evolveum.polygon.connector.ldap.LdapConnector</q:value>
-            </q:equal>
+            <q:text>connectorType = "com.evolveum.polygon.connector.ldap.LdapConnector"</q:text>
         </filter>
     </connectorRef>
     ...
 ----
 
 The reference is resolved when this object is imported to midPoint.
-The resolution process takes the search filter and it looks for connector object with the `connectorType` specified in the filter.
+The resolution process takes the search filter, and it looks for connector object with the `connectorType` specified in the filter.
 
 Connector configuration goes next.
 This block specifies connector configuration properties such as hostname, port, passwords and so on.
 
+.resource-ldap.xml
 [source,xml]
 ----
     <connectorConfiguration>
@@ -1136,36 +1293,26 @@ This block specifies connector configuration properties such as hostname, port, 
             <icfcldap:operationalAttributes>memberOf</icfcldap:operationalAttributes>
             <icfcldap:operationalAttributes>createTimestamp</icfcldap:operationalAttributes>
         </icfc:configurationProperties>
-        <icfc:resultsHandlerConfiguration>
-            <icfc:enableNormalizingResultsHandler>false</icfc:enableNormalizingResultsHandler>
-            <icfc:enableFilteredResultsHandler>false</icfc:enableFilteredResultsHandler>
-            <icfc:enableAttributesToGetSearchResultsHandler>false</icfc:enableAttributesToGetSearchResultsHandler>
-        </icfc:resultsHandlerConfiguration>
     </connectorConfiguration>
 ----
 
-The last part of this block defines that the ConnId framework result handlers should be disabled.
-ConnId result filtering is a legacy mechanism and most connectors do not need that anymore.
-It may even be harmful in many cases.
-Unfortunately this mechanism is turned on by default.
-Therefore most resource configurations contain this part to explicitly turn all the handlers off.
-
 These parts alone should already define a minimal resource.
 If you define just the name, connector reference and connector configuration you should be able to import the resource to midPoint.
-The connection test should pass and you should be able to browse resource content.
-However there is absolutely no IDM logic or automation yet.
+The connection test should pass.
+However, there is absolutely no IDM logic or automation yet.
 That is what we are going to add next.
 
-Element that usually follows connector configuration is schema.
-However if you look at almost any file that contains resource definition you will find no such element.
-The schema element is automatically generated by midPoint when midPoint connects to the resource for the first time.
-Therefore there is no need to include it in the definition.
+Connector configuration is usually followed by `schema` element.
+However, if you look at almost any file that contains resource definition, you will find no such element.
+The `schema` element is automatically generated by midPoint when midPoint connects to the resource for the first time.
+Therefore, there is no need to include `schema` element in the definition.
 
-What we have to include in the definition is the way how midPoint handles the schema.
+What we have to include in the definition is the configuration that tells midPoint how to _handle_ the schema.
 This is defined in `schemaHandling` section.
 Our `schemaHandling` section contains just one `objectType` definition.
 We are going to define how to handle ordinary user accounts on our OpenLDAP server.
 
+.resource-ldap.xml
 [source,xml]
 ----
     ...
@@ -1174,7 +1321,9 @@ We are going to define how to handle ordinary user accounts on our OpenLDAP serv
             <kind>account</kind>
             <displayName>Normal Account</displayName>
             <default>true</default>
-            <objectClass>ri:inetOrgPerson</objectClass>
+            <delineation>
+                <objectClass>inetOrgPerson</objectClass>
+            </delineation>
             ...
 ----
 
@@ -1185,19 +1334,20 @@ Which means that it will be used in case that the account type is not explicitly
 There is also specification of a display name.
 Display name is not used in automation logic.
 It is used by the user interface when referring to this definition.
-And finally, there is specification of the _object class_.
+Finally, there is specification of the _object class_.
 The `inetOrgPerson` object class will be used to create new accounts.
-The object class specification determines what attributes the account can have.
+The object class specification determines what attributes the account have.
 
 The `objectType` definition also includes a specification of attribute handling.
 There is one section for each attribute that we want to handle in automated or special way.
 It starts with the most important attribute: LDAP distinguished name (DN):
 
+.resource-ldap.xml
 [source,xml]
 ----
             ...
             <attribute>
-                <ref>ri:dn</ref>
+                <ref>dn</ref>
                 <displayName>Distinguished Name</displayName>
                 <limitations>
                     <minOccurs>0</minOccurs>
@@ -1219,7 +1369,7 @@ It starts with the most important attribute: LDAP distinguished name (DN):
 ----
 
 The `ref` element specifies name of the attribute that we are going to work with.
-In fact this is a reference to automatically-generated schema part of resource definition.
+In fact, this is a reference to automatically-generated `schema` part of resource definition.
 Definition of display name follows.
 Display name is used by the user interface as a label for the user interface elements (fields) that work with this attribute.
 This definition sets a nice "Distinguished Name" label instead of cryptic "dn" which would be used by default.
@@ -1227,58 +1377,58 @@ This definition sets a nice "Distinguished Name" label instead of cryptic "dn" w
 Let's skip the limitation definition now.
 We will come back to that later.
 
-The outbound mapping definition follows.
+The _outbound mapping_ definition follows.
 This is where the automation logic is specified.
 This is the place where the DN value is computed.
-The name property of the user object is the source for this mapping.
-The name property usually contains username (login name).
-This value is used by scripting expression in this mapping.
+The `name` property of the user object is the _source_ for this mapping.
+The `name` property usually contains username (login name).
+Its value is used by scripting expression in the mapping.
 The expression is supposed to create a DN in the form:
 
 `uid=_username_,ou=people,dc=example,dc=com`
 
-The expression here is a clever one.
+This expression is a clever one.
 It does not do the work all by itself.
-It invokes a library function to compose the DN.
+It invokes a _library function_ to compose the DN.
 It may look like a good idea to use simple string concatenation to construct a DN.
-However, that will fail in case that the DN components contain certain characters that need to be escaped in the final DN.
-The `composeDnWithSuffix` library function takes care of that and creates a proper DN.
+However, that fails in case that the DN components contain certain characters that need to be escaped in the final DN.
+The `composeDnWithSuffix` library function takes care of that, and it creates a proper DN.
 
-The outbound mapping will be evaluated whenever we need to construct a DN. This obviously happens when a new object is created.
-But the same mapping is used when a user is renamed (i.e. his username changes).
-This is the reason that the mapping needs specification of source.
+The _outbound mapping_ is evaluated whenever we need to construct a DN.
+This obviously happens when a new object is created.
+However, the same mapping is used when a user is renamed (i.e. his username changes).
+This is the reason that the mapping needs specification of _source_.
 Rename is often quite tricky and complicated operation.
-It may not be cheap and in some applications it may not be entirely reversible.
+It may not be cheap, and in some cases it may not be entirely reversible.
 We definitely do not want to trigger DN changes unless they are really needed.
 The specification of the mapping source tells us _when_ the DN change is needed.
-In this case it tells us to change the DN in the name property of the user object changes.
+In this case, it tells us to change the DN if the `name` property of the user object changes.
 
 Now it is the right time to go back to the `limitations` section.
-The dn attribute is defines as mandatory attribute by the schema.
-And that is perfectly correct: LDAP object cannot be created without a DN. MidPoint is using schema for everything.
-Therefore when midPoint displays a form to edit this LDAP account it will check that DN has a value because it is a mandatory attribute.
+The `dn` attribute is defines as _mandatory_ attribute by the schema.
+Strictly speaking, that definition is perfectly correct: LDAP object cannot be created without a DN.
+As midPoint is using schema for everything, when midPoint displays a form to edit this LDAP account, it will require that DN has a value, because it is a mandatory attribute.
 However, normally we do not want users to enter the DN in the user interface forms.
-We want to compute DN automatically.
-And that is exactly the point of the outbound mapping.
-Yet midPoint does not know when the expression computes a value and when it does not.
-The expression is a generic piece of Groovy code.
-As far as midPoint can see the expression can produce any value, including empty one.
-Therefore even if there is an expression, midPoint sticks to the schema and it still requires that DN value is entered by the user.
-However we have written the expression and we know that it will produce a value for any (reasonable) input.
-Therefore we want to tell midPoint that the DN is no longer mandatory – that it is OK for user to enter no DN value in user interface forms.
-And that is exactly what the `limitations` section does.
-This section overrides the automatically generated schema and it turns the dn attribute from mandatory to optional.
+We want to compute DN automatically - which is exactly the point of the _outbound mapping_ above.
+Yet, midPoint does not know when the expression computes a value and when it does not.
+The expression is a generic piece of Groovy code, there is no telling what it does until it is executed.
+As far as midPoint can see, the expression can produce any value, including empty one.
+Therefore, even if there is an expression, midPoint sticks to the schema, and it still requires that DN value is entered by the user.
+However, we have written the expression, and we know that it will produce a value for any (reasonable) input.
+Therefore, we want to tell midPoint that the DN is no longer mandatory – that the user does not need to enter DN value in user interface forms.
+That is exactly what the `limitations` section does.
+This section overrides the automatically generated schema, and it turns the `dn` attribute from mandatory to optional.
 
-And that is all.
-Now we have defined the behavior of the dn attribute.
+Now we have defined the behavior of the `dn` attribute.
 We can use similar approach to define the behavior of other attributes as well.
 E.g. the handling of the `cn` attribute has similar definition:
 
+.resource-ldap.xml
 [source,xml]
 ----
             ...
             <attribute>
-                <ref>ri:cn</ref>
+                <ref>cn</ref>
                 <displayName>Common Name</displayName>
                 <limitations>
                     <minOccurs>0</minOccurs>
@@ -1292,17 +1442,18 @@ E.g. the handling of the `cn` attribute has similar definition:
             ...
 ----
 
-In this case there is outbound mapping, but it has no explicit expression.
+In this case there is _outbound mapping_, but it has no explicit expression.
 Which means that the value is taken from the source without any change ("as is").
-Therefore the attribute cn will have the same value as user property `fullName`.
+Therefore, the attribute `cn` will have the same value as user property `fullName`.
 
 It is also possible to define an attribute without any mapping:
 
+.resource-ldap.xml
 [source,xml]
 ----
             ...
             <attribute>
-                <ref>ri:entryUUID</ref>
+                <ref>entryUUID</ref>
                 <displayName>Entry UUID</displayName>
             </attribute>
             ...
@@ -1311,14 +1462,15 @@ It is also possible to define an attribute without any mapping:
 This means that midPoint will not provide any automatic handling for the `entryUUID` attribute.
 This definition is used just to set a user-friendly display name for the attribute.
 
-Mappings and expressions have almost unlimited flexibility.
+_Mappings_ and _expressions_ have almost unlimited flexibility.
 E.g. the following definition sets a static value for the `description` attribute:
 
+.resource-ldap.xml
 [source,xml]
 ----
             ...
             <attribute>
-                <ref>ri:description</ref>
+                <ref>description</ref>
                 <outbound>
                     <strength>weak</strength>
                     <expression>
@@ -1329,24 +1481,25 @@ E.g. the following definition sets a static value for the `description` attribut
             ...
 ----
 
-This mapping has no source because the source does not make any sense for static value.
-Static values are always the same.
+This mapping has no source, because the source does not make any sense for literal expressions.
+Static values are always the same, regardless of the source.
 You can also notice that this mapping is _weak_.
-It will be used to set the `description` attribute only if that attribute does not have any value already.
-It will not overwrite existing values.
+It is used to set the `description` attribute only if that attribute does not have any value already.
+It does not overwrite existing values.
 
 The `inetOrgPerson` object class has much more attributes than those defined in the `schemaHandling` section.
 Those attributes will be automatically displayed in the user interface.
-MidPoint will use the generated resource schema to determine their names and types.
-MidPoint will display these attributes, the user can change them and midPoint will execute those changes.
-But apart from that midPoint will not do any special handling on those attributes.
+MidPoint uses the generated resource schema to determine their names and types.
+MidPoint displays these attributes, the user can change them and midPoint executes those changes.
+However, apart from that, midPoint does not do any special handling on those attributes.
 It is all right not to enumerate all the attributes in `schemaHandling` section.
 You only need to define those attributes which you want to handle in a special way.
 
-There are two more definitions to describe before our example is complete.
+There are two more definitions to describe, before our example is complete.
 First definition is the `activation` definition.
 It is very simple:
 
+.resource-ldap.xml
 [source,xml]
 ----
             ...
@@ -1358,12 +1511,12 @@ It is very simple:
             ...
 ----
 
-This is a definition that specifies handling of the activation administrative status.
+This is a definition that specifies handling of the activation _administrative status_.
 This status property specifies whether account is enabled or disabled.
 Activation properties are somehow special in midPoint.
 MidPoint understands the meaning and the values of activation properties.
-MidPoint also expects that user activation and account activation will usually be mapped together.
-Therefore it is enough to tell midPoint that you want such mapping.
+MidPoint also expects that user activation and account activation are usually mapped together.
+Therefore, it is enough to tell midPoint that you want such mapping.
 MidPoint already knows the source (user activation) and the target (account activation).
 If the user is disabled then the account will get disabled.
 If the user is enabled than the account will get enabled.
@@ -1371,19 +1524,20 @@ If the user is enabled than the account will get enabled.
 NOTE: Clever reader is surely scratching his head now.
 There is no LDAP standard that specifies how to enable or disable accounts.
 In addition to this, OpenLDAP does not even have a concept of disabled account at all!
-Therefore how does midPoint know how to disable an LDAP account?
-To tell the truth, midPoint does not know it.
-We have taken a bit of a poetic license here as we wanted to demonstrate a simple activation mapping.
-But in this case it will not work just by itself.
-OpenLDAP resource simply does not have this _capability_.
-However there is a way.
-Activation capability can be simulated.
+Therefore, how can midPoint disable an OpenLDAP account?
+To tell the truth, midPoint does not know how to do it.
+We have taken a bit of a poetic license here, as we wanted to demonstrate a simple activation mapping.
+The configuration will not work just by itself.
+OpenLDAP resource does not have this _capability_.
+However, there is a way.
+Activation capability can be _simulated_.
 We will deal with that later.
 For now let's just marvel in the beauty of this very elegant activation mapping that does absolutely nothing.
 
 The last thing that we need for the resource to work well is to define a mapping for _credentials_.
-In this case it is a password mapping:
+In this case it is a _password_ mapping:
 
+.resource-ldap.xml
 [source,xml]
 ----
             ...
@@ -1395,88 +1549,98 @@ In this case it is a password mapping:
             ...
 ----
 
-Similarly to activation, the credentials are handled in a special way in midPoint.
-MidPoint understands how credentials work, what their values are and how they are used.
-MidPoint also expects that user credentials such as passwords will usually be mapped to the account credentials.
-Therefore all that midPoint needs to know is that you want to do that mapping.
+Similarly to activation, the credentials are handled in a special way.
+MidPoint understands how credentials work, what their values are, and how they are used.
+MidPoint also expects that user credentials, such as passwords, are usually mapped to the account credentials.
+Therefore, all that midPoint needs to know is that you want to do that mapping.
 It can automatically determine the source and target.
 The account will have the same password as the user.
 User's password is used when a new account is created.
-And when user changes his password the change is also propagated to the account.
+When user changes his password, the change is also propagated to the account.
 
 That is it.
 Now you have your first (almost) working resource.
 You can import the definition to midPoint and test it.
 Simply assign the resource to a user.
 The OpenLDAP account will be created - the DN and all the essential attributes will be automatically computed.
-When midPoint creates an account for a user it remembers who is the owner of that account.
-Therefore it can easily delete the account when needed.
-Unassign the resource and the account will get deleted.
+When midPoint creates an account for a user, it remembers who is the owner of that account.
+Therefore, it can easily delete the account when needed.
+Unassign the resource, and the account will get deleted.
 This is how automated provisioning and deprovisioning works.
-No real programming is needed.
-Just a declarative specification and a line or two of very simple scripting.
+No hardcore programming is needed, just a declarative specification, and a line or two of very simple scripting.
 Such configuration can be done in a couple of minutes.
-And it is essentially the same process for all the applications.
-Just the connector is different.
+It is essentially the same process for all the applications, just the connector is different.
 The connector has different configuration properties, the attribute names are different - but the principles and the tools are the same.
 It is easy to connect many heterogeneous applications in this way.
 The connectors and the mappings are hiding the differences.
-In the end all the "resources" look the same to midPoint.
+In the end, all the "resources" look the same to midPoint.
 The same principles are used to manage them.
-Therefore the management can be done efficiently even at a large scale.
+Therefore, the management can be done efficiently, even at a large scale.
 
 Yet this configuration is still extremely simple.
 We are just scratching the surface of what midPoint can do.
 There is much more to see in the next chapters.
-But we need to explain more of the fundamental midPoint concepts before getting there.
+However, we still need to explain one more fundamental midPoint concept before getting there.
 
 == Shadows
 
-Linking users and accounts is one of the basic principle of any decent identity management system.
-However, it is surprisingly difficult to implement such link.
-There are numerous methods how to reliably identify accounts and they vary from system to system.
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+Linking _users_ and _accounts_ is one of the basic principle of any decent identity management system.
+However, it is surprisingly difficult to implement such _link_.
+There are numerous methods to reliably identify accounts, and they vary from system to system.
 Some systems identify accounts only by username - which makes reliable detection of renames quite difficult.
 Other systems improve on that by introducing another identifier, an identifier that is persistent.
-Identifier value is assigned by the resource and it never changes.
-However, username is still used as secondary identifier and it has to be unique.
-Yet another system has compound identifiers that consist of two or more values.
-Some system have globally-unique identifiers while other systems have identifiers that are only unique in their own object class.
-Some systems have hierarchical structured identifiers, others have flat unstructured identifiers.
-Some identifiers are case-sensitive strings, others are case-insensitive, some identifiers follow complex normalization rules and yet another identifiers are binary and completely opaque.
+Identifier value is assigned by the resource, and it never changes.
+However, username is still used as secondary identifier, and it still has to be unique.
+Yet another system may have _compound_ identifiers that consist of two or more values.
+Some system have globally-unique identifiers, while other systems have identifiers that are only unique in their own object class.
+Some systems have hierarchically-structured identifiers, others have flat unstructured identifiers.
+Some identifiers are case-sensitive strings, others are case-insensitive, some identifiers follow complex normalization rules, and yet another identifiers are binary and completely opaque.
 To make long story short: reliable identification is really complicated.
 
-We do not want to pollute user object with all the delicate details of account identification.
-Therefore we have created a separate midPoint object that hides all the resource-related details and identification complexities.
+We do not want to pollute _user_ object with all the delicate details of account identification.
+Therefore, we have created a separate midPoint object that hides all the resource-related details and identification complexities.
 We call it simply _shadow_ because it behaves as a shadow of the real account.
-When midPoint detects new account a _shadow_ is automatically created to represent the account in midPoint repository.
-When midPoint detects that account has changed (e.g. it was renamed) then midPoint automatically updates the shadow.
-When the account is deleted midPoint also deletes the shadow.
+When midPoint detects new account, a _shadow_ is automatically created to represent the account in midPoint repository.
+When midPoint detects that account has changed (e.g. it was renamed), then midPoint automatically updates the shadow.
+When the account is deleted, midPoint deletes the shadow.
 Technically, shadow is still an ordinary midPoint object.
-Therefore shadow has object identifier (OID).
+Therefore, shadow has object identifier (OID).
 Other objects can simply point to the shadow using ordinary object reference.
-And that is exactly how user-account links are implemented:
+That is exactly how user-account links are implemented:
 
 image::04-10-user-shadow-account.png[User-shadow-account]
 
-The _shadow_ objects contain all the data that are needed to reliably identify an account - or any other resource object such as group or organizational unit.
-Shadow also points to the corresponding resource definition to make the identification complete.
-Shadows are multi-purpose objects and they have many uses in midPoint.
+The _shadow_ objects contain all the data that are needed to reliably identify an _account_ - or any other resource object such as _group_ or _organizational unit_.
+In addition to the account identifiers, shadow points to the corresponding resource definition, to make the identification complete.
+Shadows are multi-purpose objects, and they have many uses in midPoint.
 Shadows record meta-data about resource objects.
-They are used to hold cached values of the attributes (this functionality is still experimental in midPoint 4.0).
+They are used to hold cached values of the attributes (this functionality is still experimental in midPoint {midpointversion}).
 Shadows can be used to hold the state of the resource objects for which midPoint does not have on-line communication channel and the operations are executed manually (a.k.a. "manual resources").
-Therefore shadows are quite complex objects.
+Therefore, shadows are quite complex objects.
 Following picture provides more substantial example of a shadow.
 
 image::04-11-user-shadow-resource.png[User-shadow-resource]
 
 Do not worry if that picture looks a bit scary.
 Shadows may be complex, but they are almost always invisible to midPoint users.
-Shadows are automatically and transparently maintained by midPoint core.
-Under normal circumstances, MidPoint takes all that is needed to maintain the shadow and no special configuration is needed for that.
+Shadows are automatically and transparently maintained by midPoint core engine.
+Under normal circumstances, MidPoint does all that is needed to maintain the shadow, and no special configuration is needed for that.
 We describe the mechanics of the shadow objects here mostly for the sake of completeness.
-But there may be situations when this knowledge may be useful.
-These are usually situations when midPoint was mis-configured and the shadows were created incorrectly.
+There may be situations when this knowledge may be useful.
+These are usually situations when midPoint was mis-configured, and the shadows were created incorrectly.
 In that case you may need to purge all shadows and start over.
-But beware: shadows are used to link users and accounts therefore if you purge the shadows you will lose the links.
+But beware: shadows are used to link users and accounts, therefore if you purge the shadows you will lose the links.
 Yet, even that is usually not that painful.
 The synchronization methods described in the next chapter may be used to easily re-create the links.
+
+
+== Conclusion
+
+MidPoint is configured as a simple _provisioning engine_ now.
+We can use midPoint to create, modify and delete accounts on many diverse systems.
+However, we are still at the beginning.
+MidPoint is _pushing_ the changes to other systems, but it is not _listening_ for any changes yet.
+Similarly to people, systems that talk all the time and never listens do not make good companions.
+Therefore, the next task is to make midPoint a better listener, by configuring _synchronization_ mechanisms.
