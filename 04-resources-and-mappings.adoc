@@ -1584,36 +1584,34 @@ However, we still need to explain one more fundamental midPoint concept before g
 
 == Shadows
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
 Linking _users_ and _accounts_ is one of the basic principle of any decent identity management system.
 However, it is surprisingly difficult to implement such _link_.
 There are numerous methods to reliably identify accounts, and they vary from system to system.
-Some systems identify accounts only by username - which makes reliable detection of renames quite difficult.
-Other systems improve on that by introducing another identifier, an identifier that is persistent.
+Some systems identify accounts only by _username_ - which makes reliable detection of rename operations quite difficult.
+Other systems improve on that by introducing another identifier, an identifier that is _persistent_.
 Identifier value is assigned by the resource, and it never changes.
-However, username is still used as secondary identifier, and it still has to be unique.
+However, _username_ is still used as secondary identifier, and it still has to be unique.
 Yet another system may have _compound_ identifiers that consist of two or more values.
-Some system have globally-unique identifiers, while other systems have identifiers that are only unique in their own object class.
-Some systems have hierarchically-structured identifiers, others have flat unstructured identifiers.
-Some identifiers are case-sensitive strings, others are case-insensitive, some identifiers follow complex normalization rules, and yet another identifiers are binary and completely opaque.
+Some system have _globally-unique_ identifiers, while other systems have _local_ identifiers that are only unique in their own object class.
+Some systems have _hierarchically-structured_ identifiers, others have _flat_ unstructured identifiers.
+Some identifiers are _case-sensitive_ strings, others are _case-insensitive_, some identifiers follow complex normalization rules, and yet another identifiers are _binary_ and completely opaque.
 To make long story short: reliable identification is really complicated.
 
 We do not want to pollute _user_ object with all the delicate details of account identification.
 Therefore, we have created a separate midPoint object that hides all the resource-related details and identification complexities.
-We call it simply _shadow_ because it behaves as a shadow of the real account.
+We call it _shadow_, because it behaves as a shadow of the real account.
 When midPoint detects new account, a _shadow_ is automatically created to represent the account in midPoint repository.
-When midPoint detects that account has changed (e.g. it was renamed), then midPoint automatically updates the shadow.
-When the account is deleted, midPoint deletes the shadow.
-Technically, shadow is still an ordinary midPoint object.
-Therefore, shadow has object identifier (OID).
-Other objects can simply point to the shadow using ordinary object reference.
+When midPoint detects that account has changed (e.g. it was renamed), then midPoint automatically updates the _shadow_.
+When the account is deleted, midPoint deletes the _shadow_.
+Technically, _shadow_ is still an ordinary midPoint object.
+Therefore, it has object identifier (OID).
+Other objects can simply point to the _shadow_ using ordinary object reference.
 That is exactly how user-account links are implemented:
 
 image::04-10-user-shadow-account.png[User-shadow-account]
 
 The _shadow_ objects contain all the data that are needed to reliably identify an _account_ - or any other resource object such as _group_ or _organizational unit_.
-In addition to the account identifiers, shadow points to the corresponding resource definition, to make the identification complete.
+In addition to the account identifiers, _shadow_ points to the corresponding resource definition, to make the identification complete.
 Shadows are multi-purpose objects, and they have many uses in midPoint.
 Shadows record meta-data about resource objects.
 They are used to hold cached values of the attributes (this functionality is still experimental in midPoint {midpointversion}).
@@ -1627,13 +1625,10 @@ Do not worry if that picture looks a bit scary.
 Shadows may be complex, but they are almost always invisible to midPoint users.
 Shadows are automatically and transparently maintained by midPoint core engine.
 Under normal circumstances, MidPoint does all that is needed to maintain the shadow, and no special configuration is needed for that.
-We describe the mechanics of the shadow objects here mostly for the sake of completeness.
-There may be situations when this knowledge may be useful.
+We are describing the mechanics of the shadow objects mostly for the sake of completeness.
+There are situations when this knowledge may be useful.
 These are usually situations when midPoint was mis-configured, and the shadows were created incorrectly.
-In that case you may need to purge all shadows and start over.
-But beware: shadows are used to link users and accounts, therefore if you purge the shadows you will lose the links.
-Yet, even that is usually not that painful.
-The synchronization methods described in the next chapter may be used to easily re-create the links.
+In that case you may need to update the shadows, or even purge all shadows and start over.
 
 
 == Conclusion
