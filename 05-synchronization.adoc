@@ -7,15 +7,15 @@ include::chapter-include.adoc[]
 It is a capital mistake to theorize before one has data.
 
 Data are the lifeblood of any software system.
-Ensuring proper management of the data is one of the primary responsibilities of a software architect.
-But data management can be very tricky – as any experienced software architect knows only too well.
+Ensuring proper management of the data is one of the primary responsibilities of all IT professionals.
+However, data management can be very tricky.
 One of the important principle of software architecture is often formulated as "do not repeat yourself".
-This applies to code as it applies to data: though shall not repeat the data.
+This applies to code, as it applies to data: _though shall not repeat the data_.
 There is one original, authoritative value.
 And there should not be any copies of that value.
 Ever.
 There is just one universal source of truth.
-If there are no copies then the data are always consistent.
+If there are no copies, then the data are always consistent.
 No copies mean no contradictions.
 Just one truth, precise and crystal-clear.
 Keep data in one place, and one place only.
@@ -23,10 +23,11 @@ Keep data in one place, and one place only.
 That is the theory.
 
 However, practice has a different opinion to offer.
-In practice there are many incompatible technologies.
+There are many incompatible technologies in practical IT systems.
 Applications built on relational databases cannot directly use data from directory services.
 Even relational databases do not fit together easily.
 Each application is designed with a different data model in mind.
+Each cloud application has a different interface (API).
 There are data translation and bridging technologies that work as adapters to resolve compatibility issues.
 You make a query, the query is intercepted by an adaptor, the adaptor translates the query, executes it in a remote database, gets the results, translates them, and provides them to you.
 All of that in real time.
@@ -34,28 +35,29 @@ Those are elegant solutions.
 Yet, there is a cost to pay.
 The adapters add latencies, and they almost always have a negative impact on performance.
 Even worse, transaction handling and data consistency is very problematic.
-Such adapters are additional components on a critical path and their failures are very painful.
-The resulting system is often operationally fragile: failure of even a minor component means a failure of the entire system.
-Not to speak about the enormous complexity and cost of the solution.
+Such adapters are additional components on a critical path, and their failures are very painful.
+The resulting system is often operationally fragile: failure of even a minor component means a failure of the entire system - not to speak about the enormous complexity and cost of the solution.
 
-On the other hand, copying all the data into my application database is so convenient.
+On the other hand, copying all the data into my application database is so very convenient.
 The application can access the data easily, using just one homogeneous mechanism.
 Failure of other components are not affecting the critical path.
 It is all so much better for performance.
 Copying the data solves almost all the troublesome issues.
 Except for one small detail: the problem of keeping the data up to date.
-That is where the synchronization mechanisms come in.
+That is where the _synchronization_ mechanisms come in.
 
-However hard you may try, it is almost impossible to avoid maintaining copies of the data.
+However hard you may try, it is almost impossible to avoid making copies of the data.
 Identity data are no exception.
-In fact identity data are often the most heavily affected.
+In fact, identity data are often the most heavily affected.
 That makes a lot of sense.
-Applications are built for users to use them.
-Therefore, almost every application keeps some kind of data about users.
+Applications are built for _users_ to use them.
+Therefore, almost every application keeps some kind of data about _users_.
 In addition to that, such data are usually very sensitive from security and privacy point of view.
 
 We cannot avoid copying the data.
 The best thing that we can do is to keep the copies managed and synchronized.
+How can we do that?
+
 Some applications have built-in support for LDAP or directory synchronization.
 However, those mechanisms are usually quite weak and fragile.
 For example, many applications provide capability for on-demand synchronization with directory service on login time.
@@ -72,11 +74,25 @@ It usually works like this:
 . Business as usual.
 Local copy of the data is used ever since.
 
+New cloud applications provide similar support for single sign-on (usually OpenID Connect or SAML), which is basically the same:
+
+. No local session exists, therefore user is redirected to identity provider.
+
+. User enters username and password to login dialog at identity provider site.
+
+. If the password is correct, then identity provider redirect user back to application, packing user data in the response.
+
+. The application stores copy of user data locally.
+
+. Business as usual.
+Local copy of the data is used ever since.
+
 This approach works quite well at the beginning.
+The data can be updated every time the user logs in - which may or may not be enough.
 Yet, after a while, the data begin to stink.
 Users are renamed, but the local copies are not updated.
 Users are deleted, but the local copies stay around forever.
-There are local accounts and privileges that are not reflected back to the directory service, and therefore remain undetected for years.
+There are local accounts and privileges that are not reflected back to the directory service or identity provider, and therefore remain undetected for years.
 Which means that we have a serious security and data protection problem here.
 Even worse, we do not even know that the problem is there.
 
@@ -86,18 +102,18 @@ There is a good reason for this.
 Synchronization is much harder than it seems.
 There may be data inconsistencies on both sides.
 There may be network communication errors and configuration errors.
-Data models are evolving in time.
+Data models are evolving over time.
 Policies are changing.
 It is no easy task to reliably synchronize the data in such environment.
 Therefore, there is a special breed of systems that specialize in synchronization of identity data: identity management systems.
 
 == Synchronization in MidPoint
 
-Synchronization is one of the basic mechanisms of midPoint.
+Synchronization is one of the fundamental mechanisms of midPoint.
 Synchronization mechanisms are integral part of midPoint design from its very beginning.
 Many of the things that midPoint normally does are in fact just different flavors of synchronization.
 There are obvious cases such as _reconciliation_ process, synchronizing account attributes with data in midPoint repository.
-However, there are also less obvious cases, such as ordinary provisioning operation when midPoint needs to create a new account for a user.
+However, there are also less obvious cases, such as ordinary _provisioning_ operation when midPoint needs to create a new account for a user.
 Even that case is in fact a synchronization: midPoint user properties are synchronized with a new empty account on the resource.
 Majority of midPoint operations are directly or indirectly using the synchronization principles.
 
@@ -108,59 +124,62 @@ We have rather designed few very generic principles that are re-used at many pla
 Synchronization is one of these principles.
 There is one code that implements the core of the synchronization logic.
 That code is used whenever we need to "align" objects that relate to each other.
-The same code is used for user-account reconciliation, ordinary provisioning, role-based provisioning, live synchronization, data consistency ... almost everywhere.
+The same code is used for user-account reconciliation, ordinary provisioning, role-based provisioning, live synchronization, opportunistic data consistency ... almost everywhere.
 
-MidPoint synchronization is almost a continuous functionality spectrum that can be tweaked and tuned to match specific needs.
+MidPoint synchronization provides a continuous functionality spectrum that can be tweaked and tuned to match specific needs.
 Yet, the synchronization mechanisms can be divided to several broad and slightly overlapping categories:
 
 * *Live synchronization* is _almost real-time_ synchronization mechanism.
 MidPoint continually scans the resource for changes.
-If changes are detected, then those changes are immediately processed by midPoint.
+When changes are detected they are immediately processed by midPoint.
 The actual latencies depend on the capabilities of the resource, but usual numbers range from few seconds to few minutes.
-Only recent changes are processed by live synchronization.
-Therefore, it is a very efficient mechanism which usually has fast responses even in large-scale deployments.
+Only _recent_ changes are processed by live synchronization.
+It is a very efficient mechanism, which usually has fast responses even in large-scale deployments.
+It usually runs all the time.
 
-* *Reconciliation* is a process that compares the data and corrects them.
-When an account is reconciled, midPoint computes the attribute values that the account should have.
-The computed values are compared to the real values that the account has.
+* *Reconciliation* is a process that compares the data and corrects the differences.
+When an account is reconciled, midPoint computes the attribute values that the account _should_ have.
+The computed values are compared to the real values that the account _has_.
 Any differences are corrected.
 Reconciliation is quite heavy-weight mechanism, comparing all the accounts one-by-one.
 It is also a very reliable mechanism.
-It can correct mistakes that were missed by live synchronization, it can correct data after major failures and corruptions, and so on.
+It can correct mistakes that were missed by live synchronization, it can correct data after major failures, corruptions, and so on.
 Reconciliation is usually executed in regular intervals.
 However, due to its heavyweight nature, it is usually executed during off-peak times (nights and weekends).
 
 * *Import* is usually a one-time process to get data from the resource to midPoint.
 Import is used to populate midPoint with initial data, or it may be used to connect a new resource to midPoint.
-Import is almost the same as reconciliation with only a few minor differences.
-However, its purpose is different and therefore there is usually also a slightly different configuration of import policies (mappings).
+Import is almost the same as reconciliation, with only a few minor differences.
+However, the purpose of import and reconciliations are different, and therefore there may be a slightly different configuration of import policies (mappings).
 Import is usually not scheduled, it is manually triggered when needed.
 
 * *Opportunistic synchronization* is a very special kind of animal which is quite unique to midPoint.
 Opportunistic synchronization is triggered automatically when midPoint discovers that something is not in order.
-For example if midPoint tries to modify an account, but it discovers that the account is not there.
+For example, if midPoint tries to modify an account, but it discovers that the account is not there.
 Synchronization mechanism is triggered at that point, just for that single account.
 This usually means that the account is re-created.
 The opportunistic synchronization is also triggered when midPoint tries to create a new account, but the account is already there.
-This approach makes midPoint a self-healing system.
-If midPoint runs into a problem, it can often correct the problem by itself.
+This approach makes midPoint a _self-healing_ system.
+If midPoint runs into a problem, it can often correct the problem just by itself.
 
-Individual mechanisms differ in a way data inconsistency is _discovered_: livesync will actively look for new changes, reconciliation will compare the data one-by-one and opportunistic synchronization will discover inconsistency by pure chance.
-Yet, all the mechanism _react_ to inconsistency in the same way.
-There is only one policy that specifies how to fix the system.
+Individual mechanisms differ in a way data inconsistency is _discovered_: live synchronization actively looks for new changes, reconciliation compares the data one-by-one and opportunistic synchronization discovers inconsistency by chance.
+Yet, all the mechanisms _react_ to inconsistency in the same way.
+There is only one policy that specifies how to fix the data.
 Of course, there may be slight deviations in the behavior.
 For example, we usually want _import_ to behave in slightly different way than _reconciliation_.
 MidPoint allows that.
-Yet, there is just one big synchronization mechanism overall.
+Yet, there is just one common synchronization mechanism.
 This has a very good reason.
 It does not really matter how the problem was discovered.
 What really matters is that the problem gets fixed.
-We do not want to maintain four separate configurations for that.
-Having one policy is enough.
+We do not want to maintain four separate configurations for every delicate variation of the functionality.
+Having one policy is much better.
 MidPoint knows which part of the configuration need to be applied in each specific situation, and it does it automatically.
 This unifying approach significantly simplifies the configuration of midPoint synchronization mechanisms.
 That is also a reason why the boundaries of individual synchronization mechanisms are quite fuzzy.
-In fact this is just a single big mechanism with several facets.
+In fact, it is just one big mechanism with several facets.
+
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 == Source Systems, Target Systems And Other Creatures
 
