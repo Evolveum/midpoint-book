@@ -355,69 +355,79 @@ The effect of account-account synchronization is achieved by combining inbound a
 
 // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
-It is all quite easy to import all HR records into an empty midPoint.
-Set up inbound mappings, start import task, wait a bit, and all is done.
+It is quite easy to import all HR records into an empty midPoint: set up inbound mappings, start import task, wait a bit, and all is done.
 However, practical situations are much more complex.
 Synchronization usually does not run on a green field.
 Live synchronization and reconciliation are supposed to work with pre-existing midPoint users.
-Import is usually not entirely trivial either, for example in cases when we try to import data from an additional data source into a running midPoint deployment.
+Import may not be entirely trivial either, for example when we try to import data from an additional data source into a running midPoint deployment.
 Some users in the import data set are new, but there may be accounts describing existing users.
 We need to tell the difference between brand-new account and an account that belongs to an existing user.
 We need to handle them in a different way.
-Of course, midPoint has an easy solution for this: _correlation_ mechanism.
+Of course, midPoint has a solution for this: _correlation_ mechanism.
 
 _Correlation_ is a method to connect newly-discovered _accounts_ and existing _users_.
 It works like this: whenever midPoint discovers new _account_ it will try to link that account to an existing _user_.
+MidPoint looks for an appropriate _user_ to represent newly-discovered _account_.
+It does so by matching selected _account_ attributes to appropriate user _properties_.
+Two things are needed for correlation to work: _correlation rule_ and corresponding _inbound mapping_.
 
-// TODO: 4.8
-
-Correlation expression is used to do this.
-Correlation expression is in fact a parametric search query.
-Such search query is constructed for every new account, and it is used to look for users that the account belongs to.
-The easiest form of the correlation expression is to search users using an identifier:
-
-// TODO: 4.8: change to Axiom query
+_Correlation rule_, also known as _correlator_, specifies which properties are used for correlation, and how they are used.
+In its simplest form it simply points to a single user property:
 
 [source,xml]
 ----
 <correlation>
-    <q:equal>
-        <q:path>employeeNumber</q:path>
-        <expression>
-            <path>$projection/attributes/empno</path>
-        </expression>
-    </q:equal>
+    <correlators>
+        <items>
+            <item>
+                <ref>personalNumber</ref>
+            </item>
+        </items>
+    </correlators>
 </correlation>
 ----
 
-This correlation query takes the value of `empno` attribute of the account.
-This value is placed into the search query that midPoint computes in memory.
-Given an account with `empno` attribute set to `007`, the resulting search filter looks like this:
+_Correlator_ defined above specifies that the `personalNumber` property should be used to correlate _accounts_ and _users_.
+If a newly-discovered account has a value that matches the `personalNumber` of a user, it is assumed that such user is an _owner_ of that account.
+Such account and user will be _linked_.
+
+Now we know that `personalNumber` property of midPoint users should be used for correlation.
+However, which account attribute should we use to match values of `personalNumber` property?
+That is where the _mapping_ comes in.
+MidPoint looks for _inbound mapping_ that maps a value of an attribute to `personalNumber` property, such as this one:
 
 [source,xml]
 ----
-    <q:equal>
-        <q:path>employeeNumber</q:path>
-        <q:value>007</q:value>
-    </q:equal>
+<attribute>
+    <ref>empno</ref>
+    <inbound>
+        <target>
+            <path>$focus/personalNumber</path>
+        </target>
+    </inbound>
+</attribute>
 ----
 
-MidPoint looks for users that match this search filter.
-If there is a user with `employeeNumber` property set to `007` then such user is considered to be an owner of the account.
+MidPoint knows that it needs to take value of account attribute `empno` to produce value for user property `personalNumber`.
+This is what midPoint normally does when it maps account data to user data.
+The same mapping is used for correlation.
+MidPoint takes the value of `empno` attribute, passes it through the mapping, and compares the result with the `personalNumber` property of all users.
 
-MidPoint has its own data representation mechanism and object structure.
-Therefore, midPoint also has its own query language that is designed to work with the object structure.
-The query language is not difficult to learn as it follows the structure of other common query languages.
-The language itself is described later in the book and in midPoint documentation.
-But do not worry about this too much now.
-Vast majority of correlation expressions is very simple.
-In fact, it is usually just a single `equal` clause just like that one used in the example above.
+// TODO: this can be simplified <correlator/> in attribute definition
+// TODO: NOTE: this is not used in examples (yet) as we have two inbound mappings for empno, it is a common practice, look at later chapters
 
-Using search queries for correlation may seem a little bit too complex.
-Yet, it is necessary.
-The correlation expression must be a search filter because that is the only efficient way how to find single user in a large set of other users.
+// TODO: correlation-only mapping for target resources; reversible mappings in the future
+
+// TODO: mention correlation expression as pre-4.8 mechanism
+
+// TODO: 4.8
+
+// TODO: correlation is a database search, it is important for the correlation property to be searchable
+The correlation expression must be TODO TODO a search filter because that is the only efficient way how to find single user in a large set of other users.
 We cannot scan the users one-by-one.
 We need to utilize the search power of the database for this.
+
+// TODO: smarter correlations, e.g. approximate with human interactions.
 
 == Synchronization Situations and Reactions
 
