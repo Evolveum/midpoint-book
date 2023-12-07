@@ -733,7 +733,7 @@ It is not a _policy decision point_ (PDP), and it definitely is not a _policy en
 You cannot rip authorization out of your application and just "use midPoint for that".
 That does not work.
 
-You can think of midPoint as a _policy management point_ (PMP).
+You can think of midPoint as a _policy administration point_ (PAP).
 MidPoint has a lot of sophisticated authorization-related logic inside its core.
 However, that logic is not designed to answer questions such as "Is subject S authorized to execute operation O on object X?".
 MidPoint logic is different.
