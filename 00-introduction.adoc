@@ -5,6 +5,9 @@
 It's a dangerous business, Frodo, going out your door.
 You step onto the road, and if you don't keep your feet, there's no knowing where you might be swept off to.
 
+// TODO: This book is quite a deep dive. It explains how, but it also explains why, and it adds lot of details.
+// TODO: There are other ways to start: videos, trainings, ...
+
 Many years ago we started a project.
 Because we had to.
 Back then we didn't think too much about business and markets and things like that.

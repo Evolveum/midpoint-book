@@ -353,26 +353,24 @@ The effect of account-account synchronization is achieved by combining inbound a
 
 == Correlation
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
-It is quite easy to import all HR records into an empty midPoint: set up inbound mappings, start import task, wait a bit, and all is done.
+It is quite easy to import all HR records into an empty midPoint: we have to set up inbound mappings, start import task, wait a bit, and all is done.
 However, practical situations are much more complex.
 Synchronization usually does not run on a green field.
 Live synchronization and reconciliation are supposed to work with pre-existing midPoint users.
-Import may not be entirely trivial either, for example when we try to import data from an additional data source into a running midPoint deployment.
+Import may not be entirely trivial either, for example we may import data from an additional data source into a running midPoint deployment.
 Some users in the import data set are new, but there may be accounts describing existing users.
 We need to tell the difference between brand-new account and an account that belongs to an existing user.
 We need to handle them in a different way.
 Of course, midPoint has a solution for this: _correlation_ mechanism.
 
 _Correlation_ is a method to connect newly-discovered _accounts_ and existing _users_.
-It works like this: whenever midPoint discovers new _account_ it will try to link that account to an existing _user_.
+Whenever midPoint discovers new _account_ it will try to link that account to an existing _user_.
 MidPoint looks for an appropriate _user_ to represent newly-discovered _account_.
-It does so by matching selected _account_ attributes to appropriate user _properties_.
-Two things are needed for correlation to work: _correlation rule_ and corresponding _inbound mapping_.
+It does so by _matching_ selected _account_ attributes to appropriate user _properties_.
+Two things are needed for this to work: _correlation rule_ and corresponding _inbound mapping_.
 
-_Correlation rule_, also known as _correlator_, specifies which properties are used for correlation, and how they are used.
-In its simplest form it simply points to a single user property:
+_Correlation rule_, better known as _correlator_, specifies which properties are used for correlation, and how they are used.
+In its simplest form, the correlator points to a single user property:
 
 [source,xml]
 ----
@@ -387,9 +385,9 @@ In its simplest form it simply points to a single user property:
 </correlation>
 ----
 
-_Correlator_ defined above specifies that the `personalNumber` property should be used to correlate _accounts_ and _users_.
-If a newly-discovered account has a value that matches the `personalNumber` of a user, it is assumed that such user is an _owner_ of that account.
-Such account and user will be _linked_.
+_Correlator_, as shown above, specifies that the `personalNumber` property should be used to correlate _accounts_ and _users_.
+If a newly-discovered account has a value that matches the `personalNumber` of a user, it is assumed that such user is an _owner_ of the account.
+Such account and user are _correlated_, and they will be _linked_.
 
 Now we know that `personalNumber` property of midPoint users should be used for correlation.
 However, which account attribute should we use to match values of `personalNumber` property?
@@ -409,41 +407,150 @@ MidPoint looks for _inbound mapping_ that maps a value of an attribute to `perso
 ----
 
 MidPoint knows that it needs to take value of account attribute `empno` to produce value for user property `personalNumber`.
-This is what midPoint normally does when it maps account data to user data.
+This is what midPoint normally does when it synchronizes account data to user data.
 The same mapping is used for correlation.
 MidPoint takes the value of `empno` attribute, passes it through the mapping, and compares the result with the `personalNumber` property of all users.
+The user that has a matching value is correlated to the account.
 
-// TODO: this can be simplified <correlator/> in attribute definition
-// TODO: NOTE: this is not used in examples (yet) as we have two inbound mappings for empno, it is a common practice, look at later chapters
+The _correlator_ and the _mapping_ always work together.
+Mapping transforms the value, correlator matches the value.
 
-// TODO: correlation-only mapping for target resources; reversible mappings in the future
+We have seen only very simple correlator so far.
+However, correlator can be quite complex.
+Correlation may be set up to match several items, correlation may be based on custom search filter or expression, and several rules may be used in composition, using specified weights to tune the process.
+Correlation can use approximate (fuzzy) matching with human assistance, submitting probable matches for approval by administrator.
 
-// TODO: mention correlation expression as pre-4.8 mechanism
+Even though correlation mechanism is very rich, the humble item-based correlator remains the most popular one.
+Therefore, there is simplified method to configure it.
+Definition of correlation item can be placed directly in account attribute definition:
 
-// TODO: 4.8
+[source,xml]
+----
+<attribute>
+    <ref>empno</ref>
+    <correlator/>
+    <inbound>
+        <target>
+            <path>$focus/personalNumber</path>
+        </target>
+    </inbound>
+</attribute>
+----
 
-// TODO: correlation is a database search, it is important for the correlation property to be searchable
-The correlation expression must be TODO TODO a search filter because that is the only efficient way how to find single user in a large set of other users.
-We cannot scan the users one-by-one.
-We need to utilize the search power of the database for this.
+The `correlator` clause in the mapping marks the `empno` attribute for correlation.
+It will be matched with the mapping target, which is `personalNumber` user property.
+This notation is all that is needed to set up simple correlation scheme.
 
-// TODO: smarter correlations, e.g. approximate with human interactions.
+.Correlation in samples
+NOTE: The simple method of `correlator` definition is not used in the samples.
+Not yet.
+We do not have our ExAmPLE configuration done yet, therefore we had to make few compromises.
+One of the compromises is username, we do have proper configuration for that yet.
+We are abusing employee number to stand in for real username.
+That means we need _two_ inbound mappings for `empno` attribute.
+If we marked `empno` attribute for correlation, midPoint does not know which of the two target properties is the right one for matching.
+Therefore, we need to go the long way around in the samples, and specify the correlator using the full notation.
+At least for now.
+
+We have dealt with correlation for _source_ resources so far, such as the HR systems in our ExAmPLE scenario.
+However, there is a slightly surprising fact, that correlation is usually not necessary for source systems with a single authoritative source.
+In such cases, the users are created from the accounts originating in the source systems.
+The users are automatically linked to the originating accounts at the moment of creation, no correlation is necessary there.
+The correlation is necessary in case that there is another source of data which overlaps with the primary source, such as second source system or manual entry of user data using user interface.
+Even though correlation mechanism may not be necessary in some cases, it is a best practice to set it up for production deployments.
+Having it set up from the beginning lowers the probability that it will be missing when new data source is added, or in case that system administrator manually creates user during HR system outage.
+It makes the deployment more resilient.
+
+Apart from _source_ resources, correlation is absolutely essential for handling _target_ resources.
+It is a very rare occasion to connect an empty target system to midPoint.
+Almost all the target systems that are connected to midPoint contain existing data, existing accounts that belong to users in midPoint.
+When such target system is connected to midPoint, we have to _correlate_ the account to midPoint users to correctly set up the links.
+The correlation mechanism is the same, regardless whether it is used for source or target systems - except for one little difference.
+While we would have a suitable _inbound_ mapping for source systems, we may not have that for target system.
+Target systems often use _outbound_ mappings only.
+Therefore, we need to add the missing _inbound_ mapping to be used to correlate target systems:
+
+[source,xml]
+----
+<attribute>
+    <ref>employeeNumber</ref>
+    <correlator/>
+    <outbound>
+        <strength>strong</strength>
+        <source>
+            <path>$focus/personalNumber</path>
+        </source>
+    </outbound>
+    <inbound>
+        <target>
+            <path>$focus/personalNumber</path>
+        </target>
+        <evaluationPhases>
+            <include>beforeCorrelation</include>
+            <exclude>clockwork</exclude>
+        </evaluationPhases>
+    </inbound>
+</attribute>
+----
+
+In this case, there are two mappings for `employeeNumber` attribute.
+The usual _outbound_ mapping is used for ordinary provisioning, it populates the target attribute `employeeNumber` with value taken from `personalNumber` property of midPoint user.
+The other _inbound_ mapping is used for correlation.
+It takes the `employeeNumber` account attribute to correlate it with `personalNumber` user property.
+However, we do not want that inbound mapping to be used to copy attribute values, as that could overwrite the authoritative information of `personalNumber` user property with incorrect data.
+Therefore, we are setting up this mapping to be _correlation-only_, using the `evaluationPhases` clause.
+The clause specifies that the mapping should be used to provide data for correlation (including `beforeCorrelation` phase), however it should not be used for ordinary synchronization processing (excluding `clockwork` phase).
+
+TIP: Clever reader certainly looks thoughtful now.
+Why do we need both _outbound_ and _inbound_ mapping here?
+If we had _outbound_ mapping only, we can clearly see how the `employeeNumber` attribute and `personalNumber` property relate to each other.
+As there is `asIs` mapping, it could work both ways, we could reverse it, and use it in _inbound_ direction as well.
+Well, in theory, clever reader would be right.
+It could be possible.
+However, it is not implemented yet.
+MidPoint is smart, but not yet _that_ smart.
+For the time being, both mappings are necessary.
+
+It is important to realize, that correlation is always a _database search_.
+We have value of account attribute on one hand, and we have the entire user database on second hand.
+We have to find one specific user in the entire database, based on the value of correlation attribute.
+Looking for each individual user one-by-one is not a scalable method, we have to utilize database search capabilities to make it efficiently.
+Therefore, when choosing a correlation property, make sure it is a searchable (indexed) property.
+
+.Correlation before midPoint 4.6
+NOTE: MidPoint versions before 4.6 used _correlation expressions_, which were basically a search filters parametrized by expressions.
+This was simple and elegant mechanisms for many years, but it was also quite limited.
+MidPoint 4.6 introduced _smart correlation_ mechanisms, and the old correlation expressions were deprecated.
+
+Corrlators are efficient method to automatically link large number of accounts and users.
+However, correlators rely on reliable and clean data.
+If employee numbers were consistently recorded for every account, correlators can do all the work.
+If usernames were applied consistently across all systems, correlators are going to be a great tool.
+However, we all know that there is an exception to every rule.
+Practical data are not perfect, there are omissions, typos and all kind of errors.
+Therefore, in practical scenarios, there are always some accounts that cannot be correlated automatically.
+Manual action is necessary to correlate them.
+The usual approach is to use btn:[Change owner] button in account list to manually set up owner for an account.
+
+// TODO: more on manual linking?
+
+// TODO: conclusion?
 
 == Synchronization Situations and Reactions
 
-Correlation expression can be used to find an owner for a new account.
-That is a part of the solution, but not entire solution.
+Correlation mechanism can be used to find an owner for a new account.
+That is a part of the solution, but it is not a whole solution yet.
 If the owner is found, then the action is quite obvious: link the account to the user and proceed as usual.
-But what to do if the owner is not found?
-This resource may be an authoritative resource, and therefore we want to create a new user based on the account.
-On the other hand, this may be a reconciliation with a target resource, and we have just found an illegal account.
-We probably want to disable such account in this case.
+However, what to do if the owner is _not_ found?
+This resource may be an _authoritative_ resource, and therefore we want to create a new user based on the account.
+On the other hand, this may be a reconciliation with a _target_ resource, and we have just found an illegal (orphaned) account.
+We probably want to deactivate such account in this case.
 Moreover, what to do if more than one owner is found?
-This can all become quite complicated.
+There are many scenarios, and the situation can become quite complicated.
 Therefore, midPoint has a concept of _synchronization situations_ to make all the possible cases understandable and manageable.
 
 Whenever midPoint deals with a change on an account, the _situation_ of that account is determined.
-The situation reflects whether this account is already linked to the user, whether we know the candidate owner, whether we cannot determine the owner and so on.
+The situation reflects whether this account is already _linked_ to the user, whether we know the candidate _owner_, whether we cannot determine the owner at all, and so on.
 Individual situations are explained in the following table.
 
 |===
@@ -454,16 +561,16 @@ Individual situations are explained in the following table.
 This is the normal situation.
 
 |`unlinked`
-|The account is not linked to the owner, but we know who the owner is.
-Correlation expression told us who the owner is.
-In this case midPoint thinks that the link should exist, but it is not linked yet.
+|The account is not linked to the owner, but we know who the owner should be.
+Correlation mechanism told us who the owner is.
+MidPoint thinks that the link should exist, but it is not linked yet.
 
 |`unmatched`
-|The account is not linked, and we do not even know who the owner is.
-The correlation expression has not returned any candidates.
+|The account is not linked, and we do not even know who the owner should be.
+The correlation mechanism has not returned any candidates.
 
 |`disputed`
-|The account is not linked, but there are more potential owners.
+|The account is not linked, and there are several potential owners.
 The correlation expression returned more than one candidate.
 
 |`collision`
@@ -472,118 +579,153 @@ This should not happen under normal circumstances.
 This is usually caused by faulty customizations or software bugs.
 
 |`deleted`
-|There was an existing account, but it was deleted on the resource.
+|There was an account, but it was deleted on the resource.
 |===
 
 After synchronization _situation_ is determined, midPoint continues by figuring out what a proper _reaction_ is.
-The reaction may be quite clear for some situations (e.g. `unlinked`), but there is a lot of variability for other situations (e.g. `unmatched`).
+The reaction may be quite clear for some situations (e.g. `unlinked`), but there is a lot of variability for other situations (e.g. `unmatched` and `deleted`).
 This variability is a reason that midPoint allows to set a reaction for each situation individually.
 There are several pre-defined reactions:
 
 |===
-|Action |Description
+|Action |Keyword | Description |Usual situations
+
+|Synchronize
+|`synchronize`
+|Synchronize all the data, using the mappings.
+This does the "normal thing", it applies the usual processing.
+No changes in links are made, no users or accounts are created or deleted at this point.
+| `linked`
 
 |Add focus
+|`addFocus`
 |New midPoint user will be created, and it will be linked to the account.
 This is usually a reaction configured for authoritative resources, used in situation when a new account is discovered.
+| `unmatched`
 
 |Delete focus
+|`deleteFocus`
 |MidPoint user that owns the account will be deleted.
 This is usually a reaction configured for authoritative resources, used in situations when midPoint detects that an account was deleted.
+| `deleted`
 
 |Inactivate focus
+|`inactivateFocus`
 |MidPoint user that owns the account will be disabled.
 This is also used for authoritative resources.
 This is a milder reaction that deleting the user.
+| `deleted`
 
-|Link
-|The user-account link will be created.
-
-|Unlink
-|The user-account link will be removed.
-The account will no longer be linked to the user.
-
-|Delete shadow
+|Delete resource object
+|`deleteResourceObject`
 |The account will be deleted.
 This is the usual reaction when illegal account is detected on non-authoritative resource.
+| `unmatched`
 
-|Inactivate shadow
+|Inactivate resource object
+|`inactivateResourceObject`
 |The account will be disabled.
 Usually a milder reaction to an illegal account.
+| `unmatched`
 |===
 
 If no reaction is explicitly configured for a situation, then midPoint does nothing.
 The situation is recorded in midPoint repository, but no other action is taken.
 This is part of midPoint philosophy: not to change the data unless an action was explicitly configured.
 
-The reactions can be defined in the synchronization section of resource configuration:
+The reactions can be defined in the synchronization section of object type definition in resource configuration:
 
 [source,xml]
 ----
-<synchronization>
-    <objectSynchronization>
-        <correlation>...</correlation>
-        <reaction>
-            <situation>linked</situation>
-            <synchronize>true</synchronize>
-        </reaction>
-        <reaction>
-            <situation>deleted</situation>
-            <action>
-                <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#deleteFocus</handlerUri>
-            </action>
-        </reaction>
-        <reaction>
-            <situation>unlinked</situation>
-            <action>
-                <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
-            </action>
-        </reaction>
-        <reaction>
-            <situation>unmatched</situation>
-            <action>
-                <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#addFocus</handlerUri>
-            </action>
-        </reaction>
-    </objectSynchronization>
-</synchronization>
+
+<resource>
+    ...
+    <schemaHandling>
+        <objectType>
+            <kind>account</kind>
+            ...
+
+            <synchronization>
+                <reaction>
+                    <situation>linked</situation>
+                    <actions>
+                        <synchronize/>
+                    </actions>
+                </reaction>
+                <reaction>
+                    <situation>deleted</situation>
+                    <actions>
+                        <deleteFocus/>
+                    </actions>
+                </reaction>
+                <reaction>
+                    <situation>unlinked</situation>
+                    <actions>
+                        <link/>
+                    </actions>
+                </reaction>
+                <reaction>
+                    <situation>unmatched</situation>
+                    <actions>
+                        <addFocus/>
+                    </actions>
+                </reaction>
+            </synchronization>
+
+        </objectType>
+    </schemaHandling>
+</resource>
 ----
 
-Most of the configuration is perhaps self-explanatory.
-This is a typical authoritative resource.
-If there is a new account on the resource, and we do not have an owner (situation: `unmatched`), then create a new user (action: `addFocus`).
-If the account is deleted from the resource (situation: `deleted`), then delete the user as well (action: `deleteFocus`).
-If we happen to find an account which should be linked but is not (situation: unlinked), then link it (action: `link`).
-The only think that deserves special explanation is the reaction to `linked` situation.
-In this case there is not much to do.
+This is a typical configuration for an authoritative resource.
+Most of the configuration is perhaps self-explanatory:
+
+* When all is fine (situation: `linked`) then do the usual thing (action: `synchronize`).
+
+* When the existing account is deleted from the resource (situation: `deleted`), then delete the user as well (action: `deleteFocus`).
+
+* When we find an account which should be linked but is not (situation: `unlinked`), then link it (action: `link`).
+
+* When a new account on the resource is found, and it does not have an owner (situation: `unmatched`), then create a new user (action: `addFocus`).
+
+Perhaps the only thing that deserves special explanation is the `synchronize` reaction.
+In the `linked` situation, there is not much to do.
 Everything seems to be in order.
 However, there may still be attributes that are not set correctly.
-Remember the inbound mappings?
-The inbound mappings were not even mentioned in this section yet - for a good reason.
-The inbound mappings are not evaluated at correlation stage of synchronization process.
-Evaluation of inbound mappings happen only after the situations and reactions are evaluated.
-We need to properly correlate accounts first, so all the accounts are properly linked (or unlinked), and the inbound mappings have valid sources and targets.
-Even when the accounts are correlated, the evaluation of inbound and outbound mappings do not happen automatically.
-MidPoint does not change the data unless it is explicitly configured to do so.
-There are reactions for `unmatched`, `deleted` and `unlinked` situations.
-Therefore, in those cases midPoint assumes that it is expected to fully synchronize everything, and therefore all the mappings and policies are evaluated automatically.
-However, there is no reaction for `linked` situation.
-In that case midPoint assumes that it should do nothing, as nothing is explicitly configured.
-Hence the `synchronize` property.
-This property can be used to force midPoint to do full synchronization, even if there is no explicit action configured.
-It can also be used to avoid full synchronization, even if explicit action is configured.
+We may need to fully apply all the inbound and outbound mappings, to make sure that all the data are correct.
+This is what the `synchronize` reaction does, among many other things.
+In fact, we want to do the "synchronize" thing as part of all other reactions too.
+MidPoint does that implicitly, there is no need to add `synchronize` to every other reaction.
+However, we need to explicitly add `synchronize` to the `linked` situation, as it is the only reaction that there is.
+If we leaved the `linked` situation empty, midPoint does nothing.
+Putting `synchronize` action there tells midPoint do to the usual thing.
+
+.Unlink action
+NOTE: There is a pre-defined `unlink` action, in addition to other actions specified in the table above.
+However, the `unlink` action is not needed, as midPoint unlinks the account automatically when it is gone.
+
+Synchronization reactions are used to configure resource for a variety of scenarios.
+The `addFocus` reaction is used to configure authoritative resources, other reactions may be used to configure target resources, semi-authoritative resources and so on.
+Synchronization reactions provide control on account level, while mappings provide control on attribute level.
+Together they can be used to implement variety of synchronization scenarios.
+
+== Synchronization Flow
+
+Correlation and synchronization actions are just two pieces of much bigger synchronization puzzle.
+Connector provides account data, correlation looks for an owner, synchronization situations and reaction decide what to do with the account, and so on.
+Every mechanism has its place in a comprehensive synchronization flow.
 
 image::05-02-synchronization-flow.png[Synchronization flow]
 
 The figure above illustrates the usual sequence of events during inbound synchronization:
 
-. Account is stored in the resource database.
+. Account is created in the resource database.
 
 . Appropriate identity connector is used to read account data.
 
-. Account shadow is created in midPoint.
+. Account _shadow_ is created in midPoint.
 
-. Correlation expression is evaluated to determine account ownership (unless the account is already linked to a user).
+. Correlation mechanism is applied to determine account ownership (unless the account is already linked to a user).
 
 . Synchronization situation is determined based on account ownership and state of the account.
 
@@ -591,38 +733,39 @@ The figure above illustrates the usual sequence of events during inbound synchro
 
 . Inbound mappings are evaluated to map account values to the user.
 
-Please note that the description of this process is slightly simplified for clarity.
+NOTE: Description of the synchronization process is slightly simplified for clarity.
 There are also obvious deviations from this process.
-E.g. inbound mappings are skipped in case that the user is about to be deleted, the mappings are also skipped if the reaction does not include "synchronization" and so on.
+E.g. some inbound mappings are evaluated before correlation to provide data for correlation, inbound mappings are skipped in case that the user is about to be deleted, the mappings are also skipped if there is no synchronization reaction and so on.
 However, generally speaking, the sequence above is what usually happens during inbound synchronization.
 
-NOTE: MidPoint is an extensible system.
-There are several prefabricated synchronization reactions described above.
-Those reactions can handle the vast majority of situations that happen during synchronization.
-However, there is a possibility to extend the system with completely custom reactions.
-MidPoint was designed for this.
-This is the theory.
-However, currently this part of midPoint is only partially extensible.
-Full extensibility feature was planned, but it was never implemented.
-Therefore, extensibility of synchronization reaction is possible, but it might be quite hard to achieve this in practice, and it may require significant development effort.
-However, there is another way.
-MidPoint development team would absolutely love to finish this extensibility feature as it was originally planned.
-However, existing midPoint customers had so far prioritized other features.
-MidPoint subscribers and sponsors are funding the development therefore midPoint development must follow their priorities.
-Therefore, if you are interested in full synchronization reaction extensibility (or any other feature) please consider purchasing midPoint subscription or sponsoring the feature.
+When the data are reflected to _user_, the usual midPoint recompute process starts.
+This also includes evaluation of object templates, roles, policies and all the other things that will be covered in following chapters.
+This is the main part of midPoint processing, internally referred to as "clockwork".
+It is essentially the same processing as if user was modified by an administrator using midPoint user interface.
+
+.Synchronization before midPoint 4.6
+NOTE: When was midPoint originally created, synchronization configuration was a completely separate top-level part of resource definition.
+It made quite a lot of sense more than a decade ago, when midPoint was much simpler.
+However, as midPoint evolved, it became obvious that this is not the best way.
+It would make much more sense if the synchronization configuration was coupled with resource object type configuration in schema handling part.
+This was finally corrected in midPoint 4.6, which gives us the form of configuration that we have today.
+
+// TODO: iterative correlation: correlate, check results, adapt the rule, check results, manual linking
+
+// TODO: conclusion?
 
 
 == Synchronization Tasks
 
 Now we know how the inbound synchronization works: midPoint reads the account, then correlation is applied, situation determined and reaction executed.
-However, we have not yet discussed the details of the very first step: how does midPoint actually read the account?
-Nothing happens without a reason, therefore there must be some active component in midPoint that actually looks for the new, changed and deleted accounts.
+However, we have not yet discussed the details of the very first step: how does midPoint actually gets account data?
+Nothing happens without a reason, therefore there must be some active component in midPoint that looks for the new, changed and deleted accounts.
 That component is a _synchronization task_.
 
 MidPoint _task_ is an active process that runs inside midPoint server.
-This is the first time that we encountered the concept of a _task_, but it is definitely not the last one.
+This is the first time that we encounter the concept of a _task_, but it is definitely not the last one.
 Tasks are used for numerous purposes in midPoint.
-They are used to track long-running operations, approvals and actions that work on large sets of objects (bulk actions).
+They are used to track long-running operations and actions that work on large sets of objects (bulk actions).
 There are tasks that execute cleanup jobs, compile reports and provide variety of other functions.
 The concept of a _task_ is a very powerful and flexible one.
 Tasks can be used to track execution of a short one-off operations.
@@ -634,46 +777,45 @@ Tasks are used as an active component to "run" almost all synchronization mechan
 
 * *Reconciliation task* is listing all the accounts in a specific resource.
 The task executes reconciliation process for every account that is found.
-This means that midPoint computes how that particular account should look like and then the computed values are compared with real account attributes.
-Reconciliation is quite a heavyweight task.
+This essentially means that midPoint computes how that particular account should look like, and then the computed values are compared with real account attributes.
+As reconciliation is processing all accounts one-by-one and recomputes all the data, it is quite a heavyweight task.
 This task is usually scheduled for regular execution using quite a long execution interval (days or weeks).
 
 * *Live synchronization task* is looking (polling) for changes in a specific resource.
 The task will look for accounts that were created, modified or deleted recently.
-The task will get a description of the change, and pass that to midPoint synchronization mechanisms.
+The task will get a description of the change (delta), and pass that to midPoint synchronization mechanisms.
 Live synchronization is designed to be fast and efficient, to provide _almost real-time_ reaction to changes.
 This task is almost always scheduled for regular execution in very short intervals (minutes or seconds).
 
 * *Import from resource task* is listing all the accounts from a specific resource.
 The task will pretend that the accounts were just created.
-This usually motivates midPoint to create users based on those accounts or link these accounts to existing users.
-This task is usually not scheduled, it is almost always executed manually.
+This usually motivates midPoint to create users based on those accounts, or link these accounts to existing users.
+This task is usually not scheduled, it is almost always executed manually as needed.
 
 Each type of synchronization task is detecting changes using a different mechanism.
 However, once the task detects the change or reads the account, then the processing is the same for all tasks.
 All the tasks lead to the same algorithms based on the same configuration and policies.
-Therefore, it does not matter whether it has all started in reconciliation or live synchronization task.
-It will all end up in the same correlation-situation-reaction-mapping process.
+Therefore, it does not matter whether it has all started in _reconciliation_ or _live synchronization_ task, it will all end up in the same correlation-situation-reaction-mapping flow.
 
-The tasks are necessary to initiate the synchronization.
+The tasks are necessary to _initiate_ the synchronization.
 They are the active part, the spark that starts the synchronization process.
 Without the tasks the synchronization does not really work.
-There are ways the synchronization can "happen" even without a task, e.g. as a reaction to user interface operation or if a new account is discovered during an unrelated operation.
-Desprite that, practical deployments need at least one synchronization task to work properly.
+There are ways the synchronization can "happen" even without a task, e.g. as a reaction to user interface operation, or if a new account is discovered during an unrelated operation.
+Despite that, practical deployments need at least one synchronization task to work properly.
 This task takes care of the vast majority of synchronization cases.
 
-Strictly speaking a task is quite a strange kind of animal.
-Tasks have their data and configuration as most other midPoint objects.
+Strictly speaking, a task is quite a strange kind of animal.
+Tasks have their data and configuration as most other midPoint objects have.
 Unlike other objects, tasks are _active_, they _run_.
 Therefore, there are CPU threads associated with the tasks when the tasks are running.
 There are mechanisms to monitor task progress.
 The tasks need to be cluster-aware, they have to fail over to a different midPoint node if one node fails.
-The tasks are quite rich, and they may be a bit tricky to handle.
+The tasks are quite complex, and they may be a bit tricky to handle.
 Fortunately, midPoint is making task handling reasonably simple.
 Tasks are represented as ordinary midPoint objects.
 Therefore, tasks can be imported to midPoint in XML/JSON/YAML form as any other object.
-Tasks can be easily edited in their XML/JSON/YAML form to change the scheduling, modify the parameters and so on.
-Of course, there are some special functions that only the tasks have (such as suspend and resume).
+Tasks can be easily edited in their XML/JSON/YAML form to change the scheduling, modify the parameters, and so on.
+Of course, there are some special functions that only the tasks have (such as _suspend_ and _resume_).
 Such functions cannot be directly controlled using the XML/JSON/YAML format.
 However, the vast majority of task management can be done using the very same methods that are used to control other midPoint objects.
 
@@ -682,13 +824,16 @@ That is the way synchronization tasks are often managed.
 When an XML-formatted resource definition is created, then there is often an associated synchronization task.
 Which means that both resource and all the necessary synchronization tasks can be imported together.
 Synchronization tasks can also be created from midPoint user interface.
-They are usually created by using special-purpose menu:Defined tasks[] tab in resource detail pages.
+They are usually created by using special-purpose menu:Defined tasks[] menu item in resource detail pages.
 
 image::05-03-synchronization-tasks.png[Synchronization tasks]
 
 Once the synchronization tasks are created, they can be managed in the same way as other tasks are managed: in the menu:Server tasks[] part of the midPoint user interface.
 
+
 == Synchronization Example: HR Feed
+
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 This section describes complete working example that feeds HR data into midPoint.
 The ExAmPLE company HR system is an old and complex system.
