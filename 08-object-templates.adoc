@@ -522,12 +522,7 @@ Enter `assignmentTargetSearch` expression evaluator:
                 <assignmentTargetSearch>
                     <targetType>RoleType</targetType>
                     <filter>
-                        <q:equal>
-                            <q:path>extension/autoassignJobCode</q:path>
-                            <expression>
-                                <path>$jobCode</path>
-                            </expression>
-                        </q:equal>
+                        <q:text>extension/autoassignJobCode = $jobCode</q:text>
                     </filter>
                 </assignmentTargetSearch>
             </expression>
@@ -650,12 +645,12 @@ The statements that control automatic assignment of roles can be placed in the r
         <focus>
             <mapping>
                 <source>
-                    <path>organizationalUnit</path>
+                    <path>locality</path>
                 </source>
                 <condition>
                     <script>
                         <code>
-                            organizationalUnit?.norm == 'kitchen'
+                            locality?.norm == 'kitchen'
                         </code>
                     </script>
                 </condition>
@@ -677,31 +672,31 @@ For example, it can set assignment activation, relation, parameters and so on.
 
 But wait, why is there this strange `norm` thing in the condition?
 Remember about Polystrings?
-The `organizationalUnit` property is a polystring.
-Therefore it has `orig` part and `norm` part.
+The `locality` property is a polystring.
+Therefore, it has `orig` part and `norm` part.
 In this case we want to compare the `norm` part, as the organizational unit name may be spelled as `Kitchen` or `KITCHEN`.
-But in all those cases the `norm` part will be `kitchen`.
+However, in all those cases, the `norm` part will be `kitchen`.
 
 If fact, there is little trap for the unwary here.
 The obvious way to specify the expression would be like this:
 
 [source,groovy]
 ----
-organizationalUnit == 'kitchen'       // This is wrong!
+locality == 'kitchen'       // This is wrong!
 ----
 
 However, such expression will always return `false`.
 The reason is that different data types are being compared.
-The `organizationalUnit` property is polystring, while `‘kitchen’` is a string literal.
+The `locality` property is polystring, while `‘kitchen’` is a string literal.
 Polystring and string will never be equal regardless for their content.
 Therefore this form of the expression is wrong.
 Following forms may be used instead:
 
 [source,groovy]
 ----
-organizationalUnit?.orig == 'Kitchen'
-organizationalUnit?.norm == 'kitchen'
-basic.stringify(organizationalUnit) == 'Kitchen'
+locality?.orig == 'Kitchen'
+locality?.norm == 'kitchen'
+basic.stringify(locality) == 'Kitchen'
 ----
 
 The later form is using `stringify()` method from basic midPoint function library.
@@ -714,7 +709,7 @@ This has benefits, but there are also drawbacks.
 
 The benefit of role autoassignment is manageability.
 The conditions are stored in roles themselves.
-Therefore they are bound to the object that they assign.
+Therefore, they are bound to the object that they assign.
 It is there, right in front of administrator’s eyes.
 It may also be a benefit if delegated administration is used. E.g. a role owner may manage role definition and the autoassignment condition in the same object.
 However, in that case beware of the expressions.
