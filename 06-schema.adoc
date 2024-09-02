@@ -8,36 +8,36 @@ If you have built castles in the air, your work need not be lost, that is where 
 
 So far we have been discussing the things that influence how midPoint interacts with the outside.
 Resource definitions, outbound and inbound mappings, even the roles - the primary purpose of those things is to control how data get into midPoint and out of midPoint.
-But now it is time to discuss how midPoint works _internally_.
+Now it is time to discuss how midPoint works _internally_.
 
-Early IDM systems were little more than smart data transformers.
-They took data from data sources, modified them in some way, maybe applied a model such as RBAC and then pushed the data out.
+Early identity management systems were little more than smart data transformers.
+They took data from data sources, modified them in some way, applied access control model such as RBAC, and then they pushed the data out.
 There was very little crucial information that was stored inside the IDM system itself.
-But that was a long time ago and the world is a different place now.
-The focus of IDM field has shifted towards identity governance.
-It is not enough to transform the data.
-Policies need to be applied.
-Compliance needs to be evaluated.
-There are processes to follow, paperwork to do, reports to compile, notifications, reviews and daily status reports.
-It is perhaps no big surprise that there is a good deal of _management_ in Identity Management.
+However, that was a long time ago.
+The world is a different place now.
+Focus of identity management field has shifted towards identity governance and high-level policies.
+It is not enough to just transform the data.
+Policies have to be applied.
+Regulatory compliance has to be evaluated.
+There are processes to follow, paperwork to do, evidence to collect, reports to compile, notifications, reviews and daily status reports.
+It is perhaps no big surprise that there is a good deal of _management_ in Identity Management after all.
 
-Many of the chapters that follow will deal with these management concepts.
-But we have to start from the basics.
-And the goal of this chapter is an explanation of the very foundation of midPoint: schema.
-The goal of midPoint is not just a mere data transformation.
-The goal is to _unify_ the data.
-And midPoint schema plays a crucial part in that ambition.
+Many of the following chapters deal with these management concepts.
+However, we have to start from the basics, the very foundation of midPoint: schema.
+MidPoint is built for much more that just a mere data transformation.
+MidPoint is designed to _unify_ the data.
+Schema plays a crucial part in that ambition.
 
 == MidPoint Schema
 
-MidPoint is designed as a schema-aware system.
-For every bit of data that passes through midPoint we have a complete _definition_.
-We know whether this is string, integer or timestamp.
+MidPoint is designed as a schema-aware system, from the bottom to the top.
+MidPoint has a _definition_ for every bit of data that passes through it.
+We know whether a particular piece of data is string, integer or timestamp.
 We know whether it is single-valued or multi-valued.
 We know whether it is optional or mandatory.
 We know whether this is a sensitive piece of data that requires extra protection.
 We know whether it is part of technical meta-data that we usually do not want to show by default.
-And often we also know what label we should use when we are presenting the data and how that label translates to other languages.
+We usually also know what label we should use when we are presenting the data, and how that label translates to other languages.
 We know quite a lot about the data that we work with.
 All the objects that midPoint works with are completely defined by the schema.
 There is a schema for user, role, org, resource, system configuration and everything else.
@@ -46,44 +46,46 @@ Such awareness of the schema brings significant advantages to midPoint.
 The most obvious advantage is in data presentation.
 We know that we need to render a calendar selector because that particular data property is timestamp.
 We know that we need to render a text field with a plus button to add values because that particular property is a multi-valued string.
-And we know that some fields should be disabled because those properties are read-only.
-This behavior is not hard-coded.
+We know that some fields should be disabled because those properties are read-only.
+This behavior is not hard-coded in the user interface code.
 Vast majority of midPoint user interface is rendered by interpreting midPoint schema.
 
-This approach is absolutely crucial for any serious IDM system.
-One of the reasons is that the IDM system works with data that are retrieved from other systems (resources).
-It is just not possible to hard-code midPoint user interface for all the various attributes that all the possible resources could have.
+This approach is absolutely crucial for any serious data management system to operate efficiently, doubly so for identity management.
+One of the reasons is that the identity management system works with data that are retrieved from other systems (resources).
+It is not realistically possible to hard-code midPoint user interface for all the various attributes that all the possible resources could have.
 A different strategy is needed here, a strategy that is much more dynamic.
 
 When midPoint connects to a new resource for the first time it attempts to retrieve _resource schema_.
-The schema specifies what object classes the resource supports, which attributes the object classes have, what types are those and so on.
-MidPoint transforms this schema to its own native format and stores that in the resource definition.
+The _resource schema_ specifies what object classes the resource supports, which attributes the object classes have, what types are those and other details about the data model of the resource.
+MidPoint transforms this _resource schema_ to its own native format, and stores that in the resource definition.
 This means that midPoint has the schema available anytime it is needed for dynamic interpretation.
 That schema is used to display resource data in the most natural and user-friendly way.
-It is also used by automatic data type conversions, which makes mapping configuration easier.
+It is also used by automatic data type conversions, which makes configuration of mappings easier.
 
 == Data Unification
 
-MidPoint schema is not just a nice way how to create user, role or organizational structure.
+MidPoint schema is not just a nice way to describe user, role or organizational structure.
 It has a much deeper meaning.
 The primary purpose of a schema is integration, data translation and unification.
 A clever reader would certainly remember that we have already talked about _star topology_ or _hub-and-spoke_ integration pattern.
 MidPoint is like a hub of the wheel and all the resources connect to midPoint as spokes.
 MidPoint is actively discouraging direct resource-to-resource communication.
 Everything in midPoint is built for resource-to-midPoint and midPoint-to-resource communication.
-MidPoint is always the center – and for a good reason.
-All resource data need to be translated to and from a midPoint “data language”.
-Thus, midPoint creates a common language that everybody can understand.
-And this is exactly the purpose of midPoint schema.
+MidPoint is always the center – for a very good reason.
+All resource data need to be translated to and from midPoint "data language".
+Thus, midPoint creates a _common language_ that everybody can understand.
+This is the very purpose of midPoint schema.
 The schema of user, role, org and service is designed to contain properties that are often used in identity-related integration scenarios.
 Therefore, an engineer who is designing a mapping is quite likely to find a suitable property in midPoint schema that is prepared to be used.
 
-MidPoint schema forms a _lingua franca_, a common language that can be translating to various data dialects used by the resources.
-But it also provides a basic framework that can be reused for many midPoint deployments.
+MidPoint schema forms a _lingua franca_, a common language that can be translated to various data dialects used by the resources.
+Even more than that, it also provides a basic framework that can be reused for many midPoint deployments.
 Therefore, an engineer starting a new deployment does not need to start on a completely green field.
 The basic schema will always be there to provide a starting point.
 
 TIP: Ever wondered why midPoint is called midPoint? Clever reader would have figured that out already.
+
+// TODO TODO  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 == Basic User Schema
 
