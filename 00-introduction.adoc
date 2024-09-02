@@ -5,19 +5,15 @@
 It's a dangerous business, Frodo, going out your door.
 You step onto the road, and if you don't keep your feet, there's no knowing where you might be swept off to.
 
-// TODO: This book is quite a deep dive. It explains how, but it also explains why, and it adds lot of details.
-// TODO: There are other ways to start: videos, trainings, ...
-
 Many years ago we started a project.
 Because we had to.
-Back then we didn't think too much about business and markets and things like that.
-We were focused on the technology.
-The project simply went on.
-It had its ups and downs – but all the time there was pure engineering passion.
-The effort brought fruits, and now there is a product like no other: midPoint.
+Back then, we didn't think too much about business and markets and things like that.
+We were focused on technology.
+The project started, and it simply went on.
+It had its ups and downs – but all the time there was purpose, improvement and pure engineering passion.
+The effort brought fruits, and now there is a product like no other: _midPoint_.
 
-MidPoint is an identity governance and administration platform.
-We built it from scratch.
+MidPoint is an identity governance and administration (IGA) platform.
 It is a comprehensive and feature-rich system.
 MidPoint can handle identity lifecycle management, identity governance and analytics.
 It can speed up the process that create accounts for new employee, student or customer.
@@ -27,12 +23,10 @@ MidPoint make sure the policies are continually maintained and enforced.
 It governs the processes of access certification (attestations).
 It provides auditing and reporting based on the identity data.
 
-MidPoint is a comprehensive system.
-There are not many products that can do what midPoint does.
 Moreover, midPoint has one inherent advantage over the competing products: midPoint is completely _open source_ platform.
 Open source is the fundamental philosophy of midPoint.
-We believe that open source is a critical aspect in the development of quality software.
-Open source principle is a guiding principle of midPoint community: partners, contributors supporters and all the engineers that work with midPoint.
+We believe that _open source_ is a critical aspect in the development of quality software.
+Open source principles are guiding development of midPoint community: partners, contributors supporters and all the engineers that work with midPoint.
 Open source character means that any engineer can completely understand how midPoint works.
 It also means that midPoint can be modified as needed, that issues can be fixed quickly, and especially to ensure the continuity of midPoint development.
 After all these years with midPoint, we simply cannot imagine using any identity technology which is not open source.
@@ -40,28 +34,38 @@ After all these years with midPoint, we simply cannot imagine using any identity
 There are engineers in our team who have been dealing with identity management deployments since early 2000s.
 The term "Identity and Access Management" (IAM) was not even invented back then.
 We have seen a lot of IAM solutions during our careers.
-The identity management system, such as midPoint, is the core of the vast majority of these solutions.
-Identity management platform is the heart of IAM deployments.
+Identity management system, such as midPoint, is the core of the vast majority of these solutions.
+Identity management platform is the beating heart of IAM deployments.
 We have designed midPoint specifically for that role.
 When it is used by the right hands, midPoint can do miracles.
-Which is exactly what this book is all about: the right use of midPoint to build a practical Identity Management solutions.
-This book will tell you how to build and deploy identity management and governance solution.
+Which is exactly what this book is all about: the right use of midPoint to build a _practical_ identity management solutions.
+
+This book will tell you _how_ to build and deploy identity management and governance solution.
 It will also tell you _why_ to do it in the first place.
 The book will explain not just the features and configuration options.
-It will also describe the motivation and the underlying principles of identity management.
+It will also describe the _motivation_ and the underlying _principles_ of identity management.
 Understanding the principles is as at least as important as knowing the mechanics of an identity management product.
 The book describes _how_ the things work, when they work.
 It also tries to describe the limitations, drawbacks and pitfalls.
 The limitations are often much more important than the features, especially when designing a new solution on a green field.
 
-The first chapter is an introduction to the basic concepts of Identity and Access Management (IAM).
+This book goes for quite a deep dive.
+It explains _how_, it also explains _why_, it includes a lot of details.
+It is meant for people that seek _deep understanding_ of identity and access management.
+This is the best way for some people, yet it may be quite challenging.
+There may be easier ways to start with midPoint.
+There are videos, trainings, and there is a _first steps_ methodology designed especially for easy start with midPoint.
+Therefore, if you want to start as quickly as possible, this book may not suit your needs.
+However, if you want to really know what you are doing, you are at the right place.
+
+The first chapter of this book is an introduction to the basic concepts of Identity and Access Management (IAM).
 It is very general, and it does not deal with midPoint at all.
 Therefore, if you are familiar with Identity and Access Management, feel free to skip the first chapter.
 However, according to our experience, this chapter has some things to tell even to experienced IAM engineers.
 This chapter contains important information to put midPoint in broader context.
 You will need that information to build a complete IAM solution.
 
-The second chapter describes midPoint big picture.
+The second chapter describes midPoint _big picture_.
 It shows how midPoint looks like from the outside.
 It describes how midPoint what midPoint does, how it behaves.
 The purpose of this chapter is to familiarize the reader with midPoint workings and basic principles.
