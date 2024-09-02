@@ -10,7 +10,7 @@
 :creator: {author}
 :producer: Evolveum
 :sectnumlevels: 1
-:midpointversion: 4.8
+:midpointversion: 4.8.4
 :xrefstyle: full
 :source-highlighter: coderay
 :icons: font
