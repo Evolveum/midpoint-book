@@ -85,40 +85,36 @@ The basic schema will always be there to provide a starting point.
 
 TIP: Ever wondered why midPoint is called midPoint? Clever reader would have figured that out already.
 
-// TODO TODO  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
 == Basic User Schema
 
-When it comes to identity management field, there is one concept that is at the center of everything: a concept of _user_.
-MidPoint is no exception.
+When it comes to identity management field, there is one concept that is at the center of everything: concept of _user_.
 User is undoubtedly the most important object in the entire midPoint schema.
-Therefore it is worth to have a closer look at how this object looks like.
+Therefore, it is worth to have a closer look at how this object looks like.
 This is going to be a really educative lesson, as it will explain several fundamental principles of midPoint.
 
-User is represented by schema datatype identified as `UserType`.
-Adding the `Type` suffix to data types is a common convention in midPoint.
-There is `UserType`, `RoleType`, `OrgType`, `ResourceType` and so on.
+_User_ is represented by schema datatype identified as `UserType`.
+Adding the `Type` suffix to data types is a common convention in midPoint, there are `UserType`, `RoleType`, `OrgType`, `ResourceType` and so on.
 This convention is partially historic, partially given by XML Schema conventions, partially a convenience to developers.
 Regardless of the origins, this convention is used for all the data types in midPoint schemas.
 You will get used to it eventually.
 
 `UserType` is what we call an _object definition_ in midPoint parlance.
 This means that `UserType` data structure specifies a complete midPoint object with all the things that any self-respecting object needs.
-There is object identifier (OID), name that can be presented in different forms and languages, free-form description and so on.
+There is _object identifier_ (OID), _name_ that can be presented in different forms and languages, free-form _description_ and so on.
 All midPoint objects have those things.
 
 The `UserType` data structure has many additional _properties_, _containers_ and _references_.
-Property is a primitive data item such as string, integer or a timestamp.
-Container is a complex data structure that contains a bunch of properties or other containers.
-Reference is a pointer to another midPoint object.
+_Property_ is a primitive data item such as string, integer or a timestamp.
+_Container_ is a complex data structure that contains a bunch of properties or other containers.
+_Reference_ is a pointer to another midPoint object.
 
 NOTE: Properties are primitive.
 However, there may be properties that have internal structure, even quite a complex internal structure.
 This is sometimes given by historic reasons.
-But there are also properties that need to be complex, e.g. properties that require localizable presentation or properties that provide protection of data.
-Yes, this may be confusing.
-And even a clever reader is officially puzzled now.
-However, this distinction is not a big issue for now.
+However, there are also properties that need to be complex, e.g. properties that require localizable presentation, or properties that provide protection of data.
+Indeed, this may be somehow confusing.
+Even a clever reader looks puzzled now.
+However, this distinction is not a big issue, for now.
 
 Definition of `UserType` is summarized in the following table:
 
@@ -156,10 +152,10 @@ Example: `active`
 |`assignment`
 |container
 |Set of object's assignments.
-Assignments define the privileges and "features" that this object should have, that this object is entitled to.
-Typical assignment will point to a role or define a construction of an account. +
+Assignments define the privileges, policies and "features" that this object should have, that this object is entitled to.
+Typical assignment will point to a role, or define a construction of an account. +
 Assignments represent what the object should have.
-The assignments represent a policy, a desired state of things.
+The assignments represent a _policy_, a _desired state_ of things.
 
 |`linkRef`
 |reference
@@ -167,8 +163,8 @@ The assignments represent a policy, a desired state of things.
 E.g. a set of accounts linked to a user.
 This is the set of shadows that belongs to the focal object in a sense that these shadows represents the focal object on the resource.
 E.g. The set of accounts that represent the same midPoint user (the same physical person, they are "analogous"). +
-Links define what the object has.
-The links reflect real state of things.
+Links define what the object _has_.
+The links reflect _real state_ of things.
 
 |`activation`
 |container
@@ -264,9 +260,10 @@ Example: `PhD.`
 |User's title defining a work position or a primary role in the organization.
 Example: `CEO`
 
-|`employeeNumber`
+|`personalNumber`
 |property
 |Unique, business-oriented identifier of the employee.
+E.g. employee number, student identifier, citizen identifier, ID card number, social security number, etc.
 Typically used as a correlation identifier and for auditing purposes.
 Should be immutable, but the specific properties and usage are deployment-specific.
 
@@ -290,8 +287,8 @@ This property together with organization may be used to provide easy-to-use data
 This is a basic outline of the schema for `UserType`.
 This description is slightly simplified.
 Not all the items that are defined for `UserType` are shown in the table above.
-Deprecated items are not shown at all.
-Only some operational properties are shown.
+_Deprecated_ items are not shown at all.
+Only some _operational_ properties are shown.
 Some items are simplified or entirely omitted for clarity.
 
 Following example illustrates the use of midPoint `UserType` schema:
@@ -316,7 +313,7 @@ Following example illustrates the use of midPoint `UserType` schema:
     <familyName>Anderson</familyName>
     <honorificSuffix>PhD.</honorificSuffix>
     <title>Business Analyst</title>
-    <employeeNumber>001</employeeNumber>
+    <personalNumber>001</personalNumber>
     <organizationalUnit>10010</organizationalUnit>
 </user>
 ----
@@ -324,66 +321,190 @@ Following example illustrates the use of midPoint `UserType` schema:
 == Operational, Experimental and Deprecated Items
 
 Most of the items in midPoint schema are quite ordinary and they behave as expected.
-Such as the fullName property.
+Such as the `fullName` property.
 The property can be set and changed by using midPoint user interface.
-But then there are some extraordinary items.
-Those are automatically determined and controlled by midPoint core.
+However, then there are some extraordinary items.
+Those are automatically determined and controlled by midPoint core engine.
 Those items are essential for correct operation of midPoint.
-Therefore they are called _operational_ items.
+Therefore, they are called _operational_ items.
 Operational items are usually not directly displayed in the user interface.
 They are either completely hidden, displayed indirectly or displayed only when user chooses to display them.
 
-MidPoint schema has grown and evolved over time.
-And it is still evolving.
+MidPoint schema has grown and evolved over time, and it is still evolving.
 Therefore, it is quite expected that the schema will slightly change over time.
-However, we do not affect midPoint deployments by incompatible schema changes.
-Therefore items are usually not removed from midPoint schema without a warning.
-An item that we do not want is marked as _deprecated_ first.
-At that point such item is still working as before.
-However, it is not displayed in the user interface to discourage use of that item.
+However, we do not want to affect midPoint deployments by incompatible schema changes in every midPoint release.
+Therefore, items are usually not removed from midPoint schema without a warning.
+An item that we plan to remove is marked as _deprecated_ first.
+At that point, such item is still working as it was working before.
+However, it is not displayed in the user interface, to discourage use of that item.
 Deprecated items are removed in one of the subsequent midPoint releases.
 This gives enough time for midPoint users to adapt to schema changes.
 
 There is also another kind of schema evolution.
 Development of most midPoint features is quick and straightforward.
-But then there are features that are quite complex or features that involve some degree of exploration to implement.
+Then there are features that are quite complex or features that involve some degree of exploration.
 Those features cannot be implemented in a single midPoint release.
-There are also features that are provided to the midPoint community as a "preview" to gather feedback for further development.
+There are also features that are provided to the midPoint community as a "preview", to gather feedback for further development.
 All such features are marked as _experimental_.
 Those features are not officially supported, but you are free to use them at your own risk.
 Most new features require extensions of midPoint schema.
-This is also true for those experimental features.
-But when going experimental, there is a fair chance that something will change in the future.
+This is also true for those _experimental_ features.
+However, when going experimental, there is a fair chance that something will change in the future.
 Therefore, we are explicitly marking parts of the schema as _experimental_.
 This is a warning that those parts are likely to change.
-We are not promising any kind of compatibility for experimental parts of midPoint schema.
+We are not promising any kind of compatibility for _experimental_ parts of midPoint schema.
 They may change any time, they may even completely disappear.
-And there will be no deprecation or any other warning.
-Simply speaking: if you are dealing with experimental features, you are completely on your own.
+There will be no deprecation or any other warning.
+Simply speaking: if you are dealing with _experimental_ features, you are completely on your own.
 Do not come crying when those things stop working.
 You have been warned.
 
-== Activation
+== Lifecycle and Activation
 
-Time is cruel and everything that we do is in some way temporary.
+Time is cruel, everything that we do is in some way temporary.
 Except perhaps for stupidity, which seems to be utterly endless.
-But all other things have a beginning and an end.
-Employees have hiring date, contracts have end dates, users can be disabled, roles may get replaced and so on.
-We use the term activation to encompass all those things that deal with the questions of digital life and death of the objects.
+Sadly, all other things have a beginning and an end.
+Employees have hiring date, contracts have end dates, users can be deactivated, roles may get replaced and so on.
+We use the terms _lifecycle_ and _activation_ to encompass all those things that deal with the questions of digital life and death of the objects.
 
-The activation in itself is multi-dimensional and quite complex.
+=== Lifecycle State
+
+Users, as well as other identity-related objects have their cycle of life.
+They are enrolled into the system, such as record of new hire is entered into HR system.
+Then the objects are active, such as user accounts of an active employee.
+The objects may be inactivated for a while, such as an employee on maternal leave or sabbatical.
+Employees do not work for ever, they may resign, may be laid off, or retired.
+Even then, a record of a former employee may be kept for some time.
+
+While the details of the lifecycle may be subtly different for various organizations and types of objects, the basic outline is almost always the same.
+For that reason the basic lifecycle states are pre-configured in midPoint, as illustrated in following diagram.
+
+image::06-01-lifecycle-statechart.png[Lifecycle states]
+
+Objects have their lifecycle state specified in `lifecycleState` property.
+If no explicit value is specified, the default value is `active`.
+Pre-defined lifecycle states are described in following table.
+
+[%autowidth]
+|===
+| State | Is active |  Description | Examples
+
+| `draft`
+| No
+| Definition of the new object in progress.
+The definition may change at any moment, it is not ready yet.
+| Role definition in preparation (not finished yet).
+
+
+| `proposed`
+| No
+| Definition of a new object is ready for use, but there is still a review process to be applied (e.g. approval).
+The definition should not change in this state.
+| Finished new role definition in approval process. +
+Self-registered user, not yet validated.
+
+
+| `active`
+| Yes
+| Active and working definition.
+Ready to be used without any unusual limitations.
+| Active employee. +
+Role in production use.
+
+
+| `suspended`
+| No
+| Suspended definition, temporarily disabled.
+It is expected that the object will return to _active_ state eventually.
+| Employee on temporary leave (maternal leave, sabbatical). +
+Resource temporarily disabled for maintenance.
+
+
+| `deprecated`
+| Yes
+| Active definition which is being phased out.
+The definition is still fully operational, but it should not be used for new assignments.
+E.g. it should not be requested, it should not be approved, etc.
+| Deprecated role: still working, but not intended to be assigned any more. +
+Legacy resource: we still want to read the data, but we do not want to create new accounts.
+
+
+| `archived`
+| No
+| Inactive historical definition.
+It is no longer used.
+It is maintained only for historical, auditing and sentimental reasons.
+E.g. some systems require that the account exists to maintain referential consistency of historical data, audit records, etc.
+It may also be used to "block" the user or account identifier to avoid their reuse.
+| Retired employee, keeping minimal record for accounting reasons and to avoid identifier recycling. +
+Phased-out role definition, kept for historical reasons.
+
+
+| `failed`
+| no
+| Unexpected error has occurred during object lifecycle.
+Result of that event is that the object is rendered inactive.
+The situation cannot be automatically remedied.
+Manual action is needed.
+| Role definition rejected during approvals, without obvious continuation of the process. +
+Role definition identified to be in violation of the policy, immediately taken out of use. +
+Resource with unexpected critical errors, requiring attention od administrators.
+
+|===
+
+Lifecycle state of an object determines whether it is considered active or inactive, among other things.
+This is perhaps the most important effect of lifecycle state on the system.
+User in `suspended` state is inactive, accounts are disabled, user cannot log in.
+Role in `draft` state is also inactive, the definition is not complete yet, it is not ready for use.
+Objects in `active` state operate normally.
+
+When it comes to users, lifecycle state is meant to be controlled automatically, if possible.
+The usual method is to synchronize user lifecycle states from the data source, such as HR system.
+Candidate user record is meant to be `proposed`, the changed to `active` when hired, temporarily set to `suspended` during maternal leave, and finally end up in `archived` state until the object is deleted.
+
+Users are not the only objects that are affected by lifecycle state.
+Many object types in midPoint have lifecycle states.
+Interpretation of the states are still almost the same.
+However, unlike _users_, lifecycle states of other objects are usually controlled manually.
+E.g. a business role begins its life in `draft` state.
+Role manager builds up role definition while in `draft` state, looking for appropriate combination of application roles to include in the definition, consulting with colleagues.
+This may take some time.
+In the meantime, the role is in `draft` state, inactive, without any risk of unintentional use.
+When role definition is done, it is switched to `proposed` state, reviewed, approved and finally set as `active`.
+When in `active` state, the role is fully operational, assigned to users, maybe even modified a bit to adapt to changed circumstances.
+Sooner or later the role becomes obsolete.
+However, we cannot simply delete the role, as it is still assigned to users.
+We have to be careful, we do not want to disrupt the business.
+First, we switch the role to `deprecated` state.
+The role is still active, everything works fine, just the role cannot be requested and it should not be assigned to any users.
+Then we can take our time to clean up all existing role assignments, replacing deprecated role with newer equivalents.
+Finally, when all assignments are gone, we can switch role to `archived` state.
+
+Lifecycle state provides elegant, systematic, unified and controlled mechanisms to control how _active_ an object is.
+It guides an objects from its digital cradle to its eventual binary death.
+As such, it is one of the essential mechanisms of identity management.
+
+=== Activation
+
+Identity management is all about the rules, policies and principles applied at scale.
+However, the world around us is not always completely systematic and elegant.
+There are always exceptions, special cases, data errors and other circumstances that do not entirely fit into our elegant identity management universe.
+For that reason, midPoint has _activation_ mechanism, which provides ability for finer control as compared to simple lifecycle state.
+_Activation_ also provides ability for manual overrides by administrator in case of need.
+
+The _activation_ in itself is multi-dimensional and a bit complex data structure.
 It is composed of several properties that may change in somehow independent and somehow inter-dependent way.
 Following list provides a quick summary of activation properties:
 
-* *Activation status* defines administrative state of the object, often manually set by system administrator.
+* *Administrative status* defines administrative state of the object, usually manually set by system administrator.
 
-* *Validity* properties specify when the object should be active.
+* *Validity* properties specify _when_ the object should be active.
 There is activation date and deactivation date.
 
 * *Effective status* is a computed operational property that shows the current effective status of the user.
-It is computed from other activation properties.
+It is computed from lifecycle state and other activation properties.
 
-* *Lockout status* is used for temporary inactivation of user, e.g. in case of numerous failed authentication attempts.
+* *Lockout status* is used for automatic temporary inactivation of user, e.g. in case of numerous failed authentication attempts.
 
 * *Additional operational properties* provide (meta) data about the past changes of administrative status.
 
@@ -391,10 +512,10 @@ The best way to explain how activation works is to describe the meaning and beha
 
 _Administrative status_ defines the "administrative state" of the object (user),
 i.e. the explicit decision of the administrator.
-If administrative status is set, this property overrides any other constraints in the activation type.
+If administrative status is set, this property overrides any other constraints in the activation type (but not the lifecycle state).
 E.g. if this is set to `enabled` and the user is not yet valid (according to _validity_ below), the user should be considered active.
 If set to `disabled` the user is considered inactive regardless of other settings.
-Therefore this property does *not* necessarily define an actual state of the object.
+Therefore, this property does *not* necessarily define an actual state of the object.
 It is a kind of "manual override".
 In fact, the most common setting for this property is to leave it unset and let other properties determine the state.
 If this property is not present then the other constraints in the activation type should be considered (namely validity properties, see below).
@@ -408,55 +529,101 @@ Other activation properties determine the resulting status.
 
 |`enabled`
 |The entity is active.
-It is enabled and fully operational.
+It is enabled and fully operational (if lifecycle state permits).
 
 |`disabled`
 |The entity is inactive.
 It has been disabled by an administrative action.
 
-This indicates *temporary* inactivation and there is an intent enable the entity later.
-It is usually used for an employee on parental leave, sabbatical, temporarily disable account for security reasons, etc.
-
-|`archived`
-|The entity is inactive.
-It has been disabled by an administrative action.
-
-This indicates *permanent* inactivation and there is no intent to enable the entity later.
-
-This state is used to keep the user record or account around for archival purposes.
-E.g. some systems require that the account exists to maintain referential consistency of historical data, audit records, etc.
-It may also be used to "block" the user or account identifier to avoid their reuse.
-It is usually used for retired employees and similar cases.
+This indicates *temporary* inactivation with an intent to enable the entity later.
+It is usually used to temporarily disable account for security reasons.
 |===
 
-If the administrative status is not present and there are no other constraints in the activation type or if there is no activation type at all, then the object is assumed to be "enabled", i.e. that the user is active.
+If the administrative status is not present, and there are no other constraints in the activation type, or if there is no activation type at all, then the object is assumed to be "enabled", i.e. that the user is active - provided that the lifecycle state of the object allows it.
 
-_Validity_ refers to state when the object is considered legal or otherwise usable.
-In midPoint the validity is currently defined by two dates: the date from which the object is valid (`validFrom`) and the date to which an object is valid (`validTo`).
-When talking about users these dates usually represent the date when the contract with the user started (hiring date) and the date when the contract ends.
+NOTE: The `archived` state of administrative status should not be used.
+Lifecycle state `archived` should be used instead.
+This administrative status value is one of the leftovers from midPoint history, from the dark ages when lifecycle state did not exist yet.
+
+_Validity_ refers to times _when_ the object is considered legal or otherwise usable.
+In midPoint, the validity is currently defined by two dates: the date from which the object is valid (`validFrom`) and the date to which an object is valid (`validTo`).
+When talking about users, these dates usually represent the date when the contract with the user started (hiring date) and the date when the contract ends.
 The user is considered _valid_ (active) between these two dates.
 The user is considered inactive before the `validFrom` date or after the `validTo` date.
 
-It is perfectly OK to set just one of the dates or no date at all.
-If any date is not set then it is assumed to extend to infinity.
-E.g. if `validFrom` date is not set the user is considered active from the beginning of the universe to the moment specified by the `validTo` date.
+It is perfectly acceptable to set just one of the dates or no date at all.
+If any date is unset then it is assumed to extend to infinity.
+E.g. if `validFrom` date is not set, the user is considered active from the beginning of the universe to the moment specified by the `validTo` date.
 
 The validity is overridden by the administrative status.
 Therefore, if administrative status is set to any non-empty value then the validity dates are not considered at all.
 
-Activation is also influenced by _object lifecycle_.
-Object lifecycle specifies phases of object’s life, such as `draft`, `proposed`, `active` and `deprecated`.
-There are some lifecycle states in which the object is considered to be active.
-And there are other states when the object is considered to be inactive.
-The later states are important, because object lifecycle can completely override activation.
+_Lockout status_ defines the state of user or account lock-out.
+Lock-out means that the account was temporarily disabled due to failed login attempts or a similar abuse attempt.
+This mechanism is usually used to avoid brute-force or dictionary password attacks and the lock will usually expire by itself in a matter of minutes.
+
+This value is usually set by the resource or by midpoint internal authentication code.
+This value is mostly used to read the lockout status of a user or an account.
+This value is semi-writable.
+If the object is locked then it can be used to set it to the unlocked state.
+However, it does not work the other way around.
+It cannot be used to lock the account.
+Locking is always done by the authentication code.
+
+|===
+|Lockout Status Value |Description
+
+|_no value_
+|No information (generally means unlocked user or account)
+
+|`normal`
+|Unlocked and operational user or account.
+
+|`locked`
+|The user or account has been locked.
+Log-in to the account is temporarily disabled.
+|===
+
+Please note that even if user of account are in the `normal` (unlocked) state, they still can be disabled by lifecycle, administrative status or validity which will make them efficiently inactive.
+
+There is also an informational property `lockoutExpirationTimestamp` that provides information about the expiration of the lock.
+However, not all resources may be able to provide such information.
+
+
+=== Lifecycle vs Activation
+
+_Lifecycle state_ and _activation_ work together, although the interaction between them might look slightly mysterious.
+Object lifecycle specifies phases of object’s life, separated by important life-changing events.
+Therefore, lifecycle state is the most important aspect when considering whether object is active or inactive.
+When lifecycle state specifies that object is _inactive_, then the decision is final.
+Such object is inactive, regardless of any other activation setting.
+
 This makes perfect sense.
 E.g. when an object is in `draft` state, it is just being prepared for use.
-Such object may have validity dates or administrative status that would normally activate it.
-But we do not want draft objects to be active yet.
+Such object may have validity dates or administrative status that would normally make it active.
+However, we do not want draft objects to be active yet.
 Such object may need a review and approval to transition to `active` lifecycle state.
 Only then it will really become active.
-This is just a rough overview of the lifecycle functionality that only scratches the surface.
-We will deal with object lifecycle details later in this book.
+
+If lifecycle state indicates object as _active_, the the _activation_ part is considered.
+Administrative status, validity dates and lockout status are computed, which determines state of the object.
+
+This may look complicated.
+However, it matches the needs of identity management reality quite well.
+As the rule of the thumb, it is usually _lifecycle state_ which is synchronized from data source.
+E.g. the HR system makes computation whether employee is in hiring process, whether the employee is active or retired.
+MidPoint takes that HR status and translates it to the pre-defined _lifecycle state_ values.
+However, the HR system may not be able to provide such aggregate status.
+In that case midPoint _inbound mappings_ should be used in a creative way to supplement that functionality.
+Unfortunately, the details are always deployment-specific, as the specific solution depends on the data that the HR system can provide.
+E.g. it is quite a common practice to map validity dates from HR system, and let midPoint do the validity calculations.
+However, it is strongly recommended to control _lifecycle state_ by using inbound mapping from the HR system, and do *not* control _administrative status_.
+_Administrative status_ should remain as a "last resort" mechanisms when user needs to be quickly disabled by manual action, e.g. in case of security incident.
+
+// TODO TODO  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+
+There are several _operational properties_ in the activation data structure that provide operational data about user activation:
 
 Activation is quite a complex matter that is spread out in several dimensions.
 Therefore it may not be entirely obvious which objects are active and which are not.
@@ -493,38 +660,7 @@ Similarly to effective status, there is yet another operational property `validi
 This property reflects the state of validity constraints with respect to current time.
 The values are `before`, `in` and `after`, meaning the states before the validity intervals started, inside the validity interval and after the validity interval ended respectively.
 
-_Lockout status_ defines the state of user or account lock-out.
-Lock-out means that the account was temporarily disabled due to failed login attempts or a similar abuse attempt.
-This mechanism is usually used to avoid brute-force or dictionary password attacks and the lock will usually expire by itself in a matter of minutes.
-
-This value is usually set by the resource or by midpoint internal authentication code.
-This value is mostly used to read the lockout status of a user or an account.
-This value is semi-writable.
-If the object is locked then it can be used to set it to the unlocked state.
-But not the other way around.
-It cannot be used to lock the account.
-Locking is always done by the authentication code.
-
-|===
-|Lockout Status Value |Description
-
-|_no value_
-|No information (generally means unlocked user or account)
-
-|`normal`
-|Unlocked and operational user or account.
-
-|`locked`
-|The user or account has been locked.
-Log-in to the account is temporarily disabled.
-|===
-
-Please note that even if user of account are in the `normal` (unlocked) state they still be disabled by administrative status or validity which will make them efficiently inactive.
-
-There is also an informational property `lockoutExpirationTimestamp` that provides information about the expiration of the lock.
-However, not all resources may be able to provide such information.
-
-There are several _operational properties_ in the activation data structure that provide operational data about user activation:
+There also other _operational_ properties in the activation data structure that provide operational data about user activation:
 
 |===
 |Name |Type |Description
@@ -648,6 +784,11 @@ Even assignments have activation, which is a crucial element in some configurati
 Assignments are often used to model employment contracts, student affiliations, service contracts and similar concepts that have time boundaries.
 This is usually achieved by a clever use of assignment activation.
 
+
+
+// TODO: activation vs lifecycle: not easy, quite deployment-specific. Prefer lifecycle if you can.
+// TODO: validity intervals vs HR-controlled lifecycle state. Deployment-specific.
+
 == Schema Definition
 
 So far we have talked mostly about the use schema (`UserType` data type).
@@ -736,7 +877,7 @@ The extensions will be used by midPoint user interface, expression-processing co
 Our ExAmPLE company was quite happy with the progress of IDM deployment so far.
 Mappings were used to synchronize values of user names and all other common attributes.
 There is plenty of suitable properties for that in midPoint schema such as `givenName` and `fullName`.
-Even `employeeNumber` came very handy.
+Even `personalNumber` came very handy.
 But now they need to customize midPoint schema to better suit their very specific needs.
 The company management decided that the people look really cool in fancy hats.
 Therefore they will provide a hat for every employee.
@@ -1077,7 +1218,7 @@ Therefore, there is an `ObjectType` data type that specifies all the items that 
 However, midPoint schema is substantial and one common ancestor won’t be enough.
 MidPoint type hierarchy was evolving during midPoint development and now it forms quite a rich structure.
 
-image::6-1-type-hierarchy.png[Type hierarchy]
+image::06-02-type-hierarchy.png[Type hierarchy]
 
 Following table is summarizing midPoint data types and their purpose.
 
