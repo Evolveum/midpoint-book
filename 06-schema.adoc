@@ -620,16 +620,11 @@ E.g. it is quite a common practice to map validity dates from HR system, and let
 However, it is strongly recommended to control _lifecycle state_ by using inbound mapping from the HR system, and do *not* control _administrative status_.
 _Administrative status_ should remain as a "last resort" mechanisms when user needs to be quickly disabled by manual action, e.g. in case of security incident.
 
-// TODO TODO  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
-
-There are several _operational properties_ in the activation data structure that provide operational data about user activation:
-
-Activation is quite a complex matter that is spread out in several dimensions.
-Therefore it may not be entirely obvious which objects are active and which are not.
+Lifecycle state and activation are somehow complex and spread out in several dimensions.
+Therefore, it may not be entirely obvious which objects are active and which are not.
 For that reason midPoint provides an operational property `effectiveStatus` which shows the computed "effective state" of the object.
-Simply speaking it is a read-only property that tells whether the user should be considered active or inactive.
-The effective status is the result of combining several activation settings (administrative status, validity dates, etc.).
+Simply speaking, it is a read-only property which tells whether the user should be considered active or inactive.
+The effective status is the result of combining lifecycle state and several activation settings (administrative status, validity dates, etc.).
 
 The effective status holds the result of a computation, therefore it is an _operational_ property that is recomputed every time the status changes.
 The effective status should not be set directly.
@@ -691,10 +686,10 @@ It is used to avoid repeated validity change deltas.
 Those properties are _operational_, therefore from the user point of view they are read-only.
 The values are automatically computed by midPoint and stored in the database.
 
-Let’s see how that works on some examples.
+Let’s see how that works on few examples.
 The simplest example is perhaps not even worth mentioning.
-A user without any activation data structure is considered to be active (enabled).
-When such user is stored in midPoint repository, midPoint will automatically compute effective status:
+A user without any lifecycle state or activation data structure is considered to be _active_ (enabled).
+When such user is stored in midPoint repository, midPoint will automatically compute `effectiveStatus`:
 
 [source,xml]
 ----
@@ -707,12 +702,44 @@ When such user is stored in midPoint repository, midPoint will automatically com
 </user>
 ----
 
-Administrator can disable such user by using administrative status property:
+The user can be temporarily inactivated by setting `lifecycleState` to `suspended`.
+Property `effectiveStatus` will indicate that user is _inactive_ now.
 
 [source,xml]
 ----
 <user>
     <name>alice</name>
+    <lifecycleState>suspended</lifecycleState>
+    ...
+    <activation>
+        <effectiveStatus>disabled</effectiveStatus>
+    </activation>
+</user>
+----
+
+Changing `lifecycleState` back to `active` re-activates the user:
+
+[source,xml]
+----
+<user>
+    <name>alice</name>
+    <lifecycleState>active</lifecycleState>
+    ...
+    <activation>
+        <effectiveStatus>enabled</effectiveStatus>
+    </activation>
+</user>
+----
+
+Lifecycle state is usually maintained automatically, using inbound mapping from the HR system.
+If an administrator would try to change lifecycle state manually, synchronization may reset the state back to its previous value.
+However, administrator can manually disable user by using `administrativeStatus` property:
+
+[source,xml]
+----
+<user>
+    <name>alice</name>
+    <lifecycleState>active</lifecycleState>
     ...
     <activation>
         <administrativeStatus>disabled</administrativeStatus>
@@ -720,12 +747,13 @@ Administrator can disable such user by using administrative status property:
 </user>
 ----
 
-Once again, when such user object is stored after the modification, midPoint computes the value of effective status:
+When such user object is stored after the modification, midPoint computes the value of effective status:
 
 [source,xml]
 ----
 <user>
     <name>alice</name>
+    <lifecycleState>active</lifecycleState>
     ...
     <activation>
         <administrativeStatus>disabled</administrativeStatus>
@@ -734,8 +762,10 @@ Once again, when such user object is stored after the modification, midPoint com
 </user>
 ----
 
-The use of administrative status is usually quite harsh.
-MidPoint deployments are often using validity constraints instead.
+Even though the lifecycle state of the user is `active`, the user is manually inactivated using `administrativeStatus`.
+
+The use of administrative status is usually quite harsh, and lifecycle state may be quite simplistic.
+MidPoint deployments are often using validity constraints in addition to lifecycle state.
 For example, an employee that has employment contract for a year would look like this:
 
 [source,xml]
@@ -773,8 +803,11 @@ However, if there is ever a need to explicitly disable the user, administrative 
 
 In this case the user is still in its validity interval.
 Hence the `in` value of `validityStatus`.
-But the administrative status is explicitly set to `disabled`.
-Therefore the resulting effective status is also `disabled`.
+However, the administrative status is explicitly set to `disabled`.
+Therefore, the resulting effective status is also `disabled`.
+
+// TODO TODO  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
 
 The concept of activation is not limited to users.
 Many midPoint objects have activation.
