@@ -617,8 +617,20 @@ However, the HR system may not be able to provide such aggregate status.
 In that case midPoint _inbound mappings_ should be used in a creative way to supplement that functionality.
 Unfortunately, the details are always deployment-specific, as the specific solution depends on the data that the HR system can provide.
 E.g. it is quite a common practice to map validity dates from HR system, and let midPoint do the validity calculations.
-However, it is strongly recommended to control _lifecycle state_ by using inbound mapping from the HR system, and do *not* control _administrative status_.
+The specific mappings of lifecycle state and validity dates is always somehow tricky in practice.
+It heavily depends on specific characteristics and capabilities of the data source (HR system).
+However, it is strongly recommended to control _lifecycle state_ by using _inbound mapping_ from the data source (HR system), and do *not* control _administrative status_.
 _Administrative status_ should remain as a "last resort" mechanisms when user needs to be quickly disabled by manual action, e.g. in case of security incident.
+
+The concepts of lifecycle and activation are not limited to users.
+Many midPoint objects have lifecycle state and activation.
+Roles can expire, organizational units can be disabled and so on.
+Lifecycle and activation are a concepts that have a very broad application in midPoint.
+Even assignments have activation, which is a crucial element in some configuration (e.g. multi-affiliation).
+Assignments are often used to model employment contracts, student affiliations, service contracts and similar concepts that have time boundaries.
+This is usually achieved by a clever use of assignment activation.
+
+=== Activation Operational Properties
 
 Lifecycle state and activation are somehow complex and spread out in several dimensions.
 Therefore, it may not be entirely obvious which objects are active and which are not.
@@ -685,6 +697,8 @@ It is used to avoid repeated validity change deltas.
 
 Those properties are _operational_, therefore from the user point of view they are read-only.
 The values are automatically computed by midPoint and stored in the database.
+
+=== Activation and Lifecycle Examples
 
 Let’s see how that works on few examples.
 The simplest example is perhaps not even worth mentioning.
@@ -806,72 +820,61 @@ Hence the `in` value of `validityStatus`.
 However, the administrative status is explicitly set to `disabled`.
 Therefore, the resulting effective status is also `disabled`.
 
-// TODO TODO  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
-
-The concept of activation is not limited to users.
-Many midPoint objects have activation.
-Roles can expire, organizational units can be disabled and so on.
-Activation is a concept that has a very broad application in midPoint.
-Even assignments have activation, which is a crucial element in some configuration (e.g. multi-affiliation).
-Assignments are often used to model employment contracts, student affiliations, service contracts and similar concepts that have time boundaries.
-This is usually achieved by a clever use of assignment activation.
-
-
-
-// TODO: activation vs lifecycle: not easy, quite deployment-specific. Prefer lifecycle if you can.
-// TODO: validity intervals vs HR-controlled lifecycle state. Deployment-specific.
+Activation operational properties are very useful, not just for troubleshooting.
+These properties are often used in reports, dashboards and search filters.
+E.g. the best way to search all _active_ users is to search for `activation/effectiveStatus = "enabled"`.
+Similarly, filter `activation/effectiveStatus = "disabled"` looks for all _inactive_ users, regardless whether they are inactive due to lifecycle state, administrative status or validity constraints.
 
 == Schema Definition
 
-So far we have talked mostly about the use schema (`UserType` data type).
-However, the entire midPoint schema is quite complex.
-There are many types of objects and there are thousands of data types overall.
-It would be almost impossible to manage such a big schema directly in midPoint code.
-Therefore the schema is defined in special definition files that are used by midPoint in several ways.
-It is used by the user interface to automatically render form fields.
-It is used by midPoint expression engine to automatically convert data types.
-It is even used by midPoint build process (compilation) to make sure that the schema is properly used in midPoint code.
-MidPoint is completely schema-aware system from top to bottom.
+So far we have talked mostly about the _user_ schema (`UserType` data type).
+However, midPoint schema much broader than that.
+There are many types of objects, and there are thousands of data types overall.
+It would be almost impossible to manage such a big schema if it were hard-coded in midPoint code.
+Therefore, the schema is defined in special definition files that are used by midPoint in several ways.
+Schema definition used by the _user interface_ to automatically render form fields.
+It is also used by midPoint _expression engine_ to automatically convert data types.
+It is even used by midPoint _build process_ (compilation), to make sure that midPoint code is using the schema properly.
+MidPoint is completely schema-aware system, from the bottom to the top.
 
 Schema obviously plays a crucial role in everything that midPoint does.
-Therefore it may be interesting to have a look at schema definition.
-This can be particularly useful for engineers that are deploying midPoint professionally and that often needs to extend and customize the schema.
+Therefore, it may be interesting to have a closer look at schema definition.
+This can be particularly useful for engineers that are deploying midPoint professionally, and that often needs to extend and customize the schema.
 
-MidPoint schema is specified in XML Schema Definition (XSD) format.
+MidPoint schema is specified in _XML Schema Definition (XSD)_ format.
 MidPoint schema is defined in several parts, but the most important is the "core" schema definition.
-The schema files reside in midPoint source code in schema component in the `infra` subsystem.
-Therefore schema files can be found in the `resources` part under the `infra/schema` subdirectory of midPoint source code.
+The schema files reside in midPoint source code in `schema` component in the `infra` subsystem.
+Therefore, schema files can be found in the `resources` part under the `infra/schema` subdirectory of midPoint source code.
 Schema files are also included in midPoint distribution package for convenience.
 
 TIP: Why XSD?
-Why did we choose to use the XML Schema Definition format for midPoint schema?
+Why did we choose to use the _XML Schema Definition_ format for midPoint schema?
 There are historic reasons and there are pragmatic reasons.
-Back in early 2010s when midPoint was born XML was perhaps the only sensible choice to build a complex system.
+Back in early 2010s when midPoint was born, XML was perhaps the only sensible choice to build a complex system.
 Alternatives such as JSON were young, and their schema languages ranged from _very limited_ through _useless_ to _non-existent_.
 Therefore, XML and XSD were a natural choice.
-However, quite early in midPoint development we have discovered limitations of XSD and especially limitations of Java libraries that work with XML and XSD.
-We had to extend XSD with custom features.
+We needed to extend XSD with custom features.
 Fortunately, XSD allowed that.
-We also had to rewrite parts of the XML/XSD-processing code.
-We have also invented a way how to use XSD to describe generic data structures (a.k.a. "Prism objects") that can be represented in XML, JSON and YAML.
-Therefore, XSD did not really hold us back that much.
-Despite all the limitations, XSD worked for us quite well during all those years.
+We also needed to rewrite parts of the XML/XSD-processing code.
+Unfortunately, the XML ecosystem was not designed for this, and we have also hit other limitations of XML and XSD.
+We have to invent a new way to use XSD to describe generic data structures (a.k.a. "Prism objects") that can be represented in XML, JSON and YAML.
+Due to that innovation, XSD did not really hold us back that much.
+Despite all its limitations, XSD worked for us quite well during all those years.
 However, we are getting very close to the very limits of what XSD (or any similar schema language) can do.
-We are already working on a replacement: _Axiom_ data modeling language.
+We are already working on a replacement: _Axiom data modeling language_.
 Axiom is a next-generation language, supporting not just a _data_ schema, but also _meta-data_ schema.
 Axiom is still very young, it needs more work and time to mature.
 However, it is certainly a future for midPoint.
 
-Every deployment engineer that takes midPoint deployments seriously should be aware of the schema.
+Every deployment engineer that takes midPoint deployments seriously should be aware of the _schema_.
 Hardcore engineer will surely open the XSD files in their favorite text editor in the terminal and analyze the definitions line-by-line.
 Developers could open the XSD files in their IDEs and have a nice organized look at the schema.
-But even an ordinary engineer could benefit from learning the basics of XSD and having a look at a few important data types in midPoint schema.
+However, even an ordinary engineer could benefit from learning the basics of XSD and having a look at a few important data types in midPoint schema.
 
 Schema definition is not just about the properties, containers and data types.
 Crucial part of the schema definition is in-line documentation.
 Most of the data types and items are documented by using XSD in-line documentation mechanism.
-Therefore a huge amount of details about midPoint can be learned by exploring the schema.
+Therefore, a huge amount of details about midPoint can be learned by exploring the schema.
 We have tried to make that process easier by developing _schemadoc_ mechanism.
 Schemadoc is a process that takes raw midPoint schema and generates HTML documentation out of that.
 This task is part of midPoint build process and generated documentation is a result of midPoint build.
@@ -883,40 +886,42 @@ MidPoint schema is part of midPoint itself.
 It is used when midPoint is compiled.
 It is parsed when midPoint starts.
 It is used by midPoint core and user interface.
-MidPoint is complex and even the experts can be sometimes wrong.
+MidPoint is complex, and even the experts can be sometimes wrong about midPoint functionality.
 MidPoint documentation is quite extensive, therefore it may be misleading or out of date at places.
 But not the schema.
 Schema is always right.
-Otherwise midPoint won’t work.
-Schema is the law.
+Otherwise midPoint won’t work at all.
+In midPoint world, _schema_ is the law.
+When in doubt, look at the schema.
 
 == Schema Extensibility
 
 MidPoint schema is quite rich.
-Many of the properties that are frequently used in IDM deployments are already part of midPoint schema.
-But reality has always a way to bring unexpected things.
+Many of the properties that are frequently used in identity management deployments are already part of midPoint schema.
+Given name, family name, full name, additional names, honorific titles, job title, personal number - it is all there, ready to be used.
+However, reality has always a way to bring unexpected things.
 Therefore, midPoint deployments won’t get far if midPoint schema cannot be extended.
 
 Vast majority of midPoint schema is available at _compile-time_.
-This means that such schema is used during compilation (build) of midPoint.
-That "static" part of schema is somehow hardcoded into midPoint itself and it would be very difficult to change.
-Therefore we have developed a mechanism to extend the schema at _deployment-time_.
-Small parts of the XSD definition can be provided when midPoint is deployed.
-MidPoint will read those definitions when it starts up.
+This means that such schema is used during _compilation_ (build) of midPoint.
+That "static" part of schema is somehow hardcoded into midPoint itself, and it would be very difficult to change.
+Therefore, we have developed a mechanism to extend the schema at _deployment-time_.
+Small parts of the XSD definition can be provided when midPoint is _deployed_.
+MidPoint reads those definitions when it starts up.
 The static part of the schema is extended with those definitions.
-From that point on the extensions are part of midPoint schema.
-The extensions will be used by midPoint user interface, expression-processing code and all other parts of midPoint.
+From that point on, the extensions are part of midPoint schema.
+The extensions are naturally used by midPoint user interface, expression-processing code and all other parts of midPoint.
 
-Our ExAmPLE company was quite happy with the progress of IDM deployment so far.
+Our ExAmPLE company was quite happy with the progress of their identity management deployment so far.
 Mappings were used to synchronize values of user names and all other common attributes.
 There is plenty of suitable properties for that in midPoint schema such as `givenName` and `fullName`.
 Even `personalNumber` came very handy.
-But now they need to customize midPoint schema to better suit their very specific needs.
-The company management decided that the people look really cool in fancy hats.
-Therefore they will provide a hat for every employee.
-Which means that the IDM system needs to track hat size for all users.
-Hat size is not used in the IDM deployments very often, therefore it is not a part of standard midPoint schema.
-But fortunately, it is easy to extend the schema.
+However, now they need to customize midPoint schema to better suit their very specific needs.
+The company management decided that the people are going to look really cool in fancy hats.
+Therefore, they are going provide a hat for every employee.
+Which means that the identity management system needs to track hat size for all users.
+Hat size is not used in the identity management deployments very often, therefore it is not a part of standard midPoint schema.
+Fortunately, it is quite easy to extend the schema.
 
 First step to extend midPoint schema is to prepare a small XSD file:
 
@@ -941,20 +946,20 @@ First step to extend midPoint schema is to prepare a small XSD file:
 
 This file defines a new data structure `UserTypeExtensionType`.
 The name of this data structure does not really matter.
-What matters is that it is bound to an extension of `UserType` in the annotation part of the type definition.
-When midPoint reads this file, it will extend the definition of `UserType` with this data type.
+What matters is that it is bound to an extension of `UserType` in the _annotation_ part of the type definition.
+When midPoint reads this file, it extends the definition of `UserType` with this data type.
 
-The extension data type specifies just a single property: `hatSize`.
-This is an optional single-valued string property.
-Every user in midPoint will have this property.
-User interface will automatically display text input field for this property.
+The extension specifies just a single property: `hatSize`.
+This is an optional single-valued string property, which is specified by the `minOccurs` and `maxOccurs` clauses.
+Every user in midPoint can have this property.
+When this schema extension is applied, user interface is going to automatically display text input field of this property for every user.
 
 MidPoint administrator puts this XSD content into `example.xsd` file.
 Name of the file can be chosen arbitrarily as long as it has `.xsd` file extension.
-Administrator copies that file to `schema` subdirectory of midPoint home directory and restarts midPoint.
+Administrator copies that file to `schema` subdirectory of _midPoint home directory_ and restarts midPoint.
 From that point on the schema extension is active.
 
-The users can now be extended with custom property:
+The users can be extended with custom property now:
 
 [source,xml]
 ----
@@ -969,28 +974,37 @@ The users can now be extended with custom property:
 
 There is a couple of important remarks to be made here.
 Firstly, all the extension properties are always placed in a special `extension` container in the objects.
-Even though the properties are placed inside a container, the user interface will present them in the same way as the static (native) midPoint properties.
+Even though the properties are placed inside a container, the user interface will present them in the same way as the other midPoint properties originating from the static midPoint schema.
+In midPoint, all schema items are treated equally, regardless of their origin.
 
-Secondly, a clever reader surely noticed that we have used XML namespace here.
-We have omitted XML namespaces from the majority of other examples as they are not that important when working with midPoint objects.
-But schema is different.
-Namespaces are handled quite a strict way when working with the schema.
-Namespaces must be declared and namespace prefixes must be properly used in all XSD definitions.
+Secondly, a clever reader surely noticed that we have used _XML namespace_ here.
+We have omitted XML namespaces from the majority of other examples, as they are not that important when working with midPoint objects.
+However, schema is different.
+Namespaces are handled quite strictly when working with the schema.
+Namespaces must be declared and namespace prefixes must be properly used in all _XSD definitions_.
+This is how the XSD language was designed.
 The most important namespace in this case is the _target namespace_ of the extended schema.
 The URI for this namespace should be chosen in such a way that it is globally unique.
 The use of your DNS domain is the recommended technique.
 
 Namespaces also _should_ be used when working with `extension` container in users and other midPoint objects.
-This requirement is not that strict as midPoint can usually figure out the namespace.
+This requirement is not that strict, as midPoint can usually figure out the namespace.
 However, this may be a problem in case that several schema extensions are combined.
-Such combinations are possible in midPoint.
-MidPoint will simply parse all the XSD files in the schema directory and apply all of them as extensions.
-The namespace is used to differentiate between them.
-Therefore, if there is an expectation that several schema extensions will be used in the same deployment then the use of namespaces in object extension is more than recommended.
+Such schema combinations are fully supported by midPoint.
+MidPoint simply parses all the XSD files in the schema directory and applies all of them as extensions.
+These files may contain conflicting definitions of the same items.
+The _namespace_ is used to differentiate between them.
+Therefore, if there is an expectation that several schema extensions will be used in the same deployment, then the use of namespaces in object extension is more than recommended.
 
-TIP: Why is there an `extension` container?
-Why are the properties not mixed among other static properties?
+[TIP]
+.Extension container
+====
+Why is there an `extension` container?
+Why are the extension properties not mixed among other static properties?
+XML should allow that.
+Yet, it does not really work well in practice.
 This is related to the intricacies of XML and XML schema.
+
 Theoretically, XML is completely extensible.
 However, when XML Schema is applied to XML, some extensibility scenarios do not work very well.
 That is also the case for mixing of static XML elements and dynamic XML elements.
@@ -999,17 +1013,18 @@ This was further amplified by limitations of Java XML libraries.
 The easiest and perhaps even most correct way to resolve this limitation was to create a dedicated XML element for schema extensions.
 That is what we have done in early midPoint versions.
 The schema processing code in midPoint has significantly improved since, and now we are almost at the point where we could remove the `extension` element.
-But we are not yet there.
+Unfortunately, we are not yet there.
 Moreover, there is still an aspect of compatibility to consider.
-Therefore, the `extension` element stays for now.
+The `extension` element stays, at least for now.
 However, we are trying hard to hide its existence from the end user.
+====
 
 MidPoint schema does not just specify the "core" data model.
 MidPoint schema goes a bit further, and it can also specify the details of data _presentation_.
-This means that the schema can specify a label that should be used for particular data item, help text and so on.
-The XML Schema (XSD) cannot do this.
-But fortunately, XSD schema can be extended by _annotations_.
-Those annotations can be used to define the presentation properties of the items:
+This means that the schema can specify a _label_ that should be used for particular data item, _help text_, _tooltip_ and other characteristics.
+The XML Schema (XSD) cannot do this out-of-the-box.
+Fortunately, XSD schema can be extended by _annotations_.
+Those annotations can be used to define the presentation properties of an items:
 
 [source,xml]
 ----
@@ -1020,7 +1035,7 @@ Those annotations can be used to define the presentation properties of the items
             <xsd:appinfo>
                 <a:displayName>Hat size</a:displayName>
                 <a:help>
-                    Your hat size in whatever mysterious units the hatters
+                    Your hat size, in whatever mysterious units the hatters
                     are using for measuring hats.
                 </a:help>
             </xsd:appinfo>
@@ -1029,11 +1044,11 @@ Those annotations can be used to define the presentation properties of the items
     ...
 ----
 
-This works fine if your system works for just a single localization environment.
-But this is not enough in case that you need more than one language.
-MidPoint was born in Europe and we know quite well all the pain that comes with multi-language environments.
-MidPoint is designed to be localizable.
-Therefore you can simply use localization keys instead of actual text:
+This works fine, if your system works in a single localization environment.
+Yet, this is not enough in case that you need to support more than one language.
+MidPoint was born in Europe, and here at the old continent we know quite well all the pain that comes with multi-language environments.
+Therefore, MidPoint is designed to be localizable.
+You can simply use localization keys instead of actual text:
 
 [source,xml]
 ----
@@ -1050,28 +1065,28 @@ Therefore you can simply use localization keys instead of actual text:
     ...
 ----
 
-The actual text to be used for the label can be looked up in the localization catalog.
+The actual text to be used for the label can be looked up in the _localization catalog_.
 However, using localization catalogs is a matter of its own.
 It will be covered by later chapters.
 
 == PolyString and Protected String
 
 Majority of midPoint schema is pretty standard stuff.
-When you walk through the jungle of midPoint schema definition you can see all the usual wildlife: strings, integers, booleans, timestamps and binary values.
-But there are few species that are quite strange.
+When you walk through the jungle of midPoint schema definition, you can see all the usual wildlife: strings, integers, booleans, timestamps and binary values.
+Yet, there are few species that are quite strange.
 However strange they might look, they are immensely useful.
-Their names are _PolyString_ and _Protected String_.
+Their names are _PolyString_ and _protected string_.
 
-_PolyString_ is the stranger one of those two.
+_PolyString_ (`PolyStringType`) is the stranger one of those two.
 Its name came from _polymorphic string_, which means a string that can take a variety of forms.
-In its simplest form PolyString is just a simple string that can be _normalized_.
-Normalization means that we convert the original string into some standard form, e.g. we are removing leading and trailing whitespace (trimming), we are converting all letters to lower case, simplifying national characters and so on.
+In its simplest form, PolyString is just a simple string that can be _normalized_.
+_Normalization_ means that we convert the original string into some standard form, e.g. by removing leading and trailing whitespace (trimming), converting all letters to lower case, simplifying national characters and so on.
 
 Many ordinary midPoint properties are PolyStrings.
 Object `name` and user’s `givenName`, `familyName` and `fullName` and all PolyStrings.
-And yet not even a clever reader haven’t noticed anything suspicious about them so far.
-The reason for this is that normalization is almost transparent in midPoint PolyStrings.
-But now it is a time to have a peek inside.
+However, not even a clever reader have noticed anything suspicious about these properties so far.
+This is because normalization is almost transparent in midPoint PolyStrings, it happens on its own in the background.
+However, now it is a time to have a peek inside.
 Let’s import a user that looks like this:
 
 [source,xml]
@@ -1106,35 +1121,36 @@ This all happens transparently.
 PolyStrings are displayed as strings in the user interface.
 They are handled (almost completely) as strings in the mappings.
 Ordinary midPoint user has no idea that the normalization happens at all.
-But why we bother to normalize strings at all?
+If everything is so transparent, why do we bother to normalize strings at all?
 PolyString normalization has many practical uses.
-However, two of them are embedded quite deep in the way how midPoint works.
+Two of them are embedded quite deep in the way how midPoint works.
 
 Firstly, normalization is used to provide reliable uniqueness mechanism.
 Usually we do not want a user with username `semancik` and another user with username `Semancik` or even `Semančík`.
-This may lead to confusion.
-As midPoint has uniqueness constraints on both the `orig` and `norm` parts of the name then such situation is completely avoided.
-All those usernames have the same normalized form, therefore the uniqueness constraint on `norm` part of the name will prohibit the use of all those forms at the same time.
+This may lead to confusion, and it even totally breaks some applications.
+As midPoint has uniqueness constraints on both the `orig` and `norm` parts of the name, such situation is completely avoided.
+All those usernames have the _same_ normalized form `semancik`, therefore the uniqueness constraint on `norm` part of the name prohibits the use of all those forms at the same time.
 
-Secondly, normalization is simple and elegant way how to conveniently search for objects.
+Secondly, normalization is simple and elegant way to conveniently search for objects in international environments.
 When PolyStrings are searched, the value from the query is normalized.
-Then the norm part of the PolyString is searched.
+Then the `norm` part of the PolyString is searched.
 Therefore, whether the query contains `semancik`, `Semancik` or `semančík`, it will always find the user entry above.
 
 Default normalization algorithm in midPoint should be a good fit for most environments.
-But there are always deployments that are different.
+However, there are always deployments that are different.
 For example, characters such as hyphens (`-`) are usually not considered to be significant.
-But some deployments will consider `aliceanderson` and `alice-anderson` to be two different usernames.
-The default midPoint normalization mechanism will remove hyphens, therefore attempt to have two such users will end up with an error.
-But fortunately the normalization algorithm is customizable.
+Yet, some deployments may consider `aliceanderson` and `alice-anderson` to be two different usernames.
+The default midPoint normalization mechanism removes hyphens, therefore attempt to have two such users will end up with an error.
+Fortunately, the normalization algorithm is customizable.
 There are several algorithms to choose from and they can even be parameterized.
-In the extreme case there is a way to develop a completely custom algorithm.
-Therefore the PolyString normalization should fit pretty much every deployment scenario.
+In the extreme case, there is a way to develop a completely custom algorithm.
+Therefore, the PolyString normalization should fit pretty much every deployment scenario.
 
-But PolyString still has more tricks to do.
-The normalization is not much of a polymorphism yet.
-PolyString becomes a real shape-shifter in fully localized environments.
-PolyString is designed to store values that can have individualized representations in national environments. E.g. in multi-national deployments we may want to provide localized role names.
+PolyString still has more tricks to do.
+Simple normalization is not much of a _polymorphism_ yet.
+PolyString becomes a real shape-shifter when used in fully localized environments.
+PolyString is designed to store values that can have individualized representations in national environments.
+E.g. in international deployments we probably want to provide localized role names.
 Like this:
 
 [source,xml]
@@ -1145,7 +1161,7 @@ Like this:
         <lang>
             <en>System administrator</en>
             <sk>Systémový správca</sk>
-            <cz>Správce systémú</cz>
+            <cz>Správce systému</cz>
         </lang>
     </name>
     ...
@@ -1153,31 +1169,31 @@ Like this:
 ----
 
 This is a mechanism to display midPoint to end users in their own language, complete with localized _content_ of midPoint.
-This functionality is only partially implemented in midPoint 4.0 and it is considered to be experimental (i.e. unsupported).
-But this is a glimpse of how the future of midPoint schema may look like.
 
 The other strange animal in the midPoint jungle is _protected string_ (`ProtectedStringType`).
 Identity management systems often work with sensitive data such as user passwords.
 All the identity-related data usually need protection, but those sensitive data items need even better safeguards.
-This usually means that some kind of cryptographic technique needs to be employed. E.g. we do not want to store passwords in the cleartext form.
+This usually means that some kind of cryptographic technique needs to be employed.
+E.g. we do not want to store passwords in the cleartext form.
 Want them to be either hashed or encrypted.
-And that is what protected string is for.
+That is what protected string is for.
 Protected string is basically just a simple string, but it has extra cryptographic protection.
 
-If you have ever had something to deal with cryptography, you will probably know that cryptography is not simple.
-Even such a seemingly simple thing as password hash is quite complex when it comes to all the details. E.g. we do not want simple hash as that would not provide sufficient protection.
+If you have ever dealt with cryptography, you will probably know that cryptography is not simple.
+Even such a seemingly simple thing as password hashing is quite complex when it comes to all the details.
+E.g. we do not want to store plain hash, as that would not provide sufficient protection.
 We want _salted_ hash.
 Which means that the salt value needs to be stored together with the string.
-Many algorithms are parametric and the parameters used during the hashing also need to be stored.
-And most importantly, we do not want to hard-wire midPoint to any specific algorithm.
-Cryptographic algorithms often do not age well and they need to be replaced.
-Therefore we also need to store algorithm identifiers with the value.
+Many algorithms are parametric, and the parameters used during the hashing also need to be stored.
+Most importantly, we do not want to hard-wire midPoint to any specific algorithm.
+Cryptographic algorithms often do not age well, and they need to be replaced eventually.
+Therefore, we also need to store algorithm identifiers with the value.
 If the value is encrypted, we also need to store key identifier, as several keys may be active at the same time.
-And so on.
+Nothing is simple in cryptography.
 The cryptographic devil is in the tiny and often counter-intuitive details.
 
-Protected string is a data structure that is designed to handle all those pesky cryptographic details and still pretend that the content of the data structure is just a string.
-Similarly to PolyString, the basic usage is quite simple.
+_Protected string_ is a data structure that is designed to handle all those pesky cryptographic details, and still pretend that the content of the data structure is just a string.
+Similarly to PolyString, the basic usage of protected string is quite simple.
 Data can be imported into midPoint by using `clearValue` element:
 
 [source,xml]
@@ -1222,34 +1238,33 @@ The data are automatically protected when the object is imported into midPoint:
 </user>
 ----
 
-Protected string data type supports cleartext representation, encryption using a symmetric algorithm and hashing.
-However, the data type itself is just a mechanism for storing the data.
-Whether specific protected string in the schema gets encrypted or hashed and at which point that happens is not controlled by the protected string itself.
+Protected string data type supports _cleartext_ representation, _encryption_ using a symmetric algorithm and _hashing_.
+However, the protected string data type is just a mechanism for storing the data, it is just a place where the values can be stored.
+Whether specific protected string in the schema gets encrypted or hashed, and at which point that happens, is not controlled by the protected string data type itself.
 It is controlled by midPoint configuration and policies.
-For example, whether user password is encrypted or hashed is determined by midPoint security policy.
+For example, whether user password is encrypted or hashed is determined by midPoint _security policy_.
 
 == Advanced Schema Concepts
 
 This section describes schema concepts that goes deeper into midPoint mechanisms and implementation.
 Awareness of those concepts will provide insight into how midPoint works.
-However, we have already talked about the schema quite a lot.
-And this chapter was quite low on practical examples.
+However, we have already talked about the schema quite a lot, and this chapter was quite low on practical examples.
 Feel free to skip the rest of this chapter if you want to get your hands dirty as soon as possible.
-But please make sure to come back later.
-You will have to learn those schema concepts eventually to get the best of midPoint functionality.
+However, please make sure to come back later.
+You will have to learn those schema concepts eventually, to get the best of midPoint functionality.
 
-== Type Hierarchy
+=== Type Hierarchy
 
 So far we have presented midPoint schema as a simple set of data types.
 There is `UserType` for users, `RoleType` for roles and so on.
 However, all the midPoint objects have something in common.
-For example, all of them have object identifier (OID), name, description and so on.
+For example, all of them have _object identifier_ (OID), _name_, _description_ and so on.
 We could simply copy definitions of those properties to all the data types.
-But that is not the best way how to do data modeling.
-The proper way is to create a type hierarchy.
+However, that is not the best way to do data modeling.
+The proper way is to create a _type hierarchy_.
 Therefore, there is an `ObjectType` data type that specifies all the items that all the object types share.
 However, midPoint schema is substantial and one common ancestor won’t be enough.
-MidPoint type hierarchy was evolving during midPoint development and now it forms quite a rich structure.
+MidPoint type hierarchy was evolving during midPoint development, and now it forms quite a rich structure.
 
 image::06-02-type-hierarchy.png[Type hierarchy]
 
@@ -1260,28 +1275,29 @@ Following table is summarizing midPoint data types and their purpose.
 
 |`ObjectType`
 |Common (abstract) data type for all midPoint objects.
-Specifies basic items that all midPoint objects have: name, description, metadata and so on.
+Specifies basic items that all midPoint objects have: _name_, _description_, _metadata_ and so on.
 
 |`AssignmentHolderType`
 |Abstract supertype for all object types that can have assignments.
 
 |`FocusType`
-|Abstract supertype for all object types that can be focus of full midPoint computation.
-This basically means objects that have projections. But focal objects also have activation, they may have personas, etc.
+|Abstract supertype for all object types that can be _focus_ of full midPoint computation.
+This basically means objects that have _projections_ (accounts).
+Focal objects also have _activation_, they may have _personas_, etc.
 
 |`UserType`
 |User object represents a physical user of the system.
-Properties of User object typically describe the user as a physical person.
-Therefore, the user object defines handful of properties that are commonly used to describe users in the IDM solutions (employees, customers, partners, etc.)
+Properties of user object typically describe the user as a physical person.
+Therefore, the user object defines handful of properties that are commonly used to describe users in the identity management solutions (employees, customers, partners, etc.)
 
 |`AbstractRoleType`
 |Abstract data type that contains the "essence" of a role.
 Roles and other objects that behave like roles are derived from this data type.
 All abstract roles may "grant" accounts on resources, attributes and entitlements for such accounts.
-The role can also imply (induce) organizational units, other roles or various IDM objects that can be assigned directly to user.
+The role can also imply (_induce_) organizational units, other roles or various identity management objects that can be assigned directly to user.
 
 |`RoleType`
-|A role in the Role-Based Access Control (RBAC) sense.
+|A role in the role-based access control (RBAC) sense.
 The roles specify privileges that the user (or other object) should have.
 
 Roles are intended to give privileges to users and other objects.
@@ -1291,26 +1307,26 @@ Roles are intended to give privileges to users and other objects.
 The OrgType objects are designed to form a hierarchical organizational structure (or rather several parallel organizational structures).
 
 Orgs are intended to group objects.
-But as orgs are abstract roles, they can also behave as roles.
+As orgs are _abstract roles_, they can also behave as roles.
 
 |`ServiceType`
-|This object type represents any kind of abstract or concrete services or devices such as servers, virtual machines, printers, mobile devices, network nodes, application servers, applications or anything similar.
-The "service" is a very abstract concept.
+|This object type represents any kind of abstract or concrete services, or devices such as servers, virtual machines, printers, mobile devices, network nodes, application servers, applications or anything similar.
 
 |`ArchetypeType`
 |Archetype definition.
-Archetype defines custom object (sub)type. I.e. it defines specific behavior, look and feel of objects of a particular type, such as "employee", "project", "application", "business role" and so on.
+Archetype defines custom object (sub)type.
+I.e. it defines specific behavior, look and feel of objects of a particular type, such as "employee", "project", "application", "business role" and so on.
 
 |`ResourceType`
 |Resource represents a system or component external to midPoint system which is managed by midPoint.
-It is sometimes called IT resource, target system, source system, provisioning target or by variety of ther names.
+It is sometimes called identity resource, IT resource, target system, source system, provisioning target or by variety of their names.
 MidPoint connects to the resource to create accounts, assign accounts to groups, etc.
-But it also may be an authoritative source of data, database that contains organizational structure and so on.
+Resource may also be an authoritative source of data, database that contains organizational structure and so on.
 
 |`ConnectorType`
 |Description of a generic connector.
 Connector in midPoint is any method of connection to the resource.
-This usually describes a ConnId connector.
+This usually describes a ConnId identity connector.
 
 |`ConnectorHostType`
 |Host definition for remote connector, remote connector framework or a remote "gateway".
@@ -1318,14 +1334,13 @@ This usually specifies the detail of a ConnId remote connector server.
 
 |`SystemConfigurationType`
 |System configuration object.
-Holds global system configuration setting.
-There is just one object of this type in the system. It has a fixed OID.
+It holds global system configuration setting.
+There is just one object of this type in the system.
+It has a fixed identifier (OID).
 
 |`TaskType`
 |Object that contains information about a task.
-This can represent active running task.
-It may be a scheduled task waiting for execution.
-Or the object may contain a results of a finished task.
+This can represent active running task, it may be a scheduled task waiting for execution, or the object may contain a results of a finished task.
 
 |`ObjectTemplateType`
 |An object that contains mappings and other configuration intended to apply to other object types.
@@ -1335,6 +1350,7 @@ E.g. it may be used as “user template” to set up basic properties of new use
 |An object that represents lookup table.
 The lookup table can be used for two purposes: value enumerations (e.g. for GUI or validation) and value mapping (translation).
 Simply speaking it is a set of key-value pairs that can be efficiently stored and used in midPoint user interface, mappings and so on.
+It is designed to hold a large number of key-value pairs.
 
 |`SecurityPolicyType`
 |System that contains definitions of overall security policy.
@@ -1351,20 +1367,20 @@ Those functions can be used in mappings and expressions in all parts of midPoint
 |`ObjectCollectionType`
 |Object that specifies a collection of other objects.
 It is mostly just a named search filter that can be reused in other parts of midPoint.
-But there are also some advanced functions that can be used in dashboards, for compliance purposes and so on.
+However, there are also some advanced functions that can be used in dashboards, for compliance purposes and so on.
 
 |`ReportType`
 |Specification of midPoint report.
 This specification defines what the report should contain, how it should look like, output format and so on.
 
-This is a report definition.
-It is a report “template” that can be executed and it produces data.
+This object contains a report _definition_.
+It is a report “template” that can be executed, and it produces data.
 The output data are referred to by report output objects.
 
 |`ReportDataType`
 |Object that refers to data of the report.
-This is usually a report of the output, but it may also refer to input data that are to be imported to midPoint.
-It also contains metadata, e.g. when the report was created, what definition was used, etc.
+This is usually an output of a report, but it may also refer to input data that are to be imported to midPoint.
+It also contains metadata, e.g. timestamp of report was creation, what definition was used, etc.
 
 |`SequenceType`
 |Definition of a sequence object that produces unique values.
@@ -1378,7 +1394,7 @@ It is used for user interface customization.
 |`DashboardType`
 |Object that specifies a look and a behavior of a dashboard.
 This is used for user interface customization.
-But it can also specify some aspects of midPoint reports.
+It can also specify some aspects of midPoint reports.
 
 |`GenericObjectType`
 |Generic type for any other object type that do not fit into any other category.
@@ -1397,35 +1413,35 @@ The Node objects are the way how the nodes in cluster know about each other.
 |===
 
 Type hierarchy is a principle that is used in many software systems.
-This principle will be quite obvious to all software developers, but it may need some time to get used to for other engineers.
-However, the basic idea is quite simple. E.g.
-`AbstractRoleType` has all the items that are needed for an object to behave like a role.
+This principle is probably quite obvious to all software developers, but it may need some time to get used to for other engineers.
+However, the basic idea is quite simple.
+E.g. `AbstractRoleType` has all the items that are needed for an object to behave like a role.
 `RoleType`, `OrgType`, `ServiceType` and `ArchetypeType` are subtypes of `AbstractRoleType`.
 Therefore `RoleType`, `OrgType`, `ServiceType` and `ArchetypeType` can all behave like a role.
 
-This may sound quite strange, why would we want an organizational unit to behave like a role.
-But the answer is quite obvious.
-Membership in an organizational unit may imply some privileges.
-Other IDM systems need complex rules in a form "if user belongs to organizational unit A then he will also have role X".
-But that is not needed in midPoint.
-Organizational unit is a role, therefore it can simply include all the roles that are needed.
-This means that the Role-Based Access Control (RBAC) principles can be applied to several object types.
-And this is a very typical trait of a midPoint philosophy: reuse of generic principles.
+This may sound quite strange, why would we want an _organizational unit_ to behave like a _role_?
+Yet, the answer is quite obvious.
+Membership in an _organizational unit_ may imply some privileges.
+Other identity systems need complex rules such as "if user belongs to organizational unit `A` then he will also have role `X`".
+That is not needed in midPoint.
+_Organizational unit_ is like a _role_, therefore it can simply include all the roles that are needed.
+This means that the role-based access control (RBAC) principles can be applied to several object types.
+This approach illustrates a very typical trait of a midPoint philosophy: reuse of generic principles.
 We reuse existing principles instead of complicating the system by inventing a new single-purpose mechanism.
 As you will see later, this makes midPoint both elegant and powerful.
 
-== Item Path
+=== Item Path
 
 MidPoint configuration often needs to reference a particular item in a particular object.
 For example, mapping sources and target are references to properties and containers.
 However, midPoint data structures can be quite complex.
-For example, password is stored in property value that is located in container password which is in container `credentials` defined in `UserType` data type.
+For example, password is stored in property value that is located in container `password` which is in container `credentials` defined in `FocusType` data type.
 It may be difficult to find a way in this little maze.
-And there may be even some unambiguous situations.
+There may be even some unambiguous situations.
 For example, user status is controlled by property `administrativeStatus` that is in the `activation` container.
-But assignment also has an `activation` container and there is an assignment `administrativeStatus`.
-Therefore referencing an item by a simple name would not be enough.
-We need something more sophisticated here.
+However, `assignment` also has an `activation` container, and there is an assignment `administrativeStatus`.
+Therefore, referencing an item by a simple name would not be enough.
+We need something more sophisticated.
 
 MidPoint is using the concept of _item path_ to reference items in the schema.
 In its simplest form, item path is just a sequence of item names concatenated by slash characters.
@@ -1442,63 +1458,60 @@ assignment/activation/administrativeStatus
 Item path provides an unambiguous reference to a specific item in midPoint schema.
 The path can be used in all the places where there is a need to reference a particular item.
 It is often used in mappings to specify sources and target.
-But it is also used in other places that we will mention in later chapters.
-The concept of path is deeply embedded in all midPoint operations.
+Search filters are often using item paths to form search queries.
+The path is also used in other places that we will mention in later chapters.
+The concept of _item path_ is deeply embedded in all midPoint operations.
 For example, modification deltas are using item path to precisely pinpoint the places in the object that are modified.
 
 The path is used to locate a particular item in midPoint schema.
-But it is also used to reference a specific value in midPoint objects.
-In that case the path often looks exactly the same.
+It is also used to reference a specific value in midPoint objects.
+In that case the path often looks simple, as we have seen it above.
 As long as we are dealing only with single-value containers, the path can unambiguously point to a specific item.
-But we may get into trouble in case that multi-valued containers are used.
-And those are used in midPoint quite often.
+However, we may get into trouble in case that _multi-valued containers_ are used, which are often used in midPoint schema.
 Assignment is one of those multi-valued container.
 User can have many assignments.
 If we want to disable one particular assignment, how do we do it?
-If we would use the path above then it is not clear which assignment should be disabled.
-Therefore, in case of multi-valued containers the path is extended with a container identifier in square brackets:
+If we would use the path above, then it is not clear _which_ assignment should be disabled.
+Therefore, in case of multi-valued containers, the path is extended with a _container identifier_ in square brackets:
 
 [source]
 assignment[123]/activation/administrativeStatus
 
 This path is unambiguously referencing `administrativeStatus` property in an `activation` container in a very specific assignment - an `assignment` container with identifier `123`.
-This form of the path is used mostly in the deltas and user should not need to ever enter those paths manually.
+This form of the path is used mostly in the deltas, and user should not need to ever enter those paths manually.
 However, this form is often recorded in midPoint log files and other diagnostic output.
-Therefore it is very useful to be familiar with it.
+Therefore, it is quite useful to be familiar with it.
 
 You might wonder why there is an identifier for `assignment` but there is no identifier for `activation`.
 Both are containers, aren’t they?
-However, the clever reader already knows the answer.
+The clever reader already knows the answer.
 `assignment` is a multi-valued container.
 Therefore, identifier is needed to pinpoint a specific value of that container.
-But `activation` is a single-valued container.
+However, `activation` is a single-valued container.
 There is no danger of ambiguity.
-Therefore the identifier is not needed in this case.
+Therefore, the identifier is not needed in this case.
 
 This form of item path works fine if we need to identify an item in a particular object.
-But sometimes we have a lot of objects and other data structures to choose from.
-For example a mapping can have several sources.
-And then there are expression variables.
-Therefore using simple paths would be ambiguous.
-In such case the path can start with an optional variable identifier:
+However, sometimes we have a lot of objects and other data structures to choose from.
+For example, a mapping can have several sources and expression variables.
+Therefore, using simple paths would be ambiguous, as it would not specify where the path _starts_.
+In such case the path can start with an optional _variable identifier_:
 
 [source]
 $focus/activation/administrativeStatus
 
 The path above explicitly states that it should be applied to the content of variable `focus`.
-Therefore there is no danger that this path could be applied to a shadow object which also has the `activation` container.
-This form of item path is often used in path expression evaluators.
+Therefore, there is no danger that this path could be applied to a shadow object which also has the `activation` container.
+This form of item path is often used in `path` expression evaluators.
 
 Clever reader is surely wondering about QNames now.
 The XML schema defines the elements in a form of QNames, which basically means "names in a namespace".
-Therefore element names and QNames.
-And path should use QNames as well.
-But so far all the names in the path looks like simple strings.
-Yes, they are simple strings.
-But they point to elements in the schema.
+Therefore, element names are supposed to be QNames, and item path should use QNames as well.
+Yet, so far all the names in the path looked like simple strings.
+In fact, they indeed are simple strings, but they point to elements in the schema.
 While the path is correct and unambiguous, midPoint does not need the namespaces.
 Simple string (known as _local part_ of QNames) are enough to navigate through the schema and automatically determine the namespaces.
-This is the same principle used for parsing XML, JSON or YAML document without namespace definitions.
+The same principle is used for parsing XML, JSON or YAML document without namespace definitions.
 However, there may be ambiguities in case that several custom schema extensions are used.
 Those extensions may have elements with conflicting local parts.
 In that case an alternative form of item path can be used:
@@ -1519,10 +1532,9 @@ http://midpoint.evolveum.com/xml/ns/public/...
 Indeed, the schema is divided into two big parts:
 
 * *Prism schema* is used to express basic concepts that deal with objects, deltas, item paths, queries and similar mechanisms.
-Those are concepts of our data representation library that we dubbed Prism.
-Prism concepts are very generic mechanisms that have nothing to do with identity management.
-While currently Prism is an integral part of midPoint, it is supposed to be a general-purpose data representation library that can be reused to build other applications.
-The plan is to separate Prism form midPoint at some point in the future.
+Those are concepts of our data representation library that we dubbed _Prism_.
+Prism concepts are very generic mechanisms that (theoretically) have nothing to do with identity management or midPoint.
+Prism is supposed to be a general-purpose data representation library that can be reused to build other applications.
 
 * *MidPoint schema* is used to express all the objects and data types that midPoint works with.
 All the concepts specific to identity management are there: user, role, org, assignment and many, many others.
@@ -1532,6 +1544,6 @@ This is the data model of identity management as it is implemented in midPoint.
 
 This is all about midPoint schema that you need to know right now.
 There is still much more to learn, as the entire midPoint schema is big and complex.
-And understanding of midPoint schema is absolutely crucial, as the schema is a foundation of everything that midPoint does.
-But the best way to do the learning is to do it on the go.
+Understanding of midPoint schema is absolutely crucial for advanced use of midPoint, as the schema is a foundation of everything that midPoint does.
+Yet, the best way to do the learning is to do it on the go.
 You will learn more about midPoint schema as you will explore midPoint functionality.
