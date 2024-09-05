@@ -43,11 +43,12 @@ This installation method is not covered in this book.
 The package contains _binaries_, scripts and other files to run midPoint.
 The binaries can also be obtained by building the _source code_ directly.
 _Java Runtime Environment_ is needed to run the binaries, as well as some knowledge of software development and system administration techniques.
-This method is recommended only for deep experimentation and special scenarios.
-It is *not* recommended for general use.
+This method is recommended only for deep experimentation and special scenarios and for people that prefer the traditional approach.
 
 It is recommended to start with the _Docker_ method.
 The descriptions and examples in this book assume that _Docker Compose_ installation is used.
+
+// TODO: more recommendations on choosing installation method?
 
 === Docker Compose Installation
 
@@ -553,12 +554,7 @@ As the IntelliJ platform has good integration for version control systems and ot
 If you plan to use midPoint professionally, _MidPoint Studio_ is certainly worth trying.
 
 
-== Looking Around MidPoint Installation
-
-Now we have a running midPoint instance, and you should have some theoretical understanding how to configure it.
-However, before we plunge deep into configuration details, let’s have a look at midPoint installation.
-There are few things that need to be understood before going on.
-It will save a lot of time later.
+== MidPoint Repository
 
 MidPoint needs its own database to work.
 We call that database _midPoint repository_.
@@ -572,11 +568,13 @@ However, proper database engine is needed to support all midPoint features.
 While the embedded H2 engine is still present in midPoint, it is not recommended to use it.
 Many midPoint features will fail unless a proper database engine (PostgreSQL) engine is used.
 
+// TODO TODO  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+== MidPoint Home Directory
+
 While almost all of midPoint configuration is stored in the database, there are few things that cannot be stored there - such as connection parameters to the database itself.
 For that purpose midPoint has a small configuration file called `config.xml`.
 MidPoint also needs a place where to store other data that cannot be in the database, such as cryptographic keys, connector binaries and so on.
-
-// TODO TODO  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 MidPoint needs a special directory on a filesystem for that purpose.
 We call it _midPoint home directory_.
@@ -596,6 +594,9 @@ These objects get imported automatically, because if they are not there, you wil
 These objects are imported only if they are not already present in the database.
 If you modify them later, midPoint will not overwrite them.
 
+// TODO: where to find the directory in Docker compose
+
+// TODO: use for connectors, CSV resources, etc.
 
 == Logging
 
@@ -615,6 +616,8 @@ This means that the messages on level `INFO` and above are logged while the fine
 If you want to diagnose midPoint issues you will need to switch the logging levels to `DEBUG`, or in extreme cases even to `TRACE`.
 The logging levels can be adjusted in midPoint user interface.
 Navigate to menu:Configuration[System > Logging].
+
+// TODO: where to find logs in Docker compose
 
 MidPoint is not a simple system.
 There are complex interactions, there is usually a lot of custom configuration, customizations, expressions and so on.
