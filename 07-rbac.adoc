@@ -3,23 +3,28 @@
 
 include::chapter-include.adoc[]
 
-[quote, Mentat conundrum, "Dune: House Corrino by Brian Herbert"]
+[quote, Mentat conundrum, "Dune: House Corrino by Brian Herbert and Kevin J. Anderson"]
 Simplicity is the most complex of all concepts.
 
 Basic idea of role-based access control (RBAC) is very simple: instead of assigning the same privileges to users over and over again, let’s group such privileges into roles.
 Then assign roles to users.
-This often aligns with organizational roles such as _manager_, _assistant_ or _analyst_.
+Such RBAC roles often align with organizational roles such as _manager_, _assistant_ or _analyst_.
 Therefore, roles are quite easy to understand even on an intuitive level.
 RBAC should make your life easier - at least in theory.
 
 Role-based access control principles are present in almost all identity management systems.
-Therefore, it is no surprise that RBAC is one of the basic midPoint mechanisms to organize privileges in midPoint.
-MidPoint supports all the usual RBAC features such as role hierarchies, an automatic assignment of roles, entitlement definition etc.
+Therefore, it is no surprise that RBAC is one of the basic midPoint access control mechanisms.
+MidPoint supports all the usual RBAC features, such as role hierarchies, an automatic assignment of roles and entitlement definition.
 However, midPoint goes beyond traditional RBAC.
 MidPoint roles can be smart.
-There may be dynamic expression inside midPoint roles, such as attribute mappings.
+There may be dynamic expressions inside midPoint roles, such as attribute mappings.
 The roles may be conditional: one role is included in another role, but only in case that a specific condition is satisfied.
 The roles may be parametric: the role can determine the specific set of entitlements based on the user data or a parameter of a role assignment.
+Traditional concept of roles is enhanced with _policy_: rules, expressions and constraints applied to roles.
+MidPoint advanced RBAC mechanism, together with role auto-assignment capabilities and other policy mechanisms create a very powerful combination to express complex policies.
+This creates _policy-driven_ RBAC, a mechanism that is quite unique to midPoint.
+Although midPoint policy mechanisms are based on RBAC principles, its capabilities are similar to other popular access control models, such as attribute-based access control (ABAC) or policy-based access control (PBAC).
+For the curious, there is a discussion of midPoint approach in light of other access control models at the end of this chapter.
 
 Role dynamics in midPoint goes even one step further.
 The RBAC system can be applied to the roles themselves, thus creating _meta-roles_.
@@ -28,10 +33,6 @@ However, all the business roles have common characteristics such as common appro
 Instead of copying the common parts into each and every business role, the business roles may be assigned a common _archetype_ which acts as a meta-role.
 Archetype defines all the common characteristics of all business roles, therefore the RBAC system is much easier to maintain.
 More on that later.
-
-MidPoint advanced RBAC mechanism, together with role auto-assignment capabilities and other policy mechanisms create a very powerful combination to express complex policies.
-Although midPoint policy mechanisms are based on RBAC principles, its capabilities are similar to other popular access control models, such as attribute-based access control (ABAC) or policy-based access control (PBAC).
-For the curious, there is a discussion of midPoint approach in light of other access control models at the end of this chapter.
 
 Powerful RBAC mechanisms in midPoint are flexible enough to handle very complex scenarios.
 However, we will start small.
@@ -48,58 +49,53 @@ What me mean by _RBAC_ is a generic mechanism that is based on the concept of ro
 Although the basic principles of midPoint RBAC are very similar to NIST RBAC model, we take the liberty to deviate from NIST model when needed.
 As you will see later, such deviation is really necessary.
 
-== Reality, Policy and Assignments
+== Reality vs Policy
 
 Previous chapters were focused on account provisioning and synchronization.
-Which means that the primary focus was an _account_ (or a similar resource object).
+Their primary focus was an _account_ (or a similar resource object).
 This is what we call _reality_ in midPoint way of thinking.
 Accounts are objects that exist in the databases and files on the resources.
 In that aspect they are almost tangible things.
 Existence of an account allows user to access a particular system, to execute operations and so on.
 Therefore, we consider an account to be something _real_.
 
-But how do we know whether an account should exist or it should not exist?
+However, how do we know whether an account should exist or it should not exist?
 The situation would be quite clear if midPoint is the only source of truth.
-In that case if there is a linked shadow then account should exist.
-If there is no shadow, then account is illegal.
-But reality is almost never that simple.
-In real deployments MidPoint is not the only source of truth.
+In that case, if there is a linked shadow, then account should exist, if there is no shadow, then account is illegal.
+However, reality is almost never that simple.
+In real deployments, MidPoint is not the only source of truth.
 It is usually human resource (HR) system that is the source of the truth – but only for some types of users, usually employees.
-Then there are external users, temporary workers, special personas for user administrators and so on.
-Some of them may have their own source systems similar to HR database.
-But for some users it may still be midPoint which is the ultimate source of truth.
-And that "truth" may be in fact only partial or compiled from several sources.
+Then there are external users, temporary workers, special personas for user administrators, services, devices and so on.
+Some of them may have their own authoritative source systems similar to HR database.
+However, for some users it may still be midPoint which is the ultimate source of truth.
+Moreover, that "truth" may be in fact only partial information, or it may be compiled from several sources.
 To keep long story short: reality is messy and complicated.
-And it is often quite difficult to figure out which accounts particular user should have and which he should not have.
-Yet, for an IDM system this distinction is absolutely crucial.
-Various IDM systems came with broad range of mechanisms to handle this problem, and sadly, those mechanisms are often not very good.
+It is often quite difficult to figure out which accounts particular user _should_ have and which he _should not_ have.
+Yet, this distinction is absolutely crucial for cybersecurity.
+Various identity management systems came with broad range of mechanisms to handle this problem, and sadly, those mechanisms are often not very good.
 Fortunately, midPoint was designed from the beginning with a full awareness of this problem.
 Therefore, there is a clean distinction between _reality_ and _policy_ in midPoint.
 
 Accounts, shadows and links are what we refer to as _reality_.
 Those describe what _exists_, what _is_.
-And there is a separate mechanism to describe policy.
+Then there is a separate mechanism to describe _policy_.
 Policy, in midPoint parlance, means definition of what _should be_.
-In the ideal world _reality_ and _policy_ should be in accord.
+In the ideal world, _reality_ and _policy_ should be in accord.
 They should describe the same state of things.
-But we do not live in ideal world.
-Perfectly good accounts may be deleted by mistake, illegal accounts may be created, entitlements may get mixed up, attribute values destroyed – there are many dangers in the big wild world out there.
-And then there are scenarios when we actually want reality to be different from policy for a given period of time.
+However, we do not live in ideal world.
+Perfectly good accounts may be deleted by mistake, illegal accounts may be created, entitlements may get mixed up, attribute values may get destroyed – there are many dangers in the big wild world out there.
+Then there are scenarios when we actually _want_ reality to be different from policy for a given period of time.
 Those may be migration scenarios when a new system is being connected to midPoint and the data needs to be cleaned up.
 _Reality_ and _policy_ do not match exactly in practice.
 We all know that only too well.
 Therefore, midPoint is designed in such a way that it can graciously handle the differences between _reality_ and _policy_.
 
+== Assignment
+
 When it comes to policy, the most important concept is an _assignment_.
 Simply speaking, assignment is a data structure which specifies that a particular user should have something.
 The simplest case is _account assignment_.
 This type of assignment states that the user should have an account on a particular resource.
-When such assignment is added to a user, there is suddenly a discrepancy between reality and policy.
-The assignment states that a user _should have_ an account.
-But there is no such account yet.
-It is a nature of midPoint to align policy and reality as much as possible (unless it is told otherwise).
-Therefore midPoint will try to create missing account.
-Once that account is created _reality_ and _policy_ are aligned once again.
 
 The mechanism that midPoint uses to define that a particular user needs an account, entitlement or other resource object is called _construction_.
 The simplest case is a _construction_ that specifies to create an account (a.k.a. _account construction_):
@@ -118,67 +114,68 @@ The simplest case is a _construction_ that specifies to create an account (a.k.a
 </user>
 ----
 
-The term _construction_ means that object on that particular resource should be constructed.
-In this case the object on OpenLDAP resource should be constructed for this particular user.
+The term _construction_ means that object on that particular resource should be _constructed_.
+In this case, the object on OpenLDAP resource should be constructed for this particular user.
 If no construction parameters are specified then a _default account_ will be constructed.
 Which means that outbound mappings in the OpenLDAP resource definition will be used to set up the account.
 
 image::07-01-user-assignment-resource-simple.png[Simple account assignment]
 
 Construction can be quite a complex data structure describing object types, object classes, attributes and so on.
-However,it is unlikely that they will be placed directly in assignment like this.
-But more on that later.
+However, it is unlikely that they will be placed directly in _assignment_ like in the above example.
+More on that later.
 What is important for now is that assignments specify _policy_.
 
-After the assignment is added to a user and all the processing and provisioning takes place the situation looks like this:
+After the assignment is added to a user, and all the processing and provisioning takes place, the situation looks like this:
 
 image::07-02-user-assignment-resource-account.png[Simple account assignment and account link]
 
 Assignment is a definition of policy which states that an OpenLDAP account should exist for Alice.
-However, there is no such account.
-Therefore, MidPoint aligns reality and policy by creating that account.
-As for any other account there is a shadow and a link to track account ownership.
+When such assignment is added to Alice, there is suddenly a discrepancy between reality and policy.
+The assignment states that Alice _should have_ an account, but no such account exists on OpenLDAP resource yet.
+It is a nature of midPoint to align policy and reality as much as possible (unless it is told otherwise).
+Therefore, midPoint tries to create missing account.
+Once that account is created, _reality_ and _policy_ are aligned once again.
 
 This may look like a very complicated method to do something simple.
-But this kind of thinking is really necessary to handle complex cases.
+However, this kind of thinking is really necessary to handle complex cases.
 There may be several assignments that mandate the same account.
 There may be assignments for the same accounts, but each assignment mandates different attributes or values.
 The account that the assignments mandate may exist already, e.g. it may be linked by previous reconciliation with the resource.
 There may be several accounts for the same user on the same resource (e.g. "ordinary" account and "testing" account).
 And so on.
 We will deal with various cases in this book.
-But the basic principle is the same: assignments are policy and midPoint is trying to align reality to match the policy.
+Yet, the basic principle is always the same: assignments are _policy_ and midPoint is trying to align _reality_ to match the _policy_.
 
 == Roles
 
-There is much more in the concept of an assignment than just the very simple account assignment that was introduced above.
-Assignment is a generic mechanism that is used in midPoint for wide variety of cases, from simple account provisioning to really complex identity governance policies.
-But one specific assignment type is particularly interesting with respect to the topic of this chapter: role assignment.
+There is much more in the concept of an assignment than just the very simple account assignment.
+_Assignment_ is a generic mechanism that is used in midPoint for wide variety of cases, from simple account provisioning to really complex identity governance policies.
+One specific assignment type is particularly interesting with respect to the topic of this chapter: role assignment.
 
-The basic idea of Role-Based Access Control (RBAC) is simple:
+The basic idea of role-based access control (RBAC) is simple:
 Instead of assigning account to users directly, let us group all accounts that a particular group of users need into a _role_.
 Then assign the role to users.
-Later on you may add new application to your system, and you probably want all the users to have account there.
-In that case all that is needed is to add that account to a role and recompute the users.
+Later on you may add new application to your system, and you probably want existing the users to have account there.
+In that case all that is needed is to add that account to a _role_ and recompute the users.
 All the users that should have the account will get the account.
 This principle is reused for many purposes in midPoint: accounts, privileges, authorizations, policies ...
 
-Role is a special type of object in midPoint.
+_Role_ is a special type of object in midPoint.
 Yet, as all midPoint objects, role has a very familiar structure:
 
 .role-business-analyst.xml
 [source,xml]
 ----
 <role oid="aaa6cde4-0471-11e9-9b50-c743da469067">
-    <name>Business Analyst</name>
+    <name>Business analyst</name>
     ...
 </user>
 ----
 
-Role object has its OID and name.
+Role object has its _object identifier (OID)_ and _name_.
 The rest of the role usually specifies the privileges that the role gives to the users.
-But how do we give this role to users?
-That is what role assignment is good for:
+We can _assign_ the role to a user by creating an _assignment_:
 
 [source,xml]
 ----
@@ -192,22 +189,22 @@ That is what role assignment is good for:
 ----
 
 User `alice` has role `Business Analyst` assigned.
-The assignment is using the familiar style of object references in midPoint, referring to the role by its OID.
-This is very useful, as the assignment stays the same in case that the role or the user are renamed - and both of those events are much more frequent that one would think.
+The assignment is using the familiar style of object references in midPoint, referring to the role by its object identifier (OID).
+This is very useful, as the assignment stays valid in case that the role or the user are renamed - and both of those events are much more frequent that one would think.
 
-== Provisioning Roles
+== Roles and Provisioning
 
 Provisioning is the bread and butter of identity management.
 Therefore, it is quite understandable that the most natural usage of roles in midPoint is to automate provisioning.
 Provisioning roles are usually combining several _construction_ statements.
 The idea is that a provisioning role should specify all the privileges that users of that role need.
-Therefore a `Business Analyst` role may look like this:
+Therefore, a `Business Analyst` role may look like this:
 
 .role-business-analyst.xml
 [source,xml]
 ----
 <role oid="aaa6cde4-0471-11e9-9b50-c743da469067">
-    <name>Business Analyst</name>
+    <name>Business analyst</name>
     <inducement>
         <construction>
              <!-- OpenLDAP resource -->
@@ -226,57 +223,52 @@ Therefore a `Business Analyst` role may look like this:
 ----
 
 The usual case is that every employee need to have basic access to company functionality.
-In our case that access is granted by an account in central OpenLDAP directory.
+In our case, that access is granted by an account in central OpenLDAP directory.
 In addition to the basic LDAP account, business analysts need access to the CRM system.
 The role combines all the accounts that a business analyst needs.
-Assign that one role and the user has all that is needed to do the job.
+Assign that one role, and the user has all that is needed to do the job.
 
-But, what is that mysterious _inducement_ thing?
-Think of inducement as indirect assignment.
+The key to the functionality of roles is _inducement_.
+Think of _inducement_ as indirect assignment.
 Assignments give privileges directly to the object in which they are placed.
-The assignment in the previous section gave account to the user because it was placed in the user object.
+The assignment in the previous section gave account to the user, because it was placed in the user object.
 However, here we do not want the accounts to be created for a role.
 We want accounts to be created for all the users that have the role.
 That is one _order of indirection_ down the line.
 Therefore, we (usually) do not want to use assignments in roles.
 We want to use something that reflects this indirect relation.
-And that is exactly what inducement is.
+That is exactly what _inducement_ is.
 Inducement is very similar to assignment - in fact it has exactly the same structure.
-But while assignment is direct, inducement is indirect.
+However, while assignment is direct, inducement is indirect.
 
 image::07-03-user-assignment-role.png["User, role and resource"]
 
 MidPoint user interface can show a nice summary of the inducements:
 
+// TODO: needs update
 image::07-04-gui-role-inducements.png[Role inducements in user interface]
 
-It is perhaps worth explaining what happens if this `Business Analyst` role is assigned to a user.
-When that role is assigned to a user, midPoint will process all the parts of role definition.
-MidPoint will take the inducements from the role and apply them to the user.
-In fact, midPoint will behave in almost the same way as if those construction statements were specified directly in user’s assignment.
-And then we have the familiar principle: policy mandates that two accounts should exit, but in reality there are no such accounts.
+It is perhaps worth explaining what happens if this `Business analyst` role is assigned to a user.
+When `Business analyst` role is assigned to a user, midPoint processes all the parts of role definition.
+MidPoint takes the inducements from the role, and applies them to the user.
+In fact, midPoint behaves in almost the same way as if those construction statements were specified directly in user’s assignment.
+This results in a familiar situation: policy mandates that two accounts should exit, but in reality there are no such accounts.
 Therefore midPoint creates the accounts.
-MidPoint also creates appropriate shadow objects and links them to the user.
+Of course, midPoint also creates appropriate shadow objects and links them to the user.
 
 image::07-05-user-assignment-role-accounts.png["User, role assignment, shadows and accounts"]
 
-Many applications implement at least some aspects of RBAC, as RBAC is a very useful way how to organize the privileges.
-However, almost all the applications limit the applicability of RBAC to the application itself. I.e. roles in an application can contain only those privileges that apply to that particular application.
-The roles cannot have privileges from other application.
-But IDM systems are different.
-IDM systems such as midPoint are reaching out to many applications (resources).
-Therefore, a single midPoint role can give access to many applications at once.
-No other application can do that.
+This is how midPoint implements role-based access control (RBAC) for provisioning purposes.
 
 == Roles, Accounts and Attributes
 
-We have already seen how outbound mappings can be used to set up account attributes.
+We have already seen how _outbound mappings_ can be used in resource to set up account attributes.
 Roles can also contain outbound mappings, therefore they can be used for a similar purpose:
 
 [source,xml]
 ----
 <role oid="aaa6cde4-0471-11e9-9b50-c743da469067">
-    <name>Business Analyst</name>
+    <name>Business analyst</name>
     <inducement>
         <construction>
              <!-- OpenLDAP resource -->
@@ -296,98 +288,102 @@ Roles can also contain outbound mappings, therefore they can be used for a simil
 </role>
 ----
 
-When the above role is assigned to a user, an account on OpenLDAP server will be created.
-The account will be provisioned in a usual way.
-All the outbound mappings from resource definition will be applied to set up the account.
-But there is one difference.
+When the above role is assigned to a user, an account on OpenLDAP server is created.
+The account is provisioned in a usual way - all the outbound mappings from resource definition are applied to set up the account.
+However, there is one difference.
 The role specifies one additional outbound mapping for the account.
-This mapping will be included in the set of usual account mappings when the account will be provisioned.
-Therefore, the account will have attribute `title` set to `Business Analyst`.
+This mapping is included in the set of usual account mappings when the account is provisioned.
+Therefore, the account has attribute `title` set to `Business Analyst`.
 
-This is a very typical way how midPoint deployments are set up:
+This is a very typical pattern used by many midPoint deployments:
 
-* Common and usual attribute values are specified by outbound mappings in the resource definition (in `schemaHandling`).
-Those are usual mappings that take user properties as their source.
-Many of those mappings do not even modify the value at all (`asIs` mappings).
+* Common and usual attribute values are specified by outbound mappings in the _resource definition_ (in `schemaHandling`).
+Usually, those mappings that take _user_ properties as their source, producing values for _account_ attributes.
+Many of those mappings do not even transform the value at all (`asIs` mappings).
+Common identity attributes such as _username_ and _full name_ are provisioned this way.
 
 * Attributes that are specific to roles are defined in the roles themselves.
 Those mappings often do not have any source at all.
 They just set a static value (literal `value` mappings).
+_Entitlement associations_ such as group membership are also provisioned this way.
+More on that later.
 
 At the time when midPoint is about to provision an account, all the mappings are merged and processed together.
 It is quite common that more than one role has a construction for the same account.
 All those constructions from all such roles are merged together, and they are added to the mappings specified in resource definition.
 All those mappings are used to compute final values of account attributes.
 
-Most account attributes are single-valued.
-Attempt to set more than one value for such an attribute will end up with an error.
-Therefore, it does not make sense to specify more than one mapping for such an attribute.
-The mapping can be specified in a resource or in the role, but only one of those should be active at the time.
-Mapping conditions and strength can be used to selectively deactivate some mappings in more complicated cases.
-But it still means that only one mapping is active at a time.
+Most account attributes are _single-valued_.
+Attempt to set more than one value for such an attribute ends up with an error.
+Therefore, it does not make sense to specify more than one mapping for single-valued attribute.
+The mapping can be specified in a _resource definition_ or in the _role_, but only one of those should be active at any time.
+Mapping _conditions_ and _strength_ can be used to selectively deactivate some mappings in more complicated cases.
+However, it still means that only one mapping is supposed to set the value.
 
-However, some attributes are multi-value.
-In that case midPoint will merge the values from all the mappings.
-In that case several roles may contribute to the final set of attribute values, as can the mapping in resource definition.
+Some account attributes are _multi-valued_.
+In that case, midPoint merges the values from all the mappings.
+Several _roles_ may contribute to the final set of attribute values, as can the mappings in _resource definition_.
 This is the usual case of attributes that specify privileges, such as permissions, authorization codes, access control list (ACL) entries and so on.
 
-Merging of multi-value attributes is an easy way how to manage simple privileges in resources.
-However, midPoint contains a whole sophisticated mechanism for managing _entitlements_ such as groups.
+Merging of multi-valued attributes is an easy way how to manage simple privileges in resources.
+However, midPoint contains sophisticated mechanism for managing _entitlements_ such as groups.
 There is an entire chapter in this book dedicated to entitlement management.
 
 .Additive principle.
-NOTE: MidPoint is built on a principle of merging.
-Assigned roles are merged together, that is merged with outbound mappings, entitlements are merged and so on.
-MidPoint always adds, it never subtracts. E.g. there is no simple way how one role can "eliminate" a value given by another role.
-If a role specifies that an account should have value A, that account will have value A. And that’s it.
-It can also have values B and C given by other roles.
-But A will always be there, no matter what other roles do (unless those roles are involved in some really dark magic).
+NOTE: MidPoint is built on a principle of _merging_.
+Assigned roles are merged together, further merged with outbound mappings, entitlements are merged and so on.
+MidPoint always adds, it never subtracts.
+E.g. there is no simple way how one role can "eliminate" a value given by another role.
+If a role specifies that an account should have value `A`, that account will have value `A`.
+That’s it.
+It can also have values `B` and `C` given by other roles.
+However, `A` will always be there, no matter what other roles do (unless those roles are involved in some really dark magic).
 This may seem quite limiting.
-But it is sufficient for the vast majority of cases.
+However, it is sufficient for the vast majority of cases.
 It only needs a change in your way of thinking about privileges.
-Do not think about removing a privilege.
+Do not think about _removing_ a privilege.
 Think about _not adding_ a privilege.
 There are many ways how that can be achieved.
 There is a role hierarchy, mappings can be conditional and whole assignments and inducements can be conditional too.
 We are trying really hard to avoid concept of "removing" privileges, because that requires ordered processing.
-E.g. if role X adds something and role Y removes it, the final result depends on the order in which such roles are processed.
+E.g. if role `X` adds something and role `Y` removes it, the final result depends on the order in which such roles are processed.
 This creates ambiguities, it limits parallelism and overall it is a huge complication.
-Therefore we try to avoid it.
+Therefore, we try to avoid it.
 And so far we have been successful.
 
 == Role Hierarchy
 
-Ability to group privileges into roles is quite useful.
+Ability to group privileges into roles is somehow useful.
 However, it is still not good enough unless your access control policy is extremely simple.
-Most practical policies require placing roles into roles, thus creating role hierarchy.
+Most practical policies require placing roles into roles, thus creating _role hierarchy_.
 
-Let’s consider two work positions: clerk and supervisor.
+Let’s consider two work positions: _clerk_ and _supervisor_.
+We are going to create roles for both work positions.
 Clerk has some basic set of privileges.
 Supervisor can do everything that a clerk can do, but supervisor has some additional privileges.
 A naive way would be to simply copy all the clerk’s privileges in supervisor’s role.
 However, privileges are seldom static.
 Access control policies tend to change and evolve as much as the environment changes.
-It is likely that a clerk’s privileges will change.
-In that case we will need to update the supervisor’s role as well.
+It is likely that a clerk’s privileges will change in the future.
+In that case, we would need to update the supervisor’s role as well.
 This would be a maintenance burden.
 Now imagine hundreds or thousands of related roles that need constant maintenance.
-Any person maintaining such a structure will need superhuman precision and patience to do that.
+Any person maintaining such a structure would need superhuman precision and patience to do that.
 
-A more natural idea would be to include clerk’s role into a supervisor’s role.
+A better idea is to _include_ clerk’s role into a supervisor’s role.
 If clerk’s privileges change, then also supervisor’s privileges are automatically updated.
 Maintenance is much easier.
-This is the basic idea of role hierarchy.
+This is the basic idea of _role hierarchy_.
 Basic privileges are placed into low-level roles.
 Low-level roles are combined to create a higher-level roles.
-Then those roles are combined as well.
+Then those roles may be combined as well.
 The process is repeated until there are all the roles that are needed for assignment to users.
 
 image::07-06-role-hierarchy.png[Role hierarchy]
 
 Creating role hierarchies in midPoint is quite easy.
-A clever reader would already expect that this has something to do with inducements.
-And clever reader would be absolutely right.
-Role hierarchy is nothing more than a set of inducements between roles:
+A clever reader would already expect that this has something to do with _inducements_ - and clever reader would be absolutely right.
+Role hierarchy is nothing more than a set of _inducements_ between roles:
 
 [source,xml]
 ----
@@ -409,19 +405,19 @@ Role hierarchy is nothing more than a set of inducements between roles:
 </role>
 ----
 
-The inducement includes `Clerk` role in `Supervisor` role.
-When midPoint evaluates the `Supervisor` role, it will get all the inducements from both the `Supervisor` and `Clerk` roles.
+The _inducement_ includes `Clerk` role in `Supervisor` role.
+When midPoint evaluates the `Supervisor` role, it gets all the _inducements_ from both the `Supervisor` and `Clerk` roles.
 This process is almost transparent, it works almost as if the clerk’s privileges were copied in the supervisor’s role.
 All the constructions in all the inducements in both roles are processed.
 Therefore, supervisor will get all the accounts that a clerk would get, plus few extra privileges.
 
 image::07-07-supervisor-clerk-inducement.png[Supervisor-clerk inducement]
 
-Both `Clerk` and `Supervisor` roles are likely to have construction for the same account.
+Both `Clerk` and `Supervisor` roles are likely to have _construction_ for the same account.
 This is quite natural, as both clerk and supervisor would probably work with the same applications.
-However, their privileges will be different.
+However, their privileges are different.
 This is where the merging mechanism becomes very useful.
-When a supervisor role is processed then privileges of clerk are merged with privileges of supervisor:
+When a supervisor role is processed, then privileges of clerk are merged with privileges of supervisor:
 
 .role-clerk.xml
 [source,xml]
@@ -476,33 +472,36 @@ When a supervisor role is processed then privileges of clerk are merged with pri
 ----
 
 When supervisor’s role is processed, midPoint figures out that those two `construction` statements are referring to the same account.
-Therefore they will be merged together.
-Supervisor will get an account that will have `priv` attribute set to values `read`, `create`, `approve`, `modify` and `delete`.
+Therefore, they are merged together.
+Supervisor gets an account that has `priv` attribute set to values `read`, `create`, `approve`, `modify` and `delete`.
 
 image::07-08-supervisor-clerk-inducement-constructions.png[Supervisor-clerk inducement with constructions]
 
 .Assignments in roles.
-NOTE: So far we have seen only inducement in the roles.
-But what about assignment?
-Assignment is indeed used in the roles, but it has different meaning.
-Inducement means that role A has to be included in role B. But assignment means that role A has to be applied to role B. In that case role A is in fact a meta-role.
-But more on that later.
-For now it is good to remember a rule of the thumb: role hierarchy is always created by inducements.
+NOTE: So far we have seen only _inducement_ in the roles.
+But what about _assignment_?
+_Assignment_ is indeed used in the roles, but it has different meaning.
+_Inducement_ means that role `A` has to be included in role `B`.
+However, _assignment_ means that role `A` has to be applied to role `B`.
+In that case, role `A` is in fact a _meta-role_.
+More on that later.
+For now, it is good to remember a rule of the thumb: role hierarchy is always created by _inducements_.
 
 == Role Universality
 
-MidPoint roles are very useful kind of animal, because they are used for almost everything in midPoint.
-MidPoint role be used as:
+MidPoint role is a very useful kind of animal, therefore it is used for almost everything in midPoint.
+MidPoint role can be used as:
 
-* *Provisioning role:* The role can include constructions that control provisioning and deprovisioning of accounts.
+* *Provisioning role:* The role can include _constructions_ that control provisioning and deprovisioning of accounts.
 
-* *Entitlement management:* The constructions can include specification of groups, resource-side roles, privileges and so on.
+* *Entitlement management:* The constructions can include specification of _entitlement associations_ such as membership in groups, resource-side roles, possession of privileges and so on.
 
-* *Internal authorization:* The roles give access to data in midPoint itself. E.g. a role can allow reading some user properties.
-Authorizations in a role can also allow access to particular parts of midPoint user interface, remote network services and so on.
+* *Internal authorization:* The roles give access to data in midPoint itself.
+E.g. a role can allow reading selected user properties.
+_Authorizations_ in a role can also allow access to particular parts of midPoint user interface, remote network services and so on.
 
-* *Policy specifications:* Roles (and especially meta-roles) are the places where important parts of policy management is specified.
-Roles include policy rules that can apply segregation of duties (SoD) policies, ownership and approval policies and so on.
+* *Policy specifications:* Roles (and especially meta-roles) are the places where important parts of _policy management_ is specified.
+Roles include _policy rules_ that can apply segregation of duties (SoD) policies, approval policies, compliance policies and so on.
 
 All those aspects can be combined into a single role.
 Therefore, such role can specify everything that is needed for the role holder to live a complete digital life: access to systems (accounts), entitlements, access to midPoint itself (e.g. for self-service), apply policy constraints and so on.
@@ -510,14 +509,13 @@ Everything in one place.
 
 Role universality may seem mundane and completely natural, but in fact it is quite unique and incredibly powerful idea.
 As you will see later, roles can be driven through approval process, lifecycle management can be applied to role, roles can be subject to policies, role compliance can be evaluated and so on.
-All of this applies to provisioning roles.
-But the same mechanism can be applied also to roles that govern the administration of midPoint itself.
-And even to meta-roles that specify high-level policies.
-Which means that in a strange post-modern way midPoint can be applied to itself.
+All of this applies to ordinary (provisioning) roles.
+However, the same mechanism can be applied also to roles that govern the administration of midPoint itself - even to meta-roles that specify high-level policies.
+Which means that in a strange post-modern way, midPoint can be applied to itself.
 MidPoint can be its own manager.
 
-NOTE: Surprisingly, role universality is quite a unique concept in the IDM field.
-The common approach of older IDM systems is to separate provisioning roles, authorization roles, governance roles and so on.
+NOTE: Surprisingly, role universality is quite a unique concept in the identity management field.
+The common approach of traditional identity management systems is to separate provisioning roles, authorization roles, governance roles and so on.
 Each of them was different, and it was managed in a different way.
 It was quite difficult to create a unified and consistent policy.
 This is one of many aspects where midPoint provides a seemingly simple mechanism, but that mechanisms simplifies a lot of things and provides an elegant solution to a difficult problem.
@@ -542,54 +540,58 @@ It is also an assumption that is almost always utterly false.
 
 Oh no!
 How can we proceed if one of our fundamental assumptions is false?
-Is role-based access control doomed to failure?
-Certainly, there are people that proclaim that role-based approach is useless, suggesting many innovative approaches that are usually even more useless in practice.
+Is role-based access control (RBAC) doomed to failure?
+Certainly, there are people who eagerly proclaim that role-based approach is useless, suggesting many innovative approaches that are usually even more useless in practice.
 Role-based access control is not dead, not even close.
-It is just much harder than it may seem.
+RBAC practice is just much harder than it may seem.
 
 Yes, it is true that nobody knows exactly what privileges a clerk should have.
 However, it is known what privileges Harry Harris needs to do his day-to-day work.
 Harry is a clerk.
 Therefore, it is perhaps fair to assume that the privileges that Harry has are pretty much the same privileges that should be included in clerk role.
-This _bottom-up_ approach may not be perfect for business analytics puritans, but it is a practical approach, favored by almost all practical organizations.
+This _bottom-up_ approach may not be perfect for business analytics puritans, but it is a practical approach, favored by many pragmatic organizations.
 
 However, it is not practical to start with roles that have business meaning.
-I.e., it is not practical to start with `Clerk` role, as we do not yet know what privileges should be in that role, as we do not know what privileges Harry has, and we may not even know that Harry is a clerk.
-There are too many missing pieces to start solving the business puzzle yet.
+I.e., it is not practical to start with `Clerk` role, as we do not yet know what privileges should be in that role - because we do not know what privileges Harry has yet, and we may not even know that Harry is a clerk.
+There are too many missing pieces to start solving the _business_ puzzle yet.
+
+=== Application Roles
 
 We start by creating _application roles_.
-Those roles deal with access to a single application.
+Those roles deal with access to a single _application_.
 An application role may be quite broad, as giving access to the entire application, or it may be quite narrow giving access to small parts of the application.
 
-The usual start is to create an application role for every _group_ in Active Directory or a similar central directory system.
-Groups are good starting material.
-They tend to be the right granularity, not too broad or too narrow.
+The usual starting point is to create an application role for every _group_ in Active Directory or a similar central directory system.
+_Groups_ are very good starting material.
+They tend to be the right granularity, not too broad, not too narrow.
 Users are already assigned to groups, as they need the privileges given by the group membership to carry out their work.
 Therefore, the groups form some kind of basic vocabulary to start access control conversation among application administrators, business people and role engineers.
 Starting with groups makes sense from a business continuity perspective as well.
-Good start, indeed.
+Good starting point, indeed.
 
 Let us create application role for every Active Directory group.
-An application role will grant account in Active Directory, as well as membership in one specific group.
-MidPoint _entitlements_ mechanism is an ideal tool to do this.
+Such application role grants _account_ in Active Directory, as well as _membership_ in one specific _group_.
+MidPoint _entitlement_ mechanism is an ideal tool to do this.
 
 .Entitlements and synchronization of application roles
-NOTE: Indeed, midPoint _entitlements_ mechanism is an ideal tool for building application roles.
+NOTE: Indeed, midPoint _entitlement_ mechanism is an ideal tool for building application roles.
 Unfortunately, the _Entitlements_ chapter of this book is not written yet.
 MidPoint reference documentation can provide the necessary information in the meantime.
 Similarly, _generic synchronization_ is an ideal tool to keep _groups_ and _application roles_ consistent.
-There are some information about _generic synchronization_ in the Organizational Structure chapter.
+There are some information about _generic synchronization_ in the <<09-orgstruct#09-orgstruct,Organizational Structure>> chapter.
 
-Strictly speaking, application roles are not meant to be assigned directly to users.
+Strictly speaking, _application roles_ are not meant to be assigned directly to users.
 They are supposed to be abstract, to be the base "material" used to create higher-level roles.
 However, we are not at that maturity level yet.
-We have to accept that application roles are assigned directly to users, for now.
-Although we are not strictly doing any serious role-based access control yet, we can already do some role-based magic even at this point.
+We have to accept that application roles are assigned directly to users, at least for now.
+Although we are not strictly doing any serious role-based access control yet, we can already do some role-based magic with application roles only.
 Once we have application roles, users can request them, we can review and approve the request, assign some roles automatically and so on.
-Owners can be assigned to application roles, keeping an information who is responsible for each particular group.
+We can keep track of _who_ has _what_ and _why_, _when_ it was assigned and _how_ (requested, approved) - these are very useful data.
+_Owners_ can be assigned to application roles, keeping an information who is responsible for each particular group.
 There is still a lot of value even at this point.
 
 // TODO: later: concept of Application, application vs resource
+// TODO: Applications, application roles, inducements (later?)
 
 .Misery of application roles
 NOTE: Obviously, there are some downsides to using application roles.
@@ -603,10 +605,12 @@ However, this method is difficult to combine with the _bottom-up_ approach, ther
 During the early years of midPoint we had hope to avoid using application roles at all.
 Even earlier versions of this book advocated such approach.
 However, the practice of application roles seems to be well established already.
-Even though application roles are not perfect, they are practical.
+Even though application roles may not be perfect, they are very practical.
 We have to admit that.
 
-Once we have the application roles, we can start combining them into roles that have a business meaning.
+=== Business Roles
+
+Once we have the application roles, we can start combining them into roles that have a _business_ meaning.
 Those higher-level roles are called _business roles_, as they reflect the needs of the business, such as specific job or responsibility in a business process.
 
 Here comes the `Clerk` role at last.
@@ -621,14 +625,14 @@ image::07-07-role-hierarchy-application-business.png[Role hierarchy - applicatio
 This sounds easy, yet it never really is that simple.
 Harry may have other responsibilities besides being a clerk.
 Therefore, the `Clerk` role is not supposed to contain all the Harry's application roles.
-We may need to have a look at the roles of Violet Vickers who is also a clerk in the same organization unit and compute an intersection of Harry's and Violet's application roles.
+We may need to have a look at the roles of Violet Vickers who is doing similar job in the same organization unit and compute an intersection of Harry's and Violet's application roles.
 Even that may not be entirely precise, as both Harry and Violet may have other responsibilities, and they may share a common application role purely by chance.
 Also, there may be roles that Harry and Violet have, and they do not actually need them.
-It is very hard to get this exactly right.
-However, it is perhaps better to have not-entirely-precise yet somehow manageable system than to have no system at all.
+It is very difficult to get this exactly right.
+However, it is perhaps better to have not entirely precise yet somehow manageable system than to have no system at all.
 
 It may be daunting task to do this analysis for every user (or combination of users), manually, with just a rudimentary tooling.
-This smells like huge spreadsheets that get outdated even sooner than the analysis is done.
+This smells like huge spreadsheets that gets outdated even sooner than the analysis is done.
 In fact, it is usually feasible to define just a small subset of business roles, leaving many application roles assigned directly to users.
 This is not entirely right, not right at all.
 Yet, it is feasible, while complete business role coverage is usually not.
@@ -646,7 +650,9 @@ The tooling is quite rudimentary for now, and it may look somehow complex to use
 Yet, it is practical, for those that have the courage to try it.
 MidPoint 4.8 has a role mining capability that is worth trying.
 
-Sometimes there are also more types of role, not just _application_ and _business_ roles.
+=== Role Types
+
+In some deployments, there are more types of roles, not just _application_ and _business_ roles.
 The other roles are much less common, yet they are used from time to time.
 The table below summarizes role types:
 
@@ -654,7 +660,7 @@ The table below summarizes role types:
 |Role type |Description |Content |Should be assigned to users? |Example
 
 |Application role
-|Role describing access to a single application.
+|Role describing access to a single _application_.
 Usually represents one specific _entitlement_ in the application, such as application group, privilege or role.
 It is bound to one specific application (hence the name).
 
@@ -676,7 +682,7 @@ Database `foo` read-only access
 IT role
 |Combines several application roles or low-level privileges into one unit that is easier to manage.
 Often used for application roles that depend on each other, e.g. when operating system access is needed to perform database administration.
-They are considered to be somewhere between application roles and business roles.
+They are considered to be somewhere between _application roles_ and _business roles_.
 They are not application roles, as they can give access to several applications.
 They are not business role either, as they do not describe a complete business responsibility, and they often use very technical and non-business-friendly terminology, which makes them a separate species on their own.
 They are not used very often.
@@ -723,7 +729,7 @@ Business roles are supposed to be a combination of smaller "elemental" roles.
 
 // TODO: assigning business roles to users automatically? Point to object template chapter, and explain details there?
 
-Overall, role engineering an art rather than a science.
+Overall, role engineering is an _art_ rather than a science.
 It is not strictly a technological job.
 Entire identity management and governance is about business-IT cooperation, which is never easy.
 Role engineering is even harder, as there is even bigger overlap to business.
@@ -734,7 +740,7 @@ More on that later, in future versions of this book.
 
 == Assignment Gets Complicated
 
-At the first sight, the concept of assignment may seem quite mundane, maybe even over-complicated.
+At the first sight, the concept of _assignment_ may seem quite mundane, maybe even over-complicated.
 In fact, it is a very powerful concept, and it has been a crucial part of midPoint design from the very beginning.
 Assignment is so much more that just a simple user-role connection:
 
@@ -745,11 +751,11 @@ It can also be used to assign roles that will be activated in the future.
 * Assignment have *administrative status* that can be used to manually disable or enable a particular assignment.
 This can be used to manage exceptions from the policies or it can be very useful in emergency situations.
 
-* Assignments can contain *parameters* that are used to support parametric roles (see above).
+* Assignments can contain *parameters* that are used to support parametric roles.
 
 * Assignments are subject to policies, governance and compliance mechanisms.
 Assignments have their lifecycle, they are subject to re-certification campaigns, there can be policy exception recorded for an assignment and so on.
-But more on that in later chapters of this book.
+More on that in later chapters of this book.
 
 For example, assignment validity period can be used to assign a role only for a temporary period:
 
@@ -768,7 +774,7 @@ For example, assignment validity period can be used to assign a role only for a 
 </user>
 ----
 
-As assignment and inducement are in fact the same data structure, similar approach can be used to disable parts of role hierarchy:
+As _assignment_ and _inducement_ are in fact the same data structure, similar approach can be used to disable parts of role hierarchy:
 
 [source,xml]
 ----
@@ -795,27 +801,27 @@ As assignment and inducement are in fact the same data structure, similar approa
 Many types and variants of assignments can be combined in a single user.
 Assignment validity periods may overlap, there may be disabled assignments and enabled assignments for the same role at the same time, there may be several assignments to the same role with various parameters and so on.
 All reasonable combinations are supported, which allows modeling very complicated schemes such as multi-affiliation, multiple employment contracts and so on.
-Assignment is a crucial data structure, and we will be dealing with it in almost every chapter in the book.
+_Assignment_ is a crucial data structure for midPoint platform, and we will be dealing with it in almost every chapter in the book.
 
 == Dynamic Roles
 
-RBAC is a nice and elegant way how to create and maintain access control policies.
+RBAC is a nice and elegant method to create and maintain access control policies.
 However, there is a serious danger: roles can be quite explosive.
-The role structure can easily get out of control and the roles may start to multiply.
+The role structure can easily get out of control, and the roles may start to multiply.
 This is known as _role explosion_, and it is one of the nastiest drawbacks of access control system based on static roles.
 It is not uncommon for an organization to have much more roles than it has users.
 This creates a recurring maintenance nightmare.
 Fortunately, midPoint has a very powerful support for dynamic roles that can significantly reduce or even completely eliminate the impact of role explosion.
 
-To understand dynamic roles, we first need to understand what is wrong with static roles.
+To understand dynamic roles, we first need to understand what is the problem with static roles.
 Many organizations have jobs that are very similar, they just differ is some small detail.
-For example, all bank tellers are similar, the difference is just their branch office.
+For example, all bank tellers are similar, the difference is just the branch office where they work.
 Similarly, all the assistant jobs are pretty much the same.
 The difference is the department or section that they work for.
 Therefore, there is `Sales Assistant`, `Engineering Assistant`, `Logistics Assistant` - and a hundred or so similar roles.
 Almost all the privileges in those roles are the same.
 Of course, we can create an (abstract) role `Assistant` that will have all the common privileges.
-But we still need those hundreds of specific assistant roles.
+However, we still need those hundreds of specific assistant roles as sub-roles of the common `Assistant` role.
 And then it gets even worse, because there may be `Senior Sales Assistant`, `Trainee Sales Assistant`, `Senior Engineering Assistant`, ...
 
 The key to the role explosion is a realization that those "exploded" roles are created in an algorithmic way.
@@ -825,37 +831,41 @@ The organizational unit (sales, engineering or logistics) is just a parameter to
 Then the number of roles can be significantly reduced.
 This is what we call _parametric roles_.
 
-Parametric roles are not your ordinary garden-variety static roles that just contain a set of privileges.
-Parametric roles need to be much smarter. E.g. the Assistant role need an algorithm, that takes the organization unit as an input, and it outputs a privileges that are appropriate for that organizational unit.
+Parametric roles are not your ordinary garden-variety roles that contain a fixed set of privileges.
+Parametric roles need to be much smarter.
+E.g. the `Assistant` role needs an algorithm, that takes the organization unit as an input, and it outputs privileges that are appropriate for that organizational unit.
 This may be a simple expression that determines correct group name based on organizational unit name.
-But it may also be quite a complex code that determines most efficient location of home directories and other resources based on office location.
+Yet, it may be quite a complex code that determines most efficient location of home directories and other resources based on office location.
 There is no free lunch.
-The algorithm that was used to generate the number of "exploded" roles will not magically disappear.
-In case of parametric roles that algorithm needs to be placed in the role itself.
-But it still may be much easier to maintain a couple of expression than to maintain thousands upon thousands of roles.
+The algorithm that was used to generate the number of "exploded" roles is not going to magically disappear.
+In case of parametric roles, that algorithm needs to be placed in the role itself.
+However, it may still be easier to maintain a couple of expressions in few smart roles than to maintain thousands upon thousands of ordinary roles.
 
 The usual problem with parametric roles is, quite obviously, the presence of the parameters.
-The parameters cannot be stored with the role, as they are different for each assignment of the role.
+The parameters cannot be stored with the role, as they are different for each _assignment_ of the role.
 The parameters also cannot be stored directly with the user, as the user may have the same role assigned with a different set of parameters.
-Fortunately, midPoint was designed with this problem in mind and this was one of the big motivations to create a concept of _assignment_.
-Assignment is the right place to store the parameters, as it is the data structure that associates user with a specific role.
+Fortunately, midPoint was designed with this problem in mind.
+This was one of the big motivations to create a concept of _assignment_ in the first place.
+_Assignment_ is the right place to store the parameters, as it is the data structure that associates user with a specific role.
 
 ExAmPLE is a very progressive company.
-Similarly to other corporations they have functional organizational structure.
-But their employees are also organized in teams.
+Similarly to other corporations, they have functional organizational structure.
+However, their employees are also organized in _teams_.
 Each team can have a manager and ordinary members.
 The team membership is represented by custom attributes in LDAP server.
 Each user has two custom multi-value attributes: `exampleTeamMember` and `exampleTeamManager`.
 Both attributes expect team name as their value.
 
+// TODO: modify this example. Teams are better addressed by using orgs. Figure out something better here.
+
 The naïve way to handle this would be to create two roles for each team.
-But there are hundreds of team and that would be a maintenance nightmare.
+However, there are hundreds of team, and this approach would create a maintenance nightmare.
 A smarter solution is to use parametric roles.
-There will be two roles only: `Team Member` and `Team Manager`.
-Those roles will take custom property `teamName` as parameter.
+There are only two roles: `Team Member` and `Team Manager`.
+Those roles take custom property `teamName` as parameter.
 But where does this property comes from?
 It comes from assignment extension.
-Each time the team role is assigned there needs to be a parameter in the assignment:
+Each time the team role is assigned, there needs to be a parameter in the assignment:
 
 [source,xml]
 ----
@@ -918,8 +928,7 @@ This is the basic mechanism of parametric roles.
 It is incredibly powerful mechanism.
 Unfortunately, current implementation of parametric roles in midPoint is quite limited.
 While midPoint was designed with parametric roles in mind, the implementation is not yet finished.
-Therefore support for parametric roles is quite limited.
-MidPoint core supports parametric roles quite well.
+MidPoint core engine supports parametric roles quite well.
 Assignment parameters and mappings should work perfectly.
 However, the support for assignment parameters in midPoint user interface is very limited.
 In fact, the production-quality support is limited only to the couple of hardcoded parameters (`orgRef` and `tenantRef`) and even that leaves a lot to be desired.
@@ -931,24 +940,24 @@ NOTE: Roles may also explode due to other reasons.
 Application roles that were mentioned above may significantly contribute to role explosion.
 Also attempts to "atomize" the low-level roles as an attempt to create enough "material" to compose higher-level roles may lead to explosion.
 MidPoint has some mechanism that limit those effects.
-But perhaps the best approach for those cases could be summarized as "do not overdo it".
+However, perhaps the best approach for those cases could be summarized as "do not overdo it".
 
 == Metaroles
 
 MidPoint roles are usually applied to users.
-But midPoint roles are universal.
+However, midPoint roles are _universal_.
 The roles can be applied to almost any midPoint object.
 Roles can be applied to users, organizations, services and even to roles themselves.
 
-Simply speaking, meta-roles are roles applied to other roles.
-Ordinary role applies its characteristics to a user.
-Meta-role applies its characteristics to another role.
+Simply speaking, _meta-roles_ are roles applied to other roles.
+Ordinary role applies its characteristics to a _user_.
+_Meta-role_ applies its characteristics to another _role_.
 This is perfectly possible in midPoint, as role can be applied to almost any midPoint object.
 Then why not apply a role to another role?
 This may seem like a pretty useless exercise, but the truth is that meta-roles are tremendously useful.
 
 History is repeating, they say.
-The fact is that repetition is daily bread in almost all IDM deployments.
+The fact is that repetition is daily bread in almost all identity management deployments.
 E.g. many business roles have something in common.
 For example, the business roles have similar approval process.
 There may be role classes that have similar exclusion policies that are part of global segregation of duties (SoD) policy.
@@ -959,9 +968,12 @@ Therefore, applying meta-roles to them can be very useful.
 So far all the roles that we have seen were composed exclusively from inducements.
 That made perfect sense, as all those things that were in the inducement did not apply to the role itself.
 Privileges specified in inducements applied to users that the role was assigned to.
-However, in this case, we want to apply meta-role to a role.
-The effects of a meta-role should apply to the role, not to the user.
+However, in this case, we want to apply _meta-role_ to a role.
+The effects of a meta-role should apply to the _role_, not to the user.
 Therefore _assignment_ is used instead of inducement:
+
+// TODO: this is archetype-like example. Rework this.
+// TODO: Maybe wait for policyType, explain that as meta-role?
 
 [source,xml]
 ----
@@ -996,13 +1008,14 @@ Therefore _assignment_ is used instead of inducement:
 ----
 
 This may seem similar to a role hierarchy.
-However, it is a completely different animal.
-The crucial difference is that the meta-role is applied to the role, and not to the user.
+However, _meta-role_ is a completely different animal.
+The crucial difference is that the meta-role is applied to the _role_, and not to the user.
 The inducements in the meta-role often contain policies such as approval policy, or construction clauses that create groups or organizational units.
 We usually do not want to create a group for each user.
 Yet, we often want to create a group for a role.
 That’s what meta-role can do.
 
+.Reuse in midPoint
 TIP: Meta-roles are one of the stranger concepts of midPoint, but it goes well with midPoint philosophy.
 Meta-roles are roles that are applied to themselves.
 This is a reuse of an existing mechanism to create something new.
@@ -1013,8 +1026,8 @@ When we have designed the RBAC system for midPoint, we haven’t thought about m
 The meta-roles just appeared as a consequence of the design, a consequence that was absolutely unexpected.
 Fortunately, we have quickly realized the potential that meta-roles have, and we have put them to a full use.
 
-A clever reader would probably notice that meta-roles can be used to set up different types of roles.
-We could have meta-role for application role, business role and so on.
+A clever reader would probably notice that meta-roles can be used to set up different _types_ of roles.
+We could have meta-role for _application_ role, _business_ role and so on.
 And clever reader, as always, would be right.
 However, given just the metaroles, there would be few bits still missing here to create a full-featured type system.
 Those missing bits are implemented in a form of _archetypes_.
@@ -1022,7 +1035,7 @@ Simply speaking, archetypes are meta-roles, with some optimizations and improved
 More on that later.
 
 It may be difficult to understand the concept of meta-roles from such a short and very abstract description.
-But do not worry.
+Do not worry.
 As meta-roles are often used in midPoint, we will get back to the meta-roles on several occasions.
 Meta-roles often allow simplification of complex problems by creating a very elegant solutions.
 For now, it is enough to remember that roles can be applied to almost anything in midPoint, including themselves.
@@ -1032,13 +1045,13 @@ For now, it is enough to remember that roles can be applied to almost anything i
 This section is where we will get all thoughtful and philosophical.
 The people that are bored with philosophical questions should skip the rest of this chapter.
 We will also throw some dirt on almost every access control model in existence.
-Therefore, the people that maintain dogmatic beliefs about IAM mechanisms should skip this section as well.
+Therefore, the people that maintain dogmatic beliefs about identity and access management mechanisms should skip this section as well.
 On the other hand, open-minded people are quite likely to enjoy it.
 
 Role-based access control (RBAC) is just one of many access control models.
-There many variants of RBAC and there are other access control models that are based on a completely different paradigm.
-One such popular model is Attribute-Based Access Control (ABAC).
-ABAC is based on an idea that access to the systems can be determined dynamically just based on "attributes".
+There are many variants of RBAC, and there are other access control models that are based on a completely different paradigms.
+One such popular model is attribute-based access control (ABAC).
+ABAC is based on an idea that access to the systems can be determined dynamically, just based on "attributes".
 Simply speaking, we can imagine ABAC as a one big algorithm that takes "attributes" as an input and decides whether access should be allowed or denied.
 
 Policy-based access control (PBAC) is similar to ABAC.
@@ -1046,14 +1059,14 @@ PBAC extends the notion of attribute-based decisions to an abstract concept of _
 Access decisions are still supposed to be algorithmic, although the algorithm is not limited to attributes.
 
 ABAC is very popular in the access management (AM) community because of its simplicity.
-PBAC, as an extension of the idea is also gaining traction.
+PBAC, as an extension of the idea, is also gaining traction.
 It all makes much sense, as it is much simpler and faster to evaluate one policy expression than to sift through a mountain of roles.
 The problem with ABAC and PBAC is manageability.
 ABAC and PBAC assume that all access control decisions could be based on algorithms, that they can be made anytime a decision is needed.
 However, that is almost never the case in larger practical deployments.
 
 Too many identity professionals dream about complete automation of access control.
-It would be a marvel if an IDM system could automatically determine the privileges of every person simply based on the organizational unit, work responsibilities or any other attributes of that person.
+It would be a marvel if an access control system could automatically determine the privileges of every person simply based on the organizational unit, work responsibilities or any other attributes of that person.
 It would be perfect to get that information from an HR system, process it through a set of algorithms and automatically provision correct privileges to everybody.
 That is a very nice dream, indeed.
 However, reality has a different idea.
@@ -1063,64 +1076,67 @@ First problem is at the very start: HR data are almost never correct.
 There is very little motivation for the HR data to be completely correct.
 It is not a big issues if someone has a wrong job code or organizational unit code in the HR system.
 The business goes on, the salary is paid, everybody is happy.
-There is no efficient feedback loop that would force corrections in HR data - until the IDM system is deployed, that is.
-It takes years or decades for a typical company to deploy an IDM system.
+There is no efficient feedback loop that would force corrections in HR data - until the identity management system is deployed, that is.
+It takes years or even decades for a typical company to deploy an identity management system.
 At that point the HR data are beyond repair.
 The corrections that need to be done in the HR system are substantial.
 It is very difficult to correct HR data manually, even in small organizations.
 Bigger deployments absolutely require proper tooling to do that job.
 However, even with good tooling, it usually takes a lot of time to get the data right.
-Many IDM deployments were significantly delayed, or even canceled, because of data quality problems.
+Many identity management deployments were significantly delayed, or even canceled, because of data quality problems.
 Reliance on correct input data is dangerous.
-Identity system should not fail when the input data are wrong.
+Identity system should be able to handle wrong input data.
 
-The IDM deployment should not be delayed because of wrong input data.
+The identity management deployment should not be delayed because of wrong input data.
 That would be like refusing to use your reading glasses because the text you are reading is misspelled.
-IDM systems are essential tools that assist you in the process of data clean-up.
-The IDM system should be deployed using whatever data are available, and it should be used to manage data quality on day-to-day basis.
+Identity management systems are essential tools that assist you in the process of data clean-up.
+The identity management system should be deployed using whatever data are available, and it should be used to manage data quality on day-to-day basis.
 It is naive to think that once the data are cleaned-up they will stay clean.
-The processes that crated data errors are still there, therefore data errors will appear all the time.
-The crucial insight is to accept that there will be data errors and to design the mechanisms to detect and correct them.
+The processes that crated data errors are still there, therefore data errors are going to appear all the time.
+The crucial insight is to accept that there are (and will be) data errors, and to design the mechanisms to detect and correct them.
 
-There are many manual and ad-hoc decisions that need to be made in practical IDM deployments.
-This is not limited to IDM deployment project.
-Many ad-hoc decisions must be made during routine operation.
+There are many manual and ad-hoc decisions that need to be made in practical identity management deployments.
+This is not limited to identity management deployment _project_.
+Many ad-hoc decisions must be made during routine day-to-day operation of deployed system.
 Privileges need to be assigned manually to compensate for missing input data.
 Privileges need to be corrected, input data need to be temporarily overridden, policy exceptions has to be made.
-There are many things that need to be done manually.
-Such decisions are made almost on day-to-day basis.
-For ABAC, PBAC and similar systems this would mean that a policy needs to be updated on a day-to-day basis.
+There are many things that need to be done manually, almost on day-to-day basis.
+For ABAC, PBAC and similar models this would mean that a policy needs to be _updated_ on a day-to-day basis.
 However, these systems are not designed for such flexibility.
 
-Then there is another big problem: the data are incomplete.
+Then there is another big problem: the data are _incomplete_.
 Even if HR are data are correct, the data usually do not provide all the information needed to completely provision the user with privileges.
 The HR data are often limited to organizational unit and formal code of the work position.
 However, this is often miles away from the job that user really does.
-The usual solution to this problem is that the user requests the privileges that are needed to do a job.
-Such request is then routed through appropriate approval process.
+The usual solution to this problem relies on the users to _request_ the privileges that are needed to do their jobs.
+Such request is routed through appropriate _approval_ process.
 That _request_ is a big problem for ABAC and PBAC.
-What should the user request to get the privileges?
+What exactly should the user request to get the privileges?
 Should the user request a change in the "policy"?
 That would not be practical.
 Should the user request a new value for an attribute?
 Which attribute?
-What value that should be?
-Can we somehow create a catalog of the things that a user can request?
+What value that would be?
+Users will need a way to _choose_ what they are requesting from a list of options.
+Can we somehow create a catalog of the _things_ that a user can request?
 Once again, ABAC and PBAC are not designed for this.
 Yet, all those problems are very easy to solve in RBAC.
 User is expected to request a _role_.
-It is quite easy to create a role catalog.
+It is quite easy to create a _role catalog_.
 _Role_ is a concept that users are familiar with.
 However, as ABAC and PBAC do not rely on roles, there is nothing that a user can get a grip on.
 There is no "handle" that would allow the user to make much sense from the abstract policies.
 
 This is all a consequence of yet another ABAC/PBAC problem.
-While ABAC/PBAC policy may be easy to set up, it is quite difficult to analyze and maintain.
+While ABAC/PBAC policy may be easy to set up, it is quite difficult to _analyze_ and _maintain_.
+There are simple and obvious questions that are very difficult to answer in ABAC/PBAC world.
+What are the privileges of this specific user?
+Which users are entitled to access this particular application?
 Which users are affected by this particular policy statement?
 How many users will be affected if I make this change to policy?
 ABAC/PBAC systems would need a complex simulation algorithms to answer those questions.
-However, it is all quite easy in RBAC.
-Policies are encapsulated into roles.
+However, answering such questions is quite easy in RBAC model.
+In RBAC, policies are encapsulated into roles.
 Therefore, only the users that have those roles are affected.
 The roles also divide the policy to a smaller, manageable pieces.
 Each of the roles can have its own state and lifecycle.
@@ -1138,24 +1154,24 @@ Therefore, many of the advantages of ABAC/PBAC are useless in identity managemen
 
 However, ABAC and PBAC are not complete failures.
 They are very useful in customer-oriented identity and access management (CIAM).
-Customer identities are usually "lightweight" and the policies are simple.
+Customer identities are usually "lightweight", and the policies are simple.
 However, when there is a need to manage employees, teachers, contractors and similar "heavyweight" identities then ABAC/PBAC approach almost always fails.
 
-The fact that ABAC/PBAC fails in complex practical IDM deployments does not mean that RBAC is ideal.
+The fact that ABAC/PBAC fails in complex practical identity management deployments does not mean that RBAC is ideal.
 Quite the contrary.
-RBAC has problems of its own and the applicability of pure RBAC in practical IDM deployments is very limited.
+RBAC has problems of its own, and the applicability of pure RBAC in practical identity management deployments is very limited.
 Many of the problems of RBAC model motivated engineers to develop ABAC, PBAC and similar models.
 In fact, the "algorithmic" idea of ABAC/PBAC is not entirely bad.
-Only if we had a way how to combine ABAC/PBAC and RBAC ... Oh, but there is a way!
+Only if we had a way how to combine ABAC/PBAC and RBAC ... oh, but there is a way!
 We did it already.
 
 MidPoint combines RBAC and ABAC/PBAC by putting expressions into roles.
 We have seen that already.
 When role is assigned, the expressions in the role gets evaluated.
-And there can be any complex algorithm in the expression, even a complete ABAC/PBAC policy.
+There can be any complex algorithm in the expression, even a complete ABAC/PBAC policy.
 At least in theory.
-MidPoint expressions do not make access control decisions, because it is not the job of an IDM system to make such decisions.
-IDM system should set up the account.
+MidPoint expressions do not make access control decisions, because it is not the job of an identity management system to make such decisions.
+Identity management system should set up the account.
 It provides the "material" for an authorization system to make a correct decisions.
 Therefore, midPoint goes as close to ABAC/PBAC as a provisioning system can go.
 In an extreme case the entire ABAC/PBAC policy can be implemented in outbound expressions in resource definition.
@@ -1174,9 +1190,30 @@ This combined approach works surprisingly well.
 
 Of course, this idea is not new.
 Many RBAC-like systems use some kind of "smart" behavior inside the roles.
-However, so far we haven’t seen anything as comprehensive as midPoint role-based access control model.
+However, so far we haven’t seen anything as comprehensive as midPoint dynamic role-based access control model.
 Therefore, we had to invent an impressive marketing name for our creation.
-Due to a momentary lapse of imagination we dubbed it _Advanced Hybrid RBAC_.
+Due to a momentary lapse of imagination we dubbed it _policy-driven RBAC_ (PD-RBAC).
 Whatever you choose to call it, the fact is that this approach is very useful in practice.
 It can transform apparent chaos into something that can be efficiently managed.
 After all, that is the whole point of identity management and governance.
+
+== Conclusion
+
+Role-based access control (RBAC) means many things to many people.
+Some consider it a cure-all, the only viable access control standard, others consider it cumbersome, yet others proclaim its death.
+Whatever is said about RBAC, the fact is, that RBAC is here, and it is here to stay.
+When it comes to midPoint, RBAC has its place as a very useful concept and essential tool.
+The truth is that the policy-driven RBAC variant that midPoint is using is miles apart from the traditional static RBAC models of the past.
+MidPoint would not be able to work efficiently without major innovation of the RBAC model.
+
+Role-based access control as well as dynamic policies are at the heart of midPoint.
+Similarly, identity management systems such as midPoint are at the heart of IT infrastructure.
+Many _applications_ implement at least some aspects of RBAC or similar access control models.
+However, almost all the applications limit the applicability of RBAC to the application itself.
+I.e. roles in an application can contain only those privileges that apply to that particular application.
+The roles cannot have privileges from other application.
+However, identity management systems are different.
+Identity management systems such as midPoint are reaching out to many _applications_ (resources).
+Therefore, a single midPoint role can give access to many applications at once.
+No other application can do that.
+This properly alone make identity management systems indispensable.

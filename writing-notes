@@ -1,3 +1,10 @@
 Describe data protection in AIM intro.
 
 Mention support for multiaccounts (tags) in early sections. As a note.
+
+RBAC chapter:
+* Describe concept of application
+* Mention archetypes
+* Parametric roles: rework Example, team do not fit here
+* Meta-role discussion is using archetype-like example. this should be reworked.
+
