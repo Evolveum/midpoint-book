@@ -75,11 +75,15 @@ The rules can define compliance policies.
 The rules can do it all.
 The rules are here to _govern_ the identities.
 
+// TODO: policies - PolicyType (4.9+)
+
 * *Access certification:* This is known by many names: certification, re-certification, attestation, ... but whatever the name is it is still the same process.
 Simply speaking, this is a method to review roles assigned to the users to make sure the users still need the roles that they have.
 This is a method how to get a grip on the _principle of least privilege_ even in environments that are naturally inclined to ad-hoc operation.
 But it is very useful mechanism in almost all environments.
 And midPoint provides many flavors of certification mechanisms from a scheduled mass recertification campaigns focused on roles assignments to an ad-hoc recertification of a single used after he is moved to a new organization.
+
+// TODO: regulatory compliance
 
 * *Data protection:* Identity management is no longer a wild west where anybody can do anything.
 Now there are strict data protection rules, regulations and legislation.

@@ -23,3 +23,8 @@ TODO: divisions, departments, sections
 TODO: archetype for projects, archetype for functional org.
 
 TODO: assignment relation: allow project managers and owners, but not approvers.
+
+== Meta-roles
+
+// TODO: move section from RBAC chapter here
+// TODO: Explain how archetypes act as meta-roles

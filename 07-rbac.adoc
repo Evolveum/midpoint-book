@@ -944,6 +944,9 @@ However, perhaps the best approach for those cases could be summarized as "do no
 
 == Metaroles
 
+// TODO: move this section to archetypes chapter
+// TODO: keep only a short "teaser" in this chapter
+
 MidPoint roles are usually applied to users.
 However, midPoint roles are _universal_.
 The roles can be applied to almost any midPoint object.
