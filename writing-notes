@@ -2,12 +2,25 @@ Describe data protection in AIM intro.
 
 Mention support for multiaccounts (tags) in early sections. As a note.
 
+Create a dedicated chapter for mappings and expressions
+
 RBAC chapter:
 * Describe concept of application
 * Mention archetypes
 * Parametric roles: rework Example, team do not fit here
 * Meta-role discussion is using archetype-like example. this should be reworked.
+* Find a better example for roles with multi-valued attributes (privs), find a resource to simulate multi-val attrs
 
 Move meta-role discussion to archetypes chapter
 
 Move book samples to midpoint-book git repo?
+
+MidPoint query language
+
+
+== NEXT VERSION
+
+* Mapping names are mandatory
+
+* PolicyType
+

@@ -54,9 +54,7 @@ Applications are built for _users_ to use them.
 Therefore, almost every application keeps some kind of data about _users_.
 In addition to that, such data are usually very sensitive from security and privacy point of view.
 
-We cannot avoid copying the data.
-The best thing that we can do is to keep the copies managed and synchronized.
-How can we do that?
+If we cannot avoid copying the data, the best thing that we can do is to keep the copies _managed_ and _synchronized_.
 
 Some applications have built-in support for LDAP or directory synchronization.
 However, those mechanisms are usually quite weak and fragile.
@@ -178,7 +176,6 @@ MidPoint knows which part of the configuration need to be applied in each specif
 This unifying approach significantly simplifies the configuration of midPoint synchronization mechanisms.
 That is also a reason why the boundaries of individual synchronization mechanisms are quite fuzzy.
 In fact, it is just one big mechanism with several facets.
-
 
 == Source Systems, Target Systems And Other Creatures
 
@@ -750,7 +747,7 @@ However, as midPoint evolved, it became obvious that this is not the best way.
 It would make much more sense if the synchronization configuration was coupled with resource object type configuration in schema handling part.
 This was finally corrected in midPoint 4.6, which gives us the form of configuration that we have today.
 
-// TODO: iterative correlation: correlate, check results, adapt the rule, check results, manual linking
+// TODO: iterative correlation process (a la first steps): correlate, check results, adapt the rule, check results, manual linking
 
 // TODO: conclusion?
 
@@ -833,30 +830,28 @@ Once the synchronization tasks are created, they can be managed in the same way 
 
 == Synchronization Example: HR Feed
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
 This section describes complete working example that feeds HR data into midPoint.
-The ExAmPLE company HR system is an old and complex system.
+The HR system used by ExAmPLE company is an old and complex thing.
 Therefore, the easiest integration method is to use structured text exports.
 The system can export employee data in a form of a comma-separated text file (CSV).
 The HR system is set up to export fresh data every night.
 MidPoint takes this export file, crunches the content, and updates the data about users.
 
 This configuration is done in three steps.
-First, we will use a simple setup to import the data into midPoint.
+First, we create a simple setup to import the data into midPoint.
 This is an operation that is executed only once.
-Then the configuration will be updated to run scheduled reconciliation task.
+Then the configuration is updated to run scheduled reconciliation task.
 Reconciliation compares all the data records every time, and it makes any necessary updates.
-Even though this method would be perfectly acceptable for a company of this size, we are still going set up a live synchronization task.
+Even though this method would be perfectly acceptable for a company of this size, we are still going set up a live synchronization task, to make synchronization lighter and faster.
 
-The core of the configuration is contained in a single resource definition file.
+The core of the configuration is contained in a single _resource definition_ file.
 Following paragraphs explain individual parts of the file.
-There are few additional configuration files for reconciliation and live synchronization tasks.
+There are few additional configuration files for reconciliation and live synchronization _tasks_.
 Simplified XML notation is used for clarity.
 The complete file in a form that is directly usable in midPoint can be found at the same place as all the other samples in this book (see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for details).
 
 The resource representing HR system is configured as data source.
-It will be used to "pull" the data inside midPoint.
+It is used to "pull" the data inside midPoint.
 However, as we have described previously, there is no fundamental difference between source and target resources in midPoint.
 Therefore, this HR resource starts in entirely ordinary way.
 There is a reference to the CSV connector and the connector configuration:
@@ -890,9 +885,14 @@ The schema handling section contains inbound mappings for HR account attributes:
     ...
     <schemaHandling>
         <objectType>
-            <objectClass>ri:AccountObjectClass</objectClass>
+            <displayName>Default Account</displayName>
+            <default>true</default>
+            <delineation>
+                <objectClass>AccountObjectClass</objectClass>
+            </delineation>
             <attribute>
-                <ref>ri:empno</ref>
+                <ref>empno</ref>
+                <displayName>Employee number</displayName>
                 <inbound>
                     <target>
                         <path>$focus/name</path>
@@ -900,12 +900,13 @@ The schema handling section contains inbound mappings for HR account attributes:
                 </inbound>
                 <inbound>
                     <target>
-                        <path>$focus/employeeNumber</path>
+                        <path>$focus/personalNumber</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:firstname</ref>
+                <ref>firstname</ref>
+                <displayName>First name</displayName>
                 <inbound>
                     <target>
                         <path>$focus/givenName</path>
@@ -913,7 +914,8 @@ The schema handling section contains inbound mappings for HR account attributes:
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:lastname</ref>
+                <ref>lastname</ref>
+                <displayName>Last name</displayName>
                 <inbound>
                     <target>
                         <path>$focus/familyName</path>
@@ -924,7 +926,7 @@ The schema handling section contains inbound mappings for HR account attributes:
 ----
 
 
-The account attribute `empno` is mapped to midPoint user properties name and `employeeNumber`.
+The account attribute `empno` is mapped to midPoint user properties name and `personalNumber`.
 Account attributes `firstname` and `lastname` are mapped to `givenName` and `familyName` properties respectively.
 This is perhaps self-explanatory.
 
@@ -953,89 +955,95 @@ The next part of the configuration specifies mappings for activation and credent
             ...
 ----
 
-Activation is a very specific concept in midPoint.
-MidPoint knows activation attributes and their meaning.
+_Activation_ is a very specific concept in midPoint, controlling whether accounts is active (enabled or disabled) among other things.
+MidPoint knows activation attributes and their meaning, they are pre-defined in midPoint _schema_.
 Therefore, there is no need to specify a lot of details.
 That makes activation mapping a very simple thing.
-It simply specifies that the administrative status should be mapped in the inbound direction.
-And that is it.
+The configuration specifies that the administrative status should be mapped in the inbound direction.
+That is it.
 
 However, the mapping for credentials needs a bit of explanation.
-What midPoint sees as HR accounts are not exactly accounts.
-They are usually just records in the HR database.
+What midPoint sees as HR _accounts_ are not exactly accounts, they are usually just records in the HR database.
 Nobody is using these HR records to log into the HR systems.
-Therefore, there is no password associated with them.
+Therefore, there is no _password_ associated with them.
 Yet, we need a password for the users in midPoint.
-Therefore we are going to generate the passwords.
-For that we are going to use the weak mapping with generate expression that was explained above.
+Therefore, we are going to _generate_ the passwords.
+For that purpose, we are going to use the weak mapping with generate expression that was explained above.
 
-The mappings are undoubtedly important.
-The mappings specify how are the account data reflected to midPoint user.
-HOwever, the mappings do not specify whether the accounts should be created or deleted.
-Mappings control the data, but they do not control the _lifecycle_.
-It is the next configuration section that makes this resource really authoritative:
+Next section specifies correlation settings.
+The ownership of the accounts that are not already linked is determined by the correlation mechanism.
 
 .resource-csv-hr.xml
 [source,xml]
 ----
-    ...
-    <synchronization>
-        <objectSynchronization>
-            <enabled>true</enabled>
+            ...
             <correlation>
-                <q:equal>
-                    <q:path>employeeNumber</q:path>
-                    <expression>
-                        <path>$projection/attributes/empno</path>
-                    </expression>
-                </q:equal>
+                <correlators>
+                    <items>
+                        <item>
+                            <ref>personalNumber</ref>
+                        </item>
+                    </items>
+                </correlators>
             </correlation>
-            <reaction>
-                <situation>linked</situation>
-                <synchronize>true</synchronize>
-            </reaction>
-            <reaction>
-                <situation>deleted</situation>
-                <synchronize>true</synchronize>
-                <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#deleteFocus</handlerUri>
-                </action>
-            </reaction>
-            <reaction>
-                <situation>unlinked</situation>
-                <synchronize>true</synchronize>
-                <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
-                </action>
-            </reaction>
-            <reaction>
-                <situation>unmatched</situation>
-                <synchronize>true</synchronize>
-                <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#addFocus</handlerUri>
-                </action>
-            </reaction>
-        </objectSynchronization>
-    </synchronization>
-    ...
+            ...
+----
+
+In this case, `personalNumber` user property is used for correlation.
+MidPoint knows that `personalNumber` is mapped from `empno` account attribute, therefore midPoint compares values of `personalNumber` user property and `empno` account attribute.
+If the values match then the user is considered to be an owner of the account.
+
+The mappings are undoubtedly important part of synchronization configuration.
+The mappings specify how are the account data reflected to midPoint user.
+However, the mappings do not specify whether the accounts should be created or deleted.
+Mappings control the data, but they do not control the _lifecycle_.
+It is the next configuration section that makes this resource really authoritative:
+
+.ressource-csv-hr.xml
+[source,xml]
+----
+            ...
+            <synchronization>
+                <reaction>
+                    <situation>unmatched</situation>
+                    <actions>
+                        <addFocus/>
+                    </actions>
+                </reaction>
+                <reaction>
+                    <situation>unlinked</situation>
+                    <actions>
+                        <link/>
+                    </actions>
+                </reaction>
+                <reaction>
+                    <situation>linked</situation>
+                    <actions>
+                        <synchronize/>
+                    </actions>
+                </reaction>
+                <reaction>
+                    <situation>deleted</situation>
+                    <actions>
+                        <deleteFocus/>
+                    </actions>
+                </reaction>
+            </synchronization>
+            ...
 ----
 
 Given the information in this chapter, this configuration should be quite easy to read.
-This is how a typical authoritative resource works.
-If there is a new account on the resource, and we do not have an owner (situation: `unmatched`) then we create a new user (action: `addFocus`).
+This a typical configuration for authoritative resource.
+If there is a new account on the resource, and we do not have an owner (situation: `unmatched`), then we create a new user (action: `addFocus`).
 If there is a new account for which we can find existing owner (situation: `unlinked`), then simply link it (reaction: `link`).
 If the account is linked already (situation: `linked`), then we just synchronize the data.
-In fact, we will synchronize data for all the other situations as well.
+In fact, we synchronize data for all the other situations as well.
 Except the last one.
 If the account is deleted in the HR system (situation: `deleted`), then we want to delete midPoint user as well (reaction: `deleteFocus`).
 As the user gets deleted there is no point in synchronizing the data.
-MidPoint knows that and skips application of mappings.
+MidPoint knows that, and it skips application of mappings.
 
-The ownership of the accounts that are not already linked is determined by the correlation expression.
-In this case, the expression will be comparing account attribute `empno` with user property `employeeNumber`.
-If the values match then the user is considered to be an owner of the account.
-
-There is one more detail in this resource that we have skipped:
+There is one more little detail in this resource definition:
 
 .resource-csv-hr.xml
 [source,xml]
@@ -1052,31 +1060,31 @@ As was already mentioned, all resources in midPoint are created equal.
 The source resources must follow the same rules as target resources.
 One of the fundamental rules of midPoint is that there should not be any account without a specific reason to exist.
 In midPoint terminology, every account exists because there is an _assignment_ that justifies its existence.
-While this approach is exactly what we want for the vast majority of (well behaving) resources, it is not exactly ideal for source resources.
+While this approach is exactly what we want for the vast majority of (well behaving) resources, it is not exactly ideal for resources that are pure data sources.
 Those resources work the other way around.
-The HR account is in fact a cause for midPoint user existence, not its effect.
+The HR account is in fact a _cause_ for midPoint user existence, not its effect.
 Therefore, there is really useful `assignmentPolicyEnforcement` setting that controls the behavior of assignments.
 This setting is used in a variety of scenarios, mostly for data migration, and to tame resources that just won’t behave in a civilized manner.
-However, in this case the setting is used to turn off the assignment enforcement for this resource entirely.
+However, in this case, the setting is used to turn off the assignment enforcement for this resource entirely.
 As this resource is an authoritative source, the assignment enforcement does not make much sense.
 Behavior of this resource is defined by the `synchronization` section of resource configuration.
 
 Resource configuration is complete now.
-This configuration sets up the connector, mappings and synchronization policies.
+This configuration sets up the connector, mappings, correlation and synchronization policies.
 The configuration is the same for all the synchronization flavors: import, reconciliation and live sync - they will all use the same settings.
-When it comes to configuration, the only difference between those synchronization flavors is the way how the synchronization tasks are set up.
-If an import task is set up, then import of resource accounts will be executed.
-If reconciliation task is set up, the reconciliation will be executed.
+When it comes to configuration, the only difference between those synchronization flavors is the way how the synchronization _tasks_ are set up.
+If an _import_ task is set up, then import of resource accounts will be executed.
+If _reconciliation_ task is set up, the reconciliation will be executed.
 It is all in the tasks.
 Synchronization tasks can be easily set up using those convenient buttons in the user interface.
 However, we like to make our lives a bit painful in our part of the world.
 Therefore, we are going to go hardcore, and we import the tasks in the XML form.
 
-First task is an import task.
+First task is an _import_ task.
 This task lists all the accounts in the HR CSV file.
 The task pretends that each of the accounts was just created.
 If the task is executed for the first time, then resulting situation of the accounts is going to be either `unmatched` or `unlinked`.
-Therefore, the task creates new midPoint users or links the accounts to existing users.
+Therefore, the task creates new midPoint users, or links the accounts to existing users.
 
 .task-hr-import.xml
 [source,xml]
@@ -1107,33 +1115,32 @@ Therefore, the task creates new midPoint users or links the accounts to existing
 ----
 
 This is a very basic structure of a task.
-Similarly to all midPoint objects, a task has a name.
-Then there is an assignment of `Import task` archetype.
+Similarly to all midPoint objects, a task has a _name_.
+Then there is an assignment of `Import task` _archetype_.
 We will describe archetypes later.
 For now, it is only important to know that this classifies the task as _import_ task, so the user interface can place the task in proper categories.
-Task needs definition of an owner.
+Task needs definition of an _owner_.
 The owner is a user that is executing the task.
 This is important, because authorizations of task owner determine what the task is allowed to do.
 This is also the identity that will be recorded in the audit log.
 In this case `administrator` is owner of this task.
-Task execution status tells whether the task is running, it is suspended or finished.
-Tasks are often executed periodically, therefore they need a schedule.
-In this case, we will start with task that is executed just once, to test the configuration.
-Hence the `single` recurrence,  which specifies that the task runs only once.
+Task _execution state_ tells whether the task is running, it is suspended or finished.
+Tasks are often executed periodically, therefore they need a _schedule_.
+In this case, we start with task that is executed just once, to test the configuration.
+Hence the `single` recurrence, which specifies that the task runs only once.
 Then there is definition of _activity_.
 Activity specifies what the task really does.
-In this case the activity specifies that this is a synchronization task which imports accounts from the resource.
+In this case the activity specifies that this is a synchronization task which _imports_ accounts from the resource.
 The resource is specified by the `resourceRef` reference in the activity specification.
 This points to our HR resource.
 
-When this XML definition is imported to midPoint, the server tries to execute the task.
+As task _execution state_ is set to `runnable`, midPoint tries to execute the task when the definition is imported.
 That means that import of accounts from the HR resource starts immediately.
 Progress of the task can be monitored in the Server tasks section of midPoint user interface.
 The import task is not a recurring task, it will run only once.
 If you need to re-run the task, you can do that from midPoint user interface.
 However, the task will not get executed again, unless you explicitly tell midPoint to do so.
-This is how typical import tasks work.
-They are usually executed when a new resource is connected to the system.
+This is very typical behavior for import tasks, they are usually executed only when a new resource is connected to the system.
 Once everything is set up, correlated and linked, then the import task is not needed any more.
 
 TIP: A clever reader may ask what happens when the import task is executed more than once.
@@ -1141,15 +1148,16 @@ The answer is simple: not much.
 Even if the task pretends that the accounts were just created, midPoint is not fooled easily.
 In fact, it is hard to believe that the account was just created if midPoint already has shadow for that account, and it is linked to a user, isn’t it?
 Therefore, midPoint is going to stay calm and carry on.
+It keeps the user, it keeps the shadow and also the link between them.
 If there is any change in the account attribute, the change will be reflected to the user.
 That is it.
 No big drama here.
 
-Import task will get the data from the resource into midPoint.
-As import is not a recurring task, it will not _keep_ the data synchronized.
+_Import_ task gets the data from the resource into midPoint.
+As import is not a recurring task, it does not _keep_ the data synchronized.
 Import tasks are not designed to do so.
-Fortunatelly, there are other tasks that are designed for continuous synchronization.
-Reconciliation task is one of these.
+Fortunately, there are other tasks that are designed for continuous synchronization.
+_Reconciliation_ task is one of these.
 Reconciliation task lists all the accounts on a resource and compares that with data in midPoint.
 
 .task-hr-recon.xml
@@ -1181,10 +1189,10 @@ Reconciliation task lists all the accounts on a resource and compares that with 
 </task>
 ----
 
-Definition of a reconciliation task is almost the same as the definition of import task.
+Definition of a _reconciliation_ task is almost the same as the definition of import task.
 However, there are crucial differences.
 First of all, there is different _activity_.
-This is what makes this task a reconciliation task.
+This is what makes this task a _reconciliation_ task.
 Then, the task is _recurring_.
 This means that midPoint will repeat execution of the task.
 Therefore, there is also execution schedule, so the server knows when to execute the task.
@@ -1200,10 +1208,10 @@ There is also definition of misfire action.
 Misfire is a situation when the server is down at the time when the task is supposed to run.
 In this case, if the server is down in the early hours of Saturday, this task will be executed as soon as the server starts up.
 
-Reconciliation task is a real workhorse of identity management.
+_Reconciliation_ is a real workhorse of identity management.
 It can be used for almost any resource.
 It is very reliable.
-It is often used to fix data problems, apply new policies, look for missing accounts, illegal accounts and so on.
+It is often used to fix data problems, apply new policies, look for missing accounts, detect illegal accounts and so on.
 It is indeed a really useful tool.
 Yet, it has its downside.
 Reconciliation iterates through all the accounts, it recomputes all the applicable policies for every account, one-by-one.
@@ -1213,14 +1221,14 @@ This can take hours or even days in extreme cases.
 Even for smaller deployments, reconciliation is not entirely easy.
 The problem is not in midPoint.
 MidPoint can be usually scaled up to handle the load.
-However, listing all the accounts often may put unacceptable load on the resources.
-Therefore reconciliation is not executed often.
+However, listing all the accounts often may put unacceptable load on the _resources_, the source and target systems.
+Therefore, reconciliation is not executed often.
 Daily, weekly or even monthly reconciliation seems to be a common approach.
-Reconciliation is reliable, but it is not entirely what we would call "real-time".
-But of course, midPoint has a faster alternative.
 
-_Live synchronization_ is the way to go for real-time synchronization.
-Or rather _almost_ real-time synchronization.
+Reconciliation is reliable, but it is not entirely what we would call "real-time".
+Of course, midPoint has a faster alternative.
+
+_Live synchronization_ is the way to go for real-time synchronization - or rather _almost_ real-time synchronization.
 Practical latencies for live synchronization are in the range of seconds or minutes, which is fast enough for most practical cases.
 Live synchronization is also quite resource-efficient.
 Overall, it is much faster and much lighter than reconciliation.
@@ -1231,7 +1239,7 @@ The specific mechanism to record the changes may vary from resource to resource.
 It may be as basic as a simple modification timestamp, or it may be a complex real-time change log.
 The mechanism has to be good enough for the connector to discover recent changes, and it must be efficient enough for the connector to do that every couple of seconds.
 If such mechanism is available, and the connector knows how to use it, then setting up live synchronization is easy.
-All that is needed is synchronization task.
+All that is needed is live synchronization task.
 
 .task-hr-livesync.xml
 [source,xml]
@@ -1259,18 +1267,17 @@ All that is needed is synchronization task.
 
 This task definition should be easy to understand by now.
 There is a different _activity_ that makes this a live synchronization task.
-There is also a different type of scheduling.
+There is also a different type of _scheduling_.
 We do not want to execute this task at a specific time.
 We rather want to execute it all the time, at regular intervals.
 In this case the interval is set to 10 seconds.
 That is all.
 We have live synchronization running.
-If the HR CSV file is changed now, the changes will get automatically processed by midPoint.
+If the HR CSV file is changed, the changes will get automatically processed by midPoint.
 
-Setting up synchronization flavors is just a matter of setting up the tasks.
+Setting up synchronization flavors such as reconciliation or life synchronization is just a matter of setting up the tasks.
 The rest of the configuration is the same for all flavors.
-Therefore, it is very easy to run both live synchronization and reconciliation for the same resource.
-Just create two tasks.
+Therefore, it is very easy to run both live synchronization and reconciliation for the same resource - just create two tasks.
 In fact, this is quite a common setup.
 Live synchronization is used to get the changes quickly and efficiently.
 Reconciliation is used to make sure all the changes were processed and that the policies are applied consistently.
@@ -1278,13 +1285,13 @@ Reconciliation is used to make sure all the changes were processed and that the 
 Now we have the HR feed up and running.
 However, there are still few issues.
 A clever reader would surely notice that this is not a very good HR resource.
-MidPoint users created from this HR feed have given name and family name, but the full name field is empty.
-But do not worry.
+MidPoint users created from this HR feed have given name and family name, but the _full name_ field is empty.
+Do not worry.
 We will sort that out in later chapters, with the help of _object template_.
 Also, the users have employee number as their username.
 This may be in fact a very good approach for some deployments as it avoids the need to rename accounts.
 However, it is not a very user-friendly approach.
-Therefore, most deployments need to generate more convenient usernames.
+Therefore, most deployments would like to generate more convenient usernames.
 This is easy to do with midPoint, and we will also address that later.
 There is still a lot of things to learn before we get to a complete synchronization set up.
 
@@ -1296,14 +1303,17 @@ Even though midPoint mechanisms are the same for all resources, the data coming 
 There is this traditional computer engineering wisdom: _garbage in, garbage out_.
 An error in data feed may cause a lot of problems everywhere.
 Therefore, it is important to get the data sources right.
-This is usually one of the first steps in an IDM project.
+This is usually one of the first steps in an identity management project.
+
+// TODO: correlation
+// TODO: align with "first steps"
 
 Unfortunately, source data feed is usually quite difficult to set up correctly - and it is almost impossible to get it right at the first try.
 There may be good old configuration problems, which are usually easy to fix.
 There may be data compatibility problems, such as presence of non-ASCII national characters where they are not expected.
 Worst of all, source data may be of poor quality, there may be inconsistencies, typos, the data may be out of date, not reflecting the reality very well.
-These problems are the most difficult to correct, as the right way to correct them is to modify the data at its source.
-That takes time, meetings, mail messages, management decisions, processes, excuses, delays and a lot of patience.
+These problems are the most difficult to correct, as the right way to correct them is to modify the data at its source - in the source database, HR system or spreadsheet exchanged by e-mail.
+That takes time, meetings, mail messages, management decisions, processes, excuses, delays and huge amount of patience.
 Therefore, setup of a data source is usually an iterative process.
 The process usually goes like this:
 
@@ -1313,7 +1323,7 @@ Check that you can see the accounts.
 Set up mappings and synchronization policy.
 
 . Test the import process on a couple of individual accounts.
-Navigate to the resource details pages, click on menu:Accounts[] tab to list accounts, choose an account and click on the small btn:Import[] button in the table row.
+Navigate to the resource details pages, click on menu:Accounts[] tab to list accounts, choose an account and click on the small btn:[Import] button in the table row.
 Import of that individual account starts immediately.
 Just that one account.
 It is easier to see the errors (see step 6) by using this method.
@@ -1338,7 +1348,7 @@ See the <<90-troubleshooting.adoc#90-troubleshooting,Troubleshooting>> chapter o
 These are usually easy to fix.
 However, there are usually worse errors as well – errors caused by wrong or unexpected input data.
 The right way would be to fix the data.
-But that is not always possible (in fact it is almost never a feasible option for a quick fix).
+However, that is not always possible (in fact it is almost never a feasible option for a quick fix).
 Fortunately, most of the input data errors can be fixed (read: "worked around") in midPoint with a bit of ingenuity.
 Just use the power of the mappings.
 For example, clean up the unexpected characters, white space or data formats using scripting expressions.
@@ -1346,7 +1356,7 @@ For example, clean up the unexpected characters, white space or data formats usi
 . Rinse and repeat.
 If the errors you get are not severe then you may simply re-run the import task.
 This often works just fine.
-But if the problem was in a mapping that completely ruined all the data then it is perhaps best to start with a blank slate.
+However, if the problem was in a mapping that completely ruined all the data then it is perhaps best to start with a blank slate.
 We are all just humans and this situation happens quite often, especially in the beginning while you are still learning.
 Therefore, there is a special feature to help you out.
 Navigate to menu:Configuration[Repository Objects].
@@ -1359,14 +1369,14 @@ This is a very convenient way how to get back to a black slate, but keep all the
 
 . Goto step 2. Repeat until done.
 
-If the initial IDM deployment step includes an HR feed, we strongly recommend to start with that HR feed.
+If the initial identity management deployment step includes an HR feed, we strongly recommend to start with that HR feed.
 It is significant benefit to have authoritative HR data in the midPoint to start with.
 It is usually easier to correlate other resources to midPoint users later on, if the users were created from a reasonably reliable HR data.
 Also, it will usually take some tweaking to get the HR import right.
 The possibility to easily clean up midPoint and get to a clean slate is extremely useful.
-HOwever, this "wipeout" approach is possible only if the HR feed is the first resource that is connected to midPoint.
+However, this "wipeout" approach is possible only if the HR feed is the first resource that is connected to midPoint.
 
-A clever reader would notice, that we assumed that the source feed will be taken from a CSV file.
+A clever reader would notice, that we assumed that the source feed is taken from a CSV file.
 This is indeed the case in many deployments.
 The CSV file is usually produced as an automatic scheduled export of HR system data, running every night.
 If a new employee or contractor is about to join the company, there is usually no hurry.
@@ -1399,16 +1409,16 @@ Therefore, the resource accounts linked to the user are immediately updated.
 All of that happens in a single operation.
 That is how midPoint works.
 MidPoint is not a human.
-It will never procrastinate (unless explicitly instructed do to so).
-MidPoint will not postpone the operation for later if the operation can be executed immediately.
+It never procrastinates (unless explicitly instructed do to so).
+MidPoint does not postpone the operation for later if the operation can be executed immediately.
 MidPoint tries to get the data right on the first try.
-Therefore, there are no specialized propagation or provisioning tasks that you might know from older IDM systems.
+Therefore, there are no specialized propagation or provisioning tasks that you might know from older identity management systems.
 MidPoint does not need them.
 
 There are other advantages in doing everything in one operation.
 It is all one operation, therefore midPoint knows all the details: what was the cause, what is the effect, what exactly has been changed.
 Such _context_ is extremely important for troubleshooting.
-Some IDM systems decouple the cause from the effect.
+Some identity management systems decouple the cause from the effect.
 Such a divided approach may have its advantages, but it is an absolute nightmare when an engineer needs to figure out why a certain effect happened.
 For that reason, midPoint has both the cause and the effects bundled together in a single operation.
 Therefore, it is much easier to figure out what is going on.
@@ -1424,14 +1434,14 @@ For example, it is quite easy for midPoint to implement the "last change wins" p
 In this case midPoint will simply overwrite only those attributes that are really changed in operation.
 MidPoint can leave other values untouched.
 In fact, this is the default behavior of midPoint.
-It is a very useful behavior during deployment of a new IDM system.
+It is a very useful behavior during deployment of a new identity management system.
 
-Careful processing of the operations allows configurations that are not feasible with older IDM systems, e.g. a resource that is both a source and a target.
-In fact a lot of IDM systems can have resource that is both a source and a target - as long as it is a source for one attribute and a target for another attribute.
+Careful processing of the operations allows configurations that are not feasible with older identity management systems, e.g. a resource that is both a source and a target.
+In fact a lot of identity management systems can have resource that is both a source and a target - as long as it is a source for one attribute and a target for another attribute.
 However, midPoint can live with a resource where the same attribute is both a source and a target.
 In fact there may be many sources and many targets for the same property at the same time.
 This is a very useful configuration, indeed.
-Just think about telephone number property.
+Just think about _telephone number_ property.
 It is usually something that the user sets up himself.
 This may be set up by some kind of specialized self-service, it may be updated by a call center call, the user may update that in his Active Directory profile ... there are many ways how this information is changed.
 Yet, we want this property to be consistent.
@@ -1444,7 +1454,7 @@ Just specify both inbound and outbound mappings for the same attribute:
 [source,xml]
 ----
 <attribute>
-    <ref>ri:mobile</ref>
+    <ref>mobile</ref>
     <outbound>
         <source>
              <path>$focus/telephoneNumber</path>
@@ -1458,8 +1468,8 @@ Just specify both inbound and outbound mappings for the same attribute:
 </attribute>
 ----
 
-In this case the change in user property `telephoneNumber` will be propagated to the account attribute `mobile` (outbound change).
-But also a change in the account attribute `mobile` will be propagated back to user property `telephoneNumber` (inbound change).
+In this case, the change in user property `telephoneNumber` is propagated to the account attribute `mobile` (outbound change).
+However, also a change in the account attribute `mobile` is propagated back to user property `telephoneNumber` (inbound change).
 Last change wins.
 
 A clever reader certainly grumbles something about infinite loops now.
@@ -1468,30 +1478,6 @@ MidPoint can see complete operation context, both inbound and outbound sides.
 Therefore, midPoint knows when to stop processing the operation.
 There are even mechanism how to avoid loops caused by connectors detecting changes caused by the connector itself.
 MidPoint will break those loops automatically.
-
-TIP: Synchronization and provisioning are in fact almost the same mechanism applied in a different direction.
-Then why there are two sections in the resource configuration?
-Why there is `schemaHandling` and `synchronization`?
-Why not just one?
-The answer is simple: history.
-Rome was not built in a day, and no software is created perfect on day one.
-Similarly to other software systems, midPoint went through an evolutionary process of continuous improvement.
-MidPoint had a very good design at the beginning.
-Looking back at the initial design, now it is quite clear that almost all of midPoint developments were correctly foreseen and accounted for in the design.
-However, there are occasional mistakes.
-The initial midPoint data model design expected that there will be major differences between synchronization and provisioning mechanisms.
-Therefore, there were two sections, one for each mechanism.
-As midPoint was developed, evolutionary process improved the initial design, and we have found a way how to unify synchronization and provisioning mechanisms into one.
-However, we have not modified the initial data model because we wanted to keep compatibility.
-Having two sections instead of one is only a cosmetic imperfection.
-It does not cause any major trouble.
-On the other hand, incompatible change would certainly affect continuity of midPoint deployments.
-We highly value midPoint continuity and upgradeability.
-Therefore, the two sections remained to this day.
-However, they will not remain there forever.
-We are not going to dwell on old mistakes for too long.
-These two section will be reunited once there is a proper time to make incompatible changes.
-Which will probably happen in the future when the time comes to release midPoint 5.0.
 
 == Synchronization Strategies
 
@@ -1518,17 +1504,16 @@ Some mechanisms are quite good, some are not.
 There is an ancient "Retro change log", going back to Netscape/iPlanet LDAP servers, that is still used today.
 Active Directory, in a very typical way, has its own "DirSync" synchronization mechanism.
 OpenLDAP has yet another mechanism based on the access log.
-There is RFC 4533, which is used so rarely, that there was no request to implement it in midPoint LDAP connector.
-And then there is a catch-all synchronization mechanism that looks for recent changes based on `modifyTimestamp` attribute.
+There is this RFC 4533 standard, which is used so rarely, that there was no request to implement it in midPoint LDAP connector.
+Then there is a catch-all synchronization mechanism that looks for recent changes based on `modifyTimestamp` attribute.
 
-In theory, all the synchronization strategies above should be equivalent.
-But they are not.
+In theory, all the synchronization strategies above should be equivalent - but they are not.
 For example, some variants of "Retro change log" synchronization cannot reliably detect rename operations.
 There may be problems with delete operations as well, especially if coupled with rename operations.
 Almost every mechanism has its quirks.
-And then there is the `modifyTimestamp`, which is the most problematic of all.
+Then there is the `modifyTimestamp`, which is the most problematic of all.
 
-Unfortunately, it is quite common to use a synchronization strategy based on last modification timestamp.
+Unfortunately, it is quite common practice to use a synchronization strategy based on last modification timestamp.
 Not just for LDAP, but also for database tables and other types of source systems.
 This is perhaps understandable, as this is a very simple mechanism.
 However, it has a lot of problems.
@@ -1543,7 +1528,7 @@ Going for millisecond granularity makes the problem less severe, but the problem
 However, the worst problem is that this strategy cannot detect deleted objects.
 Deleted objects are not there anymore, they do not have last modification timestamp, therefore they will not be included the search.
 This means that there must be a reconciliation process running together with live synchronization.
-But wait a minute, it is usually recommended running reconciliation anyway, as a form of "safety net", isn't it?
+Wait a minute, it is usually recommended running reconciliation anyway, as a form of "safety net", isn't it?
 It is, but the difference is in the timing.
 It is one thing to run reconciliation once a week to make sure that no records were missed.
 Yet, it is a completely different thing to run reconciliation every hour to make sure deleted objects are properly handled.
@@ -1564,8 +1549,8 @@ Also, avoid the use of strategies based on last modification timestamp if there 
 
 // Later: move to a chapter dedicated to mappings and expressions
 
-Mappings and expressions form a very powerful mechanism.
-In fact, most of midPoint configuration is about setting up correct mappings.
+Mappings and expressions provide a very powerful mechanism.
+In fact, most of midPoint initial configuration is about setting up correct mappings.
 However, with great power comes great responsibility, and mappings may look a bit intimidating at a first sight.
 Fortunately, there are some tips and tricks that make the life with mappings and expressions a bit easier.
 
@@ -1598,16 +1583,17 @@ As the mapping knows that its source is a focus (user) the definition may be sho
 Typical midPoint deployment has tens or hundreds of mappings.
 Deployments with thousands of mappings are definitely feasible.
 There are two things that can make maintaining the mappings easier.
-Optionally, you can specify the mapping name.
-Mapping name will appear in the log files and some error messages.
+Optionally, you can specify the mapping _name_.
+Mapping name appears in the log files and some error messages.
 It may be easier to identify which mapping is causing problems, or it may help locate the trace of mapping execution in the log file.
-Mapping can also have a description.
+It is _strongly recommended_ to provide name for your mappings.
+Mapping can also have a _description_.
 The description can be used as a general-purpose comment or a documentation explaining what the mapping does.
 
 [source,xml]
 ----
 <attribute>
-    <ref>ri:mobile</ref>
+    <ref>mobile</ref>
     <outbound>
         <name>ldap-mobile</name>
         <description>
@@ -1615,24 +1601,25 @@ The description can be used as a general-purpose comment or a documentation expl
             user’s telephone number.
         </description>
         <source>
-             <path>$focus/telephoneNumber</path>
+             <path>telephoneNumber</path>
         </source>
     </outbound>
 </attribute>
 ----
 
 Mappings can become quite complex.
-There may be multi-line scripting expression in the mapping, and it may not entirely obvious what is the input and output.
-Therefore, each mapping and each expression have an ability to enable tracing:
+There may be multi-line scripting expression in the mapping, it may not entirely obvious what is the input and output.
+Therefore, each mapping and each expression have an ability to enable tracing using the `trace` element:
 
 [source,xml]
 ----
 <attribute>
-    <ref>ri:mobile</ref>
+    <ref>mobile</ref>
     <outbound>
+        <name>ldap-mobile</name>
         <trace>true</trace>
         <source>
-             <path>$focus/telephoneNumber</path>
+             <path>telephoneNumber</path>
         </source>
         <expression>
             <trace>true</trace>
@@ -1644,7 +1631,7 @@ Therefore, each mapping and each expression have an ability to enable tracing:
 </attribute>
 ----
 
-If tracing is enabled, then the mapping or expression execution will be recorded in the log files.
+If tracing is enabled, then the mapping or expression execution is recorded in the log files.
 Tracing can be enabled at both mapping level and expression level.
 Mapping tracing is shorter.
 It provides overview of the mapping inputs and outputs.
@@ -1687,9 +1674,8 @@ There are two built-in scripting libraries that are used very often:
 These are simple, efficient stand-alone functions.
 These functions can be used in every expression.
 
-* *MidPoint script library* provides access to higher-level midPoint functions contain IDM-specific and midPoint-specific logic.
+* *MidPoint script library* provides access to higher-level midPoint functions contain identity-management-specific and midPoint-specific logic.
 This library can be used to access almost all midPoint functionality.
-But there are few places where this library may not work reliably (e.g. correlation expression).
 
 The libraries are designed to be very easy to use from the scripting code.
 While the specific details how to invoke the library depend on the scripting language, the libraries are usually accessible by the use of `basic` and `midpoint` symbols.
@@ -1715,18 +1701,17 @@ Look for https://docs.evolveum.com/midpoint/reference/expressions/expressions/sc
 
 Only two libraries were mentioned in this section so far.
 However, this is not a whole story.
-A clever reader has certainly figured out that the logging function described in previous section is also a scripting library.
-And there may be more libraries in the future.
+A clever reader has certainly figured out that the logging function described in previous section is also a scripting library - and there may be more libraries in the future.
 
 == Resource Capabilities
 
 The systems that midPoint connects to are not created equal.
 In fact, those systems significantly differ in their capabilities.
-Most systems can create accounts.
-However, not all of them can delete accounts.
+Most systems can _create_ accounts.
+However, not all of them can _delete_ accounts.
 There are systems that keep the accounts forever, the accounts can be only permanently disabled.
-Yet another systems cannot enable or disable accounts.
-While most systems support password authentication, other system do not.
+Yet another systems cannot _enable_ or _disable_ accounts.
+While most systems support _password_ authentication, other system do not.
 There is a lot of natural diversity in the provisioning wilderness.
 The connector may introduce additional limitations as well.
 Even if target system supports a particular feature, connector may not have appropriate code to use it.
@@ -1754,15 +1739,15 @@ Those capabilities should not be modified by administrator.
 Configured capabilities are used to override native capabilities.
 Configured capabilities are usually empty, which means that only native capabilities are used.
 
-There are many ways how the capabilities can be tweaked by the administrator.
+There are many ways to tweak the capabilities by the administrator.
 Yet, there is one case that is particularly interesting for synchronization and provisioning: simulated activation capability.
 
 MidPoint connectors can be tailored specifically for a particular system.
 E.g. there are often connectors that are developed specifically for one custom enterprise application.
-At the other side of the spectrum are generic connectors, that can fit a wide variety of systems and applications.
+At the other side of the spectrum are _generic connectors_, that can fit a wide variety of systems and applications.
 LDAP, CSV and database table connectors are examples of such generic connectors.
-Such connectors are very useful, they are used in almost every midPoint deployment.
-However, there is no standardized way to disable an account in database table or a CSV file.
+Such connectors are so useful that they are used in almost every midPoint deployment.
+However, there is no standardized way to _disable_ an account in database table or a CSV file.
 Various columns and various values are used to represent account activation status.
 Quite surprisingly, there is no standardized way to disable an account in LDAP directory either.
 That is bad news for midPoint.
@@ -1770,7 +1755,7 @@ MidPoint takes a significant advantage from knowing whether account is disabled 
 We had to do something about this "disable ambiguity".
 And we did.
 
-There is way to tell midPoint which attribute and what values are used to represent account activation status.
+There is way to tell midPoint which _attribute_ and what _values_ are used to represent account activation status.
 Configured activation capability is used for that purpose:
 
 [source,xml]
@@ -1804,31 +1789,31 @@ The capability does it all.
 Previous example demonstrated the use of synchronization for HR data feed.
 That is the most obvious use of synchronization mechanisms.
 However, midPoint synchronization can do more tricks than just feeding data to midPoint.
-Synchronization can be used even for target resources.
+Synchronization is frequently used even for target resources.
 In that case the synchronization is usually used for several purposes:
 
 * *Initial migration:* This is a process of connecting new resource to midPoint.
 There are usually accounts that already exist in the resource at the time when a resource is connected to midPoint.
 It is likely that at least some accounts correspond to the users that are present in midPoint (e.g. users created from the HR feed).
-Therefore, the accounts from the resource need to be correlated to the users that already exist in midPoint.
+Therefore, the accounts from the resource need to be _correlated_ to the users that already exist in midPoint.
 Synchronization is the right mechanism for this.
 
-* *Detection of illegal accounts:* Security policies are usually set up in such a way that only those people that need an account on a particular resource should have that account.
+* *Detection of illegal (orphaned) accounts:* Security policies are usually set up in such a way that only those people that need an account on a particular resource should have that account.
 This is known as the _principle of least privilege_.
-However, in typical IDM deployment, there is nothing that would prohibit system administrator to create any accounts at will.
+However, in typical identity management deployment, there is nothing that would prohibit system administrator to create any accounts at will.
 This freedom is often even desirable, because there are emergency situations where full control over the system is crucial.
 Yet, even for emergency cases, we want to make sure that the situation is aligned with policies when the emergency is over.
 MidPoint can easily do that, by scanning the target systems in regular intervals.
-Synchronization mechanisms can be used to detect accounts that do not have any legal basis and delete or disable such accounts.
+Synchronization mechanisms can be used to detect accounts that do not have any legal basis (orphaned accounts) and delete or disable such accounts.
 Again, synchronization mechanism can do that easily.
 
 * *Attribute value synchronization:* Accounts in target resources are usually created as a result of midPoint provisioning action.
 However, account attribute values are in fact copies of the data in midPoint.
-Attribute values can easily be changed by system administrator, may be set to old values during data recovery procedure or they can get out of sync by a variety of other means.
+Attribute values can easily be changed by users or system administrator, may be set to old values during data recovery procedure, or they can get out of sync by a variety of other means.
 MidPoint can make sure that the attributes are synchronized and that they stay synchronized for a long time.
 Synchronization mechanisms are ideal for this purpose.
 
-Older IDM systems used synchronization mostly to get data from the source resources to IDM system.
+Older identity management systems used synchronization mostly to get data from the source resources to identity management system.
 Synchronization in midPoint is much more powerful than that.
 It can be applied both to source systems and target systems, it can pull data, push data, detect inconsistencies and fix them.
 Synchronization is a general purpose mechanism, it is a real work-horse of identity management with midPoint.
@@ -1836,21 +1821,20 @@ This is the principle of reuse again.
 Synchronization mechanism can be reused for variety of purposes.
 
 In this example we will be using synchronization to connect existing LDAP server to midPoint.
-We assume that our midPoint is already connected to the HR system.
-We have imported the HR data.
+We assume that our midPoint is already connected to the HR system and we have imported the HR data.
 Now we have midPoint users created for all our employees.
 Then there is this LDAP server.
 It is really important LDAP server.
-This server is used by company intranet portal and also by a variety of smaller web applications.
+This server is used by company enterprise portal and also by a variety of smaller web applications.
 Those applications are using the LDAP server for user authentication and access authorization.
 The LDAP server was deployed many years ago.
-Initially it was populated by the HR data.
+Initially, it was populated by the HR data.
 However, the LDAP server was managed manually by a system administrator during all these years.
-Therefore, it is expected that there will be some accounts that belong to former employees.
+Therefore, it is expected that there are some accounts that belong to former employees.
 Also, it might have happened that some accounts are missing.
 It is quite likely that a lot of the accounts have wrong data.
 
-First task is to set up the connector for this resource.
+First task is to set up the _connector_ for this resource.
 As LDAP servers are used for identity management purpose all the time, MidPoint comes with a really good LDAP connector.
 All we need is to set up the resource to use that connector:
 
@@ -1862,10 +1846,7 @@ All we need is to set up the resource to use that connector:
 
     <connectorRef type="ConnectorType">
         <filter>
-            <q:equal>
-                <q:path>connectorType</q:path>
-                <q:value>com.evolveum.polygon.connector.ldap.LdapConnector</q:value>
-            </q:equal>
+            <q:text>connectorType = "com.evolveum.polygon.connector.ldap.LdapConnector"</q:text>
         </filter>
     </connectorRef>
     ...
@@ -1877,16 +1858,16 @@ This works well for almost all the references in midPoint, because OID never cha
 However, connectors are somehow elusive objects.
 Objects that represent connectors are dynamically created by midPoint when a connector is discovered.
 Therefore, the OID is generated at random when midPoint discovers new connector.
-There is no practical way how a system administrator can predict that OID.
+There is no practical way for a system administrator to predict that OID.
 Yet, we still want our resource definitions to refer to a particular connector when we import the definition.
 Therefore, there is an alternative way to specify object references.
-This method is using a search filter instead of direct OID reference.
-When this resource definition is imported to midPoint, then midPoint will use that filter and look for LDAP connector.
+This method is using a _search filter_ instead of direct OID reference.
+When this resource definition is imported to midPoint, midPoint uses that filter and looks for LDAP connector.
 If that connector is found, then the OID of that connector is placed in the reference (`connectorRef`).
-Therefore, the next time midPoint will be using this resource, it can follow the OID directly.
+Therefore, the next time midPoint is using this resource, it can follow the OID directly.
 This is a very convenient method.
 However, there are few limitations.
-Firstly, the filter is resolved only during import.
+Firstly, the filter is resolved only during import of the resource definition object.
 Which means that it is resolved only once.
 If the connector is not present at import time, then the reference needs to be corrected manually.
 Secondly, this approach works if there is only one LDAP connector deployed to midPoint.
@@ -1895,6 +1876,7 @@ However, the connector framework can contain several connectors of the same type
 This is a very useful feature for gradual connector upgrades, testing of new connector versions and so on.
 Yet, in case that the filter matches more than one object, the import will fail.
 In that case the connector reference has to be set up manually.
+However, this method of connector references is very useful in practice, and it is used all the time.
 
 Once we have proper reference to LDAP connector we need to configure the connection:
 
@@ -1911,27 +1893,12 @@ Once we have proper reference to LDAP connector we need to configure the connect
             <cc:bindPassword><t:clearValue>secret</t:clearValue></cc:bindPassword>
             ...
         </icfc:configurationProperties>
-        <icfc:resultsHandlerConfiguration>
-            <icfc:enableNormalizingResultsHandler>false</icfc:enableNormalizingResultsHandler>
-            <icfc:enableFilteredResultsHandler>false</icfc:enableFilteredResultsHandler>
-            <icfc:enableAttributesToGetSearchResultsHandler>false</icfc:enableAttributesToGetSearchResultsHandler>
-        </icfc:resultsHandlerConfiguration>
     </connectorConfiguration>
     ...
 ----
 
 This is all very similar to the configuration of the other resource that were already presented in this book.
-It should be quite self-explanatory – except perhaps for the configuration of result handlers.
-_Result handlers_ are little helpers that come with the ConnId connector framework.
-The purpose of the result handlers is to assist simpler connectors in filtering and post-processing search results.
-However, LDAP connector is no ordinary simple connector.
-LDAP connector is mature and full-featured connector that can do everything without any help from such annoying little creatures as those result handlers.
-ConnId result handlers do not add any value here.
-In fact, they may even be harmful.
-LDAP protocol has a lot of peculiarities, such as case-insensitivity that applies to almost all the aspects of LDAP data – except for some notable exceptions.
-The connector is aware of those peculiarities, but the handlers are not.
-If the handlers are turned on (which is the default) they may get in the way and ruin the data.
-Therefore, it is always strongly recommended to explicitly turn off the handler when a full-featured connector is used.
+It should be quite self-explanatory.
 
 NOTE: The XML example above, as all other examples in this book, is simplified and shortened for clarity.
 You will not be able to import the example in this form into midPoint.
@@ -1940,7 +1907,6 @@ Please see <<92-additional-information.adoc#92-additional-information,Additional
 
 The basic resource configuration above is sufficient to connect to the resource.
 Therefore, the test connection operation on resource details page should be successful.
-This configuration may also be used to list the accounts.
 However, LDAP servers support many object classes and midPoint does not yet know which object class represents account.
 Therefore, we need to add schema handling section to our resource:
 
@@ -1953,12 +1919,16 @@ Therefore, we need to add schema handling section to our resource:
             <kind>account</kind>
             <displayName>Normal Account</displayName>
             <default>true</default>
-            <objectClass>ri:inetOrgPerson</objectClass>
+            <delineation>
+                <objectClass>inetOrgPerson</objectClass>
+            </delineation>
+
             <attribute>
-                <ref>ri:dn</ref>
+                <ref>dn</ref>
                 <displayName>Distinguished Name</displayName>
                 <limitations>
                     <minOccurs>0</minOccurs>
+                    <maxOccurs>1</maxOccurs>
                 </limitations>
                 <outbound>
                     <source>
@@ -1968,7 +1938,7 @@ Therefore, we need to add schema handling section to our resource:
                         <script>
                             <code>
                                 basic.composeDnWithSuffix('uid', name,
-                                                  'ou=people,dc=example,dc=com')
+                                        'ou=people,dc=example,dc=com')
                             </code>
                         </script>
                     </expression>
@@ -1981,91 +1951,103 @@ There should be outbound mapping for each mandatory LDAP attribute for the `inet
 Such mappings are very typical for a target resource definition.
 
 Once we set up the schema handling, we should be able to conveniently list LDAP accounts in midPoint.
-However, we need to switch to the _Resource_ view instead of _Repository_ view.
+However, we need to click on the btn:[Reload] button.
 The accounts are stored in the LDAP server and midPoint can access them.
-Therefore, the accounts are listed in the _Resource_ view.
-HOwever, midPoint have not processed the accounts yet.
+However, midPoint have not processed the accounts yet.
 Therefore, there are no account shadows in midPoint repository yet.
-That is the reason that the _Repository_ view is empty.
-Now we are going to do something about it.
+Click on the btn:[Reload] button initiate reading of accounts from the LDAP server.
 
 We are going to import (or reconcile) the resource accounts.
 However, if we try to do this now, nothing would really happen.
-The accounts are not linked to users, therefore midPoint will not synchronize the attributes.
-MidPoint was not told to do anything with the accounts.
-Therefore, midPoint will do nothing.
-That is one of midPoint principles: midPoint will not change the accounts in any way unless it is explicitly told to do so.
+The accounts are not linked to users, therefore midPoint would not synchronize the attributes.
+MidPoint was not told to do anything with the accounts, therefore midPoint does nothing.
+That is one of midPoint principles: midPoint does not change the accounts in any way unless it is explicitly told to do so.
 We would rather do nothing than to destroy the data.
 
 Before we can import the accounts, we need to set up the synchronization configuration for this resource.
 There are accounts in the LDAP server that should belong to users that already exist in midPoint.
 We want to link them.
 However, we do not want to do the linking manually.
-We would rather set up a correlation expression that does this automatically:
+We would rather set up a _correlation_ mechanism that does this automatically.
+We would like to use LDAP attribute `employeeNumber` to correlate accounts.
 
 .resource-ldap.xml
 [source,xml]
 ----
-    ...
-     <synchronization>
-        <objectSynchronization>
-            <objectClass>ri:inetOrgPerson</objectClass>
-            <kind>account</kind>
-            <intent>default</intent>
-            <focusType>UserType</focusType>
-            <enabled>true</enabled>
-            <correlation>
-                <q:equal>
-                    <q:path>employeeNumber</q:path>
-                    <expression>
-                        <path>$projection/attributes/employeeNumber</path>
-                    </expression>
-                </q:equal>
-            </correlation>
+            ...
+            <attribute>
+                <ref>employeeNumber</ref>
+                <displayName>Employee Number</displayName>
+                <correlator/>
+                <outbound>
+                    ...
+                </outbound>
+                <inbound>
+                    <target>
+                        <path>$focus/personalNumber</path>
+                    </target>
+                    <evaluationPhases>
+                        <include>beforeCorrelation</include>
+                        <exclude>clockwork</exclude>
+                    </evaluationPhases>
+                </inbound>
+            </attribute>
             ...
 ----
 
-This correlation expression is going to match account attribute `employeeNumber` and user property that is also named `employeeNumber`.
-Simply speaking: if account and user employee numbers match then we assume that they should be linked.
-In that case midPoint decides that synchronization situation is unlinked (they should be linked, but they are not yet linked).
+The `employeeNumber` attribute is configured as _correlator_ by using the `correlator` configuration element.
+The `employeeNumber` attribute is mapped to `personalNumber` user property, therefore midPoint knows that values of `employeeNumber` attribute are to be compared with values of `personalNumber`.
+When midPoint encounters an LDAP account, it takes value of `employeeNumber` attribute, transforms it using the _inbound_ mapping defined above, and looks for matching value of `personalNumber` among all the users.
+
+.Inbound mapping and evaluation phases
+NOTE: _Inbound_ mapping is necessary at this point, even though the LDAP resource is a _target_ resource.
+The _inbound_ mapping is used to transform the value for correlation purposes.
+Its responsibility is to transform the value of `employeeNumber` account attribute to the same format as is used by `personalNumber` user property.
+In this case the format is the same, therefore no transformation is used (`asIs` expression is assumed).
+The `evaluationPhases` configuration limits application of this mapping to _correlation_ only.
+It excludes _clockwork_ phase, which is a main synchronization phase.
+Therefore, the mapping will be used for correlation, but it will not be used for other parts of synchronization process.
+
+If correlation values match, then we assume that the account should be _linked_ to the user.
+In that case midPoint decides that synchronization situation is `unlinked` (they should be linked, but they are not yet linked).
 We want midPoint to link the account in this case, therefore we define appropriate reaction:
 
 .resource-ldap.xml
 [source,xml]
 ----
-            ...
-            <reaction>
-                <situation>unlinked</situation>
-                <synchronize>true</synchronize>
-                <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
-                </action>
-            </reaction>
-            ...
+                ...
+                <reaction>
+                    <situation>unlinked</situation>
+                    <actions>
+                        <link/>
+                    </actions>
+                </reaction>
+                ...
 ----
 
-This will take care of accounts for whose we can find an owner.
-But what to do with other accounts?
+_Unliked_ accounts get _linked_.
+This takes care of accounts for whose we can automatically find an owner by using correlation mechanism.
+What we should do with other accounts?
 We will do nothing about them just yet.
 Therefore, we do not need to define any other reactions.
 This may be somehow surprising.
 We do not want illegal accounts in our LDAP server, do we?
-Then perhaps we would like to see a reaction to delete unmatched accounts, right?
+Then perhaps we would like to see a reaction to delete _unmatched_ accounts, right?
 That would be a good approach, but it is just too early for this.
 We do not want to delete unmatched account just now.
-There may be accounts that are perfectly legal, just the employeeNumber attribute is missing or mistyped.
+There may be accounts that are perfectly legal, just the `employeeNumber` attribute is missing or mistyped.
 Data errors like those happen all the time, especially when the data were managed manually.
 We do not want to over-react and start deleting accounts too early.
-Therefore, we will go just with this one synchronization reaction for now.
+Therefore, we go just with this one synchronization reaction for now.
 
-Now it is the right time to start import or reconciliation task.
+Now it is the right time to start import or reconciliation task for LDAP resource.
 After the task is finished the situation may look like this:
 
 image::05-04-reconciliation-ldap-unmatched.png[OpenLDAP accounts]
 
 TIP: For the curious readers, the LDAP server has data equivalent to the content of `ldap-real.ldif` file located in book samples.
 
-It looks like we had quite a good data in the LDAP server.
+It looks like we have quite a good data in the LDAP server.
 Most of the accounts were successfully correlated and linked to their owners.
 Yet, there are few accounts that were not correlated.
 Those accounts ended up in _unmatched_ situation.
@@ -2077,52 +2059,47 @@ Repeat this process to link all unmatched accounts.
 
 There is one interesting thing in the screenshot above.
 Have a look at the LDAP account identified by `uid=carol`.
-While most other accounts have their uid value taken from the surname of the user, this account is an exception.
-Even though the `uid` value is obviously wrong, midPoint have linked the account correctly to the user (`Carol Cooper`).
+While most other accounts have their `uid` value taken from the surname of the user, this account is an exception.
+Even though the `uid` value is obviously wrong, midPoint have linked the account to the correct user (`Carol Cooper`).
 The reason is that we have set up midPoint to use `employeeNumber` for correlation.
 Even accounts whose usernames violate the convention can be automatically linked to their owners - as long as there is any reliable piece of information that can be used for correlation.
 
 When all the accounts are linked to their owners, it is the right time to complete the synchronization policy.
-Now we can tell midPoint to delete any unmatched account.
-That is the case when an illegal account is created in LDAP server.
-We can also tell midPoint to unlink any account that was deleted in LDAP server:
+Once the correlation is complete and all accounts have an owner, detecting an _unmatched_ account means that an illegal account is created in LDAP server.
+Now we can tell midPoint to _delete_ any _unmatched_ accounts.
 
 .resource-ldap.xml
 [source,xml]
 ----
-            ...
-            <reaction>
-                <situation>unmatched</situation>
-                <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#deleteShadow</handlerUri>
-                </action>
-            </reaction>
-            <reaction>
-                <situation>deleted</situation>
-                <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#unlink</handlerUri>
-                </action>
-            </reaction>
-            ...
+                ...
+                <reaction>
+                    <situation>unmatched</situation>
+                    <actions>
+                        <deleteResourceObject/>
+                    </actions>
+                </reaction>
+                ...
 ----
 
 There may be some accounts in the LDAP server that have wrong attribute values.
 By "wrong" we mean that the attributes have different values than the values that are computed by the outbound mappings.
-However, midPoint will not correct those values just yet.
-Remember the midPoint principle that it will not change the account unless we have explicitly told to do so?
+However, midPoint is not correcting those values just yet.
+Remember the midPoint principle that it does not change the account unless we have explicitly told to do so?
 Those accounts are in the `linked` situation, and we have not configured any reaction for this situation.
-Therefore midPoint did nothing.
+Therefore, midPoint did nothing.
 Now we need to tell midPoint to synchronize the values:
 
 .resource-ldap.xml
 [source,xml]
 ----
-            ...
-            <reaction>
-                <situation>linked</situation>
-                <synchronize>true</synchronize>
-            </reaction>
-            ...
+                ...
+                <reaction>
+                    <situation>linked</situation>
+                    <actions>
+                        <synchronize/>
+                    </actions>
+                </reaction>
+                ...
 ----
 
 A clever readers is now surely wondering whether we have forgotten something.
@@ -2132,7 +2109,7 @@ However, our outbound mappings will not work in reconciliation.
 They do not have any explicit definition of _strength_, therefore midPoint assumes `normal` strength.
 Those mappings are supposed to implement the _last change wins_ strategy.
 Therefore, reconciliation cannot overwrite the account data, as midPoint does not know whether it was account attribute or user property that was the last to change.
-If midPoint is not sure about something, then it will assume a conservative position and do nothing.
+If midPoint is not sure about something, then it assumes a conservative position and does nothing.
 We do not want to destroy the data.
 Therefore, what we need to do now is to let midPoint know that we really mean it, that the mappings are really `strong`:
 
@@ -2141,7 +2118,7 @@ Therefore, what we need to do now is to let midPoint know that we really mean it
 ----
             ...
             <attribute>
-                <ref>ri:cn</ref>
+                <ref>cn</ref>
                 <displayName>Common Name</displayName>
                 <limitations>
                     <minOccurs>0</minOccurs>
@@ -2160,12 +2137,12 @@ Therefore, what we need to do now is to let midPoint know that we really mean it
 Clever reader is uneasy once again.
 What is this `limitations` thing here?
 Simply speaking, the limitations specify that the attribute is optional (`minOccurs=0`) and that it is single-valued (`maxOccurs=1`).
-But, isn’t midPoint supposed to be completely schema-aware and figure that all by itself?
-Yes, it is.
+However, isn’t midPoint supposed to be completely schema-aware and figure that all by itself?
+Yes, it is, and midPoint does it all right.
 In fact, that is the reason why we need to override the information from the schema using this `limitations` element here.
 The `cn` attribute is specified in LDAP schema as a mandatory attribute.
 However, we have just specified outbound mapping for that attribute.
-Even if midPoint user does not provide any value for attribute `cn`, we can still determine that value by using the expression.
+Even if no value for attribute `cn` is entered in midPoint user interface, we can still determine that value by using the expression.
 Therefore, even though LDAP schema specifies attribute `cn` as mandatory, we want to present that attribute as optional in midPoint user interface.
 Hence the `minOccurs` limitation.
 The `maxOccurs` limitation is immediately obvious to anyone who is intimately familiar with LDAP peculiarities.
@@ -2177,7 +2154,7 @@ The `maxOccurs` limitation is overriding the schema, and forcing midPoint to han
 
 That is all.
 Now you can schedule reconciliation tasks to keep an eye on the LDAP server.
-The task will correct any attribute values that step out of line and delete any illegal accounts.
+The task corrects any attribute values that step out of line and deletes any illegal accounts.
 This is how synchronization tasks can be useful, even in case of pure target resources.
 
 However, there is one last word of warning.
@@ -2186,19 +2163,21 @@ The accounts were not created by midPoint.
 Therefore, there is nothing in midPoint that would say that those accounts _should_ exist.
 In midPoint parlance, there are no _assignments_ for those accounts.
 MidPoint makes clear distinction between _policy_ and _reality_.
-Therefore, midPoint is aware that those accounts exist, but there is no policy statement that would justify their existence.
-By default, midPoint does nothing, and it will let the accounts live.
-The accounts will be created or deleted only if there is an explicit change in the assignments.
+Therefore, midPoint is aware that those accounts _exist_, but there is no policy statement that would justify their existence.
+By default, midPoint does nothing, and it lets the accounts live.
+The accounts are created or deleted only if there is an explicit change in the assignments.
 There is no such change now, therefore the accounts are not deleted.
 However, this is quite a fragile situation.
 Accounts that are linked but not assigned can easily get deleted if midPoint administrator is not careful.
 Of course, there are methods to handle such situations.
 One way would be to create the assignments together with the links.
 Those that are interested in this method should look up keyword "legalize" in midPoint docs.
-However, there are much better methods how to handle this.
+However, there are much better methods to handle such situations.
 Perhaps the best approach would be to utilize the roles (RBAC).
 This is the topic of the <<07-rbac.adoc#07-rbac,Role-Based Access Control>> chapter later.
 Yet, there are still more things to learn about synchronization until we get there.
+
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 == Peculiarities of Reconciliation
 
