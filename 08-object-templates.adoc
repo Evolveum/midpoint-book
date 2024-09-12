@@ -8,34 +8,35 @@ Scientists study the world as it is; engineers create the world that has never b
 
 Identity management systems are often seen as integration engines that move data from one system to another system.
 This is indeed a very important part of the identity management functionality.
-However, the things identity management systems do _internally_ are crucial to all identity management deployments - especially those that deal with identity governance and compliance.
+However, the things identity management systems do _internally_ are crucial to all identity management deployments - especially those that deal with _identity governance_ and _regulatory compliance_.
 
 MidPoint does quite a lot of things that may not be entirely obvious on the outside.
-There are rules to apply, processes to drive, policies to enforce and so on.
-Those things are gaining utter importance at that strange boundary where identity management becomes identity governance.
-There are complex and very powerful mechanisms allowing midPoint to implement identity governance.
-But more on that later.
-We need to start with simple things.
+There are rules to apply, processes to drive and policies to enforce.
+Those things are gaining utter importance at that strange boundary where identity _management_ becomes identity _governance_.
+MidPoint has comprehensive and very powerful mechanisms to support identity governance.
+More on that later, as we need to explain the basic mechanisms first.
 The simplest of those internal mechanisms is the functionality of _object template_.
 
 == Object Templates
 
-Data that come to midPoint are seldom complete and clean.
+Data that flow into midPoint are seldom complete and clean.
 Quite the contrary.
-The data that come from the "feeds" are often incomplete, they are not very precise and sometimes several sources may not even agree on a value for a particular data item.
-Inbound mappings can be used to sort out some of these problems.
+The data coming from the "feeds" are often incomplete, they are not very precise, and sometimes several sources may not even agree on a value for a particular data item.
+_Inbound mappings_ can be used to sort out some of these problems.
 However, inbound mappings are designed to work in isolation.
 They work only for one particular resource.
-However, it is often needed to gather data from several resources and then look at all of them at once.
-Inbound mappings cannot do that very well, as they are tied to a particular resource.
-However, they can be used to gather all the relevant data in the user object.
-Then we can use some kind of mechanism to have a look at user object when those data are gathered together.
-That is what object templates do.
+We often need to gather data from several resources, and then look at all of them at once.
+Inbound mappings cannot do that very well, as they are tied to a particular _resource_ and particular _attribute_.
+However, inbound mappings can be used to gather all the relevant data in the _user object_.
+Then we can have a look at _user object_, where those data are gathered, and process them all together.
+That is what _object templates_ do.
+Object template can be used to do variety of things to all kinds of midPoint objects.
+This chapter covers the most important functionality of object templates.
 
 Simply speaking, _object template_ is a set of mappings that is applied to a particular midPoint object.
-For example, user template is applied to all user objects.
-The mappings in the object template can produce new values for the object.
-For instance, a very typical use of object template is computation of user’s full name:
+For example, _user template_ is applied to all _user_ objects.
+The mappings in the _object template_ can produce new values for the object.
+For instance, a very typical use of _object template_ is computation of user’s full name:
 
 .object-template-user-simple.xml
 [source,xml]
@@ -63,16 +64,12 @@ For instance, a very typical use of object template is computation of user’s f
 ----
 
 The mapping above will compute the value of user’s `fullName` property from `givenName` and `familyName` by using a simple Groovy expression.
-It is a weak mapping, therefore it will compute the full name only in case that it is not present already.
+It is a _weak_ mapping, therefore it will compute the full name only in case that it is not present already.
 
-Object template can be used to do variety of things to all kinds of midPoint objects.
-This chapter will cover the most important functionality of object templates.
-
-Importing an object template definition into midPoint will not do much.
-The template will not be used just by being imported.
-There can be several object templates for different types of objects, archetypes and even organizations.
-MidPoint will not know how to use the template.
-Therefore, the use of the template needs to be specified in a configuration.
+Importing an object template definition into midPoint does not do much.
+The template is not used yet, it just being imported.
+There can be several object templates for different types of objects, archetypes or organizations at the same time.
+MidPoint does not know how to use the template, unless it is specified in a configuration.
 The simplest and most common way to use an object template is to configure its use in the system configuration.
 
 [source,xml]
@@ -87,19 +84,20 @@ The simplest and most common way to use an object template is to configure its u
 </systemConfiguration>
 ----
 
-This configuration activates the object template for use by all object of `UserType` type.
-Therefore, this template will be applied to all midPoint users.
+This configuration activates the object template for use by all objects of `UserType` type.
+Therefore, this template is applied to all midPoint _users_.
 
 Alternatively, user interface can be used to activate an object template.
-Navigate to menu:Configuration[System > Object policy], create a new policy using the btn:New[] button.
+Navigate to menu:Configuration[System > Policies > Object policies], create a new policy using the btn:New[] button.
 Specify reference to your template, select `User` in type field and click btn:Save[].
 
-User template is applied every time an object is changed or explicitly recomputed (e.g. on reconciliation).
-User template is applied after all the inbound mappings are processed.
-Inbound mappings often copy important data to the focal objects (e.g. user objects).
-Therefore, the template can work on a data that are summarized from all the resources.
+Object template is applied every time an object is created, changed or explicitly recomputed (e.g. on reconciliation).
+Object template is applied after all the inbound mappings are processed.
+Inbound mappings often copy important data to the object, therefore the template can work on data that are summarized from all the resources.
 
 == Item Definitions In Object Template
+
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 We have already seen how object template can be used to apply mappings on particular items of midPoint objects.
 But object template can also do other tricks.

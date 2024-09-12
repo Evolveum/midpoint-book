@@ -3,18 +3,110 @@
 
 include::chapter-include.adoc[]
 
-[quote, TODO]
-TODO
+// TODO: make this chapter go after RBAC and before object templates
 
-We have users, roles, orgs and services.
-These can represent almost any type of objects.
-But sometimes we need to show finer facets.
+[quote, Alexandre Dumas]
+All generalizations are dangerous, even this one.
 
-TODO: archetypes as metaroles
+MidPoint has many types of objects hard-coded: users, roles, orgs, services and many more.
+However, no amount of hard-coded types could ever be enough to describe the vast diversity of the world around us.
+Hence, there are _archetypes_, providing a mechanism to describe objects in finer details.
 
-== Archetypes for Users
+== Focal Objects
 
-TODO: employees, externals, etc.
+There are five basic types of _focal_ objects:
+
+* *User* (`UserType`) represents users, usually as physical persons or personas.
+
+* *Org* (`OrgType`) represents groups of other objects, such as organizational units, teams, projects or locations.
+
+* *Role* (`RoleType`) represents roles, responsibilities or policies that can be applied to other objects.
+
+* *Service* (`ServiceType`) represents non-human actors and assets, such as network services, applications and devices.
+
+* *Generic object* (`GenericObjectType`) can represent anything else.
+
+These are _focal_ types, because they can be a _focus_ of midPoint computation.
+They are the _center_ of start topology, the _hub_ of the hub-and-spoke data mapping model that midPoint is using.
+E.g. User has several linked accounts.
+In midPoint parlance, _user_ is the _focus_, _accounts_ are _projections_.
+User data can be mapped to accounts, account data can be mapped to user, but account cannot be mapped to another account.
+That is the principle of the _star topology_.
+
+image::04-05-user-bob-projections.png[Star topology]
+
+We have already seen that.
+However, _focal objects_ are meant to be much more than a mere center of data synchronization topology.
+These objects are meant to have _business meaning_, to represent entities and concepts from the real world around us.
+Almost every practical object, entity or concept can be classified to the first four types.
+Physical persons, personas and other human-like identities can be represented as _users_.
+Groups of other objects can be represented as _orgs_, such as organizations, organizational units, various types of teams, projects, classes, interest groups and task forces.
+Even concepts that do not immediately come to mind can be represented as _orgs_, such as locations or nationalities.
+Concept of _service_ can represent almost any _thing_, such as devices, network services, applications, databases, documents - even non-tangible _assets_ such as datasets or workspaces.
+MidPoint _roles_ can be, quite obviously, used as roles for role-based access control (RBAC) purposes.
+However, they can also represent business concepts, such as jobs, work positions and responsibilities.
+_Roles_ can even represent very abstract concepts such as policies, classifications and clearances.
+Almost anything that you can think of, anything which would be described as _identity_, could be classified in those four types: _user_, _org_, _role_ or _service_.
+In a very rare case when a concept does not fit in any of these categories, there is always _generic object_ as a last resort.
+However, the _user_-_org_-_role_-_service_ quartet works so well, that the _generic object_ was not really needed for years and years.
+
+The four types are not just cosmetics, they have specific features that allow them to represent real-world concepts.
+
+* *User* has several naming properties, such as _full name_ and _given name_, which are typical for natural persons.
+It also has _credentials_ (e.g. password)
+
+* *Org* can form hierarchies.
+There can be _orgs_ in _orgs_, which is very useful for building organizational structures, or hierarchies of locations.
+
+* *Role* is meant to grant privileges to users.
+
+* *Service* has _credentials_, similarly to users.
+Therefore, _service_ can represent machine agents, robots and similar _active_ things that behave like humans.
+However, _service_ is meant to represent non-human identities, therefore it does not have human-like names.
+
+This description is somehow simplified.
+In reality, things are a bit more generic in midPoint.
+_Roles_ are not the only type of objects that can grant privileges.
+All role-like objects (known as _abstract roles_ in midPoint) have this ability, which means _orgs_ and _services_ can grant privileges too.
+Also, all the four focal types can have _credentials_, at least in theory.
+There is a significant overlap among the capabilities of the four object types.
+However, the description above is a nice summarization of the _purpose_ for which the object types were created.
+
+.Policy
+TIP: MidPoint 4.9 is introducing another focal object type: _policy_ (`PolicyType`).
+While policies can be represented by _roles_ (`RoleType`) in midPoint 4.8 and earlier, the new _policy_ type brings clarity.
+In midPoint 4.9 and later, there is a clear distinction between quite concrete _role_ and very abstract _policy_.
+This is a nice improvement, which improves thinking about _roles_ and _policies_ by optically separating them.
+It also looks very good in user interface.
+Other than that, _roles_ and _policies_ work exactly the same.
+It is a curious thing, that sometimes even such apparently cosmetic change makes a big perceived difference.
+We strongly recommend midPoint 4.9 to anyone who plans to heavily use _policies_, e.g. in deployments that need to address complex
+_regulatory compliance_ scenarios.
+
+== Archetypes
+
+The four basic object types can represent almost anything we are likely to encounter in identity management world.
+However, it does not mean that the four types fit all object types _perfectly_.
+We often need to distinguish various nuances among object types.
+E.g. we may want to use colors or icons to distinguish between _applications_, _mobile devices_ and _workspaces_.
+
+// TODO: also slight differences in behavior, e.g. synchronize applications with enterprise application inventory, but not devices
+
+// TODO: example archetype definition: custom color and icon
+
+// TODO: archetype definitions in GUI
+
+== Structural vs Auxiliary
+
+// TODO
+
+== User Archetypes
+
+// TODO: pre-defined archetype: Person
+
+// TODO: employees, externals, etc. - as auxiliary
+
+== Role Archetypes
 
 == Archetypes in Organizational Structure
 
@@ -23,6 +115,12 @@ TODO: divisions, departments, sections
 TODO: archetype for projects, archetype for functional org.
 
 TODO: assignment relation: allow project managers and owners, but not approvers.
+
+TODO: just the basics, refer to org chapter for more details
+
+== Service Archetypes
+
+// TODO: application
 
 == Meta-roles
 

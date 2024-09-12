@@ -6,6 +6,7 @@ Create a dedicated chapter for mappings and expressions
 
 Synchronization chapter:
 * Orphan detection, in LDAP or CRM
+* Use "Person" archetype from the start, to make sure we have good data
 
 RBAC chapter:
 * Describe concept of application
@@ -13,6 +14,11 @@ RBAC chapter:
 * Parametric roles: rework Example, team do not fit here
 * Meta-role discussion is using archetype-like example. this should be reworked.
 * Find a better example for roles with multi-valued attributes (privs), find a resource to simulate multi-val attrs
+
+Object template chapter:
+
+* Mention pre-defined "Person Object Template"
+* Maybe we should describe archetypes first, them object templates.
 
 Move meta-role discussion to archetypes chapter
 
