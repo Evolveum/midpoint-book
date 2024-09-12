@@ -1479,71 +1479,6 @@ Therefore, midPoint knows when to stop processing the operation.
 There are even mechanism how to avoid loops caused by connectors detecting changes caused by the connector itself.
 MidPoint will break those loops automatically.
 
-== Synchronization Strategies
-
-Synchronization is simple, in theory.
-However, as usual, the devil is in the details.
-Similarly to provisioning, there is no one single "synchronization protocol" that would work for all the source systems.
-Every system type has its own way to synchronize data.
-Some systems (such as LDAP servers) even have several mechanisms to choose from.
-Then there are source systems that have no practical way to implement efficient synchronization.
-We would refer to such methods as _synchronization strategies_.
-
-Specific details of each synchronization strategy should be an internal matter of connector implementation.
-The strategy is configured on connector level, and the details should be, theoretically, hidden inside the connector.
-MidPoint would not know and would not need to know what synchronization strategy is used.
-That might work in an ideal world.
-Yet, we live in a practical world, and there are many details that leak through the _synchronization_ abstraction.
-
-Let us use LDAP as an example.
-LDAP is, theoretically, a standard.
-However, the standard does not specify any synchronization mechanism.
-There is experimental RFC 4533, however it is not widely adopted.
-Yet, synchronization capabilities are necessary, and every major LDAP server provides some synchronization mechanism.
-Some mechanisms are quite good, some are not.
-There is an ancient "Retro change log", going back to Netscape/iPlanet LDAP servers, that is still used today.
-Active Directory, in a very typical way, has its own "DirSync" synchronization mechanism.
-OpenLDAP has yet another mechanism based on the access log.
-There is this RFC 4533 standard, which is used so rarely, that there was no request to implement it in midPoint LDAP connector.
-Then there is a catch-all synchronization mechanism that looks for recent changes based on `modifyTimestamp` attribute.
-
-In theory, all the synchronization strategies above should be equivalent - but they are not.
-For example, some variants of "Retro change log" synchronization cannot reliably detect rename operations.
-There may be problems with delete operations as well, especially if coupled with rename operations.
-Almost every mechanism has its quirks.
-Then there is the `modifyTimestamp`, which is the most problematic of all.
-
-Unfortunately, it is quite common practice to use a synchronization strategy based on last modification timestamp.
-Not just for LDAP, but also for database tables and other types of source systems.
-This is perhaps understandable, as this is a very simple mechanism.
-However, it has a lot of problems.
-The obvious problems can be caused by de-synchronized time on network, although in the age of Network Time Protocol (NTP) this should not be a problem at all.
-The other problem is a timestamp granularity.
-If the timestamp is granular to one second, that can be a big problem.
-One second is a very long time for a computer.
-A lot can happen in one second.
-Therefore, the connector has to include the "boundary" second to both consecutive synchronization runs, which means that the records may be processed twice.
-Going for millisecond granularity makes the problem less severe, but the problem is still there.
-
-However, the worst problem is that this strategy cannot detect deleted objects.
-Deleted objects are not there anymore, they do not have last modification timestamp, therefore they will not be included the search.
-This means that there must be a reconciliation process running together with live synchronization.
-Wait a minute, it is usually recommended running reconciliation anyway, as a form of "safety net", isn't it?
-It is, but the difference is in the timing.
-It is one thing to run reconciliation once a week to make sure that no records were missed.
-Yet, it is a completely different thing to run reconciliation every hour to make sure deleted objects are properly handled.
-This makes a huge difference, especially for deployments with millions of entries.
-Strategies based on last modification timestamp may look like a good idea at the beginning.
-However, they usually turn into a major liability in the long run.
-Avoid them if you can.
-
-// TODO LATER: Maybe mention problems with backup/restore and synchronization?
-// TODO LATER: Maybe mention messaging-based synch and how (un)reliable it can be?
-
-The bottom line is, that synchronization strategies are not created equal.
-In fact, the individual strategies tend to have vastly different characteristics.
-Our advice is to learn how each synchronization strategy works, what are the limitations and when it fails.
-Also, avoid the use of strategies based on last modification timestamp if there is any other viable alternative.
 
 == Mapping and Expression Tips and Tricks
 
@@ -2177,69 +2112,67 @@ Perhaps the best approach would be to utilize the roles (RBAC).
 This is the topic of the <<07-rbac.adoc#07-rbac,Role-Based Access Control>> chapter later.
 Yet, there are still more things to learn about synchronization until we get there.
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
 == Peculiarities of Reconciliation
 
 Reconciliation is a process of comparing current state of an account (_reality_) to a desired state of the account (_policy_).
-Reconciliation does not only compare the accounts, it is actively fixing the inconsistencies.
-Reconciliation can correct wrong data on resources.
+Reconciliation does not only compare the accounts, it is actively _correcting_ the inconsistencies.
+Reconciliation can correct wrong data on resources (_outbound_ direction).
 Yet, it also works the other way.
-It can correct the data in midPoint.
+It can correct the data in midPoint (_inbound_ direction).
 Therefore, reconciliation is one of the most useful tools in the identity management toolbox.
 
 Reconciliation can be used in a variety of ways.
 Reconciliation can be initiated for one specific user by using midPoint user interface.
 In that case, midPoint compares the values of all user’s accounts to the values that were computed using the mappings.
-If there is difference, midPoint corrects account values.
+If there are differences, midPoint corrects account values.
 This approach is perfect for testing reconciliation setting using just a single user.
 This feature is also useful for fixing values of one specific user.
 
 Reconciliation of a specific user may be useful, but it is an ad-hoc approach.
 We usually favor systemic approaches in identity management.
-Therefore, reconciliation is usually used in a form of a reconciliation task.
+Therefore, reconciliation is usually used in a form of a reconciliation _task_.
 Reconciliation task lists all the accounts on the resource, and then it reconciles each account, one by one.
-This is a way how to keep all resource accounts continuously synchronized.
+This is a way to keep _all_ resource accounts continuously synchronized.
 
-There is a couple of things about reconciliation that can be somehow surprising.
-Firstly, reconciliation of an account may cause modification of a user.
-This happens if there are inbound mappings for that account.
+There is a couple of things regarding reconciliation that can be somehow surprising.
+Firstly, reconciliation of an _account_ may cause modification of a _user_.
+This happens if there are _inbound_ mappings for that account.
 This is perhaps quite expected.
 However, the operation does not stop there.
-If a user is changed, then such change may propagate to other accounts on other resources, usually by the means of outbound mappings.
-MidPoint does not like procrastination, and therefore it will try to apply all the changes immediately.
-It means that reconciliation of one account may cause changes to other accounts.
+If a _user_ is changed, then such change may propagate to other _accounts_ on other resources, usually by the means of _outbound_ mappings.
+MidPoint does not like procrastination, therefore it will try to apply all the changes immediately.
+It means that reconciliation of one _account_ may cause changes to other _accounts_.
 Which makes a lot of sense, yet it may be quite surprising.
-Secondly, reconciliation will skip any normal-strength mappings.
+Secondly, reconciliation skips all _normal-strength_ mappings.
 We have already explained the reasons for that, but this is something that can surprise even an experienced midPoint engineer from time to time.
-If we are sure that we want the mapped value to be present in the account all the time then strong mappings are the way to go.
+If we are sure that we want the mapped value to be present in the account all the time, then _strong_ mappings are the way to go.
 
 A curious reader that has already explored midPoint user interface has surely noticed _recompute_ function.
 To the untrained eye, _recompute_ looks almost exactly the same as _reconciliation_.
 However, there are subtle differences.
-Firstly, recompute will not force the fetch of account data.
-When _recomputing_, the account attributes will be fetched from the resource, unless midPoint inevitably needs them for the computation.
-This usually happens if `weak` or `strong` mappings are used.
-However, if there are `normal` mappings only, then recompute may skip reading account data.
-MidPoint will compare and correct account attribute values only for those accounts that are fetched from resource during this process.
+Firstly, recompute does not force fetching of account data.
+When _recomputing_, fresh account attributes are not retrieved from the resource, unless midPoint inevitably needs them for the computation.
+This usually happens if `weak` or `strong` mappings are used, in that case the attribute values _are_ retrieved.
+However, if there are `normal` mappings only, then recompute may skip retrieval of fresh account data.
+MidPoint compares and corrects account attribute values only for those accounts that are retrieved from resource during this process.
 That is how recompute works.
-The purpose of _recompute_ is to correct data of midPoint _users_, which means evaluation of object templates and other internal policies.
 Correcting _account_ data is more or less just a side effect of recompute.
+The purpose of _recompute_ is to correct data of midPoint _users_, which means evaluation of object templates and other internal policies.
 
 On the other hand, _reconciliation_ always tries to read all the accounts regardless whether they are needed for computation or not.
-Therefore, all the attributes on all the accounts are fixed.
+Therefore, all the attributes on all the accounts are corrected.
 That is the purpose of reconciliation: correct the _account_ data.
 
 There is yet another difference between recompute and reconcile _tasks_.
 The purpose of _recompute_ task is to correct user data.
-Therefore, recompute task will iterate over midPoint _users_.
-Recompute task will not detect new accounts on the resource, and it may even overlook if an account is deleted.
+Therefore, recompute task iterates over midPoint _users_.
+Recompute task does not detect new accounts on the resource, and it may even overlook if an account is deleted.
 However, _reconciliation_ task is different.
-In fact reconciliation task has several stages.
-Main reconciliation stage lists all resource accounts.
-It determines owner of each account, compare the attributes and corrects them.
+In fact, reconciliation task has several stages.
+Main reconciliation stage lists all resource _accounts_.
+It determines owner of each account, compares the attributes and corrects them.
 As this process iterates over real accounts on a resource, it can easily detect new accounts.
-When the main stage is completed, then the next phase looks at account shadows stored in midPoint.
+When the main stage is completed, the next phase looks at account _shadows_ stored in midPoint.
 The task looks for shadows that have not been processed in the main phase.
 Those are accounts that used to be on the resource some time ago, but have disappeared since.
 That is how reconciliation detects deleted accounts.
@@ -2247,22 +2180,24 @@ That is how reconciliation detects deleted accounts.
 Rule of the thumb for the _reconciliation_ versus _recompute_ dilemma is this:
 
 * Use _recompute_ if you want to update _users_.
-For example, use recompute after change of object templates or role definitions to apply the changes to all users.
+For example, use recompute after change of object templates, policy rules or role definitions to apply the changes to all users.
 Recompute is usually initiated manually, on _as needed_ basis.
 
 * Use _reconciliation_ to keep _accounts_ synchronized.
 For example, run periodic reconciliation task to make sure accounts in your LDAP servers are up-to-date.
+Reconciliation is usually _scheduled_ at regular intervals, to continually maintain data consistency.
 
 == Deltas
 
 Reconciliation is really useful mechanism.
-It is reliable and thorough, but it is also quite slow, and it consumes o lot of computational and network resources.
+It is reliable and thorough.
+However, it is also quite slow, and it consumes o lot of computational and network resources.
 There are good reasons why reconciliation is such a heavyweight beast.
 Reconciliation works with _absolute_ state of accounts.
-It means that reconciliation is reading all the accounts with all the values of all the attributes.
-Then it recomputes everything.
+It means that reconciliation is reading _all_ the accounts with _all_ the values of _all_ relevant attributes.
+Then it recomputes _everything_.
 Even the attributes and values that were not changed are recomputed.
-This is a very traditional and reliable way of computation, and that is also the way how the most of older identity management systems work.
+This is a very reliable way of computation, and it is also the method used by the majority of traditional identity management systems.
 
 Yet, there is also a better way.
 If we know that just one attribute was changed, we can recompute that single attribute only.
@@ -2270,22 +2205,22 @@ We do not need to care about other attributes.
 Moreover, if we know that attribute `foo` has changed in such a way, that there is a new value `bar`, then it gets even better.
 We just need to recompute the value `bar`, and we need not care about any other values.
 This is what we like to call a _relative change_.
-We just care about the values that were changed.
+We care just about the values that were _changed_.
 That is how midPoint works internally.
 We could say that MidPoint is _relativistic_ system.
 
 This is where _delta_ comes in.
-Delta is a data structure that describes the change of a single midPoint object.
-_Add_ delta describes a new midPoint object that is about to be created.
-_Modify_ delta describes existing midPoint object where some properties have changed.
-_Delete_ delta describes an object that is going to be deleted.
+Delta is a data structure that describes the _change_ of a single midPoint object.
+_Add delta_ describes a new midPoint object that is about to be _created_.
+_Modify delta_ describes existing midPoint object where some properties have _changed_.
+_Delete delta_ describes an object that is going to be _deleted_.
 
 This is a very powerful mechanism.
-Just remember that everything in midPoint can be represented as an object: user, account, resource, role, security policy … everything.
+Just remember that everything in midPoint can be represented as an object: user, account, resource, role, security policy ... everything.
 Therefore, delta can represent any change in midPoint.
-It may be a change of user password, deletion of an account, change of connector configuration or introduction of a new password policy.
+It may be a change of user password, deletion of an account, change of connector configuration or introduction of a new policy rule.
 If all the changes can be represented in a uniform way, then they can also be handled in a uniform way.
-Therefore, it is easy for midPoint to record all the changes in an audit trail – including configuration changes.
+Therefore, it is easy for midPoint to record all the changes in an _audit trail_ – including configuration changes.
 It is easy to route any change through an approval process.
 And so on.
 MidPoint can create a relatively simple mechanisms to handle changes, and then those mechanisms can be applied to any change of (almost) any object.
@@ -2307,7 +2242,9 @@ This delta contains a description of modified properties of an existing object.
 As the object can change in a variety of ways, modify delta is the most complex of the three.
 Modify delta contains a list of _item deltas_.
 Each item delta describes how a particular part of an object changes.
-For example following delta describes that a new value `pirate` is added to a user property `employeeType`.
+For example, following delta describes that a new value `pirate` is added to a user property `employeeType`.
+
+// TODO: employeeType is obsolete, change example to use something fresher
 
 image::05-07-delta-modify-add.png[Modify delta: add]
 
@@ -2330,13 +2267,13 @@ Those deltas can work efficiently even in cases that there is a multi-valued att
 There is a good reason for this.
 Multi-valued properties are quite common in the identity management field.
 Just think about how roles, groups, privileges and access control lists are usually implemented.
-Everybody that ever managed a large group in LDAP server will surely remember that experience in vivid colors.
+Everyone who ever managed a large group in LDAP server certainly remembers that experience in vivid colors.
 Fortunately, midPoint is designed to handle situations like these.
 
 Everything in midPoint is designed to work with deltas: user interface, mappings, authorizations, auditing ... all the way down to the low-level data storage components.
-Mappings are designed in a relativistic ways.
-That is one of the reasons why we need to explicitly specify sources of the mapping.
-Mapping source definitions are matched with items in the delta to control execution of the mapping.
+Mappings work in a relativistic ways.
+That is one of the reasons why we need to explicitly specify _sources_ of the mapping.
+Mapping source definitions are matched with items in the _delta_ to control execution of the mapping.
 Deltas permeate entire midPoint computation.
 Deltas are input to the mappings, and mapping produce other deltas as output.
 Therefore, we can have a complete chain: deltas that are result of inbound mappings is applied to the user object, but those deltas are also input to outbound mappings.
@@ -2351,36 +2288,36 @@ However, a clever reader does not seem to be impressed.
 How can this relativistic approach conserve any significant portion of computational resources?
 We usually fetch the entire account from the resource anyway.
 Therefore, there is no harm to recompute all the attributes.
-The computation itself is fast, it is the fetch operation that is slow.
+The _computation_ itself is fast, it is the _fetch_ operation that is slow.
 Isn’t it?
-The clever reader is, of course, right.
-Or rather partially right at the very least.
+The clever reader is, of course, right - or rather partially right at the very least.
 Most resources indeed fetch all the account attributes in a single efficient operation.
 For those cases, there is no big increase in efficiency if we go with the relativistic methods.
 However, there are exceptions.
-For example, some resources will not return all the values of big attributes, e.g. all the members of a large group.
+For example, some resources does not return all the values of big attributes, e.g. all the members of a large group.
 Additional requests are needed to fetch all the values – and there may be a lot of requests if the group is really large.
 Relativistic approach has significant benefit in those cases.
 The benefits will be even more obvious when we get to the live synchronization in the next section.
 Yet, performance is not the primary motivation for the relativistic approach.
-There is one extremely strong reason to go relativistic: data consistency.
-Consistency is something that brings ugly nightmares to many engineers that try to design distributed system.
-Identity management solution _is_ in fact a distributed system, managing data in many independent applications and databases.
+There is one extremely strong reason to be relativistic: _data consistency_.
+Consistency is something that brings ugly nightmares to many engineers who try to design distributed system.
+Identity management solution _is_ a distributed system, managing data in many independent applications and databases.
 It is also a very _loosely-coupled_ distributed system.
-There is no support for locking or transactions in the connector.
+There is no support for locking or transactions in the connectors.
 Even if there was some support, the vast majority of resource cannot provide those consistency mechanisms on their identity management APIs.
 This means that midPoint cannot rely on traditional data consistency mechanisms.
-That is why relativistic approach is so useful.
+MidPoint cannot make sure that the data are not changed during computation or between computations.
+That is why _relativistic_ approach is so useful.
 Relativistic computation has a very high probability of achieving correct result even without locking or transactions.
 This is more than acceptable for typical identity management deployments.
-For those rare cases where relativistic computation can fluctuate there is always reconciliation as a last resort.
+For those rare cases where relativistic computation can fluctuate, there is always _reconciliation_ as a last resort.
 Yet, thanks to the relativistic nature of midPoint, the need for reconciliation is significantly reduced.
 
 That was a lot of long words, but clever reader seems to be satisfied now.
 At least for a while.
-For the readers that are still scratching their heads there is quite a simple summary: relativistic approach of midPoint can do miracles.
+For the readers that are still scratching their heads, there is quite a simple summary: relativistic approach of midPoint can do miracles.
 For example, midPoint resource can be both sources and targets, even a single attribute can be both source and target of information.
-It is the relativistic approach that allows features like this.
+It is the relativistic approach that enables configurations like this.
 The principle of relativity is relatively simple.
 Yet, its effect in midPoint is nothing short of being revolutionary.
 
@@ -2390,28 +2327,28 @@ MidPoint has a range of synchronization mechanisms.
 Slow, brutal but reliable _reconciliation_ is at one end.
 _Live synchronization_ is on the other.
 Live synchronization is a lightweight mechanism that can provide almost-real-time synchronization capabilities.
-Live synchronization is specifically looking for recent changes on a resource.
+Live synchronization is looking for _recent changes_ on a resource.
 When such changes are detected, live synchronization mechanisms process those changes immediately.
-The synchronization delay is usually in order of seconds or minutes if live synchronization is used properly.
-
+The synchronization delay is usually in order of seconds or minutes, provided live synchronization is used properly.
 Unlike reconciliation, live synchronization is not triggered manually.
 That would make very little sense.
 Live synchronization works in a long-running task, repeatedly looking for fresh changes in short time intervals.
-If a resource is configured for synchronization, then all that is needed to run live synchronization is to set up a live synchronization task.
-MidPoint user interface can be used to do that easily.
 
-An example of live synchronization task was provided in the HR feed section above.
+If a resource is already configured for synchronization, then all that is needed to run live synchronization is to set up a live synchronization _task_.
+MidPoint user interface can be used to do that easily.
+An example of live synchronization task was provided in the _HR Feed_ section above.
 Live synchronization task wakes up at regular intervals.
 Each time the task waves up, it invokes the connector.
 Connectors capable of live synchronization have special operation that is used to get fresh changes from the resource.
+
 The connector can support any reasonable change detection mechanism – in theory.
 Yet, two mechanisms are commonly used in practice:
 
 * *Timestamp-based synchronization:* Resource keeps track of last modification timestamp for each account.
 The connector looks for all accounts that have been modified since last scan.
 This is very simple and relatively efficient method.
-But it has one major limitation: it cannot detect deleted accounts.
-If an account is deleted then there is no timestamp for that account and therefore the connector will not find it in the live synchronization scan.
+However, it has one major limitation: it cannot detect deleted accounts.
+If an account is deleted, then there is no timestamp for that account, and therefore the connector will not find it in the live synchronization scan.
 
 * *Changelog-based synchronization:* Resource keeps a "log" of recent changes.
 The connector is looking at the log, and it is processing all the changes that were added to the log since the last scan.
@@ -2419,13 +2356,15 @@ This is a very efficient and flexible method.
 Yet, it is not simple.
 Not many systems support it, and there are often hidden complexities.
 
+Those mechanisms are called _live synchronization strategies_, and they are further explained in following section.
+
 All live synchronization methods need to keep the track of what changes are "recent", i.e. which changes were already processed by midPoint and which were not processed yet.
 There is usually some value that needs to be remembered by midPoint: timestamp of last scan, last sequence number in the change log, serial number of last processed change and so on.
 Each connector has a different value with a connector-specific meaning.
 MidPoint refers to those values as "tokens".
 The most recent token is stored in the live synchronization task.
 That is how midPoint keeps track of processed changes.
-There are (hopefuly quite rare) cases when resource and midPoint token get out of alignment.
+There are (hopefully quite rare) cases when resource and midPoint token get out of alignment.
 This may happen in cases such as the resource database is restored from a backup, if network time gets out of synchronization and so on.
 If that happen, then deleting the token from the live synchronization task is usually all it takes to get the synchronization running again.
 
@@ -2433,10 +2372,77 @@ Live synchronization is fast and very efficient.
 However, it is not entirely reliable.
 MidPoint may miss some changes.
 This is quite a rare situation, but it may happen.
-Reconciliation will surely remedy the situation in such a case.
+Reconciliation can remedy the situation in such a case.
 Just remember, all the synchronization mechanism share the same configuration.
 It is perfectly acceptable to run live synchronization and reconciliation on the same resource at the same time.
-But of course, it would be a good idea to run reconciliation less frequently than live synchronization.
+Of course, it would be a good idea to run reconciliation less frequently than live synchronization.
+
+
+== Live Synchronization Strategies
+
+Live synchronization is fast and efficient - in theory.
+However, as usual, the devil is in the details.
+There is no one single synchronization protocol or standard that would work for all the resources.
+Every system has its own way to synchronize data.
+Some systems (such as LDAP servers) even have several mechanisms to choose from.
+Then there are source systems that have no practical way to implement efficient synchronization.
+We would refer to such methods as _live synchronization strategies_.
+
+Synchronization strategy is configured on connector level, and the details should be, theoretically, hidden inside the connector.
+MidPoint would not know and would not need to know what synchronization strategy is used.
+That might work in an ideal world.
+Yet, we live in a practical world, and there are many details that leak through the connector interface.
+
+Let us use LDAP as an example.
+LDAP is, theoretically, a standard.
+However, the standard does not specify any synchronization mechanism.
+There is experimental RFC 4533, which is not widely adopted.
+Yet, synchronization capabilities are necessary, and every major LDAP server provides some synchronization mechanism.
+Some mechanisms are quite good, some are not.
+There is an ancient "Retro change log" mechanism, going back to Netscape/iPlanet LDAP servers originating in the 1990s.
+That mechanism is still used today, in several variants.
+Active Directory, in a very typical way, has its own "DirSync" synchronization mechanism.
+OpenLDAP has yet another mechanism based on the access log.
+There is this RFC 4533 standard, which is used so rarely, that there was no request to implement it in midPoint LDAP connector.
+Then there is a catch-all synchronization mechanism that looks for recent changes based on `modifyTimestamp` attribute.
+
+In theory, all the synchronization strategies above should be equivalent - but they are not.
+For example, some variants of "Retro change log" synchronization cannot reliably detect rename operations.
+There may be problems with delete operations as well, especially if coupled with rename operations.
+Almost every mechanism has its quirks.
+Then there is the `modifyTimestamp`, which is the most problematic of all.
+
+Unfortunately, it is quite common practice to use a synchronization strategy based on last modification timestamp.
+Not just for LDAP, but also for database tables and other types of source systems.
+This is perhaps understandable, as this is a very simple mechanism.
+However, it has a lot of problems.
+The obvious problems can be caused by de-synchronized time on network, although in the age of Network Time Protocol (NTP) this should not be a problem at all.
+The other problem is a timestamp granularity.
+If the timestamp is granular to one second, that can be a big problem.
+One second is a very long time for a computer.
+A lot can happen in one second.
+Therefore, the connector has to include the "boundary" second to both consecutive synchronization runs, which means that the records may be processed twice.
+Going for millisecond granularity makes the problem less severe, but the problem is still there.
+
+However, the worst problem is that this strategy cannot detect deleted objects.
+Deleted objects are not there anymore, they do not have last modification timestamp, therefore they will not be included the search.
+This means that there must be a reconciliation process running together with live synchronization.
+Wait a minute, it is usually recommended running reconciliation anyway, as a form of "safety net", isn't it?
+It is, but the difference is in the timing.
+It is one thing to run reconciliation once a week to make sure that no records were missed.
+Yet, it is a completely different thing to run reconciliation every hour to make sure deleted objects are properly handled.
+This makes a huge difference, especially for deployments with millions of entries.
+Strategies based on last modification timestamp may look like a good idea at the beginning.
+However, they usually turn into a major liability in the long run.
+Avoid them if you can.
+
+// TODO LATER: Maybe mention problems with backup/restore and synchronization?
+// TODO LATER: Maybe mention messaging-based synch and how (un)reliable it can be?
+
+The bottom line is, that synchronization strategies are not created equal.
+In fact, the individual strategies tend to have vastly different characteristics.
+Our advice is to learn how each synchronization strategy works, what are the limitations and when it fails.
+Also, avoid the use of strategies based on last modification timestamp if there is any other viable alternative.
 
 == Conclusion
 
@@ -2451,13 +2457,13 @@ In fact, it is perfectly good approach to make all the resource read-only at thi
 The point is to let midPoint see the data.
 Why do we need that?
 
-* We will see what is the real _quality_ of the data.
+* We can see what is the real _quality_ of the data.
 Most system owners have at least some idea what data sets are there.
 However, it is almost impossible to estimate data quality until the data are processed and verified.
 That is exactly what midPoint can do at this stage.
 This is essential information to plan data cleanup and sanitation.
 
-* We will learn how many accounts and account types are there.
+* We can learn how many accounts and account types are there.
 It is perhaps quite obvious that there are _employee_ accounts.
 Are there also accounts for contractors, suppliers, support engineers?
 Are those accounts active?
@@ -2465,22 +2471,22 @@ What is the naming convention?
 Do system administrators use employee accounts for administration, or are they using dedicated high-privilege accounts?
 This information is crucial to set up provisioning policies.
 
-* We will learn distribution of accounts and their entitlements.
+* We can learn distribution of accounts and their entitlements.
 Do all employees have accounts in Active Directory?
 Are there any large user groups?
 How does organizational structure influence the accounts?
 This information is very useful to design a role-based access control structures and other policies.
 
-* We will surely learn some security vulnerabilities.
+* We can detect some security vulnerabilities.
 Are there orphaned accounts that should have been deleted long time ago?
-Are there testing accounts that were left unattended after the last night-time emergency?
+Are there testing accounts that were left unattended after the last nighttime emergency?
 Indeed, there is no security without identity management.
 
 This is a good start.
-But even if this is all that you do in the first step of the deployment it is still a major benefit.
-You will get better visibility, and with that comes better security.
+Even if this is all that you do in the first step of the deployment, it is still a major benefit.
+You can get better _visibility_, and with that comes better _security_.
 You have the data to analyze your environment, and plan next step of the identity management deployment.
-You won’t be blind any longer.
+You won't be blind any longer.
 That is extremely important.
 It is indeed a capital mistake to theorize before one has data.
 
