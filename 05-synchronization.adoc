@@ -890,6 +890,33 @@ The schema handling section contains inbound mappings for HR account attributes:
             <delineation>
                 <objectClass>AccountObjectClass</objectClass>
             </delineation>
+            <focus>
+                <type>UserType</type>
+                <archetypeRef oid="00000000-0000-0000-0000-000000000702"/>
+            </focus>
+            ...
+----
+
+The schema handling section starts with the usual definitions of _account_ object type.
+This is a definition of `Default account`, using the only object class that our CSV-based HR connector provides.
+We have seen that before, in previous chapter.
+However, there is a new part, definition of _focus_.
+The `delineation` and most other parts of schema handling definition refer to _account_ or other _resource_ objects.
+In midPoint parlance those are seen as _projections_, the "spoke" part of hub-and-spoke synchronization topology.
+However, the `focus` part is different.
+It refers to the objects in midPoint repository, objects that are at the center of the synchronization topology, the _focal_ object.
+In our case, _user_ is our focal objects, as we are going to synchronize HR _accounts_ with midPoint _users_.
+The other part of the `focus` definition specifies an _archetype_, which defines finer characteristics of focal object.
+In this case it points to `Person` archetype.
+_User_ objects that are going to be created during synchronization will have this archetype automatically assigned.
+We will learn more about archetypes later, in <<08-archetypes.adoc#08-archetypes,Archetypes>> chapter.
+
+Next part of the definition specifies properties and mappings of account _attributes_:
+
+.resource-csv-hr.xml
+[source,xml]
+----
+            ...
             <attribute>
                 <ref>empno</ref>
                 <displayName>Employee number</displayName>
@@ -924,7 +951,6 @@ The schema handling section contains inbound mappings for HR account attributes:
             </attribute>
             ...
 ----
-
 
 The account attribute `empno` is mapped to midPoint user properties name and `personalNumber`.
 Account attributes `firstname` and `lastname` are mapped to `givenName` and `familyName` properties respectively.
