@@ -1,4 +1,4 @@
-[#09-orgstruct]
+[#10-orgstruct]
 = Organizational Structures
 
 include::chapter-include.adoc[]

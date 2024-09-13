@@ -1,4 +1,4 @@
-[#11-archetypes]
+[#08-archetypes]
 = Archetypes
 
 include::chapter-include.adoc[]

@@ -1,4 +1,4 @@
-[#08-obhject-templates]
+[#09-obhject-templates]
 = Object Templates
 
 include::chapter-include.adoc[]

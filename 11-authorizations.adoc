@@ -1,4 +1,4 @@
-[#10-authorizations]
+[#11-authorizations]
 = Authorizations
 
 include::chapter-include.adoc[]
