@@ -3,12 +3,10 @@
 
 include::chapter-include.adoc[]
 
-// TODO: make this chapter go after RBAC and before object templates
-
 [quote, Alexandre Dumas]
 All generalizations are dangerous, even this one.
 
-MidPoint has many types of objects hard-coded: users, roles, orgs, services and many more.
+MidPoint has many types of objects hard-coded: _users_, _roles_, _orgs_, _services_ and many more.
 However, no amount of hard-coded types could ever be enough to describe the vast diversity of the world around us.
 Hence, there are _archetypes_, providing a mechanism to describe objects in finer details.
 
@@ -90,39 +88,132 @@ However, it does not mean that the four types fit all object types _perfectly_.
 We often need to distinguish various nuances among object types.
 E.g. we may want to use colors or icons to distinguish between _applications_, _mobile devices_ and _workspaces_.
 
-// TODO: also slight differences in behavior, e.g. synchronize applications with enterprise application inventory, but not devices
+Basic structure of archetype definition is simple:
 
-// TODO: example archetype definition: custom color and icon
+[source,xml]
+----
+<archetype oid="00000000-0000-0000-0000-000000000702">
+    <name>Person</name>
+    <archetypePolicy>
+        <display>
+            <label>Person</label>
+            <pluralLabel>Persons</pluralLabel>
+            <icon>
+                <cssClass>fa fa-user</cssClass>
+                <color>green</color>
+            </icon>
+        </display>
+    </archetypePolicy>
+</archetype>
+----
 
-// TODO: archetype definitions in GUI
+There is a special `archetypePolicy` container which is very specific to archetypes.
+This container specifies characteristics of _archetyped_ objects, which are objects that have this archetype.
+In the case illustrated above, the `Person` archetype is supposed to apply to users who are physical, natural persons (as opposed to virtual _personas_).
+Archetype policy specifies that the archetyped objects have _green_ icon defined by `fa fa-user` CSS classes.
+Each archetyped object has to be referred to as `Person`.
+Plural form `Persons` is going to be used in lists and collections of archetyped objects.
+This is quite a minimal definition of archetype.
+
+.Font Awesome icons
+TIP: MidPoint is using _Font Awesome_ icons, which is a nice collection of icons to choose from.
+Font Awesome icons are referred to by their _CSS classes_.
+Readers that have some web design experience would understand.
+For the others, just search the web for "font awesome icons", choose an icon and look for snipped of HTML code such as `<i class="fa fa-user"></i>`.
+The value of `class` HTML attribute is supposed to go to the `cssClass` property of archetype definition.
+Of course, midPoint is open source software, therefore it contains only _free_ Font Awesome icons.
+
+We have nice little archetype definition now.
+However, it does not do much just by itself.
+Archetype has to be applied to midPoint objects to be useful.
+As we are in midPoint, archetypes are _assigned_ to objects, of course.
+
+[source,xml]
+----
+<user oid="00000000-0000-0000-0000-000000000702">
+    <name>aanderson</name>
+    ...
+    <assignment>
+        <targetRef oid="00000000-0000-0000-0000-000000000702" type="ArchetypeType"/>
+    </assignment>
+    ...
+</user>
+----
+
+When archetype is assigned to an object, the object gains characteristics specified in the _archetype policy_ specified in the archetype.
+This means that _persons_ are shown using _green_ color in midPoint user interface, as that is specific in the `Person` archetype.
+
+Archetypes can be managed and create in midPoint user interface as well.
+Navigate to menu:Configuration[Archetypes].
+
+Archetypes can specify several aspects that affect look, feel and behavior of archetyped objects:
+
+* Icon, color, labels and similar presentation properties.
+
+* Object template, which specifies mappings and other details about individual data _items_ of the object.
+
+* Provisioning defaults, e.g. specifying that all employees should have an account in enterprise directory.
+
+* Policies to be applied to archetyped objects.
+
+* Collecting the objects, providing ability to sort objects to menus, look them up in searches and so on.
+
+Archetypes can significantly influence archetyped objects, as you will see in the rest of this chapter.
+This ability makes archetypes very useful.
+Due to their usefulness, archetypes permeate midPoint configurations.
+Many archetypes are provided as pre-configured (initial) objects out-of-the-box.
+Archetypes are also seen in prominent places in midPoint user interface.
+They also provide prime opportunity for customization.
+Overall, archetypes are to the core of every midPoint deployment.
 
 == Structural vs Auxiliary
 
-// TODO
+// TODO: Employee auxiliary archetype
 
-== User Archetypes
+// TODO: support for auxiliary archetypes in GUI is very limited
+
+== TODO
+
+// TODO: looking up objects by archetype, pre-configured collections in menu
+// TODO: archetypeRef?
+// TODO: archetypes work as collections
+
+== Pre-configured Archetypes
 
 // TODO: pre-defined archetype: Person
 
 // TODO: employees, externals, etc. - as auxiliary
 
-== Role Archetypes
+// TODO: role archetypes
 
-== Archetypes in Organizational Structure
-
-TODO: divisions, departments, sections
-
-TODO: archetype for projects, archetype for functional org.
-
-TODO: assignment relation: allow project managers and owners, but not approvers.
-
-TODO: just the basics, refer to org chapter for more details
-
-== Service Archetypes
+// TODO: orgstruct archetypes: see later
 
 // TODO: application
+
+// TODO: tasks, etc.
 
 == Meta-roles
 
 // TODO: move section from RBAC chapter here
 // TODO: Explain how archetypes act as meta-roles
+// TODO: archetypes are meta-roles, that is the reason they are assigned
+
+== Archetypes and Provisioning
+
+// TODO: default accounts,
+// TODO: also slight differences in behavior, e.g. synchronize applications with enterprise application inventory, but not devices, object template, etc.
+
+== Assignment Relation
+
+// TODO: archetypes apply to basic types - assignment relation
+
+// TODO: assignment relation: allow project managers and owners, but not approvers.
+
+== Future of Archetypes
+
+// TODO: schema - not easy to change
+// TODO: this is the reason why archetype assignments are limited, we may need flexibility in future
+// TODO: archetypes _assigned_ to objects - there are limitations
+
+
+// TOOD: later: object collections and views

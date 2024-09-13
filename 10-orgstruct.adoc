@@ -6,6 +6,10 @@ include::chapter-include.adoc[]
 [quote, Douglas Adams, "The Restaurant At The End Of The Universe"]
 If life is going to exist in a Universe of this size, then the one thing it cannot afford to have is a sense of proportion.
 
+// TODO: archetypes
+// TODO: divisions, departments, sections
+// TODO: archetype for projects, archetype for functional org.
+
 Organizations come in all shapes and sizes.
 Unless your organization is extremely unusual, there is always some form of recognizable internal structure.
 There may be the usual corporate divisions, departments and sections.

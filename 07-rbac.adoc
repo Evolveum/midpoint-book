@@ -578,7 +578,7 @@ NOTE: Indeed, midPoint _entitlement_ mechanism is an ideal tool for building app
 Unfortunately, the _Entitlements_ chapter of this book is not written yet.
 MidPoint reference documentation can provide the necessary information in the meantime.
 Similarly, _generic synchronization_ is an ideal tool to keep _groups_ and _application roles_ consistent.
-There are some information about _generic synchronization_ in the <<09-orgstruct#09-orgstruct,Organizational Structure>> chapter.
+There are some information about _generic synchronization_ in the <<10-orgstruct.adoc#09-orgstruct,Organizational Structure>> chapter.
 
 Strictly speaking, _application roles_ are not meant to be assigned directly to users.
 They are supposed to be abstract, to be the base "material" used to create higher-level roles.

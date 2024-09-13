@@ -54,11 +54,11 @@ include::06-schema.adoc[]
 
 include::07-rbac.adoc[]
 
-include::08-object-templates.adoc[]
+include::09-object-templates.adoc[]
 
-include::09-orgstruct.adoc[]
+include::10-orgstruct.adoc[]
 
-include::10-authorizations.adoc[]
+include::11-authorizations.adoc[]
 
 include::90-troubleshooting.adoc[]
 

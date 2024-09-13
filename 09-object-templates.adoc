@@ -6,6 +6,9 @@ include::chapter-include.adoc[]
 [quote, Theodore von Kármán]
 Scientists study the world as it is; engineers create the world that has never been.
 
+// TODO: presentation: labels, hiding
+// TODO: validation?
+
 Identity management systems are often seen as integration engines that move data from one system to another system.
 This is indeed a very important part of the identity management functionality.
 However, the things identity management systems do _internally_ are crucial to all identity management deployments - especially those that deal with _identity governance_ and _regulatory compliance_.
