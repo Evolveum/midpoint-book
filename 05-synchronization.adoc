@@ -1745,6 +1745,34 @@ If an account has attribute `active` set to `false` value, midPoint will display
 No extra logic or mapping is needed to achieve that.
 The capability does it all.
 
+The situation is slightly more complex in our LDAP server in ExAmPLE company.
+ExAmPLE is using _OpenLDAP_ server, which does not have any reasonable method to disable users.
+Therefore, we have to be very creative.
+Perhaps the least bad method is to extend OpenLDAP schema with custom auxiliary object class `MidPointPerson` which defines new attribute `midPointAccountStatus`.
+The `midPointAccountStatus` takes values `enabled` and `disabled` to represent account status.
+No value of `midPointAccountStatus` attribute means _enabled_ account as well.
+As there are two options for representing _enabled_ status, we have to specify that in the definition of simulated capability:
+
+[source,xml]
+----
+    <capabilities>
+        <configured>
+            <cap:activation>
+                <cap:status>
+                    <cap:attribute>ri:midPointAccountStatus</cap:attribute>
+                    <cap:enableValue></cap:enableValue>
+                    <cap:enableValue>enabled</cap:enableValue>
+                    <cap:disableValue>disabled</cap:disableValue>
+                </cap:status>
+            </cap:activation>
+        </configured>
+    </capabilities>
+----
+
+This is not an ideal solution as this `MidPointPerson` object class is quite cumbersome.
+However, when combined with some access control list (ACL) magic, it can work quite well.
+
+
 == Synchronization Example: LDAP Account Correlation
 
 Previous example demonstrated the use of synchronization for HR data feed.
@@ -1882,8 +1910,22 @@ Therefore, we need to add schema handling section to our resource:
             <default>true</default>
             <delineation>
                 <objectClass>inetOrgPerson</objectClass>
+                <auxiliaryObjectClass>midPointPerson</auxiliaryObjectClass>
             </delineation>
+            ...
+----
 
+This is pretty much the standard definition as we have already seen.
+However, there is one new aspect: `midPointPerson` auxiliary object class.
+This is an additional LDAP object class which is going to be applied to all object that midPoint eventually creates.
+It is not important for synchronization at this stage, yet we are going to set it up now, so we have a complete working configuration.
+
+We continue with setting up mappings for the attributes:
+
+.resource-ldap.xml
+[source,xml]
+----
+            ...
             <attribute>
                 <ref>dn</ref>
                 <displayName>Distinguished Name</displayName>
@@ -2025,7 +2067,22 @@ Even though the `uid` value is obviously wrong, midPoint have linked the account
 The reason is that we have set up midPoint to use `employeeNumber` for correlation.
 Even accounts whose usernames violate the convention can be automatically linked to their owners - as long as there is any reliable piece of information that can be used for correlation.
 
-When all the accounts are linked to their owners, it is the right time to complete the synchronization policy.
+Search panel on top of account list can be used to make manual linking faster.
+The btn:[Situation] search control can be used to select accounts that are in `Unmatched` situation.
+
+image::05-05-reconciliation-ldap-unmatched-filter.png[Looking for unmatched accounts]
+
+We can quickly handle the obvious unmatched accounts, and link them manually.
+When all the accounts are linked to their owners, we end up with two accounts that do not have owners: `john` and `oscar`.
+In identity management parlance, these are called _orphaned accounts_.
+While having a closer look at the accounts, these two accounts obviously belong to former employee.
+John and Oscar do not work for ExAmPLE company for several years.
+While John's account is _disabled_ at the very least, Oscar's account is still active.
+What a _deprovisioning disaster_ this is!
+We have illegal account here, still active, still accessible by an employee that might not be entirely happy to be laid off.
+Quite obviously, we have to do something about it.
+
+This is the right time to complete the synchronization policy.
 Once the correlation is complete and all accounts have an owner, detecting an _unmatched_ account means that an illegal account is created in LDAP server.
 Now we can tell midPoint to _delete_ any _unmatched_ accounts.
 
@@ -2042,7 +2099,31 @@ Now we can tell midPoint to _delete_ any _unmatched_ accounts.
                 ...
 ----
 
-There may be some accounts in the LDAP server that have wrong attribute values.
+When reconciliation task is completed, all orphaned accounts are gone.
+We have reduced our security risks, which is one of the primary reasons for having identity management system in the first place.
+
+[TIP]
+.Disable orphaned accounts
+====
+Clever reader is not entirely persuaded at this point.
+Outright deletion of orphaned account might look nice in security policy documents, yet it looks just too aggressive for practical use.
+Clever reader is, as always, quite right.
+We really want to react to orphaned accounts as soon as possible to reduce any security risks, which means we want to react automatically.
+However, it is much better to just _disable_ the account instead of deleting it.
+Some orphaned accounts may have benign reasons.
+The account might have been created by LDAP administrator, because the HR system is temporarily broken and business must go on.
+Detection of orphaned account may also be a false positive, caused by miscofiguration of midPoint correlation mechanism, or simple caused by wrong HR data.
+Re-enabling the account is much less work than re-creating the account, especially if there were already some data stored in the account.
+Even if orphaned account is detected correctly, we still may want to keep it for a while.
+It may provide good material (and evidence) for investigation of possible security incident.
+
+Fortunately, it is easy to reconfigure midPoint to disable the account instead of deleting it.
+All that is needed is to change the action from `deleteResourceObject` to `inactivateResourceObject`.
+====
+
+We have our accounts partially cleaned up now.
+All accounts are linked to owners and orphaned accounts are gone.
+However, there may be some accounts in the LDAP server that have wrong attribute values.
 By "wrong" we mean that the attributes have different values than the values that are computed by the outbound mappings.
 However, midPoint is not correcting those values just yet.
 Remember the midPoint principle that it does not change the account unless we have explicitly told to do so?
@@ -2112,6 +2193,51 @@ Even commonly used attributes for account identifiers and names are multi-valued
 Nobody is really using them as multi-valued attributes, because vast majority of applications will probably explode if they ever encounter two values in the `cn` attribute.
 Yet, those attributes are formally defined as multi-valued in LDAP schema, and that is what midPoint gets from LDAP connector.
 The `maxOccurs` limitation is overriding the schema, and forcing midPoint to handle this attribute as if it was single-value attribute.
+
+The last thing that we need at this point is to handle _activation_.
+We need a very simple mapping for that:
+
+.resource-ldap.xml
+[source,xml]
+----
+            ...
+            <activation>
+                <administrativeStatus>
+                    <outbound/>
+                </administrativeStatus>
+            </activation>
+            ...
+----
+
+The mapping is entirely empty (`<outbound/>`), as it completely relies on default settings.
+Source is default (`$focus/activation/effectiveStatus`), target is default (`activation/administrativeStatus` of account),
+also the expression is default (`asIs`).
+All midPoint needs to know is that we want such mapping at all.
+
+However, there is one more detail to set up.
+As LDAP does not have any standard reasonable account disable mechanism, we have to tell midPoint which method are we using for this particular case.
+We do that using configured capability, as we have already seen before:
+
+[source,xml]
+----
+    <capabilities>
+        <configured>
+            <cap:activation>
+                <cap:status>
+                    <cap:attribute>ri:midPointAccountStatus</cap:attribute>
+                    <cap:enableValue></cap:enableValue>
+                    <cap:enableValue>enabled</cap:enableValue>
+                    <cap:disableValue>disabled</cap:disableValue>
+                </cap:status>
+            </cap:activation>
+        </configured>
+    </capabilities>
+----
+
+From this point on we can keep reconciliation task running periodically by setting task schedule.
+Our synchronization policies are in good shape, ready to be continually enforced.
+Periodic reconciliation runs keeps account attributes updated.
+Even more importantly, it keeps us protected from serious security risk posed by orphaned accounts.
 
 That is all.
 Now you can schedule reconciliation tasks to keep an eye on the LDAP server.
@@ -2213,6 +2339,59 @@ Recompute is usually initiated manually, on _as needed_ basis.
 For example, run periodic reconciliation task to make sure accounts in your LDAP servers are up-to-date.
 Reconciliation is usually _scheduled_ at regular intervals, to continually maintain data consistency.
 
+== Usernames
+
+Usernames take many forms.
+Some people like usernames based on first names (`john`), others prefer last names (`smith`), many practical solutions end up using a combination of both (`jsmith`).
+Some organizations prefer immutable identifiers, such as employee numbers (`1458363`), which is not entirely favored by users.
+We will discuss that later, in <<09-object-templates#09-object-templates,Object Templates>> chapter.
+Whatever username convention we are going to choose, we have a problem in our current ExAmPLE midPoint deployment: midPoint has usernames based on employee numbers (`001`), while LDAP has usernames based on names (`anderson`).
+We should use one or the other, not both of them at the same time.
+
+Clean, simple and systematic solution would be to force usernames based on employee numbers from midPoint to LDAP.
+This is very simple to do, all we need is to change strength of `dn` mapping from `weak` to `strong`.
+Next reconciliation run would change all the usernames in LDAP to match values of user `name` property in midPoint.
+However, this may not be entirely desirable.
+This process changes all usernames in the LDAP directory, changing their usernames (`uid`), but also distinguished names (`dn`) in the directory.
+There are usually other applications connected to the directory, as that is the reasons for directories to exist.
+Application accounts are almost always bound to either `uid` or `dn` in LDAP directory.
+Strictly speaking, there is immutable `entryUUID` attribute in OpenLDAP directory, which is almost ideal for account binding.
+Of course, almost no application is using `entryUUID`, they all rely on `uid` or `dn`.
+If `uid` and `dn` are changed, account bindings in applications may be lost.
+Users may lose their settings, preferences, user profiles, access to data and home directories - and they are not going to like that.
+Not to mention the simple fact, that they are not going to like the new numeric usernames in the first place.
+
+It may be a much better idea to keep existing LDAP usernames, and change usernames in midPoint to match them.
+Fortunately, this is also very easy to do.
+All we need is one _inbound_ mapping:
+
+.resource-ldap.xml
+[source,xml]
+----
+            ...
+            <attribute>
+                <ref>uid</ref>
+                ...
+                <inbound>
+                    <strength>strong</strength>
+                    <target>
+                        <path>name</path>
+                    </target>
+                </inbound>
+                ...
+            </attribute>
+            ...
+----
+
+Once reconciliation run is completed, LDAP usernames are applied to midPoint users.
+Users have user-friendly (although slightly non-consistent) usernames now.
+
+image::05-06-users-nice-usernames.png[Users with nice usernames]
+
+It is a good idea to remove the inbound mapping after midPoint usernames are corrected.
+We do not need it any more, and it can be quite confusing or even harmful in the long run.
+We probably want to _generate_ usernames in a systematic and consistent way from now on, which will be described in <<09-object-templates#09-object-templates,Object Templates>> chapter.
+
 == Deltas
 
 Reconciliation is really useful mechanism.
@@ -2256,12 +2435,12 @@ There are three types of delta: _add_, _modify_ and _delete_.
 _Add delta_ is quite simple.
 It contains a new object to be created.
 
-image::05-05-delta-add.png[Add delta]
+image::05-07-delta-add.png[Add delta]
 
 _Delete delta_ is even simpler.
 It contains just object identifier (OID) of an object to be deleted.
 
-image::05-06-delta-delete.png[Delete delta]
+image::05-08-delta-delete.png[Delete delta]
 
 Last one is _modify delta_.
 This delta contains a description of modified properties of an existing object.
@@ -2272,20 +2451,20 @@ For example, following delta describes that a new value `pirate` is added to a u
 
 // TODO: employeeType is obsolete, change example to use something fresher
 
-image::05-07-delta-modify-add.png[Modify delta: add]
+image::05-09-delta-modify-add.png[Modify delta: add]
 
 The item delta may have three modification types: _add_, _delete_ and _replace_.
 _Add modification_ means that new value or values are added to an item.
 _Delete modification_ means that value or values are removed from an item.
 
-image::05-08-delta-modify-delete.png[Modify delta: delete]
+image::05-10-delta-modify-delete.png[Modify delta: delete]
 
 In both _add_ and _delete_ cases, the values that are not mentioned in the delta are not affected.
 They remain unchanged as they are.
 However, _replace_ modification is different.
 This means that all existing values of the item are going to be discarded, and they are replaced with the value or values from the delta.
 
-image::05-09-delta-modify-replace.png[Modify delta: replace]
+image::05-11-delta-modify-replace.png[Modify delta: replace]
 
 The deltas are designed to work with both single-valued and multi-valued items.
 In fact, _add modification_ and _delete modification_ deltas are specifically designed with multi-value items in mind.

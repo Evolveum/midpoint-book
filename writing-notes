@@ -5,8 +5,7 @@ Mention support for multiaccounts (tags) in early sections. As a note.
 Create a dedicated chapter for mappings and expressions
 
 Synchronization chapter:
-* Orphan detection, in LDAP or CRM
-* Use "Person" archetype from the start, to make sure we have good data
+* Inbound username mapping?
 
 RBAC chapter:
 * Describe concept of application
@@ -25,6 +24,10 @@ Move meta-role discussion to archetypes chapter
 Move book samples to midpoint-book git repo?
 
 MidPoint query language
+
+== Fit somwhere
+
+* Disable instead of delete
 
 
 == NEXT VERSION

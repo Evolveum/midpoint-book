@@ -1194,6 +1194,8 @@ It is good enough to create a simple solution.
 
 == Complete Deployment Example
 
+// TODO: use Person archetype
+
 We have all that we need to create a simple but mostly complete identity management solution.
 Our environment and solution outline:
 

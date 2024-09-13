@@ -131,7 +131,7 @@ As we are in midPoint, archetypes are _assigned_ to objects, of course.
 [source,xml]
 ----
 <user oid="00000000-0000-0000-0000-000000000702">
-    <name>aanderson</name>
+    <name>anderson</name>
     ...
     <assignment>
         <targetRef oid="00000000-0000-0000-0000-000000000702" type="ArchetypeType"/>
@@ -202,6 +202,10 @@ Overall, archetypes are to the core of every midPoint deployment.
 
 // TODO: default accounts,
 // TODO: also slight differences in behavior, e.g. synchronize applications with enterprise application inventory, but not devices, object template, etc.
+
+// TODO: use Person archetype to provision LDAP (need LDAP correlation first!!!)
+
+// TODO: Complete example is at the end of chapter 9.
 
 == Assignment Relation
 
