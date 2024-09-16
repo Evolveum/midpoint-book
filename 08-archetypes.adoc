@@ -156,7 +156,7 @@ Archetypes can specify several aspects that affect look, feel and behavior of ar
 
 * Policies to be applied to archetyped objects.
 
-* Collecting the objects, providing ability to sort objects to menus, look them up in searches and so on.
+* Collecting the objects, providing ability to quickly look them up in searches, menu shortcuts, and so on.
 
 Archetypes can significantly influence archetyped objects, as you will see in the rest of this chapter.
 This ability makes archetypes very useful.
@@ -168,35 +168,116 @@ Overall, archetypes are to the core of every midPoint deployment.
 
 == Structural vs Auxiliary
 
-// TODO: Employee auxiliary archetype
+An object can have more than one archetype, as long as following rules are followed:
 
-// TODO: support for auxiliary archetypes in GUI is very limited
+* At most one *structural archetype* can be applied to object.
+Structural archetype provides _structure_ to the object, it specifies icon, color, and presentation of the object.
+In the future, structural archetype may define _schema_ for the objects.
 
-== TODO
+* Any number of *auxiliary archetypes* can be applied to object.
+Auxiliary archetypes provide _additional_ information, functionality and policies to the objects.
 
-// TODO: looking up objects by archetype, pre-configured collections in menu
-// TODO: archetypeRef?
-// TODO: archetypes work as collections
+_Structural_ archetypes should be used to represent _nature_ of the objects, characteristics that are unlikely to change.
+Good examples are `Person` or `Application`.
+On the other hand, _auxiliary_ archetypes are more like the roles.
+They usually represent characteristics that might change, or characteristics that could be combined.
+For example, `Employee`, `Student` and `Volunteer` are good examples, as a `Person` could theoretically be student and employee of a school at the same time, as well as volunteer for certain activities.
+
+Definition of _auxiliary_ archetypes is almost the same as definition of _structural_ archetypes, except for `archetypeType` property.
+
+[source,xml]
+----
+<archetype oid="8070c13e-73ff-11ef-b9ac-7beb1c83f753">
+    <name>Employee</name>
+    <archetypeType>auxiliary</archetypeType>
+</archetype>
+----
+
+.Limited UI support
+NOTE: User interface support for auxiliary archetypes is quite limited in midPoint 4.8.
+
+// TODO: later: how are structural/auxiliary icons and colors combined?
 
 == Pre-configured Archetypes
 
-// TODO: pre-defined archetype: Person
+Archetypes are very useful mechanism for setting up presentation of behaviour of objects.
+Therefore, midPoint contains a set of pre-defined archetypes, ready to be used.
+Following table describes the most interesting pre-configured archetypes:
 
-// TODO: employees, externals, etc. - as auxiliary
+|===
+|Archetype |Holder type |Description
 
-// TODO: role archetypes
+|Person
+|User
+|Archetype for natural persons.
 
-// TODO: orgstruct archetypes: see later
+|System user
+|User
+|Archetype for system users, i.e. non-person users that are needed for system to work, such as `administrator` user.
 
-// TODO: application
+|Application
+|Service
+|Archetype for applications, as a basic building blocks for access control.
 
-// TODO: tasks, etc.
+|Application role
+|Role
+|Archetype for roles that directly grant access to applications.
+
+|Business role
+|Role
+|Archetype for roles that represent business concepts.
+
+|System role
+|Role
+|Archetype for roles that are essential from the system point of view, such as `Superuser` role.
+
+|===
+
+There are other pre-defined archetypes as well, mostly for tasks, cases, reports and marks.
+These are not important for now.
+There are no pre-defined archetypes for organizational units in midPoint 4.8.
+More on that later, in a chapter dedicated to organizational structures.
+
+== Life with Archetypes
+
+Archetypes influence many aspects of "life" for midPoint objects.
+Therefore, it is a best practice to set proper archetype for object as soon as the object is created.
+This approach makes it easier to customize behavior of objects later on.
+For this reason, we have set `Person` archetype for all users created by synchronization from HR system.
+This is going to be very useful, as we will see in next chapter dealing with object templates.
+Similarly, it is recommended to properly set archetypes for new roles, services, orgs and other objects.
+
+Choosing the right archetypes is quite important, as change of (structural) archetypes is a serious matter.
+Archetypes define many aspects of object character, presentation and behavior.
+Change of archetype means quite a substantial change of object nature already.
+In the future, it is very likely that archetypes could define object _schema_ as well, influencing the way the object is composed and stored.
+Therefore, change of archetypes would mean a change of its very structure.
+As object schema changes, new mandatory properties would need new values and values of removed properties should be removed.
+Therefore, there is already a special method to change an archetype in midPoint.
+In midPoint user interface, there is btn:[Change archetype] button on object details page that starts a special action of archetype change.
+
+Archetypes naturally work as _object collections_.
+Therefore, archetypes can be used to conveniently search for all archetyped objects.
+Simply use the btn:[Object collection] control in the search bar and select archetype you are looking for.
+Moreover, archetypes can be used to customize midPoint menu, object details panels and other parts of midPoint user interface.
+Menu items regarding archetypes are already pre-configured in some cases (e.g. menu:Administration[Users > Persons]).
+
+.archetypeRef
+TIP: Archetypes are _assigned_ to objects.
+While archetype assignment is limited, it is still quite a complex object to deal with.
+As archetype searches are common, midPoint needs to execute them as quickly as possible.
+Therefore, there is special `archetypeRef` reference in archetyped objects, point to applied archetype(s).
+However, this reference is _operational_, it is managed by midPoint internally, it should never be changed by midPoint users.
+Archetypes should be managed solely by changing _assignments_.
+Yet, the `archetypeRef` may still be useful, e.g. when searching for archetyped objects using scripts or midPoint REST interface.
 
 == Meta-roles
 
 // TODO: move section from RBAC chapter here
 // TODO: Explain how archetypes act as meta-roles
 // TODO: archetypes are meta-roles, that is the reason they are assigned
+
+// TODO: add inducement of `End user` role to `Person` archetype.
 
 == Archetypes and Provisioning
 
@@ -210,6 +291,7 @@ Overall, archetypes are to the core of every midPoint deployment.
 == Assignment Relation
 
 // TODO: archetypes apply to basic types - assignment relation
+// TODO: holder type
 
 // TODO: assignment relation: allow project managers and owners, but not approvers.
 

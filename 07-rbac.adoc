@@ -723,7 +723,10 @@ Business roles are supposed to be a combination of smaller "elemental" roles.
 
 |===
 
-// TODO: mention archetypes ... reference to the unwritten chapter?
+There are pre-defined _archetypes_ for application and business roles in midPoint 4.8.
+As we will explain later, _archetypes_ give character and behavior to objects.
+The two pre-defined role archetypes are ready to use in midPoint.
+Role wizards are prepared to create new _application_ and _business_ roles to match the archetypes.
 
 // TODO: mention certifications?
 

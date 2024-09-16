@@ -1,8 +1,10 @@
-Describe data protection in AIM intro.
 
-Mention support for multiaccounts (tags) in early sections. As a note.
+AIM Intro chapter:
+* Describe data protection
 
-Create a dedicated chapter for mappings and expressions
+Resource/Mapping chapter:
+* Mention support for multiaccounts (tags) in early sections. As a note.
+* Create a dedicated chapter for mappings and expressions
 
 Synchronization chapter:
 * Inbound username mapping?
@@ -15,18 +17,20 @@ RBAC chapter:
 * Find a better example for roles with multi-valued attributes (privs), find a resource to simulate multi-val attrs
 
 Object template chapter:
-
 * Mention pre-defined "Person Object Template"
 * Maybe we should describe archetypes first, them object templates.
+
+Orgstruct chapter:
+* Orgstruct and archetypes
+* Use orgs for locations
 
 Move meta-role discussion to archetypes chapter
 
 Move book samples to midpoint-book git repo?
 
-MidPoint query language
+== Fit Somewhere
 
-== Fit somwhere
-
+* MidPoint query language
 * Disable instead of delete
 
 
