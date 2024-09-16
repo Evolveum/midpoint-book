@@ -947,104 +947,25 @@ However, perhaps the best approach for those cases could be summarized as "do no
 
 == Metaroles
 
-// TODO: move this section to archetypes chapter
-// TODO: keep only a short "teaser" in this chapter
-
 MidPoint roles are usually applied to users.
 However, midPoint roles are _universal_.
 The roles can be applied to almost any midPoint object.
 Roles can be applied to users, organizations, services and even to roles themselves.
+Roles applied to other roles (and other objects) are meta-roles.
 
-Simply speaking, _meta-roles_ are roles applied to other roles.
-Ordinary role applies its characteristics to a _user_.
-_Meta-role_ applies its characteristics to another _role_.
-This is perfectly possible in midPoint, as role can be applied to almost any midPoint object.
-Then why not apply a role to another role?
-This may seem like a pretty useless exercise, but the truth is that meta-roles are tremendously useful.
-
-History is repeating, they say.
-The fact is that repetition is daily bread in almost all identity management deployments.
-E.g. many business roles have something in common.
-For example, the business roles have similar approval process.
-There may be role classes that have similar exclusion policies that are part of global segregation of duties (SoD) policy.
-There are roles that are tied to entitlements in a systematic way and so on.
-Roles, organizational units, services and other role-like objects tend to be quite similar.
-Therefore, applying meta-roles to them can be very useful.
-
-So far all the roles that we have seen were composed exclusively from inducements.
-That made perfect sense, as all those things that were in the inducement did not apply to the role itself.
-Privileges specified in inducements applied to users that the role was assigned to.
-However, in this case, we want to apply _meta-role_ to a role.
-The effects of a meta-role should apply to the _role_, not to the user.
-Therefore _assignment_ is used instead of inducement:
-
-// TODO: this is archetype-like example. Rework this.
-// TODO: Maybe wait for policyType, explain that as meta-role?
-
-[source,xml]
-----
-<role oid="6924fb9c-a184-11e9-840e-2feb476335f4">
-    <name>Account Manager</name>
-    <description>
-        This is business role that corresponds to account manager job.
-    </description>
-    <assignment>
-        <!-- Metarole assignment -->
-        <targetRef oid=”a3065910-a183-11e9-835c-0b6edc3d44c3” type=”RoleType”/>
-    </assignment>
-    <inducement>
-        <!--
-             Privileges specific to account manager.
-        -->
-    </inducement>
-</role>
-----
-
-[source,xml]
-----
-<role oid="a3065910-a183-11e9-835c-0b6edc3d44c3">
-    <name>Business metarole</name>
-    <inducement>
-        <!--
-            Policies and constructions that should be applied to all
-            business roles.
-        -->
-    </inducement>
-</role>
-----
-
-This may seem similar to a role hierarchy.
+Meta-roles may seem similar to a role hierarchy.
 However, _meta-role_ is a completely different animal.
 The crucial difference is that the meta-role is applied to the _role_, and not to the user.
 The inducements in the meta-role often contain policies such as approval policy, or construction clauses that create groups or organizational units.
-We usually do not want to create a group for each user.
-Yet, we often want to create a group for a role.
+We usually do not want to create a group for each _user_.
+Yet, we often want to create a group for _application role_.
 That’s what meta-role can do.
 
-.Reuse in midPoint
-TIP: Meta-roles are one of the stranger concepts of midPoint, but it goes well with midPoint philosophy.
-Meta-roles are roles that are applied to themselves.
-This is a reuse of an existing mechanism to create something new.
-This is very typical for midPoint.
-We always try to reuse an existing mechanism instead of reinventing a new one.
-The result is quite unexpected and surprising sometimes.
-When we have designed the RBAC system for midPoint, we haven’t thought about meta-roles at all.
-The meta-roles just appeared as a consequence of the design, a consequence that was absolutely unexpected.
-Fortunately, we have quickly realized the potential that meta-roles have, and we have put them to a full use.
+Meta-roles can specify behavior and apply policies to broad classes of other objects.
+This makes meta-role mechanism very flexible and powerful, one of the most important mechanisms in midPoint.
 
-A clever reader would probably notice that meta-roles can be used to set up different _types_ of roles.
-We could have meta-role for _application_ role, _business_ role and so on.
-And clever reader, as always, would be right.
-However, given just the metaroles, there would be few bits still missing here to create a full-featured type system.
-Those missing bits are implemented in a form of _archetypes_.
-Simply speaking, archetypes are meta-roles, with some optimizations and improved user experience.
-More on that later.
-
-It may be difficult to understand the concept of meta-roles from such a short and very abstract description.
-Do not worry.
-As meta-roles are often used in midPoint, we will get back to the meta-roles on several occasions.
-Meta-roles often allow simplification of complex problems by creating a very elegant solutions.
-For now, it is enough to remember that roles can be applied to almost anything in midPoint, including themselves.
+_Archetypes_ are the most common objects that work as meta-roles.
+Therefore, we will explain the details about meta-roles in <<08-archetypes.adoc#08-archetypes,Archetypes>> chapter.
 
 == RBAC, ABAC, PBAC And Other Wildlife
 

@@ -271,27 +271,155 @@ However, this reference is _operational_, it is managed by midPoint internally, 
 Archetypes should be managed solely by changing _assignments_.
 Yet, the `archetypeRef` may still be useful, e.g. when searching for archetyped objects using scripts or midPoint REST interface.
 
-== Meta-roles
 
-// TODO: move section from RBAC chapter here
-// TODO: Explain how archetypes act as meta-roles
-// TODO: archetypes are meta-roles, that is the reason they are assigned
+== Archetypes as Roles
 
-// TODO: add inducement of `End user` role to `Person` archetype.
+Archetypes are _abstract roles_.
+Similarly to _orgs_ and _services_, _archetypes_ behave like roles.
+_Inducements_ in the archetype apply to all archetyped objects.
+This is very convenient method to apply default settings to broad classes of users.
+Pre-defined `Person` archetype is especially suitable for this purpose.
+Inducements added to `Person` archetype can be used to set up default accounts and roles for users.
 
-== Archetypes and Provisioning
+Our deployment at ExAmPLE company goes quite well.
+We have HR synchronization set up.
+We have also connected LDAP server and correlated the accounts.
+However, the LDAP setup is not complete.
+When new employee is hired, midPoint takes the HR record and creates a user.
+However, the user is not going to get an LDAP account, as every employee should.
 
-// TODO: default accounts,
-// TODO: also slight differences in behavior, e.g. synchronize applications with enterprise application inventory, but not devices, object template, etc.
+As archetypes work as roles, and all employees have `Person` archetype, we can easily do what we need.
+Setting up default accounts for employees is a simple matter of adding an _inducement_ to the `Person` archetype.
 
-// TODO: use Person archetype to provision LDAP (need LDAP correlation first!!!)
+[source,xml]
+----
+<archetype oid="00000000-0000-0000-0000-000000000702">
+    <name>Person</name>
+    ...
+    <inducement>
+        <construction>
+             <!-- OpenLDAP resource -->
+             <resourceRef oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c"/>
+             <kind>account</kind>
+        </construction>
+    </inducement>
+</archetype>
+----
 
-// TODO: Complete example is at the end of chapter 9.
+When HR record is synchronized to midPoint, user is created, `Person` archetype is applied, _inducement_ is processed and LDAP account created.
+This configuration _almost_ works, except for one little detail.
+New user's username is generated from employee number.
+This is not very convenient for users.
+However, we still need one more trick to get there, which is explained in the <<09-object-templates#09-object-templates,Object Templates>> chapter.
+
+In addition to accounts, archetypes are useful for setting up default roles and privileges.
+E.g. `Person` archetype can be used to grant access to midPoint user interface to all users by adding _inducement_ to `End user` role.
+
+[source,xml]
+----
+<archetype oid="00000000-0000-0000-0000-000000000702">
+    <name>Person</name>
+    ...
+    <inducement>
+        <targetRef oid="00000000-0000-0000-0000-000000000008" type="RoleType"/>
+    </inducement>
+</archetype>
+----
+
+Archetypes are ideal for provisioning _birthright_ privileges, access rights that are automatically given to users based on their type.
+
+// TODO: more?
+
+== Archetypes as Meta-roles
+
+Simply speaking, _meta-roles_ are roles applied to other roles.
+Ordinary role applies its characteristics to a _user_.
+_Meta-role_ applies its characteristics to another _role_.
+This is perfectly possible in midPoint, as role can be applied to almost any midPoint object.
+Then why not apply a role to another role?
+This may seem like a pretty useless exercise, but the truth is that meta-roles are tremendously useful.
+
+History is repeating, they say.
+The fact is that repetition is daily bread in almost all identity management deployments.
+E.g. many business roles have something in common.
+For example, the business roles have similar approval process.
+There may be role classes that have similar exclusion policies that are part of global segregation of duties (SoD) policy.
+There are roles that are tied to entitlements in a systematic way, and so on.
+Roles, organizational units, services and other role-like objects tend to be quite similar.
+Therefore, applying meta-roles to them can be very useful.
+
+Archetypes are a prime example of meta-roles.
+`Business role` archetype is a meta-role that applies its policies to all _business roles_.
+
+[source,xml]
+----
+<archetype oid="00000000-0000-0000-0000-000000000321">
+    <name>Business role</name>
+    <inducement>
+        <!--
+            Policies, rules, constructions and other things
+            that should be applied to all business roles.
+        -->
+    </inducement>
+</role>
+----
+
+Statements in the _inducement_ above are applied to business _roles_, as opposed to ordinary role where inducements are applied to _users_.
+Similarly, `Application` archetype applies its inducements to _services_.
+
+This ability makes archetypes ideal for addressing slight differences in behavior of various object types.
+For example, we probably would like to synchronize _applications_ with enterprise application inventory system.
+However, that does apply to _applications_ only, and not to other services.
+Therefore, `Application` archetype is ideal place to configure this policy.
+
+.Reuse in midPoint
+TIP: Meta-roles are one of the stranger concepts of midPoint, but it goes well with midPoint philosophy.
+Meta-roles are roles that are applied to themselves.
+This is a reuse of an existing mechanism to create something new.
+This is very typical for midPoint.
+We always try to reuse an existing mechanism instead of reinventing a new one.
+The result is quite unexpected and surprising sometimes.
+When we have designed the role-based access control system for midPoint, we haven’t thought about meta-roles at all.
+The meta-roles just appeared as a consequence of the design, a consequence that was absolutely unexpected.
+Fortunately, we have quickly realized the potential that meta-roles have, and we have put them to a full use.
+
+It may be difficult to understand the concept of meta-roles from such a short and very abstract description.
+Do not worry.
+As meta-roles are often used in midPoint, we will get back to the meta-roles on several occasions.
+Meta-roles often allow simplification of complex problems by creating a very elegant solutions.
+For now, it is enough to remember that roles can be applied to almost anything in midPoint, including themselves.
 
 == Assignment Relation
 
+Archetypes are very flexible, perhaps a little bit too flexible.
+Theoretically, archetype can be assigned to anything, any type of object.
+However, it does not make much sense to use `Person` archetype on roles or services.
+Therefore, it makes sense to constraint the ability to use archetypes.
+
+MidPoint has _assignment relation_ mechanism that can be used to fine-tune the application and use of archetypes.
+This mechanism can be configured by using `assignmentRelation` clause.
+
+// TODO
+
+[source,xml]
+----
+<archetype oid="00000000-0000-0000-0000-000000000702">
+    <name>Person</name>
+    ...
+    <assignment>
+        <identifier>holderType</identifier>
+        <assignmentRelation>
+            <holderType>UserType</holderType>
+        </assignmentRelation>
+    </assignment>
+</archetype>
+----
+
+
 // TODO: archetypes apply to basic types - assignment relation
 // TODO: holder type
+
+// TODO: concept of relation - light intro
 
 // TODO: assignment relation: allow project managers and owners, but not approvers.
 
