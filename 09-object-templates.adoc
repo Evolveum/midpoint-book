@@ -11,13 +11,14 @@ Scientists study the world as it is; engineers create the world that has never b
 
 Identity management systems are often seen as integration engines that move data from one system to another system.
 This is indeed a very important part of the identity management functionality.
-However, the things identity management systems do _internally_ are crucial to all identity management deployments - especially those that deal with _identity governance_ and _regulatory compliance_.
+However, the things identity management systems do _internally_ are crucial to all identity management solutions - especially those that deal with _identity governance_ and _regulatory compliance_.
 
 MidPoint does quite a lot of things that may not be entirely obvious on the outside.
 There are rules to apply, processes to drive and policies to enforce.
 Those things are gaining utter importance at that strange boundary where identity _management_ becomes identity _governance_.
-MidPoint has comprehensive and very powerful mechanisms to support identity governance.
-More on that later, as we need to explain the basic mechanisms first.
+MidPoint has powerful mechanisms to support identity governance.
+We will get to them later.
+We need to explain the basic mechanisms of midPoint internal processing first.
 The simplest of those internal mechanisms is the functionality of _object template_.
 
 == Object Templates
@@ -25,18 +26,17 @@ The simplest of those internal mechanisms is the functionality of _object templa
 Data that flow into midPoint are seldom complete and clean.
 Quite the contrary.
 The data coming from the "feeds" are often incomplete, they are not very precise, and sometimes several sources may not even agree on a value for a particular data item.
-_Inbound mappings_ can be used to sort out some of these problems.
+_Inbound mappings_ can be used to sort out _some_ of these problems.
 However, inbound mappings are designed to work in isolation.
-They work only for one particular resource.
+They work only for one particular _resource_ and one particular _attribute_.
 We often need to gather data from several resources, and then look at all of them at once.
-Inbound mappings cannot do that very well, as they are tied to a particular _resource_ and particular _attribute_.
+Inbound mappings cannot do that very well, as they are tied to the _resource_.
 However, inbound mappings can be used to gather all the relevant data in the _user object_.
 Then we can have a look at _user object_, where those data are gathered, and process them all together.
 That is what _object templates_ do.
 Object template can be used to do variety of things to all kinds of midPoint objects.
-This chapter covers the most important functionality of object templates.
 
-Simply speaking, _object template_ is a set of mappings that is applied to a particular midPoint object.
+Simply speaking, _object template_ is a set of definitions and mappings that is applied to a particular midPoint object.
 For example, _user template_ is applied to all _user_ objects.
 The mappings in the _object template_ can produce new values for the object.
 For instance, a very typical use of _object template_ is computation of user’s full name:
@@ -66,48 +66,39 @@ For instance, a very typical use of _object template_ is computation of user’s
 </objectTemplate>
 ----
 
-The mapping above will compute the value of user’s `fullName` property from `givenName` and `familyName` by using a simple Groovy expression.
-It is a _weak_ mapping, therefore it will compute the full name only in case that it is not present already.
+The mapping above computes the value of user’s `fullName` property from `givenName` and `familyName` by using a simple Groovy expression.
+It is a _weak_ mapping, therefore it computes the full name only in case that it is not present already.
 
-Importing an object template definition into midPoint does not do much.
-The template is not used yet, it just being imported.
+Import of object template definition into midPoint does not do much.
+The template is not used yet, it just stored in midPoint repository.
 There can be several object templates for different types of objects, archetypes or organizations at the same time.
 MidPoint does not know how to use the template, unless it is specified in a configuration.
-The simplest and most common way to use an object template is to configure its use in the system configuration.
+The simplest and most common way to use an object template is to configure use in the _archetype_.
 
 [source,xml]
 ----
-<systemConfiguration>
-    ...
-    <defaultObjectPolicyConfiguration>
-        <type>UserType</type>
+<archetype oid="00000000-0000-0000-0000-000000000702">
+    <name>Person</name>
+    <archetypePolicy>
+        ...
         <objectTemplateRef oid="22f83022-b76d-11e9-8a30-6ffc11b23016"/>
-    </defaultObjectPolicyConfiguration>
+    </archetypePolicy>
     ...
-</systemConfiguration>
+</archetype>
 ----
-
-This configuration activates the object template for use by all objects of `UserType` type.
-Therefore, this template is applied to all midPoint _users_.
-
-Alternatively, user interface can be used to activate an object template.
-Navigate to menu:Configuration[System > Policies > Object policies], create a new policy using the btn:New[] button.
-Specify reference to your template, select `User` in type field and click btn:Save[].
 
 Object template is applied every time an object is created, changed or explicitly recomputed (e.g. on reconciliation).
 Object template is applied after all the inbound mappings are processed.
 Inbound mappings often copy important data to the object, therefore the template can work on data that are summarized from all the resources.
 
-== Item Definitions In Object Template
+== Item Definitions
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+We have already seen an example of _object template_ used to apply a _mapping_ on `fullName` property of midPoint users.
+This was a very simple example.
+Object template can also do other tricks.
 
-We have already seen how object template can be used to apply mappings on particular items of midPoint objects.
-But object template can also do other tricks.
-We will have a look at some of them here.
-
-The processing of an object template is almost always focused on particular items of an object.
-Therefore, almost all the object template functionality is located in item element that references a particular item by its path:
+The processing of an object template is usually focused on particular _items_ of an object.
+Therefore, almost all the functionality of object template is located in `item` element that references a particular item by its _path_:
 
 [source,xml]
 ----
@@ -124,14 +115,16 @@ Therefore, almost all the object template functionality is located in item eleme
 </objectTemplate>
 ----
 
-The most common use of object template is to run mappings on items, such as the mapping to determine user’s full name above.
-Target of the mapping is automatically set to the item for which it is specified.
+The most common use of object template is to evaluate _mappings_ on items, such as the mapping to determine user’s _full name_ above.
+Therefore, the mappings evaluated by the template are pre-configured with convenient default settings.
+Target of the mapping is automatically set to the _item_ for which it is specified.
 Sources of the mapping need to be defined explicitly.
-But the basic idea is, that the user template should take properties of user as inputs.
-In other words, user template works on the same user object both as input and output.
+The basic idea is, that the _user template_ should take properties of _user_ as inputs.
+In other words, the template works on the same object both as input and output.
 
-Object template mappings often use static (literal) values or a very simple expressions, but mapping conditions are used to control application of the value.
-The easiest way to explain this is to use a simple example:
+Unlike inbound and outbound mappings, object template mappings often use static (literal) values or a very simple expressions to determine the value.
+However, in object templates, mapping _conditions_ are often used to control application of the value.
+The easiest way to explain this is to use an example:
 
 [source,xml]
 ----
@@ -157,33 +150,36 @@ The easiest way to explain this is to use a simple example:
 </objectTemplate>
 ----
 
-This mapping works for `description` property of the user.
-The mapping sets a fixed warning text specified as text literal in the mapping by using value expression evaluator.
+This mapping is applied to `description` property of the user.
+The mapping sets a fixed warning text specified as text literal using `value` expression evaluator.
 However, the mapping is not setting that value for all the objects.
-The mapping is applied only for objects that satisfy the condition.
+The mapping is applied only for objects that satisfy the _condition_.
 The condition is set to trigger for all the users that have hat size larger than 60.
 
-However, mappings are made to be relativistic.
+Mappings are made to be _relativistic_.
 This means that mappings react to changes.
-The same principle applies to mapping conditions.
-They are also relativistic.
-Therefore the mapping reacts to changes in the condition state.
-When user’s head grows and the hat size changes to a value over 60, then the mapping will add the warning.
-When the user’s head shrinks, then the warning disappears.
+The same principle applies to mapping conditions - they are _relativistic_ too.
+Therefore, the mapping reacts to changes in its sources, as well as changes in the condition state.
+When user’s head grows, and the hat size changes to a value over 60, then the mapping _adds_ the warning.
+When the user’s head shrinks, then the warning is _removed_.
 
-It may look that this mechanism is too complicated, if you look at single-valued properties only.
-But it all starts to make sense in case of multi-value items.
-Such as the assignments.
-But more on that in the next section.
+It may look that this mechanism is unnecessarily complicated, if you look at single-valued properties only.
+It all starts to make sense in case of _multi-value_ items, such as the _assignments_.
+We will get to that in the next section.
 
-While mappings are the things that object template does almost all the time, the template can also do other interesting things.
-First of all, object template can tweak the schema.
-MidPoint comes with a rich schema that is prepared to be used.
+== Schema
+
+_Mappings_ are the things that object template does almost all the time.
+However, the template can also do other interesting things.
+First of all, object template can tweak the _schema_.
+MidPoint comes with quite a rich schema, ready to be used.
 However, the schema is not a perfect fit for all the deployments.
-Previous chapter described a method to extend the schema.
-But what we should do if we want to change the built-in schema of midPoint?
-Yes, object template is the right answer.
-The `item` specification can be used to modify the way how midPoint applies the schema:
+<<06-schema#06-schema,Schema>> chapter described a method to _extend_ the schema with custom items.
+However, what we should do if we want to change the _built-in schema_ of midPoint?
+The schema is hard-coded to midPoint, even compiled into midPoint source code.
+It is not that easy to change the built-in schema.
+Yet, object template provides a mechanism to customize the use and presentation of built-in schema.
+The `item` specification can be used to modify the way how midPoint _applies_ the schema:
 
 [source,xml]
 ----
@@ -206,19 +202,21 @@ The `item` specification can be used to modify the way how midPoint applies the 
 ----
 
 The "additional name" is a nice and generic term that can fit many cultural environment.
-However, it is not very usual or intuitive in cultures that are not used to it (which means pretty much all the cultures).
+However, it is not very usual or intuitive in cultures that are not used to such a generic term (which means pretty much _all_ the cultures).
 Therefore, almost all midPoint deployments that chose to use this property would like to rename it to something that feels more natural.
-Similarly for "given name" and "family name", which do not fit well in all the cultural environments.
-We have expected that and object template can be used to modify some aspects of built-in schema.
+Similarly, "given name" and "family name" do not fit well in all the cultures.
+We have expected that.
+Therefore, object template can be used to modify some aspects of built-in schema, such as the display labels.
 
-Object template can also be used to override object multiplicity, especially to change mandatory item into optional.
-MidPoint insists on having name set for all the users.
-But we may be able to compute a name from other properties, such as other user names, employee number or other identifiers, if we don't want to present name item as mandatory in the user interface.
-We can compute the value of user’s full name from given name and family name.
-Therefore user may leave full name blank in the user interface.
-But user interface is driven by the schema.
-As name is mandatory in the schema, also the user interface will insist that the name field should be filled in.
-But this can be changed in the object template:
+Object template can also be used to override object _multiplicity_, especially to change mandatory item into optional.
+MidPoint insists on having `name` property set for all the users.
+However, we may be able to compute value of `name` property from other properties, such as other names of the user, employee number or other identifiers.
+Therefore, we do not want to present `name` item as mandatory in the user interface.
+Therefore, we would allow midPoint administrator to leave `name` field blank in the user interface when creating a new user.
+However, user interface is strictly driven by the schema, as are all the other midPoint components.
+As `name` is mandatory in the schema, the user interface insists that the `name` field must be filled in.
+
+This behavior can be changed in the object template:
 
 [source,xml]
 ----
@@ -238,14 +236,16 @@ But this can be changed in the object template:
 </objectTemplate>
 ----
 
-This configuration will make the name optional for the _presentation_ purposes.
-This means that the user interface will treat `name` as optional.
-But core midPoint engine will still require the `name` to have a value.
-This gives object template a chance to generate the value for `name`.
-However, this means that `name` will still be present as read-write item in the user interface.
-We do not want that as `name` is supposed to be immutable identifier.
-We want to present `name` as read-only item.
-This can also be achieved by object template by using access configuration:
+This configuration makes the `name` property optional for the _presentation_ purposes.
+This means that the user interface treats `name` as optional field.
+However, core midPoint engine still requires `name` property to have a value.
+This gives _object template_ a chance to generate the value for `name` property.
+
+However, the `name` field is still rendered as _read-write_ item in the user interface.
+We do not want that, as `name` is supposed to be _immutable_ identifier in our deployment.
+We do not want anyone to change the `name` once it was generated.
+Therefore, we would like to present `name` as _read-only_ item in the user interface.
+This can also be achieved by object template, by using `access` configuration:
 
 [source,xml]
 ----
@@ -271,19 +271,17 @@ This can also be achieved by object template by using access configuration:
 ----
 
 NOTE: Even immutable identifiers may need to change occasionally.
-There may be a bug in the identifier generator.
-Or some identifier has to change manually to adjust to the reality.
+There may be a bug in the identifier generator, or we may need to manually change identifier to match the reality.
 Theoretically, every piece of the solution should play by the rules.
-But we know that rules have exceptions in the practice.
-Therefore, privileged users such as system administrator should be able to change the identifiers if really needed.
-The proper way how to do this would be to use authorizations and not object template.
-But we do not know how to use authorizations yet.
-Therefore this solution will have to do for now.
+Yet, we know that rules have exceptions in the practice.
+Therefore, privileged users such as system administrator should be able to change the identifiers when it is really needed.
+The proper way how to do this would be to use _authorizations_, and not object template.
+Unfortunately, we do not know how to use authorizations yet.
+Therefore, this solution will have to do, at least for now.
 
-Object template can be used to adjust how midPoint user interface interprets the schema.
-But perhaps the most extreme measure is to eliminate certain item entirely.
+Perhaps the most extreme measure to change presentation of midPoint schema is ability to eliminate certain item entirely.
 In fact, this happens quite often.
-MidPoint schema is rich and many deployments do not use all the items in midPoint schema.
+MidPoint schema is rich, and many deployments do not use all the items defined in midPoint schema.
 It makes little sense to present the items that are not used, therefore there is a way to tell midPoint that we want to completely ignore an item:
 
 [source,xml]
@@ -303,19 +301,19 @@ It makes little sense to present the items that are not used, therefore there is
 
 Object template can be used to do further tricks.
 It can be used to associate value enumeration with an item, e.g. to apply lookup table to a particular item.
-Object templates can be used to set up a validation expression for items.
-And a couple of other things.
-But more on that later.
+Object templates can be used to set up a validation expression for items - and a couple of other things.
+More on that later.
 
 == Automatic Role Assignment in Object Template
 
-Object templates are very flexible and they can be used for a lot of different things.
-But there is one particular usage of object template that appears in almost every deployment.
-It is an ability to automatically assign roles.
+Object templates are very flexible, they can be used for a lot of different things.
+Yet, there is one particular usage of object template that appears in almost every deployment.
+It is an ability to assign roles _automatically_.
 
 The basic idea is quite simple.
-An assignment is just an ordinary item.
-If we use object template mapping to populate that item with appropriate value, we will get automatic assignment of roles.
+When it comes to midPoint schema, an `assignment` is just an ordinary item.
+Therefore, we can use object template mapping to populate that item with appropriate value.
+When done properly, it gives us automatic assignment of roles.
 Like this:
 
 [source,xml]
@@ -332,11 +330,10 @@ Like this:
 </objectTemplate>
 ----
 
-The trick here is to set up the mapping correctly.
-The simplest case is a conditional assignment of a role.
-Let’s suppose that we want to assign a Hatter role to everybody that has provided a hat size in user profile.
-We already know what to do, don’t we?
-Let’s use mapping condition:
+The trick here is to set up the mapping properly.
+The simplest case is a _conditional_ assignment of a role.
+Let’s suppose that we want to assign a `Hatter` role to everybody that has provided a hat size in user profile.
+We already know how to do that, we can use mapping _condition_:
 
 [source,xml]
 ----
@@ -374,31 +371,33 @@ Let’s use mapping condition:
 ----
 
 Simple, isn’t it?
-The `value` part in the expression is an inside of a new assignment to create.
-And the assignment will be created on a condition that `hatSize` has a non-null, non-empty and non-zero value (that is a built-in evaluation of booleans in Groovy).
-The real trick here is the relativity of mapping conditions.
+The `value` part in the expression is a content of a new _assignment_ that we want to create.
+The assignment will be created when `hatSize` property has a non-null, non-empty and non-zero value (that is a built-in evaluation of booleans in Groovy).
+The real trick here is the _relativity_ of mapping conditions.
 Assignments are multi-valued.
-Therefore it is important to know when to add a value and when to remove one.
-MidPoint evaluates the condition twice.
-The condition is evaluated for an object before a change is applied (old object) first.
-The condition is evaluated for an object after the change is applied (new object) once again.
-When the condition changes from `false` to `true`, `Hatter` role is assigned.
-When the condition changes from `true` to `false`, `Hatter` role is unassigned.
-Other assignments values are not changed by this mapping.
-Therefore many assignment mappings can happily coexist.
+We do not want to ruin all the other _assignments_ that the user has.
+We just want to add (or remove) one particular value, leaving other values untouched.
+
+When it comes to multi-valued items, it is extremely important to know when to _add_ a value and when to _remove_ one.
+Therefore, midPoint evaluates the condition _twice_.
+The condition is evaluated for an object _before_ a change is applied (old object) first.
+The condition is evaluated for an object _after_ the change is applied (new object) once again.
+When the condition changes from `false` to `true`, `Hatter` role is assigned (_added_).
+When the condition changes from `true` to `false`, `Hatter` role is unassigned (_removed_).
+Other assignment values are not changed by this mapping.
+Therefore, many assignment mappings can happily coexist.
 
 However, this is a very simple case.
-Typical midPoint deployments will have many roles.
-It is theoretically possible to create mappings like this for each and every role that has to be assigned automatically.
-But that would be a lot of repetitive work.
-And even worse, it is likely to become a major maintenance nightmare in the future.
-We are creative people and we do not really like repetitive work.
-And we really hate maintenance nightmares.
-Therefore it is perhaps no big surprise that there is a better way to do this.
+Typical midPoint deployments have large number of roles.
+It is (theoretically) possible to create mappings like this for each and every role that has to be assigned automatically.
+However, that would be a lot of repetitive work.
+Even worse, it is likely to become a major maintenance nightmare in the future.
+We engineers are creative people, we do not really like repetitive work - and we really hate maintenance nightmares.
+Therefore, it is perhaps no big surprise that there is a better way to do this.
 
 The most common use case for automatic role assignment is to look up the role using some of its properties.
-For example, let’s suppose that our HR system provides job codes for our employees.
-Therefore we have extended midPoint schema with a custom property `jobCode`:
+For example, let’s suppose that our HR system provides _job codes_ for our employees.
+Therefore, we have extended midPoint schema with a custom property `jobCode`:
 
 [source,xml]
 ----
@@ -459,7 +458,7 @@ We extend role schema with custom `autoassignJobCode` property:
 </xsd:schema>
 ----
 
-And then we set up the roles:
+Then we set up the roles:
 
 [source,xml]
 ----
@@ -493,6 +492,13 @@ And then we set up the roles:
     ...
 </role>
 ----
+
+
+// TODO: extend schema in book container (ExAmPLE)
+
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+// TODO: assignment, and even more importantly: unassignemnt. PD-RBAC?
 
 We are almost there.
 The final part of this puzzle is an object template mapping that automatically assigns the roles according to job code.
@@ -750,6 +756,8 @@ But perhaps the most significant drawback of role autoassingment is that the map
 There is no way how to use this mechanism to handle autoassignment of many roles with just one mapping.
 But object template mappings can do that easily.
 Therefore, many deployments chose to implement automatic assignment of roles by the means of object template or inbound mappings.
+
+// TODO: TIP: autoassignment and PD-RBAC, refer to RBAC
 
 == Iteration
 
@@ -1152,6 +1160,36 @@ For that reason there is mechanism to include one object template in another:
 
 In this case, the special user template includes all the mappings from default user template.
 Therefore both mapping for `employeeNumber` and mapping for `fullName` will be processed.
+
+
+== OTHER TODO
+
+// TODO: system configuration also
+
+[source,xml]
+----
+<systemConfiguration>
+    ...
+    <defaultObjectPolicyConfiguration>
+        <type>UserType</type>
+        <objectTemplateRef oid="22f83022-b76d-11e9-8a30-6ffc11b23016"/>
+    </defaultObjectPolicyConfiguration>
+    ...
+</systemConfiguration>
+----
+
+This configuration activates the object template for use by all objects of `UserType` type.
+Therefore, this template is applied to all midPoint _users_.
+
+Alternatively, user interface can be used to activate an object template.
+Navigate to menu:Configuration[System > Policies > Object policies], create a new policy using the btn:New[] button.
+Specify reference to your template, select `User` in type field and click btn:Save[].
+
+// TODO: prefer object template in archetypes
+// e.g. you want full name computed for ordinary users (Person), but not for system users such as administrator
+
+// TODO: default `Person Object Template`, more elaborate mappings
+
 
 == Combining the Ingredients
 
