@@ -54,6 +54,8 @@ include::06-schema.adoc[]
 
 include::07-rbac.adoc[]
 
+include::08-archetypes.adoc[]
+
 include::09-object-templates.adoc[]
 
 include::10-orgstruct.adoc[]

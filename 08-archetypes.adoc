@@ -391,15 +391,13 @@ For now, it is enough to remember that roles can be applied to almost anything i
 
 == Assignment Relation
 
-Archetypes are very flexible, perhaps a little bit too flexible.
-Theoretically, archetype can be assigned to anything, any type of object.
+Archetypes are very flexible, even perhaps a little bit too flexible.
+Theoretically, an archetype can be assigned to anything, any type of object.
 However, it does not make much sense to use `Person` archetype on roles or services.
-Therefore, it makes sense to constraint the ability to use archetypes.
+Therefore, midPoint has to constraint the ability to use archetypes.
 
 MidPoint has _assignment relation_ mechanism that can be used to fine-tune the application and use of archetypes.
 This mechanism can be configured by using `assignmentRelation` clause.
-
-// TODO
 
 [source,xml]
 ----
@@ -415,19 +413,103 @@ This mechanism can be configured by using `assignmentRelation` clause.
 </archetype>
 ----
 
+In the example above, the _assignment relation_ clause specifies _holder type_ for archetype.
+Simple speaking, this is the type that an archetype can apply to, a type that can _hold_ assignment to the archetype.
+In this case, the _holder type_ is constrained to _user_ (`UserType`).
+Hence, `Person` archetype can be applied to _users_, and no other object type.
 
-// TODO: archetypes apply to basic types - assignment relation
-// TODO: holder type
+_Assignment relation_ is important for maintaining some sanity in the vast flexibility of midPoint platform.
+As we know that `Person` archetype should be applied to _users_, we can easily detect errors when the archetype is accidentally applied to other object type.
+_Assignment relation_ is even more important for the user interface.
+Due to the _assignment relation_ specification above, midPoint user interface knows that it makes sense to offer `Person` archetype as an option for creating new _user_, but this archetype does not make sense not for _org_ or _role_.
+Several parts of midPoint user interface adapt to _assignment relation_ specified in archetypes.
 
-// TODO: concept of relation - light intro
+Clever reader has surely noticed that _assignment relation_ clause is enclosed in an _assignment_.
+This has certainly some deeper meaning.
+Clever reader is right once again.
+As _assignment relation_ is placed in _assignment_, it applies to the archetype itself.
+In the case above, specification of the _holder type_ applies to the _archetype_.
+Archetype `Person` can be applied to _users_ (`UserType`).
+On the other hand, we can put _assignment relation_ clause in _inducement_.
+In that case, the clause would apply to _archetyped objects_ instead.
 
-// TODO: assignment relation: allow project managers and owners, but not approvers.
+Let's consider an example of `Business Role` archetype.
+
+[source,xml]
+----
+<archetype oid="00000000-0000-0000-0000-000000000321">
+    <name>Business Role</name>
+    ...
+    <assignment>
+        <assignmentRelation>
+            <description>This archetype can be assigned to role.</description>
+            <holderType>RoleType</holderType>
+        </assignmentRelation>
+    </assignment>
+    <inducement>
+        <assignmentRelation>
+            <description>Business role can be assigned to users.</description>
+            <holderType>UserType</holderType>
+        </assignmentRelation>
+    </inducement>
+    ...
+</archetype>
+----
+
+There are _assignment relation_ clauses both in _assignment_ and in _inducement_.
+The clause in _assignment_ applies to the archetype itself.
+It states that the _archetype_ is supposed to be applied to _roles_.
+We have seen that already.
+The other clause is placed in _inducement_.
+This clause applies to all archetyped object, which means to all _business roles_.
+It states that _business role_ can be given to _users_ only, it cannot be given to _orgs_ or _services_.
+
+This is the principle of meta-roles in practice.
+Archetypes are meta-roles, applied to roles.
+In this case `Business Role` archetype is a meta-role that applies to _roles_, which gives these roles character of _business roles_.
+
+_Assignment relation_ is an important mechanism to maintain order in amazing flexibility of midPoint platform, especially when this mechanism is coupled with _archetypes_.
+Together, this two mechanisms can form variety of object types and relations between them.
+This is the foundation allowing midPoint to describe vast diversity of identities in the wold around us.
 
 == Future of Archetypes
 
-// TODO: schema - not easy to change
-// TODO: this is the reason why archetype assignments are limited, we may need flexibility in future
-// TODO: archetypes _assigned_ to objects - there are limitations
+While the underlying mechanism of _meta-roles_ is part of midPoint for a very long time, archetypes were added a bit later.
+Archetypes embrace the _meta-role_ mechanism, making it nicer and easier to use, while adding some features of their own.
+While archetypes in midPoint {midpointversion} are already quite powerful, there are still plans for improvement.
 
+Archetypes are supposed to exert tighter control over _character_ of the archetyped object in the future.
+This means that archetype should control _lifecycle_ of the object and further details of its presentation and behavior.
+However, perhaps the most important future function of archetypes is to control _schema_ of archetyped objects.
+As we have seen in <<06-schema#06-schema,Schema>> chapter, midPoint schema can be extended with custom properties.
+However, such schema extension is _global_, it applies to all objects of a given type.
+Vision for future midPoint gives similar ability to archetypes.
+In later midPoint versions, archetypes should be able to specify schema extension for archetyped objects.
+This could make schema management more elegant, cleaner and much more manageable.
+However, there are also downsides.
+As archetypes can change, this means that object schema can change as well.
+New schema applied by new archetype may include mandatory properties, which need values.
+Scheme of old archetype might have included properties that are not part of new schema.
+Values of such properties must be discarded, which means destructive operation.
+There are other complications as well - none of them unsolvable, but none one them easy to solve either.
 
-// TOOD: later: object collections and views
+That is one of the reasons why _change of archetype_ is a special operation in midPoint user interface.
+This operation is quite simple in midPoint {midpointversion}, however we expect that it will get much more complex later on.
+Possible consequences of archetype change also led us to limit the application of archetypes.
+While archetypes are _abstract roles_, unlike other abstract roles, archetypes can only be assigned to objects _directly_.
+Archetypes can only be referenced from an object in a plain, non-conditional, direct _assignment_, just like we have seen at the beginning of this chapter.
+Indirect use of archetypes (e.g. referencing archetypes from _inducements_) is not supported, and it may lead to unforeseeable behavior.
+When it comes to archetypes, perhaps the best strategy is to keep things simple.
+At least for now.
+
+== Conclusion
+
+Archetypes make midPoint nicer and more elegant.
+Icons, colors and other nuances that archetypes bring make it easier to navigate midPoint user interface.
+However, most importantly, archetypes make midPoint data more _descriptive_.
+Archetypes can be used to describe variety of identity types, including all the flavors and nuances of the diverse world around us.
+
+Archetypes are build on deep underlying principles of midPoint platform, such as the _meta-role_ mechanism.
+Yet, archetypes are giving such deep mechanisms a nice human-friendly form.
+
+// TODO: later: object collections and views?
