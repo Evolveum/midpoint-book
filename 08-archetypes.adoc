@@ -195,6 +195,9 @@ Definition of _auxiliary_ archetypes is almost the same as definition of _struct
 
 .Limited UI support
 NOTE: User interface support for auxiliary archetypes is quite limited in midPoint 4.8.
+This is the reason auxiliary archetypes are not used often in midPoint 4.8.
+In fact, use of birthright _roles_ is still recommended in midPoint 4.8, instead of using auxiliary archetypes such as `Employee`.
+More on that in next chapter.
 
 // TODO: later: how are structural/auxiliary icons and colors combined?
 

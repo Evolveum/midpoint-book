@@ -2392,6 +2392,15 @@ It is a good idea to remove the inbound mapping after midPoint usernames are cor
 We do not need it any more, and it can be quite confusing or even harmful in the long run.
 We probably want to _generate_ usernames in a systematic and consistent way from now on, which will be described in <<09-object-templates#09-object-templates,Object Templates>> chapter.
 
+It is also a good idea to disable inbound mapping from `empno` attribute to user's `name` in the HR resource.
+If we would leave this mapping active, it can ruin our usernames by replacing them with employee numbers from HR system.
+Even worse, as we have configured outbound mappings to LDAP directory, change of user's `name` is reflected to LDAP `uid` attribute, effectively renaming all LDAP accounts.
+We definitely do not want that!
+Disabling the inbound HR mapping leaves us in a situation in which there is no mapping for user's `name` at all.
+This means creation of new midPoint user from new HR record is going to fail.
+We have to live with that now, as we are not going to risk destruction of all our usernames.
+We will fix that later, when we learn how to generate proper usernames.
+
 == Deltas
 
 Reconciliation is really useful mechanism.

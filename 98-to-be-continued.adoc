@@ -19,15 +19,6 @@ There is still so much to write about:
 Therefore, midPoint has a fine-grained authorization system for controlling access to itself.
 Authorization mechanisms are very powerful allowing many scenarios from delegated administration to partial multi-tenancy.
 
-* *Archetypes:* Users, roles, orgs and services are the four basic object types of midPoint.
-They are quite powerful.
-Yet, there is often a need to define special behavior for employees, agents, students, academic staff, partners and other types of persons.
-We would also like to see business roles, application roles, system roles.
-The enterprises would be lost without their divisions, departments and sections.
-There are always shades, flavors and subtypes to objects.
-That is what the _archetypes_ do.
-They can be used to create subtle flavors of functionality suitable for individual object types.
-
 * *MidPoint queries:* MidPoint often needs to find objects in the repository.
 There is a special-purpose query language that is used in many places in midPoint.
 

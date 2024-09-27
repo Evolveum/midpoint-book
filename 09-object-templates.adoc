@@ -6,6 +6,8 @@ include::chapter-include.adoc[]
 [quote, Theodore von Kármán]
 Scientists study the world as it is; engineers create the world that has never been.
 
+// TODO: consider renaming this chapter, as it has more than just object templates
+
 // TODO: presentation: labels, hiding
 // TODO: validation?
 
@@ -289,7 +291,7 @@ It makes little sense to present the items that are not used, therefore there is
 <objectTemplate>
     ...
     <item>
-        <ref>employeeNumber</ref>
+        <ref>organization</ref>
         <limitations>
             <layer>presentation</layer>
             <processing>ignore</processing>
@@ -425,11 +427,11 @@ A user object that is created from an HR record looks like this:
 [source,xml]
 ----
 <user>
-    <name>bob</name>
+    <name>jones</name>
     <extension>
         <exmpl:jobCode>S007</exmpl:jobCode>
     </extension>
-    <fullName>Bob Brown</fullName>
+    <fullName>Jack Jones</fullName>
     ...
 </user>
 ----
@@ -493,26 +495,18 @@ Then we set up the roles:
 </role>
 ----
 
-
-// TODO: extend schema in book container (ExAmPLE)
-
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
-// TODO: assignment, and even more importantly: unassignemnt. PD-RBAC?
-
 We are almost there.
-The final part of this puzzle is an object template mapping that automatically assigns the roles according to job code.
+The final part of this puzzle is an object template _mapping_ that automatically assigns the roles according to job code.
 Naive solution would be to create one mapping for each job code.
-But we do not want that.
-We want something smarter.
+We do not want that, we want something smarter.
 We want a single mapping that can work for all these roles.
-Such mapping needs to dynamically look up the role when it is evaluated.
-It is certainly possible to create such mapping in Groovy script.
-But that is not entirely straightforward.
-And in fact, this use case is a very common one.
-Role autoassignment is a part of almost every IDM solution in one form or another.
-Therefore we have created a special expression evaluator to make this job easy.
-Enter `assignmentTargetSearch` expression evaluator:
+Such mapping needs to _dynamically_ look up the role when it is evaluated.
+Of course, it is possible to create such mapping in Groovy script.
+However, that is not entirely straightforward.
+As this use case is a very common one, there is quite an easy method to do that in midPoint.
+Role _autoassignment_ is a part of almost every identity management solution in one form or another.
+Therefore, we have created a special _expression evaluator_ to make this job easy.
+Enter `assignmentTargetSearch`:
 
 .object-template-user.xml
 [source,xml]
@@ -539,48 +533,32 @@ Enter `assignmentTargetSearch` expression evaluator:
 </objectTemplate>
 ----
 
-Now, is this how "easy job" looks in midPoint?
-Yes, in fact, it is.
-But do not panic.
-Not yet.
+This may look a bit confusing at the first sight, but do not panic.
+Not yet, anyway.
 It all makes perfect sense once it is explained.
 The code above is a part of user template.
-It is a mapping that is producing assignments.
-This mapping has an ordinary source which is user’s `jobCode`.
-This mapping also has an expression.
-But that expression is somehow extraordinary.
-It is not the usual `script`, `path` or `value`.
-The expression evaluator is `assignmentTargetSearch`.
-This is a special evaluator that looks for assignment target, creates a complete assignment from that target and provides that assignment as an output.
+It is a mapping that is producing _assignments_.
+This mapping has an ordinary source which is user’s `jobCode` property.
+This mapping also has an _expression_, even though that expression is somehow extraordinary.
+It is not the usual `script`, `path` or `value` expression.
+The _expression evaluator_ is `assignmentTargetSearch` in this case.
+This is a special evaluator that looks for _assignment target_ (e.g. a role), creates a complete _assignment_ from that target, and provides that assignment as an output.
 The interesting part here is the way how `assignmentTargetSearch` looks for assignment target.
-First of all, there is a `targetType` clause, which tells the expression to look for roles as assignment target.
-And then there is a search filter.
-We have already seen midPoint search filters a couple of times, for example in a form of correlation expression.
+First of all, there is a `targetType` clause, which tells the expression to look for _roles_ as assignment target.
+Then there is a _search filter_.
+We have already seen midPoint search filters a couple of times, for example as a method to look up connector reference.
 This is yet another use for search filters.
-In this case, the filter is used to look up appropriate role in midPoint repository.
+In this case, the filter is used to look up suitable role in midPoint repository.
 The filter looks up the roles by the `autoassignJobCode` value.
-But what value do we require here?
-Static value such as `S007` will not really help as that means that we will need one mapping for each role.
-We need to make this query dynamic and smarter.
-You probably know the answer already as the same approach was used in correlation expressions.
-We simply use an expression instead of static value.
-In this case, we use path expression that point to `jobCode` variable.
-Job code is a source for this mapping, therefore it will be present as a variable in all the expressions of the mapping.
-So when the expression is processed for Bob then the final filter looks like this:
-
-[source,xml]
-----
-<filter>
-    <q:equal>
-        <q:path>extension/autoassignJobCode</q:path>
-        <q:value>S007</q:value>
-    </q:equal>
-</filter>
-----
-
-That filter is used to look for a role.
-The `Sales Agent` role is found.
-This role is used to construct an assignment with the role as a target:
+However, what _value_ are we looking for?
+Static value, such as `S007`, is not going to help here.
+We need to make this query _dynamic_ and smarter.
+We simply use a _variable_ instead of static value.
+In this case, we use `$jobCode` variable.
+Job code is a _source_ for this mapping, therefore it is present as a variable in all the _expressions_ of the mapping, including the `assignmentTargetSearch` expression.
+When the expression is processed for Jack Jones, value `S007` is substituted.
+That filter is used to look for a role, which results in the `Sales Agent` role.
+This role is used to construct an assignment with the role as its _target_:
 
 [source,xml]
 ----
@@ -589,56 +567,80 @@ This role is used to construct an assignment with the role as a target:
 </assignment>
 ----
 
-And that is it!
+That is it!
 That assignment is added to the user object.
-Which means that Bob has that role assigned now:
+Which means that Jack Jones has that role assigned:
 
 [source,xml]
 ----
 <user>
-    <name>bob</name>
+    <name>jones</name>
     <extension>
         <exmpl:jobCode>S007</exmpl:jobCode>
     </extension>
     <assignment>
         <targetRef oid="b93af850-b9b9-11e9-8c2c-dfb9a89635a0" type="RoleType"/>
     </assignment>
-    <fullName>Bob Brown</fullName>
+    <fullName>Jack Jones</fullName>
     ...
 </user>
 ----
 
-This single mapping will work for all the cases of all the current job codes and future job codes.
+This single mapping works for all the cases of all the current job codes, and even for all future job codes.
 That is how we like it.
+One simple mapping solves many problems.
 
-NOTE: Clever reader is surely amused at this point.
-As you can see, we have put an expression into an expression, so now midPoint can evaluate while it evaluates.
-There is an `assignmentTargetSearch` expression, inside that is a search filter and inside the search filter there is a path expression.
-This is one of the basic tenets of midPoint philosophy: we reuse and combine the mechanisms that we already have.
-The second expression could be any midPoint expression that makes sense here, e.g. it could be a script.
-The filter can be much more complex, and it can have several expressions.
-Full power of midPoint is at your disposal here.
-
-Of course, this could all have been done with one smart groovy script instead of `assignmentTargetSearch` expression.
-And if you prefer it that way, you are free to do it.
+.Why not Groovy?
+NOTE: Of course, this could all have been done with one smart groovy script instead of `assignmentTargetSearch` expression.
+You are free to do it in Groovy, if you prefer it that way.
 It will work.
-But assignment is a complex data structure and `assignmentTargetSearch` makes work with that structure easier.
+However, as assignment is a complex data structure, the `assignmentTargetSearch` expression makes work with assignment much easier.
 It can set up validity constraints, relation and other assignment details.
 It can also create the target on demand in case the target is not found.
 It is quite powerful.
-But perhaps the most important detail is that `assignmentTargetSearch` expression implements the use cases that are common in almost every IDM deployment.
-And that functionality is maintained and tested as a native part of midPoint.
-Therefore, you can simply reuse it in every midPoint deployment instead of copying, adapting, testing and bugfixing one big groovy script over and over again.
+Perhaps the most important detail is that `assignmentTargetSearch` expression implements the use cases that are common in almost every identity management deployment.
+Functionality of `assignmentTargetSearch` expression is maintained and tested as a native part of midPoint.
+Therefore, you can simply reuse it in every midPoint deployment, instead of copying, adapting, testing and bugfixing one big groovy script over and over again.
+
+So far we have been talking about automatic _assignment_ of roles.
+However, the mapping works _both ways_.
+It can automatically _assign_ the roles, and it can also automatically _unassign_ them.
+This is an effect of _relativity_ of midPoint mappings.
+When mapping input changes, midPoint knows how it was changes, as it has a _delta_.
+Therefore, midPoint can use the mapping to compute both the values that were _added_ as well as values that were _removed_.
+When `jobCode` of Jack Jones changes from `S007` to `X001`, midPoint evaluates the expression for both values, old and new.
+Evaluation of the expression with _old_ value `S007` produces assignment for `Sales Agent` role.
+MidPoint knows that value `S007` was _removed_, therefore it also removes assignment of `Sales Agent` role from the user.
+
+When it comes to security, automatic _unassignment_ of roles is even more important than automatic _assignment_.
+Principle of least privilege dictates that a users should have minimal access rights necessary for conducting their duties.
+MidPoint _autoassignment_ mechanism take care of that, applying a rule to _assign_ a role when it is necessary, while also using the same rule to _unassign_ the role when it is no longer necessary.
+This mechanism is one of the building block of policy-driven RBAC mechanism, a dynamic role-based access control model which is a native part of midPoint.
+
+MidPoint automatically _assigns_ and _unassigns_ the roles when there is appropriate _autoassignment_ mapping.
+This works very well, it even works when there are several mappings that manage roles automatically.
+MidPoint executes them all and merges the results.
+However, roles that are managed _automatically_ may clash with roles that are managed _manually_.
+Therefore, if a mapping specifies that a role should be unassigned, midPoint unassigns that role even if the role was assigned manually.
+MidPoint 4.8 does not really know the difference between role that was assigned automatically and manually.
+
+There is a mechanism that can be used to make sure that manually-assigned roles are never automatically removed.
+Clever use of assignment _subtype_ together with configuration of _mapping range_ can be used to separate assignments that are managed manually from those that are managed automatically.
+However, the specific configuration is not entirely simple.
+Luckily, future versions of midPoint bring a significant improvement.
+midPoint 4.9 is using _value meta-data_ to record origin of values.
+Such meta-data can be used to determine whether assignment was created automatically or manually.
+Mappings in midPoint 4.9 are set up in such a way that they would remove only the values that they themselves created, making the mechanism seamless.
+Therefore, if this situation is likely to occur in your deployment, it may be worth consider using midPoint 4.9.
+
+TIP: The roles used in this section are in fact _business roles_, as they correspond to business responsibilities defined by job codes.
+Even though the roles were not explicitly marked as _business roles_ in the examples above, they are properly marked in the example files by applying `Business role` archetype.
+
 
 == Autoassignment in Roles
 
-Automatic assignment of roles in the object template is not the only option.
+Automatic assignment of roles in the _object template_ is not the only option.
 This is midPoint, therefore there are usually several ways to do the same thing.
-For example, a mapping similar to that `assignmentTargetSearch` mapping used above can be used as an inbound mapping.
-And there is yet another way.
-Strictly speaking, this method has almost nothing to do with object template.
-But as we are talking about role autoassignment, this is a good opportunity to cover all the options here.
-
 The statements that control automatic assignment of roles can be placed in the roles themselves:
 
 .role-cook.xml
@@ -667,18 +669,21 @@ The statements that control automatic assignment of roles can be placed in the r
 </role>
 ----
 
-The mapping in the `autoassign` part of the role will be evaluated approximately at the same time as other object template mappings.
-The mapping has no expression.
+The mapping in the `autoassign` part of the role is evaluated approximately at the same time as other object template mappings.
+The mapping has no _expression_.
 There is no need to.
-MidPoint will prepare complete assignment data structure.
-The mapping just has to decide when to apply that assignment to the user and when not to apply it.
-That is what the condition is for.
-The expression in this mapping is optional.
+MidPoint prepares complete assignment data structure for this mapping as an input.
+The mapping just has to decide whether to apply that assignment to the user.
+That is what the _condition_ is for.
+When the condition evaluates to _true_, the role is automatically assigned.
+When it evaluates to _false_, the role is unassigned.
+
+TIP: The _expression_ in this mapping is optional.
 If an expression is specified, then such expression can be used to further set up the assignment.
 For example, it can set assignment activation, relation, parameters and so on.
 
 But wait, why is there this strange `norm` thing in the condition?
-Remember about Polystrings?
+Remember about polystrings?
 The `locality` property is a polystring.
 Therefore, it has `orig` part and `norm` part.
 In this case we want to compare the `norm` part, as the organizational unit name may be spelled as `Kitchen` or `KITCHEN`.
@@ -692,11 +697,11 @@ The obvious way to specify the expression would be like this:
 locality == 'kitchen'       // This is wrong!
 ----
 
-However, such expression will always return `false`.
+However, such expression always returns `false`.
 The reason is that different data types are being compared.
 The `locality` property is polystring, while `‘kitchen’` is a string literal.
-Polystring and string will never be equal regardless for their content.
-Therefore this form of the expression is wrong.
+Polystring and string are never equal regardless for their content.
+Therefore, this form of the expression is wrong.
 Following forms may be used instead:
 
 [source,groovy]
@@ -710,35 +715,38 @@ The later form is using `stringify()` method from basic midPoint function librar
 This method converts everything to string.
 Whatever data type is passed to this method the result is always a string that can be safely compared.
 
-But let’s get back to role autoassignment.
-When autoassign mappings are specified in the roles, midPoint will process in a way that is very similar to object template mappings.
+Let’s get back to role _autoassignment_.
+When _autoassign_ mappings are specified in the roles, midPoint is processing the mappings in a way that is very similar to object template mappings.
 This has benefits, but there are also drawbacks.
 
-The benefit of role autoassignment is manageability.
+The benefit of role autoassignment is _manageability_.
 The conditions are stored in roles themselves.
 Therefore, they are bound to the object that they assign.
-It is there, right in front of administrator’s eyes.
-It may also be a benefit if delegated administration is used. E.g. a role owner may manage role definition and the autoassignment condition in the same object.
-However, in that case beware of the expressions.
-MidPoint expressions are very powerful.
+Autoassignment rule is right there, in front of administrator’s eyes.
+It may also be a benefit if _delegated administration_ is used.
+E.g. a role owner manages both role definition and the autoassignment condition in the same object.
+In that case, this encapsulation of autoassignment rule in role definition is a huge benefit.
+
+.Beware of the expressions
+WARNING: Scripting expressions are very powerful.
 In fact, they are way too powerful for secure delegated administration.
-Unconstrained midPoint expression can do pretty much anything.
+Unconstrained scripting expression can do pretty much anything.
 It can bring down the system, read memory, modify data, it can do whatever it likes to do.
 There are some safeguards that prohibit against accidental abuse, but a malevolent expression can easily circumvent them.
-If you allow a user to specify an expression, you are pretty much giving away keys to the kingdom.
-Therefore do not do it.
+If you allow a user to specify any expression, you are pretty much giving away keys to the kingdom.
+Therefore, do not do it.
 At least not now.
-There is a code in midPoint that implements expression profiles.
+MidPoint has ability to specify _expression profiles_.
 The goal of the profiles is to constraint expression to only allow safe operations.
-However, that functionality is not finished yet.
-If you are interested in this functionality, then midPoint platform subscription is the way to get it fully implemented.
+However, as scripting languages such as Groovy and JavaScript are very flexible and powerful, it is quite difficult to constraint them to a set of safe operations.
+Therefore, use scripting expression with utmost care.
 
-Role autoassignment has another drawback and that is performance.
-All the autoassignment mappings need to be evaluated every time that user is recomputed.
-This means that all the roles that contain the mappings need to be retrieved from midPoint repository.
+Role autoassignment has another drawback which is _performance_.
+_All_ the autoassignment mappings need to be evaluated every time a user is recomputed.
+This means that _all_ the _roles_ that contain the mappings need to be retrieved from midPoint repository.
 This may not be a big deal for a small deployment with thousands of users and hundreds of roles.
-But the performance hit is likely to be significant as the number of users and roles grows.
-Therefore, roles autoassignment is not enabled by default.
+However, the performance hit is likely to be significant as the number of users and roles grows.
+Therefore, role autoassignment is not enabled by default.
 It has to be explicitly enabled in system configuration:
 
 [source,xml]
@@ -752,12 +760,24 @@ It has to be explicitly enabled in system configuration:
 </systemConfiguration>
 ----
 
-But perhaps the most significant drawback of role autoassingment is that the mapping needs to be in every role.
-There is no way how to use this mechanism to handle autoassignment of many roles with just one mapping.
-But object template mappings can do that easily.
+There is one more significant drawback of role autoassingment, which is quite obvious.
+The autoassignment mapping needs to be in every role.
+There is no way to use this mechanism to handle autoassignment of many roles with just one mapping.
+However, object template mappings can do that easily.
 Therefore, many deployments chose to implement automatic assignment of roles by the means of object template or inbound mappings.
 
-// TODO: TIP: autoassignment and PD-RBAC, refer to RBAC
+Role autoassignment mechanism is also part of midpoint dynamic role-based access control mechanism, the policy-based RBAC.
+As such, autoassignment is an essential tool in midPoint access control policy toolbox.
+
+== Automatic Assignment in Synchronization
+
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+
+// TODO: Employee role, birthright
+
+// TODO: NOTE: mention auxiliary archetypes
+
 
 == Iteration
 
