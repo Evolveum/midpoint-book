@@ -1413,41 +1413,37 @@ It is good enough to create a simple, yet complete solution.
 
 == Complete Deployment Example
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
-// TODO: use Person archetype
-
 We have all that we need to create a simple but mostly complete identity management solution.
 Our environment and solution outline:
 
 * HR system is a data input.
-It exports employee data into a CSV file.
-Employee number is a primary key, there is employee first and last name and job code.
+It exports _employee_ data into a CSV file.
+Employee number is a primary key, there are first and last names and job code.
 There is no username or password.
 
 * We need to feed employee data into midPoint.
-Which means that we need to configure synchronization.
+Which means that we need to configure _synchronization_.
 
-* We need to generate unique and user-friendly username, compute full name and generate a random initial password.
+* We need to generate unique and user-friendly _username_, compute _full name_ and generate a random _initial password_.
 
-* We need to automatically assign roles based on job code from the HR system.
+* We need to automatically assign roles based on _job code_ from the HR system.
 
-* We need to automatically provision account to LDAP server and CRM database table.
+* We need to automatically provision account to _LDAP server_ and _CRM database table_.
 
 We can do that if we put together all that we have learned so far.
 Even though this is still quite a simple example, the complete configuration is too large to put all of it into this book.
 It will take too much space.
-And after all the detailed explanation in the previous chapters it will also get a bit boring.
+Moreover, after all the detailed explanation in the previous chapters, it would also get a bit boring.
 Therefore, we will show only the interesting pieces of the configuration here.
 Complete configuration can be found in the usual place.
 Please see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for details.
 These files represent the final configuration, the expected state at the end of this chapter.
-Therefore, if you want to follow instructions in this chapter step-by-step you have to choose appropriate parts of the files to import.
-Or you can just import everything and use the following text as an explanation of the effects that you see.
+Therefore, if you want to follow instructions in this chapter step-by-step, you have to choose appropriate parts of the files to import.
+Alternatively, you can just import everything, and use the following text as an explanation of the effects that you see.
 
 Let us start with an HR resource.
 This is mostly the same resource definition as we have seen in the <<05-synchronization#05-synchronization,Synchronization>> chapter.
-But there are few differences.
+However, there are few differences.
 First of all, the data feed is a bit different.
 We have a new `jobcode` column there.
 It looks like this:
@@ -1486,7 +1482,7 @@ We have defined a new custom user property `jobCode` in our extension schema:
 </xsd:schema>
 ----
 
-The jobcode column is mapped to jobCode extension property in HR resource inbound mapping:
+The `jobcode` column is mapped to `jobCode` extension property in HR resource inbound mapping:
 
 .resource-csv-hr.xml
 [source,xml]
@@ -1497,7 +1493,7 @@ The jobcode column is mapped to jobCode extension property in HR resource inboun
         <objectType>
             ...
             <attribute>
-                <ref>ri:jobcode</ref>
+                <ref>jobcode</ref>
                 <displayName>Job code</displayName>
                 <inbound>
                     <target>
@@ -1512,79 +1508,99 @@ The jobcode column is mapped to jobCode extension property in HR resource inboun
 </resource>
 ----
 
+There is one more interesting inbound mapping, a mapping that automatically assigns `Employee` role.
+All the records that come from the HR resource are employee records.
+Therefore, we want to assign Employee role to all of them.
+The easiest way to do that is to use inbound mapping of HR resource:
+
+.resource-csv-hr.xml
+[source,xml]
+----
+<resource oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf">
+    ...
+    <schemaHandling>
+        <objectType>
+            ...
+            <attribute>
+                <ref>rempno</ref>
+                ...
+                <inbound>
+                    <expression>
+                        <value>
+                            <!-- Employee role -->
+                            <targetRef oid="86d3b462-2334-11ea-bbac-13d84ce0a1df"
+                                       type="RoleType"/>
+                        </value>
+                    </expression>
+                    <target>
+                        <path>assignment</path>
+                    </target>
+                </inbound>
+            </attribute>
+            ...
+        </objectType>
+    </schemaHandling>
+    ...
+</resource>
+----
+
+This mapping is quite straightforward.
+Its expression produces a static `targetRef` value that is placed in user’s assignment.
+The strange thing here is the placement of this mapping.
+It is placed in the section that corresponds to `empno` attribute.
+This is inbound mapping, and it just has to be placed somewhere.
+Any reasonable attribute would do.
+It does not really matter into which attribute it is placed as it ignores attribute value anyway.
+
 The rest of the mappings that are defined in the HR resource is a bit boring.
 The interesting thing is the mapping that is not there at all.
-The mapping for username (property name of the user object) is missing.
-We will not generate username in the inbound phase.
+The mapping for _username_ (property `name` of the _user_ object) is missing.
+We are not generating username in the inbound phase.
 We just do not have enough data to responsibly generate username just yet.
-Inbound phase is still running, user object is not fully populate yet.
+Inbound phase is still running, user object is not fully populated yet.
 Let’s postpone the decision about username for later.
 
 Synchronization part of the HR resource definition is also a pretty standard one.
 This resource is an authoritative source.
-Accounts will be correlated by the `empno` column matching the `employeeNumber` user property.
-Linked accounts will be updated and new users will be created for unmatched accounts.
+Accounts are correlated by the `empno` column matching the `personalNumber` user property.
+Linked accounts are updated and new users are created for unmatched accounts.
 It is all the same routine as we have already described in <<05-synchronization#05-synchronization,Synchronization>> chapter.
 
-Perhaps the most interesting part of this setup is object template.
+Perhaps the most interesting part of this setup is _object template_.
 The template has several responsibilities:
 
-* Compute full name from first name and last name.
+* Compute _full name_ from first name and last name.
 
-* Generate unique username.
+* Generate unique _username_.
 
-* Generate e-mail address.
+* Generate _e-mail address_.
 
-* Automatically assign basic employee role.
+* _Automatically assign_ the roles based on _job code_.
 
-* Automatically assign the roles based on job code.
+All our users originating from the HR system have `Person` archetype.
+This is quite a standard configuration, and it is a very suitable one.
+We want to set up _object template_ for users that represent _persons_.
+We do not want the template to apply to system users, such as `administrator`.
+Therefore, `Person` archetype is an ideal place to specify the template.
+This configuration is so common, that this is already pre-configured in midPoint.
+There is `Person Object Template` which is present in midPoint by default and it is already applied to `Person` archetype.
+All we need to do is to modify that template.
 
-Let’s start with the simple thing: generating full name. At this point this is probably a no-brainer:
+Let’s start with the simple thing: generating _full name_.
+At this point this almost a no-brainer:
 
-.object-template-user.xml
+.object-template-person.xml
 [source,xml]
 ----
-<objectTemplate oid="22f83022-b76d-11e9-8a30-6ffc11b23016">
+<objectTemplate oid="00000000-0000-0000-0000-000000000380">
+    <name>Person Object Template</name>
     ...
     <item>
         <ref>fullName</ref>
         <mapping>
-            <source>
-                <path>givenName</path>
-            </source>
-            <source>
-                <path>familyName</path>
-            </source>
-            <expression>
-                <script>
-                    <code>givenName + ' ' + familyName</code>
-                </script>
-            </expression>
-        </mapping>
-    </item>
-    ...
-</objectTemplate>
-----
-
-This is really simple.
-But it is much harder for username.
-We want to generate a user-friendly username.
-We could simply use user’s last name.
-But this is very likely to create conflicts.
-Therefore let’s combine last name with the first letter of first name.
-We will get nice usernames such as aanderson, bbrown and so on.
-But there is still a chance of username conflict.
-So let’s add iteration tokens into the mix.
-Like this:
-
-.object-template-user.xml
-[source,xml]
-----
-<objectTemplate oid="22f83022-b76d-11e9-8a30-6ffc11b23016">
-    ...
-    <item>
-        <ref>name</ref>
-        <mapping>
+            <name>generate-fullname</name>
+            <description>Generate fullName (enforcing on renames because of strong mapping)</description>
+            <strength>strong</strength>
             <source>
                 <path>givenName</path>
             </source>
@@ -1594,16 +1610,60 @@ Like this:
             <expression>
                 <script>
                     <code>
-                        if ( givenName == null &amp;&amp; familyName == null ) {
-                            return null
-                        }
-                        if ( familyName == null ) {
-                            return givenName?.norm + iterationToken
-                        }
-                        if ( givenName == null ) {
-                            return familyName?.norm + iterationToken
-                        }
-                        givenName?.norm[0] + familyName?.norm + iterationToken
+                        basic.concatName(givenName, familyName)
+                    </code>
+                </script>
+            </expression>
+            <target>
+                <path>fullName</path>
+            </target>
+        </mapping>
+    </item>
+    ...
+</objectTemplate>
+----
+
+This is almost the same mapping as we have seen before.
+However, there is one difference: `concatName` function is used to concatenate the names.
+The `concatName` is quite smart, it converts all inputs to strings, it trims them, handles cases where some parts of name are null or empty - overall, it saves a lot of trouble.
+Perhaps the most interesting thing about this mapping is the fact, that it is already present in `Person Object Template` by default.
+We do not need to change anything.
+
+_Full name_ mapping is really simple, but it is a bit harder for _username_.
+We want to generate a user-friendly username.
+We could simply use user’s last name, but this is very likely to create conflicts.
+Therefore, let’s combine last name with the first letter of first name.
+That gives us nice usernames such as `aanderson`, `bbrown` and so on.
+However, there is still a chance of username conflict.
+So let’s add iteration tokens into the mix.
+Like this:
+
+.object-template-person.xml
+[source,xml]
+----
+<objectTemplate oid="00000000-0000-0000-0000-000000000380">
+    <name>Person Object Template</name>
+    ...
+    <item>
+        <ref>name</ref>
+        <mapping>
+            <name>generate-name-jsmith</name>
+            <lifecycleState>active</lifecycleState>
+            <strength>weak</strength>
+            <source>
+                <path>givenName</path>
+            </source>
+            <source>
+                <path>familyName</path>
+            </source>
+            <expression>
+                <script>
+                    <code>
+                        tmpGivenName = basic.trim(basic.norm(basic.stringify(givenName)))
+                        tmpFamilyName  = basic.trim(basic.norm(basic.stringify(familyName)))
+                        tmpGivenNameInitial = tmpGivenName?.take(1)
+                        return (tmpGivenNameInitial + tmpFamilyName?.replaceAll(" ", ""))?.take(8)
+                                    + iterationToken
                     </code>
                 </script>
             </expression>
@@ -1624,47 +1684,50 @@ givenName[0] + familyName + iterationToken
 
 The devil is, as usual, in the details.
 
-Firstly, good part of any programming is error handling.
-Hence all the if-then statements.
-It may look like those situations cannot happen in our little example.
-All the HR records have both first and last name set, anyway.
-Therefore, they will never be `null` in the expression, will they?
-In fact, they will.
-This is one small peculiarity of midPoint expressions.
-MidPoint works in a _relative_ way.
-Therefore, midPoint often evaluates _old_ values of attributes and properties to figure out which values to remove.
-The old values for any new user are `null`.
-Therefore, it may happen that the expression is evaluated with `null` inputs.
-This may seem a bit annoying at the beginning.
-But you will be more than grateful that your expressions are properly sanitized and null-safe when you get to work with real data.
-Reality always finds a way to bring surprises.
+Firstly, good part of any programming is robustness and error handling.
+All the `stringify` and `trim` functions deal with inputs that are `null`, formatted in a wrong way (e.g. extra spaces) or wrong data types (e.g. polystring instead of string).
+We are also making sure there are no spaces in username (hence the `replaceAll` function).
 
-Secondly, midPoint is built with multi-national environment in mind.
-It is 21^st^ century already and unicode is everywhere.
+Secondly, midPoint is built with multinational environment in mind.
+It is 21^st^ century already and Unicode is everywhere.
 _Almost_ everywhere, that is.
 It is expected that the HR system stores names with full national characters, such as `Radovan Semančík`.
 Yet, it is still not a common practice to use national characters in usernames, e-mail addresses and so on.
-Therefore we usually want to normalize the national characters to their ASCII-7 equivalents.
-That is what PolyString is for and that is what the `norm()` methods are doing.
-The result is that the generated username will be `rsemancik` instead of `RSemančík`.
+Therefore, we usually want to normalize the national characters to their ASCII-7 equivalents.
+That is what PolyString is for and that is what the `norm` methods are doing.
+The result is that the generated username will be `rsemanci` instead of `RSemančí`.
 
-But there is still one piece missing.
-We want to enable iteration to resolve naming conflicts.
-Otherwise poor Arnold Anderson won’t have his accounts created because `aanderson` username is already taken by Alice.
+Then there is slightly annoying issue of legacy in information technologies.
+Even though it is 21^st^ century already, some systems are still quite behind.
+For example, `sAMAccountName` identifier in Active Directory is limited to 10 characters in length.
+Therefore, we are limiting the length of username to 8 characters, leaving last two characters for the iteration token.
+This is what the `take(8)` function does.
+
+The bad news is that reality always finds a way to bring surprises, therefore the expressions dealing with real-wold data need to be more complicated than it is perhaps expected.
+However, there is also good news - at least when it comes to username generator mapping.
+The mapping above is already pre-configured in default `Person Object Template` in midPoint.
+It is not enabled by default.
+Lifecycle state of the mapping is set to `draft`, which effectively inactivates the mapping.
+Changing the lifecycle state to `active` enables it, and makes it ready to be used.
+
+However, there is still one piece missing.
+We want to _enable_ iteration to resolve naming conflicts.
+Otherwise poor Arnold Anderson won’t have his accounts created because `aanderso` username is already taken by Alice.
 We can enable iterations like this:
 
-.object-template-user.xml
+.object-template-person.xml
 [source,xml]
 ----
-<objectTemplate oid="22f83022-b76d-11e9-8a30-6ffc11b23016">
+<objectTemplate oid="00000000-0000-0000-0000-000000000380">
+    <name>Person Object Template</name>
     ...
     <iterationSpecification>
-        <maxIterations>5</maxIterations>
+        <maxIterations>99</maxIterations>
         <tokenExpression>
             <script>
                 <code>
                     if (iteration == 0) {
-                        return ''
+                        return ""
                     } else {
                         return iteration + 1
                     }
@@ -1680,29 +1743,33 @@ The `maxIteration` part up there is quite straightforward.
 We want to have some limit on the number of iterations as we do not want to iterate forever.
 Most iteration sequences are short in practice.
 If the iterative approach cannot find a match in several steps, then perhaps the iteration is not a good method anyway.
-Therefore the limit is usually not a problem.
-But having a limit makes a huge difference for troubleshooting.
+Therefore, the limit is usually not a problem.
+However, having a limit makes a huge difference for troubleshooting.
 Most infinite iteration loops are caused by configuration errors.
-And it is much better to get an error after a couple of seconds than to wait forever.
+It is way much better to get an error after a couple of seconds than to wait forever.
 
 The second part of the iteration configuration is also quite clear for people that read this chapter carefully.
 The default iteration token sequence is `""`, `"1"`, `"2"`, `"3"` and so on.
-But that would give us `aanderson`, `aanderson1`, `aanderson2` and so on.
-We do not want to have `aanderson` and `aanderson1` as that would be confusing.
+That would give us `aanderso`, `aanderso1`, `aanderso2` and so on.
+We do not want to have `aanderso` and `aanderso1` as that would be confusing.
 Therefore, we chose to skip the `"1"` token and start with `"2"`.
 The custom iteration token expression does just that.
 
-As soon as we have the mapping for name in place, we can start testing the configuration.
+Similarly to the mappings, iteration specification is already part of default `Person Object Template`.
+
+As soon as the above configuration is in place, we can start testing our little deployment.
 Go ahead and import the HR resource, import object template, set the object template in the configuration and do not forget to replace the HR CSV file.
 If you did any experiments with previous configuration, it can be helpful to clean up midPoint by using the "delete all identities" process (that little dropdown button in menu:Repository objects[] page).
-When everything is set up, you can try to manually import a single account from the HR resource by using the "import" button, located on the page where you can list resource accounts.
-Once the basic configuration works, you can test iterations by adding Arnold Anderson to the HR CSV file and importing the account.
-Do not forget to switch from repository to resource view by clicking on the btn:Resource[] button on the top-left side of the page.
+When everything is set up, you can try to manually import a single account from the HR resource by using the btn:import[] button, located on the page where you can list resource accounts.
+Once the basic configuration works, you can test username generator by adding Arnold Anderson to the HR CSV file and importing the account.
+Do not forget to explicitly fetch the accounts from the resource by clicking on the btn:Reload[] button on the bottom of the page.
 There is no synchronization task running, therefore MidPoint have not seen Arnold’s account yet.
 You have to instruct midPoint to explicitly look at the resource.
-Once Arnold’s account is imported a non-conflicting username should be selected for him:
+Once Arnold’s account is imported, a non-conflicting username should be generated for him:
 
 image::08-02-users-andersons.png[Users]
+
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 We need to determine e-mail address next.
 In our case the mapping for e-mail address is quite similar to username mapping:
@@ -1776,56 +1843,13 @@ Weak mapping will not overwrite existing value.
 Sometimes it is best not to automate everything, leave the complex cases to system administrators to deal with.
 
 Role autoassignment is the next step.
-Let’s start with something simple.
-All the records that come from the HR resource are employee records.
-Therefore let’s assign Employee role to all of them.
-The easiest way to do that is to use inbound mapping of HR resource:
 
-.resource-csv-hr.xml
-[source,xml]
-----
-<resource oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf">
-    ...
-    <schemaHandling>
-        <objectType>
-            ...
-            <attribute>
-                <ref>ri:empno</ref>
-                ...
-                <inbound>
-                    <expression>
-                        <value>
-                            <!-- Employee role -->
-                            <targetRef oid="86d3b462-2334-11ea-bbac-13d84ce0a1df"
-                                       type="RoleType"/>
-                        </value>
-                    </expression>
-                    <target>
-                        <path>assignment</path>
-                    </target>
-                </inbound>
-            </attribute>
-            ...
-        </objectType>
-    </schemaHandling>
-    ...
-</resource>
-----
-
-This mapping is quite straightforward.
-Its expression produces a static `targetRef` value that is placed in user’s assignment.
-The strange thing here is the placement of this mapping.
-It is placed in the section that corresponds to `empno` attribute.
-This is inbound mapping, and it just has to be placed somewhere.
-Any reasonable attribute would do.
-It does not really matter into which attribute it is placed as it ignores attribute value anyway.
-
-That was a very simple static mapping.
-It is perhaps too simple for practical use as there not many cases when a role is assigned both automatically and unconditionally.
-The mapping above can be slightly improved by adding a _condition_ to the mapping.
-But that still has some limitations.
-For example, inbound mappings cannot have more than one input.
-And being an inbound mapping, this can only work with account attributes and therefore its behavior cannot be influenced by user data changed in the user interface.
+// That was a very simple static mapping.
+// It is perhaps too simple for practical use as there not many cases when a role is assigned both automatically and unconditionally.
+// The mapping above can be slightly improved by adding a _condition_ to the mapping.
+// But that still has some limitations.
+// For example, inbound mappings cannot have more than one input.
+// And being an inbound mapping, this can only work with account attributes and therefore its behavior cannot be influenced by user data changed in the user interface.
 
 Autoassignment in inbound mapping is still useful and in fact it is also used quite often.
 Yet, there is another way that is much more popular: autoassignment in object template mapping.
@@ -2092,7 +2116,7 @@ If it works, then it is the time for roll-out.
 Set up a synchronization task for the HR resource, and we are done.
 We have running system:
 
-image::08-03-users-final.png[Users]
+image::08-04-users-final.png[Users]
 
 Users are imported from the HR system.
 Roles are assigned, which can be checked by navigating to user details page and opening the menu:Inducements[] tab.
