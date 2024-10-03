@@ -6,8 +6,6 @@ include::chapter-include.adoc[]
 [quote, Douglas Adams, "The Restaurant At The End Of The Universe"]
 If life is going to exist in a Universe of this size, then the one thing it cannot afford to have is a sense of proportion.
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
 // TODO: concept of relation - light intro
 
 // TODO: archetypes
@@ -19,27 +17,25 @@ If life is going to exist in a Universe of this size, then the one thing it cann
 Organizations come in all shapes and sizes.
 Unless your organization is extremely unusual, there is always some form of recognizable internal structure.
 There may be the usual corporate divisions, departments and sections.
-Or there may be dynamic teams, projects, work groups and task forces.
-Some kind of _organizational structure_ is always there.
-And it matters.
+Perhaps there are dynamic teams, projects, work groups and task forces.
+One way or another, some kind of _organizational structure_ is always there, and it matters.
 While many organizational structures are quite far from the ideal, organizational structure is seldom completely useless.
-Membership in some organizational units is a reason to automatically grant privileges.
+Membership in some organizational units is a reason to automatically grant privileges to users.
 Managers can usually access quite a wide set of data about employees in organizational units that they are managing.
-Team leaders and project manager often exercise elevated privileges over their team and projects.
-And all of that is not limited just to users.
+Team leaders and project managers often exercise elevated privileges over their teams and projects.
+Moreover, organizational structure is not limited to users.
 Roles are often organized into _role catalog_.
-Services and devices may be organized by applications, by geographical location and so on.
-There are many things that need to be organized and there are many ways to organize them.
+Services and devices may be organized by geographical location.
+There are many things that need to be organized, and there are many ways to organize them.
 
 Organizational structure affects almost every part of the identity management deployment.
 We have realized that in very early stages of midPoint development.
-Therefore, organizational structure is an integral part of midPoint.
+Therefore, organizational structure is an integral part of midPoint functionality.
 It permeates almost every part of midPoint functionality.
 Unlike most other systems, organizational structure in midPoint is a very flexible and almost universal concept.
-It can be used to build functional organizational structures with divisions, departments and sections.
-It can also be used to create a flat project-based organizational structure.
-The same mechanism can be used to sort roles in a role catalog or to manage devices by geographical location.
-And all of those organizational structures may co-exist at the same time in the same system.
+It can be used to build functional organizational hierarchies as well as flat project-based structures.
+The same mechanism can be used to sort roles in a role catalog, or to manage devices by geographical location.
+All of those organizational structures may co-exist at the same time in the same system.
 
 The concept of organizational structure is a very powerful one, but it is implemented by just a handful of simple components.
 Let us have a look at those building blocks now.
@@ -49,17 +45,18 @@ Let us have a look at those building blocks now.
 Basic building blog of all organizational structures is just one simple object type.
 Due to the lack of poetic talent and because of critical shortage of abstract words in our dictionary, we have decided to call that object simply an _org_.
 It is a nice and short name.
-_Org_ can represent any kind of organizational unit: companies, division, department, section, project, team, role category, geographical location or anything else.
+_Org_ can represent any kind of organizational unit: company, division, department, section, project, team, role category, geographical location or anything else.
 Orgs can be used to create hierarchical structures.
-For example, a top-level org may represent a company. A couple of other orgs can represent divisions.
+For example, a top-level org may represent a company.
+A couple of other orgs can represent divisions.
 Those orgs can be put "inside" the company org.
-Yet another orgs can represent departments, these can be put "inside" the division orgs.
-Repeat the process until complete organizational structure is formed.
+Other orgs can represent departments, these can be put "inside" the division orgs.
+That process can be repeated until complete organizational structure is formed.
 
 .Organizational tree
 image::09-01-org-tree.png[Organizational tree]
 
-Org is quite a basic thing with a very simple anatomy:
+_Org_ is quite a basic thing with a very simple anatomy:
 
 .org-example-top.xml
 [source,xml]
@@ -70,31 +67,31 @@ Org is quite a basic thing with a very simple anatomy:
 </org>
 ----
 
-Strictly speaking, the only things that an org really needs are name and OID.
+Strictly speaking, the only two things that an org really needs are _name_ and _OID_.
 The example above adds `displayName` to make the presentation of the org nicer.
-As all regular midPoint objects, a name of an org must be unique.
-This often leads to a practice that org names are in fact identifiers or that they are generated automatically.
+As all regular midPoint objects, a `name` of an org must be unique.
+This often leads to a practice that org names are in fact identifiers, or that they are generated automatically.
 This is also our case.
-We have decided to set `F1000` as the name of this org.
+We have decided to set `F1000` as the `name` of this org.
 The value `1000` is an identifier of the company in our HR system.
 As we are building a functional organizational structure of the company, we have prefixed the identifier with `F` which stands for _functional_.
 However, names such as `F1000` are not very friendly.
 Therefore, there is a mechanism to set nicer display name that does not need to be unique.
-The display name will be used instead of the ordinary `name` whenever this org is displayed to a user.
+The display name is used instead of the ordinary `name` whenever this org is displayed to a user.
 
+// TODO: update screenshot
 .Top-level organizational unit
 image::09-02-org-top.png[Top-level organizational unit]
 
-We have an organizational unit now.
-But how do we put users in it?
-Clever reader already knows the answer: assignment.
-All that is needed is to assign the org to a user.
+We have an organizational unit now, but how do we put users in it?
+Clever reader already knows the answer: _assignment_.
+All we need is to _assign_ the org to a user.
 This is done in almost the same way as you would assign a role, just select the `Org` tab in assignment dialog.
 
 .Assignment of an organizational unit
 image::09-03-top-org-assignment.png[Assignment of an organizational unit]
 
-Or, in XML form:
+The assignment looks like this in XML form:
 
 [source,xml]
 ----
@@ -108,7 +105,6 @@ Or, in XML form:
 </user>
 ----
 
-
 The user is a part of our minimalistic organizational unit now:
 
 .Assigned top-level organizational unit
@@ -117,9 +113,9 @@ image::09-04-top-org-assignment-tree.png[Assigned top-level organizational unit]
 == Organizational Structure Hierarchy
 
 There is very little structure in our tiny organizational structure yet.
-Orgs would not be very useful unless they can be placed inside each other, creating a hierarchy.
+Orgs would not be very useful, unless they can be placed inside each other, creating a hierarchy.
 It is this hierarchy that makes organizational structures attractive.
-Therefore let us go corporate and create some hierarchy now.
+Therefore, let us go corporate and create some hierarchy now.
 It is a well-known fact that all self-respecting corporations need sales and marketing division:
 
 .org-sales-and-marketing-division.xml
@@ -138,17 +134,17 @@ We have seen `name` and `displayName` before.
 The `description` is no stranger either.
 Then there is an `identifier`.
 The value of the `identifier` is usually an official "code" of the organizational unit assigned by HR people.
-But why do we need yet another identifier?
+Why do we need yet another identifier?
 OID is an identifier, `name` is an identifier of sorts, why do we need another one?
-For now let's just say that the identifier will be very useful later on, when we will be synchronizing organizational structures.
+For now, let's just say that the identifier is going to be very useful later on, when we synchronize organizational structures.
 
-If we import the org above into midPoint it will become the _top_ org.
-MidPoint will put it at the same level as the ExAmPLE company org.
+If we import the org above into midPoint it becomes the _top_ org.
+MidPoint puts it at the same level as the ExAmPLE company org.
 We do not want that.
-We want to create a hierarchy.
-We want to tell midPoint to put the department inside the company.
+We want to create a _hierarchy_.
+We want to tell midPoint to put the department _inside_ the company.
 How do we do that?
-We use an assignment, of course:
+We use an _assignment_, of course:
 
 .org-sales-and-marketing-division.xml
 [source,xml]
@@ -166,7 +162,7 @@ We use an assignment, of course:
 </org>
 ----
 
-Now we have our little hierarchy:
+Now we have our minimalistic hierarchy:
 
 .Small organizational structure tree
 image::09-05-small-org-tree.png[Small organizational structure tree]
@@ -174,22 +170,21 @@ image::09-05-small-org-tree.png[Small organizational structure tree]
 This makes perfect sense, doesn't it?
 Users become part of organizational units when the units are assigned to them.
 Therefore, also organizational units become part of other organizational units when they are assigned to them.
-This priciple applies to everything: roles, services, tasks, resources and other object types.
+This principle applies to everything: roles, services, tasks, resources and other object types.
 Every object type that can be _assignment holder_ can be placed in organizational structure, by assigning an organizational unit to it.
 
 .Assignment holders
-NOTE: Majority of midPoint object types are _assginment holders_, and therefore they can be placed into organizational structure.
+NOTE: Almost all midPoint object types are _assignment holders_, and therefore they can be placed into organizational structure.
 Theoretically.
 However, midPoint user interface has some limits.
 Convenient management of the assignments is currently possible only for _focal_ types: user, role, org and service.
 Other objects can be placed in organizational structure, and they should behave up to the expectations.
-But that cannot be done by few convenient clicks in midPoint user interface
+However, that cannot be done by few convenient clicks in midPoint user interface
 Not yet.
 You have to use a different approach.
 You either add the assignment manually in the XML/JSON/YAML form.
-Or you may try to use mappings to create the assignments automatically.
-Or perhaps use the REST interface to do that.
-Or maybe send some money in the direction of midPoint development team to motivate them to add this functionality to user interface.
+You may also try to use mappings to create the assignments automatically, or perhaps use the REST interface to do that.
+Maybe it would be a good idea to send some money in the direction of midPoint development team to motivate them to add this functionality to user interface.
 
 We know how to create a simple organizational hierarchy.
 All we need to do now is to repeat the process _ad nauseam_ to create something that resembles real corporate organizational structure.
@@ -212,7 +207,7 @@ Let us add marketing department to our division:
 ----
 
 It is the same process over and over again.
-But there so many organizational units, there are so many files to import.
+However, there are so many organizational units, there are so many files to import.
 We like to be efficient in all the things that we do.
 Therefore, let's put the entire organizational structure into a single file:
 
@@ -263,6 +258,8 @@ Of course, you can also create organizational structure in the user interface an
 However, according to our experience, many engineers prefer text editor to graphical user interfaces.
 
 == Orgs in the Database
+
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 Organizational structures tend to form _hierarchies_ - data structures that look like trees.
 However, databases are usually designed to store _relational_ data - data structures that look like tables.
