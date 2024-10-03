@@ -6,7 +6,9 @@ include::chapter-include.adoc[]
 [quote, Douglas Adams, "The Restaurant At The End Of The Universe"]
 If life is going to exist in a Universe of this size, then the one thing it cannot afford to have is a sense of proportion.
 
-// TODO: concept of relation - light intro -> org chapter
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+// TODO: concept of relation - light intro
 
 // TODO: archetypes
 // TODO: divisions, departments, sections

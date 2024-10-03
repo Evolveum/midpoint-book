@@ -2344,7 +2344,7 @@ Reconciliation is usually _scheduled_ at regular intervals, to continually maint
 Usernames take many forms.
 Some people like usernames based on first names (`john`), others prefer last names (`smith`), many practical solutions end up using a combination of both (`jsmith`).
 Some organizations prefer immutable identifiers, such as employee numbers (`1458363`), which is not entirely favored by users.
-We will discuss that later, in <<09-object-templates#09-object-templates,Object Templates>> chapter.
+We will discuss that later, in <<09-focus-processing#09-focus-processing,Focus Processing>> chapter.
 Whatever username convention we are going to choose, we have a problem in our current ExAmPLE midPoint deployment: midPoint has usernames based on employee numbers (`001`), while LDAP has usernames based on names (`anderson`).
 We should use one or the other, not both of them at the same time.
 
@@ -2390,7 +2390,7 @@ image::05-06-users-nice-usernames.png[Users with nice usernames]
 
 It is a good idea to remove the inbound mapping after midPoint usernames are corrected.
 We do not need it any more, and it can be quite confusing or even harmful in the long run.
-We probably want to _generate_ usernames in a systematic and consistent way from now on, which will be described in <<09-object-templates#09-object-templates,Object Templates>> chapter.
+We probably want to _generate_ usernames in a systematic and consistent way from now on, which will be described in <<09-focus-processing#09-focus-processing,Focus Processing>> chapter.
 
 It is also a good idea to disable inbound mapping from `empno` attribute to user's `name` in the HR resource.
 If we would leave this mapping active, it can ruin our usernames by replacing them with employee numbers from HR system.

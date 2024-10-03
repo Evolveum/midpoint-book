@@ -313,7 +313,7 @@ When HR record is synchronized to midPoint, user is created, `Person` archetype 
 This configuration _almost_ works, except for one little detail.
 New user's username is generated from employee number.
 This is not very convenient for users.
-However, we still need one more trick to get there, which is explained in the <<09-object-templates#09-object-templates,Object Templates>> chapter.
+However, we still need one more trick to get there, which is explained in the <<09-focus-processing#09-focus-processing,Focus Processing>> chapter.
 
 In addition to accounts, archetypes are useful for setting up default roles and privileges.
 E.g. `Person` archetype can be used to grant access to midPoint user interface to all users by adding _inducement_ to `End user` role.

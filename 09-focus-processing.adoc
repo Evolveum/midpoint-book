@@ -1,13 +1,10 @@
-[#09-obhject-templates]
-= Object Templates
+[#09-focus-processing]
+= Focus Processing
 
 include::chapter-include.adoc[]
 
 [quote, Theodore von Kármán]
 Scientists study the world as it is; engineers create the world that has never been.
-
-// TODO: consider renaming this chapter, as it has more than just object templates
-// TODO: Focus? Focus policy? Internal processing? Computing objects? Inside MidPoint's Head?
 
 Identity management systems are often seen as integration engines that move data from one system to another system.
 This is indeed a very important part of the identity management functionality.
@@ -19,7 +16,11 @@ Those things are gaining utter importance at that strange boundary where identit
 MidPoint has powerful mechanisms to support identity governance.
 We will get to them later.
 We need to explain the basic mechanisms of midPoint internal processing first.
-The simplest of those internal mechanisms is the functionality of _object template_.
+
+This chapter is about processing of _focus_, which is a midPoint term for object that is at the center of computation.
+The _focus_ is usually a _user_, therefore this chapter is about the internal processing about the _user_ object itself.
+It deals with handling of _user_ properties such as determining _username_, _e-mail address_ and composing _full name_.
+Moreover, it deals with other aspects of internal processing, such as automatic assignment of roles.
 
 == Object Templates
 
@@ -1712,7 +1713,7 @@ Changing the lifecycle state to `active` enables it, and makes it ready to be us
 
 However, there is still one piece missing.
 We want to _enable_ iteration to resolve naming conflicts.
-Otherwise poor Arnold Anderson won’t have his accounts created because `aanderso` username is already taken by Alice.
+Otherwise poor Albert Anderson won’t have his accounts created because `aanderso` username is already taken by Alice.
 We can enable iterations like this:
 
 .object-template-person.xml
@@ -1761,27 +1762,27 @@ As soon as the above configuration is in place, we can start testing our little 
 Go ahead and import the HR resource, import object template, set the object template in the configuration and do not forget to replace the HR CSV file.
 If you did any experiments with previous configuration, it can be helpful to clean up midPoint by using the "delete all identities" process (that little dropdown button in menu:Repository objects[] page).
 When everything is set up, you can try to manually import a single account from the HR resource by using the btn:import[] button, located on the page where you can list resource accounts.
-Once the basic configuration works, you can test username generator by adding Arnold Anderson to the HR CSV file and importing the account.
+Once the basic configuration works, you can test username generator by adding Albert Anderson to the HR CSV file and importing the account.
 Do not forget to explicitly fetch the accounts from the resource by clicking on the btn:Reload[] button on the bottom of the page.
-There is no synchronization task running, therefore MidPoint have not seen Arnold’s account yet.
+There is no synchronization task running, therefore MidPoint have not seen Albert’s account yet.
 You have to instruct midPoint to explicitly look at the resource.
-Once Arnold’s account is imported, a non-conflicting username should be generated for him:
+Once Albert’s account is imported, a non-conflicting username should be generated for him:
 
 image::08-02-users-andersons.png[Users]
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+We need to generate e-mail address next.
+In our case, the mapping for e-mail address is a bit similar to username mapping:
 
-We need to determine e-mail address next.
-In our case the mapping for e-mail address is quite similar to username mapping:
-
-.object-template-user.xml
+.object-template-person.xml
 [source,xml]
 ----
-<objectTemplate oid="22f83022-b76d-11e9-8a30-6ffc11b23016">
+<objectTemplate oid="00000000-0000-0000-0000-000000000380">
+    <name>Person Object Template</name>
     ...
     <item>
         <ref>emailAddress</ref>
         <mapping>
+            <name>generate-email</name>
             <strength>weak</strength>
             <source>
                 <path>givenName</path>
@@ -1792,19 +1793,10 @@ In our case the mapping for e-mail address is quite similar to username mapping:
             <expression>
                 <script>
                     <code>
-                        if ( givenName == null &amp;&amp; familyName == null ) {
-                            return null
-                        }
-                        if ( familyName == null ) {
-                            return givenName?.norm + iterationToken +
-                                                     '@example.com'
-                        }
-                        if ( givenName == null ) {
-                            return familyName?.norm + iterationToken +
-                                                      '@example.com'
-                        }
-                        givenName?.norm + '.' + familyName?.norm +
-                                                iterationToken + '@example.com'
+                        if ( givenName == null &amp;&amp; familyName == null ) { return null }
+                        if ( familyName == null ) { return givenName?.norm + iterationToken + '@example.com' }
+                        if ( givenName == null ) { return familyName?.norm + iterationToken + '@example.com' }
+                        givenName?.norm + '.' + familyName?.norm + iterationToken + '@example.com'
                     </code>
                 </script>
             </expression>
@@ -1816,19 +1808,19 @@ In our case the mapping for e-mail address is quite similar to username mapping:
 
 This mapping should be quite understandable by now.
 There are the same checks for special cases.
-Then the main expression at the end combines given name and family name in a slightly different way to get an e-mail address.
-This is just a simple example for e-mail address that is a good fit for a book.
+Then the main expression at the end combines _given name_ and _family name_ to get an e-mail address.
+This is just a simple example for e-mail address that is a good fit for a book or for a simple deployment.
 However, dealing with e-mail address is a bit more difficult in practice.
 A clever reader can surely discover a couple of obvious issues.
 Firstly, the expression is using the same iteration token than the username mapping is using.
-Therefore, the e-mail address for Arnold Anderson will be `arnold.anderson2@example.com`.
+Therefore, the e-mail address for Albert Anderson will be `albert.anderson2@example.com`.
 
 This is what we get when we re-import or reconcile both Andersons:
 
 image::08-03-users-andersons-email.png[Users]
 
 This is not exactly what we want.
-Ideally, we would like to use much simpler versions `arnold.anderson@example.com`.
+Ideally, we would like to use much simpler versions `albert.anderson@example.com`.
 In this case there is no conflict with `alice.anderson@example.com`.
 However, midPoint does not consider e-mail address to be an identifier, therefore it does not check for its uniqueness.
 Also, there is only one iteration token that is reused for all the expressions in all object template mappings.
@@ -1839,24 +1831,13 @@ However, it is quite likely that a completely custom code will be needed for a m
 
 That is also one of the reasons to set strength of this mapping to _weak_.
 We want to set an e-mail address automatically, but only in case that an address was not already specified manually.
-Weak mapping will not overwrite existing value.
+Weak mapping does not overwrite existing value.
 Sometimes it is best not to automate everything, leave the complex cases to system administrators to deal with.
 
+Similarly to the _full name_ and _username_ mappings, the mapping for _e-mail address_ is also part of `Person Object Template` by default.
+
 Role autoassignment is the next step.
-
-// That was a very simple static mapping.
-// It is perhaps too simple for practical use as there not many cases when a role is assigned both automatically and unconditionally.
-// The mapping above can be slightly improved by adding a _condition_ to the mapping.
-// But that still has some limitations.
-// For example, inbound mappings cannot have more than one input.
-// And being an inbound mapping, this can only work with account attributes and therefore its behavior cannot be influenced by user data changed in the user interface.
-
-Autoassignment in inbound mapping is still useful and in fact it is also used quite often.
-Yet, there is another way that is much more popular: autoassignment in object template mapping.
-That is what we are going to do next.
-We are going to handle role autoassignment based on job code.
-
-We want to demonstrate autoassignment in object template.
+We are going to handle role autoassignment based on _job code_ using the object template method described above.
 Our object template works with user object both as input and output.
 It cannot (or rather _should not_) reach out to the HR account to get the value of `jobcode` attribute.
 We have to do that the other way around.
@@ -1866,12 +1847,13 @@ We have to map HR account attribute `jobcode` to midPoint user property `jobCode
 [source,xml]
 ----
 <resource oid="03c3ceea-78e2-11e6-954d-dfdfa9ace0cf">
+    <name>HR System</name>
     ...
     <schemaHandling>
         <objectType>
             ...
             <attribute>
-                <ref>ri:jobcode</ref>
+                <ref>jobcode</ref>
                 <inbound>
                     <target>
                         <path>$focus/extension/jobCode</path>
@@ -1885,16 +1867,18 @@ We have to map HR account attribute `jobcode` to midPoint user property `jobCode
 </resource>
 ----
 
-We can easily use the job code in object template mapping now:
+As the job code is synchronized to _user_, we can easily use it in object template mapping now:
 
-.object-template-user.xml
+.object-template-person.xml
 [source,xml]
 ----
-<objectTemplate oid="22f83022-b76d-11e9-8a30-6ffc11b23016">
+<objectTemplate oid="00000000-0000-0000-0000-000000000380">
+    <name>Person Object Template</name>
     ...
     <item>
         <ref>assignment</ref>
         <mapping>
+            <name>autoassign-jobcode</name>
             <strength>strong</strength>
             <source>
                 <path>extension/jobCode</path>
@@ -1903,12 +1887,7 @@ We can easily use the job code in object template mapping now:
                 <assignmentTargetSearch>
                     <targetType>RoleType</targetType>
                     <filter>
-                        <q:equal>
-                            <q:path>extension/autoassignJobCode</q:path>
-                            <expression>
-                                <path>$jobCode</path>
-                            </expression>
-                        </q:equal>
+                        <q:text>extension/autoassignJobCode = $jobCode</q:text>
                     </filter>
                 </assignmentTargetSearch>
             </expression>
@@ -1920,13 +1899,13 @@ We can easily use the job code in object template mapping now:
 
 This is the same principle as we have used earlier in this chapter.
 The mapping is using `assignmentTargetSearch` expression to look for roles where user’s `jobCode` and role’s `autoassignJobCode` match.
-This mapping is strong as we want to recompute the mapping and set the value all the times.
+This mapping is _strong_, as we want to recompute the mapping and set the value all the times.
 If the mapping would be normal-strength, then the values are recomputed only when `jobCode` changes.
 Which actually might be enough during normal operation of the system.
-But making this mapping strong makes things much easier during testing.
-That is all for the mapping.
-Now we need to prepare the roles for this mapping to work.
-We need to extend role schema first:
+However, making this mapping _strong_ makes things much easier during testing.
+That is all that we need to do for the mapping.
+Now we need to prepare the _roles_ for this mapping to work with.
+We need to extend role _schema_ first:
 
 .extension-example.xsd
 [source,xml]
@@ -1950,7 +1929,7 @@ We need to extend role schema first:
 </xsd:schema>
 ----
 
-Then we need a couple of roles with job codes in their extension:
+Then we need a couple of roles with _job codes_ in their extension:
 
 .role-sales-manager.xml
 [source,xml]
@@ -1991,24 +1970,22 @@ Then we need a couple of roles with job codes in their extension:
 That is all the configuration needed for autoassignment to work.
 The roles should be automatically assigned to users when the users are recomputed.
 Just make sure that the users have their `jobCode` properly set in the user object.
-If they do not have it then re-import them or run a reconciliation task.
+If they do not have it, then re-import them from the HR resource or run a reconciliation task.
 Then go ahead and create some more roles for the missing job codes.
-No change in any of the mappings is needed to support more job codes.
-Just create the roles and recompute.
-That is the beauty of this solution.
-It is easy to maintain.
+The mappings do not need to be changed at all to support more job codes.
+Just create new roles and recompute.
+That is the beauty of this solution - it is so easy to maintain.
 
 So far we have tackled the inbound phase and focus policy phase.
-But we have not talked about the outbound (provisioning) phase much.
+However, we have not talked about the outbound (provisioning) phase much.
 Now it is the right time to have a look at that.
 
 We are going to reuse the LDAP and CRM resources from previous chapters.
-Those resources are used here pretty much unchanged.
+Those resources are used here in a pretty much unchanged form.
 There is no need to change them.
 Outbound mappings in the resource definitions specify the basic framework of the account.
-The key to provisioning flexibility is usually not in the resource definition.
-It is in the roles.
-But let’s start in the simplest way possible with the `Employee` role.
+The key to provisioning flexibility is usually not in the resource definition, it is in the _roles_.
+Let’s start in the simplest way possible - with the `Employee` role.
 ExAmPLE company policy states that every employee should have a very basic LDAP account.
 Therefore, all we need is a very simple LDAP account _construction_ that we place into an _inducement_ in the `Employee` role:
 
@@ -2027,13 +2004,12 @@ Therefore, all we need is a very simple LDAP account _construction_ that we plac
 </role>
 ----
 
-All employees get this role by the means of inbound mapping on HR resource.
-Therefore, all employees will automatically get basic LDAP account.
+All employees get this role, by the means of _inbound mapping_ defined for HR resource.
+Therefore, all employees automatically get basic LDAP account.
 It is as simple as that.
-Put the construction in the role, reconcile the HR resource or just recompute the users.
-LDAP accounts will be created.
+Put the construction in the role, reconcile the HR resource or just recompute the users, then LDAP accounts are created for all employees.
 
-But we want something that is a bit more fancy.
+We want something a bit more fancy next.
 Salespeople tend to be a bit sensitive when it comes to their professional image.
 Therefore, they insist on having proper titles set up in company directory.
 Not a problem.
@@ -2051,7 +2027,7 @@ This is how it looks like for a sales manager:
             <!-- OpenLDAP -->
             <resourceRef oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c" />
             <attribute>
-                <ref>ri:title</ref>
+                <ref>title</ref>
                 <outbound>
                     <expression>
                         <value>Sales Manager</value>
@@ -2063,7 +2039,7 @@ This is how it looks like for a sales manager:
 </role>
 ----
 
-This construction refers to the same account as the Employee role.
+This construction refers to the same account as the `Employee` role.
 MidPoint knows that, therefore it does not attempt to create a new account.
 It just updates existing account with appropriate title.
 However, we are not done yet.
@@ -2090,7 +2066,7 @@ Let’s just add new construction to an existing job role:
             <!-- CRM -->
             <resourceRef oid="04afeda6-394b-11e6-8cbe-abf7ff430056" />
             <attribute>
-                <ref>ri:accesslevel</ref>
+                <ref>accesslevel</ref>
                 <outbound>
                     <expression>
                         <value>MANAGER</value>
@@ -2102,10 +2078,13 @@ Let’s just add new construction to an existing job role:
 </role>
 ----
 
-This is the only role that gives access to the CRM system for a sales manager.
+This is a role that gives access to the CRM system for a sales manager.
 MidPoint knows that, and it automatically creates a new CRM account when the role is assigned.
 Outbound mappings from the CRM resource definition are used to set basic properties of CRM account, such as account identifiers and password.
-In addition to that, the Sales Manager role sets appropriate access level to the CRM system.
+In addition to that, the `Sales Manager` role sets appropriate _access level_ to the CRM system.
+
+// TODO: later: we are combining both business role and application role here, is a single role.
+// TODO: we should probably explain that in a note.
 
 Our setup is almost complete now.
 We have inbound synchronization, object template, roles and outbound mappings.
@@ -2119,45 +2098,33 @@ We have running system:
 image::08-04-users-final.png[Users]
 
 Users are imported from the HR system.
-Roles are assigned, which can be checked by navigating to user details page and opening the menu:Inducements[] tab.
+Roles are assigned, which can be checked by navigating to user details page and opening the menu:Assignements[] tab.
 Accounts are provisioned according to the roles, which is the reason for variations in number of accounts for individual users.
 The basic stuff works now.
 Go ahead and try it out, add more roles and mappings, modify the configuration.
 Have some fun.
 
-TIP: Zealous reader has certainly tried both the HR and user recompute task, and stares at the `administrator` user now.
-Administrator has an e-mail address!
-Value `midpoint.administrator@example.com` was generated for administrator by recomputation task.
-Oh yes, administrators are people too, and the `administrator` user is still a user.
-Therefore, user template applies to administrator as well, as does user recompute task.
-User `admnistrator` was not updated by the HR import as there is no corresponding HR account.
-However, user recompute task iterates over all the users, including `administrator`.
-This has to be kept in mind when designing midPoint policies and configurations.
-
-We have got nice little identity management deployment.
-The basic functionality is in place, data are synchronized from the HR system, accounts are provisioned to handful of simple resources, access is governed by roles.
-This is a huge improvement for many organizations already.
+Even this simple identity management deployment is a huge improvement for many organizations already.
 However, there is still a lot of things to improve here.
 Maybe we want to set up a formalized organizational structure.
 Maybe we need delegated administration.
-Maybe we have several object types to manage, and we want to set up archetypes for them.
 We almost certainly want to manage groups, privileges and other entitlements.
 This is still just a beginning.
 
 == Conclusion
 
 This chapter concludes one whole part of the book.
-If you have followed the book so far, you should be able to set up a simple working IDM deployment at this point.
+If you have followed the book so far, you should be able to set up a simple working identity management deployment at this point.
 We have covered all the basic mechanisms: resources, mappings, roles, schema and object templates.
 This is a good time to stop reading and get your hands dirty.
 Take the examples from this book and play a bit with them.
 Explore the examples that come with midPoint distribution.
+Watch videos on Evolveum YouTube channel.
 Now it is time for experiments.
 You will surely do a lot of things that are suboptimal or even outright wrong.
-But never mind.
+That does not really matter now.
 This is part of the learning process.
-If you get to dead end, just scrap everything and start over.
-Or maybe rework everything from the ground up.
+If you get to dead end, just scrap everything and start over, or maybe rework everything from the ground up.
 MidPoint is designed for this.
 Evolutionary approach is deeply embedded in midPoint philosophy and design.
 Just go ahead, have fun, conduct experiments and explore.
