@@ -6,13 +6,6 @@ include::chapter-include.adoc[]
 [quote, Douglas Adams, "The Restaurant At The End Of The Universe"]
 If life is going to exist in a Universe of this size, then the one thing it cannot afford to have is a sense of proportion.
 
-// TODO: concept of relation - light intro
-
-// TODO: archetypes
-// TODO: divisions, departments, sections
-// TODO: archetype for projects, archetype for functional org.
-// TODO: assignment relation: allow project managers and owners, but not approvers. -> org chapter
-
 
 Organizations come in all shapes and sizes.
 Unless your organization is extremely unusual, there is always some form of recognizable internal structure.
@@ -259,8 +252,6 @@ However, according to our experience, many engineers prefer text editor to graph
 
 == Orgs in the Database
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
 Organizational structures tend to form _hierarchies_ - data structures that look like trees.
 However, databases are usually designed to store _relational_ data - data structures that look like tables.
 If you ever tried to express hierarchical data in a spreadsheet application you know that these paradigms are not entirely easy to align.
@@ -277,7 +268,7 @@ Assignment is just too complex for the database to understand and use efficientl
 MidPoint is solving these problems with `parentOrgRef` operational data item.
 As the name suggests, `parentOrgRef` is an object reference that points to _parent org_.
 Any _assignment holder_ in midPoint can have _parentOrgRef_, and it points to the org (or orgs) that the object belongs to.
-This somehow duplicated the data in the assignment.
+This somehow duplicating the data in the assignment.
 Yet, there are several crucial differences.
 
 Firstly, `parentOrgRef` points to the orgs that the object is _currently_ member of.
@@ -285,18 +276,18 @@ I.e. it only reflects those assignments that are currently active and valid.
 Therefore, there will be no `parentOrgRef` value for assignment that is expired or not valid yet.
 
 Secondly, `parentOrgRef` represents all organizational assignments, both direct and indirect.
-Orgs that are directly assigned to users will be present in `parentOrgRef`.
-Orgs that are induced in a role that is assigned to the user will also be present in `parentOrgRef`.
-Everything will be there.
+Orgs that are directly assigned to users are present in `parentOrgRef`.
+Orgs that are induced in a role that is assigned to the user are also present in `parentOrgRef`.
+Everything is there.
 
 Thirdly, `parentOrgRef` is a very simple data structure.
 This simplicity allows efficient _indexing_ of the `parentOrgRef` values in the database (repository) layer.
 The indexes are designed to allow efficient subtree searches over organizational structure hierarchies.
 
-This is our trick how to fit hierarchical data into flat data tables.
-The details may be quite complicated, but it usually works quite well.
+This is our trick to fit hierarchical data into flat data tables.
+The details may be a bit complicated, but it usually works quite well.
 The `parentOrgRef` is automatically maintained by midPoint under the hood.
-Therefore it is usually completely transparent.
+Therefore, its use is usually completely transparent.
 The user does not even notice that there is a special mechanism working in the background.
 
 However, there are also downsides to this approach.
@@ -315,7 +306,7 @@ Therefore, it is a good idea to check whether the values of `parentOrgRef` make 
 
 Overall, organizational structures work very well in midPoint, and you usually do not need to care about the mechanisms under the hood.
 However, management of organizational structures is much more complex than it seems.
-Therefore, if you try to do strange and unusual things, you should better be sure you fully understand what you are doing.
+If you try to do strange and unusual things, you should better be sure you fully understand what you are doing.
 
 == Orgs and Roles
 
@@ -328,17 +319,51 @@ In fact, organizations behave in almost the same way as roles.
 
 MidPoint has fully embraced this similarity.
 Orgs are designed to behave in almost the same way as roles.
-Orgs may have _inducements_, there may be _constructions_ in them, orgs may contain _authorizations_ and so on.
+Orgs are _abstract roles_, therefore they may have _inducements_, there may be _constructions_ in them, orgs may contain _authorizations_ and so on.
 Org can do everything that a role can do.
 
 Therefore, there is no need to set up complicated configurations that assign a particular role to all members of an organization.
-The organization itself acts as a role.
+The _organization_ itself acts as a role.
 All the privileges that organization members need can be simply added as _inducements_ in the organization itself.
 This is very simple, elegant and mostly fool-proof solution.
 
-We have _Indirect Sales Department_ in ExAmPLE, Inc.
-We want to make things simple, and therefore we want to grant access to CRM system to all the members of this department.
+We have _Sales and Marketing Division_ in ExAmPLE, Inc.
+We want to make things simple, and therefore we want to grant access to CRM system to all the members of this division.
 It is very easy to do:
+
+[source,xml]
+----
+<org oid="7a1feb50-471f-11ea-8aab-1b2627541f15">
+    <name>F11000</name>
+    <description>Expensive people that make money.</description>
+    <displayName>Sales and Marketing Division</displayName>
+    <identifier>11000</identifier>
+    <assignment>
+        <!-- Assignment of parent organizational unit -->
+        <targetRef oid="4d12c1ac-440c-11ea-80af-2b314d06ba95" type="OrgType"/>
+    </assignment>
+    <inducement>
+        <!-- Inducement that grants CRM privileges to all members of this department -->
+        <construction>
+            <!-- CRM resource -->
+            <resourceRef oid="04afeda6-394b-11e6-8cbe-abf7ff430056"/>
+            ...
+        </construction>
+    </inducement>
+</org>
+----
+
+Clever reader certainly wonders whether the CRM privileges apply also to _Indirect Sales Department_, which is located below _Sales and Marketing Division_ in our organizational structure.
+However, clever reader is clever enough to figure out that the privileges are not "inherited" in this case.
+To follow the thoughts of clever reader, you have to think about orgs in the same way as you would think about roles.
+There is an assignment from _Indirect Sales Department_ to _Sales and Marketing Division_.
+However, there is no _inducement_.
+Role hierarchies are built using _inducements_.
+Therefore, privileges of _Sales and Marketing Division_ are not included in _Indirect Sales Department_.
+This may seem to be counter-intuitive, but in fact it is completely correct.
+Orgs and roles form separate hierarchies (see note below).
+However, if you want to "inherit" privileges of a parent org, there is a very simple way how to do it: add explicit _inducement_.
+For example, this is how we can "inherit" the CRM privileges in _Indirect Sales Department_:
 
 [source,xml]
 ----
@@ -352,299 +377,34 @@ It is very easy to do:
         <targetRef oid="7a1feb50-471f-11ea-8aab-1b2627541f15" type="OrgType"/>
     </assignment>
     <inducement>
-        <!-- Inducement that grants CRM privileges to all members of this department -->
-        <construction>
-            <!-- CRM resource -->
-            <resourceRef oid="04afeda6-394b-11e6-8cbe-abf7ff430056"/>
-            ...
-        </construction>
-    </inducement>
-</org>
-----
-
-Clever reader certainly wonders whether the CRM privileges apply also to _Agent Management Section_, which is located below _Indirect Sales Department_ in our organizational structure.
-However, clever reader is clever enough to figure out that the privileges are not "inherited" in this case.
-To follow the thoughts of clever reader, you have to think about orgs in the same way as you would think about roles.
-There is an assignment from _Agent Management Section_ to _Indirect Sales Department_.
-However, there is no _inducement_.
-Role hierarchies are built using _inducements_.
-Therefore, privileges of _Agent Management Section_ are not included in _Indirect Sales Department_.
-This may seem to be counter-intuitive, but in fact it is completely correct.
-Orgs and roles form separate hierarchies (see note below).
-However, if you want to "inherit" privileges of a parent org, there is a very simple way how to do it: add explicit _inducement_.
-For example, this is how we can "inherit" the CRM privileges in _Agent Management Section_:
-
-[source,xml]
-----
-<org oid="f5e619a6-4726-11ea-888c-ab25c098d8b3">
-    <name>F11210</name>
-    <description>People that deal with agents (no James Bond here).</description>
-    <displayName>Agent Management Section</displayName>
-    <identifier>11210</identifier>
-    <assignment>
-        <!-- Assignment of parent organizational unit. This creates organizational hierarchy. -->
-        <targetRef oid="8887e0b0-4726-11ea-96b0-5f5ced221e42" type="OrgType"/>
-    </assignment>
-    <inducement>
         <!-- Inducement to parent organizational unit. This creates "inheritance" of privileges. -->
-        <targetRef oid="8887e0b0-4726-11ea-96b0-5f5ced221e42" type="OrgType"/>
+        <targetRef oid="7a1feb50-471f-11ea-8aab-1b2627541f15" type="OrgType"/>
     </assignment>
 </org>
 ----
 
 This has to be done for every org that needs to inherit privileges from parent, which may be quite daunting for large organizational structures.
-There is a clever way how to avoid placing inducements everywhere.
-The solution involves the concept of _metaroles_, as parent org is technically a metarole for child orgs.
+Fortunately, there is a clever way how to avoid placing inducements everywhere.
+The solution involves the concept of _meta-roles_, as parent org is technically a meta-role for child orgs.
 However, this involves an advanced thinking about application of assignment and inducements.
 Even a clever reader may not be ready for such abstract thoughts yet.
 This has to come later when the basic principles have enough time to sink in.
 
 .Org and role hierarchies
 NOTE: Both orgs are roles are _hierarchical_ in a way.
-However, it is not the same hierarchy.
+However, they form a separate hierarchies.
 Org hierarchy is used to model organizational trees.
-Role hierarchy is used to build RBAC structures.
+Role hierarchy is used to build access control structures.
 Those hierarchies have completely different purpose.
 They are also built using different mechanism.
 Role hierarchy is used to group privileges, and therefore it is built using _inducements_.
 Org hierarchy is used to group subjects (users), and it is built using _assignments_.
 There are also different internal mechanisms, indexing and data storage properties.
-For example, role hierarchy is not using `parentOrgRef`, therefore there is much lower overhead as compared to org hierarchy.
+For example, role hierarchy does not use `parentOrgRef`, therefore there is much lower overhead as compared to org hierarchy.
 However, this means that the capabilities to query role hierarchy is limited.
-Both hierarchies are their respective place and purpose.
-Even though the difference may not be very apparent now, it is quite substantial.
+Both hierarchies have their respective place and purpose.
+Even though the difference may not be entirely obvious now, it is quite substantial.
 Hopefully, this will get much more clear later when there will be more examples for both org and role structures.
-
-== Managers
-
-Placing people in organizational structures has a significant value on its own.
-However, all the people usually do not have the same _relation_ to the organizational unit.
-Most people will usually be ordinary _members_ of organizational unit.
-Then there are people that are somehow special: departmental managers, team leaders, project managers, supervisors and similar life forms.
-
-How do we designate a manager of an organizational unit?
-You probably guessed it already.
-In a typical midPoint fashion, we are re-using _assignment_, of course.
-There is just one small detail.
-We are specifying `relation` in assignment target reference:
-
-[source,xml]
-----
-<user>
-    <name>aanderson</name>
-    ...
-    <assignment>
-        <!-- Direct Sales Department -->
-        <targetRef oid="832f409a-4726-11ea-b0be-8b8eab99c1ed" type="OrgType" relation="manager"/>
-    </assignment>
-    ...
-</user>
-----
-
-This assignment makes Alice a manager of direct sales department.
-It is as simple as that.
-All the power of assignment is at your disposal.
-Therefore, it is easy to assign a manager for a temporary time period, suspend a manager and so on.
-
-Manager assignment is created in the user interface in almost the same way as normal assignment is created.
-The only difference is selection of _manager relation_ at the bottom of the assignment target dialog:
-
-.Assign organizational unit manager
-image::09-07-assign-org-manager.png[Assign organizational unit manager]
-
-MidPoint now knows that Alice is a manager of Direct Sales Department.
-This is also displayed in the organizational tree:
-
-.Organizational unit with a manager
-image::09-08-org-tree-manager.png[Organizational unit with a manager]
-
-But, wait a minute!
-Alice has been promoted to be a _manager_ of direct sales department.
-But she should be located in sales and marketing division as a direct _member_ of that division.
-E.i. she is _member_ of one organizational unit and _manager_ of another organizational unit.
-How do we do that?
-This is all perfectly clear to a clever reader by now.
-Alice has two assignments.
-First assignment is an ordinary assignment that targets sales and marketing division.
-Second assignment is a manager assignment that targets direct sales department.
-This is perfectly normal in midPoint.
-Users may have any number of assignments to any objects (unless it is explicitly constrained by policy rules or archetypes).
-Which means that users may be members of any number of organizational units at the same time.
-
-Therefore, there is no problem for Alice to be a member of one unit and manager of another.
-MidPoint can support all kind of bizarre organizational arrangements.
-MidPoint was deliberately designed in this way, because reality has an annoying habit to bring surprises, especially when organizational structures are involved.
-
-Well, Alice is a manager now.
-Good for her.
-But she still has the same access rights as ordinary workers.
-That is not right!
-Managers wear suits and ties.
-Which means that they need to have more privileges than mere mortals.
-As managers usually control funding of software development, it is perfectly understandable that midPoint has a way to set up privileges that apply to managers:
-
-[source,xml]
-----
-<org oid="832f409a-4726-11ea-b0be-8b8eab99c1ed">
-    <name>F11100</name>
-    <displayName>Direct Sales Department</displayName>
-    ...
-    <inducement>
-        <construction>
-            ... Privileges exclusive to managers are specified here ...
-        </construction>
-        <orderConstraint>
-            <order>1</order>
-            <relation>manager</relation>
-        </orderConstraint>
-    </inducement>
-</org>
-----
-
-This is a way how a manager of the direct sales department gets special privileges.
-The `orderConstraint` makes sure that only the users that have `manager` relation to this organization units will get the privileges.
-
-But wait a minute!
-Clever reader does not like that.
-This approach to manager privileges is not going to be very practical.
-Managers usually do not have special privileges in each organizational unit.
-In most organizations, managers have the same privileges regardless of the unit they manage.
-
-One way to implement this approach is to create a `Manager` role, put the special privileges there, and assign the role to every manager of every organizational unit.
-However, that creates redundancy.
-We have to make sure this role is assigned whenever a person becomes manager and that it is unassigned when the person is no longer manager.
-This is the way how this problem is solved in many IDM deployments.
-Yet, it is quite a fragile mechanism.
-This is not a way how we do things in midPoint.
-
-The `orderConstraint` data structure in our example looks suspiciously complex.
-That impression is correct, as it indeed is quite a complex concept.
-What we see here is the first glimpse at high-order "assignment algebra" that is a working horse of complex midPoint deployments.
-This mechanism is often employed when working with meta-roles and archetypes.
-As organizational units are in fact roles, and organizational structures are just a trees formed by _assignments_, they technically form meta-role structures.
-
-Therefore, the right way how to set up manager privileges is to move privilege definition to a central place.
-It may be top-level organizational unit, or it may be an _archetype_.
-In such case our _inducement_ can apply to all the managers, regardless of organizational unit.
-However, the exact configuration is a bit complex, and we still need to learn more about midPoint to be able to use it.
-Therefore we leave the details for later chapters.
-
-TIP: MidPoint assigns managers to organizational units.
-That is the right way to do it.
-However, we have often seen a different approach.
-In these cases the manager is "assigned" to users.
-I.e. each user has a reference to his or her manager.
-This approach is wrong.
-Organizational structures change.
-People come and go.
-Everything is changing all the time.
-It is very easy to change one assignment in organizational structure in case that a manager is replaced.
-However, it is extremely difficult to replace a manager in the direct user-manager data structure.
-Maybe the former manager was managing several organizational units, and now we are replacing him with two managers.
-Maybe there is a re-organization going on at the same time.
-The result is going to be a mess.
-Avoid the direct user-manager approach whenever possible.
-
-== Relation
-
-In midPoint, we like to design generic re-usable mechanisms.
-You did not think that we made the concept of _manager_ in a way that would be hardcoded to organizational structure, did you?
-As you have got so far through this book, you would probably suspect there is more to this _relation_ thing that we have seen so far.
-
-The _relation_ specifies the nature of a relation between two objects.
-For example a user may be a member of an organizational unit, manager of a project, owner of a role or approver of role assignment requests.
-In such cases, _member_, _manager_, _owner_ and _approver_ are relations that a user can have to an object.
-
-The most common way how to use relation is to specify it in `targetRef` in an assignment.
-The following example illustrates the usual way how to assign an owner for a role:
-
-[source,xml]
-----
-<user>
-    <name>aanderson</name>
-    ...
-    <assignment>
-        <!-- Business Analyst role -->
-        <targetRef oid="aaa6cde4-0471-11e9-9b50-c743da469067" type="RoleType" relation="owner"/>
-    </assignment>
-    ...
-</user>
-----
-
-There are several built-in relations in midPoint:
-
-|===
-|Relation |Usually used for |Description
-
-|`default`
-| Everything
-| This is the most common, non-specific relation to an object.
-When used with a role, it simply means that the user _has_ the role.
-Usually interpreted as _member_ when used with organizational units.
-It is the usual, normal relation.
-
-As the name suggests, this is the default relation.
-If no other relation is specified, this relation is used.
-
-|`manager`
-|Orgs
-|Manager of an organizational unit, project manager, teamleader, etc.
-Usually entitles a person (or a group) that have leading position in an org.
-This usually specifies executive or operational privileges (cf. `owner`).
-
-|`owner`
-|Roles, Orgs
-|Person responsible for governance of the object.
-Often used to nominate role owners that are responsible for role definition and maintenance.
-May be used with organizational units to specify project sponsor or business owner.
-Specifies a person responsible for governance and high-level policy decisions rather than day-to-day management (cf. `manager`).
-
-|`approver`
-|Roles, Orgs
-|Person responsible for deciding _membership_ in roles and orgs.
-A gatekeeper or moderator.
-Approvers usually decide whether someone can have a role, or may be a member of organizational unit.
-Unlike owners, approvers do not create or modify role definition.
-They cannot change the role.
-They can only decide who can have that role and who cannot.
-
-|`meta`
-|Metaroles
-|Special-purpose relation that is sometimes used with metaroles.
-Metarole structures can be complex and confusing.
-However, such structures and especially policies that govern them may sometimes be simplified, if role-metarole relations are marked in a special way.
-This relation is designed specifically for that purpose.
-
-The `meta` relation is not mandatory.
-Metarole functionality will work just fine without it.
-In fact, almost all the metarole configuration are not using this relation.
-But it may come handy if the situation becomes too complicated.
-|===
-
-Those are built-in relations.
-There are some pre-configured policies that work with them.
-However, you are free to specify and use your own relations.
-But that is quite an advanced topic and the majority of deployments are perfectly fine using just the built-in relations.
-
-As you can see, the built-in relations do not have overly strict specifications.
-There is a lot of _usually_, _often_ and _almost_ in the description of relations.
-The reason is that the relations do not do anything just by themselves.
-They just specify how one object relates to another object.
-There are no strict _policies_ or _behavior_ associated with them.
-
-The policies are specified elsewhere.
-Assignment and inducements may behave differently for different relations, as we have seen in previous section.
-Similarly, _policy rules_ are often sensitive to relations.
-For example the policy that assignment of some roles has to be approved is implemented by a policy rule that is aware of `approver` relation.
-Authorizations are often sensitive to relations.
-Archetypes influence how the system behaves based on relations.
-User interface may behave differently for some relations.
-And so on.
-Relations do nothing just by themselves.
-However, good part of the system is usually configured to recognize relations and behave accordingly.
-It is a matter of that _configuration_ that determines how exactly will the system behave.
-This is also the reason for such vague definition of relations, even those built-in relations.
-They will do what you make them do.
 
 == Multiple Organizational Structures
 
@@ -658,7 +418,7 @@ It is a very rare sight when an entire organizational structure of an organizati
 There is always the usual _functional_ organizational structure with divisions, departments, sections, companies, branches, schools and faculties.
 Then there is a _project_ organizational structure that is often completely orthogonal to functional organizational structure.
 This is sometimes spiced up with workgroups, task forces, focus groups, research teams, interest groups, clubs and similar collective life forms.
-There are the many trees that make a forrest of organizational structures.
+There are many trees that make a forrest of organizational structures.
 
 Fortunately, midPoint is not very picky when it comes to organizational structures.
 MidPoint is not limited to a single organizational tree.
@@ -705,51 +465,466 @@ Just create new root _org_ for projects and place the projects under it:
 </org>
 ----
 
-We have two organizational trees now.
-Each neatly stowed under its own tab:
+We have two organizational trees now, each neatly stowed under its own tab:
 
+// TODO: update screenshot
 .Project organizational tree
 image::09-09-org-tree-projects.png[Project organizational tree]
 
 This is a nice _project_ organizational structure.
 However, our users are members of _functional_ organizational structure already.
-How can I add my users to the projects?
+How can we add our users to the projects?
 The answer is _assignment_, of course.
 User can belong to any number of organizational units at the same time.
 It makes no difference whether they are in the same organizational tree or in different trees.
-Simply assign the projects to the users.
-The same _manager_ relation works for projects as well.
+We can simply assign the projects to the users.
 In fact, midPoint does not even recognize the difference between _functional_ and _project_ organizational structures.
 They look all the same to midPoint, and midPoint treats them in the same way.
 If there is a need for the structures to behave differently, it has to be explicitly configured.
 Which is usually done by using _archetypes_.
-We will talk about _archetypes_ later.
 
 There are two organizational structures now.
 You can have three organizational structures if you want to, or five of them.
 Any number you like - as long as all the tabs for organizational structures fit on the screen.
-The structures can be a deep rees with many branches, or they can be completely flat, with just a single level.
+The structures can be a deep trees with many branches, or they can be completely flat, with just a single level.
 The structure may not even be a tree.
 As long as it is an _acyclic directed graph_ it will work just fine.
 It can have multiple roots, it may have alternate paths, it can do all the crazy stuff.
-Just avoid cycles.
+Just avoid _cycles_.
 Cycles break the maths which is the foundation of organizational structure indexing and evaluation.
 Cycles won't work, but pretty much all the other arrangements are perfectly fine.
+
+== Archetypes
+
+Org is such a flexible creature.
+It can represent variety of concepts: divisions, sections, departments, teams, projects, companies, branches, schools, faculties, zones, locations - you name it.
+However, it would be very easy to get lost if all these fine shades of orgs looked and behaved the same.
+Fortunately, we already know what we can use to apply some character to individual subtypes of objects.
+We are going to apply archetypes to orgs.
+
+In theory, application of an archetype to org is easy.
+First, we need a suitable archetype.
+
+.archetype-project.xml
+[source,xml]
+----
+<archetype oid="5c2c123e-86ff-11ef-9f50-ab1904c498f6">
+    <name>Project</name>
+    <archetypePolicy>
+        <display>
+            <label>Project</label>
+            <pluralLabel>Projects</pluralLabel>
+            <icon>
+                <cssClass>fa fa-chart-gantt</cssClass>
+                <color>#ffc107</color>
+            </icon>
+            <tooltip>Project</tooltip>
+        </display>
+    </archetypePolicy>
+    <assignment>
+        <identifier>holderType</identifier>
+        <description>This archetype can be applied to orgs (OrgType).</description>
+        <assignmentRelation>
+            <holderType>OrgType</holderType>
+        </assignmentRelation>
+    </assignment>
+</archetype>
+----
+
+Then we can apply the archetype to objects.
+
+.org-tree-project.xml
+[source,xml]
+----
+<org oid="9c1b8464-edfd-11ea-87b8-db467c5ae301">
+    <name>PBD2020</name>
+    <description>Make money fast.</description>
+    <displayName>Big Deal</displayName>
+    <identifier>BD2020</identifier>
+    <assignment>
+        <targetRef oid="832e37e4-edfd-11ea-9f8c-ef736d6646a2" type="OrgType"/>
+    </assignment>
+    <assignment>
+        <targetRef oid="5c2c123e-86ff-11ef-9f50-ab1904c498f6" type="ArchetypeType"/>
+    </assignment>
+</org>
+----
+
+When the archetype is applied, the projects have nice icon and custom color.
+
+// TODO: screenshot: projects - in a list, not in a tree - to show the icons
+
+Archetypes are easy to apply.
+However, it may not be entirely easy to choose _what_ archetypes to apply to orgs.
+For example, the traditional enterprise functional organizational structure has _divisions_ at the top, _sections_ at the bottom and _departments_ in between.
+It may be tempting to create three archetypes: `Division`, `Department` and `Section`.
+However, this is usually not necessary.
+Single `Organizational unit` archetype should be enough.
+Having a single archetype for all kinds of functional organizational units is usually much simpler and more flexible.
+Perhaps the only reason to go for `Division`, `Department` and `Section` would be a need to modify behavior and policies of individual types of organizational units - which is not very common.
+
+While single `Organizational unit` archetype is usually the best option, it is a good idea to create a separate archetype for top-level org.
+The top-level org usually represents an _organization_, such as company, university or agency.
+While individual organizational units are usually similar to each other, the top-level organization is likely to be quite different.
+Therefore, having a separate `Organization` archetype is a good idea.
+
+.org-tree-project.xml
+[source,xml]
+----
+<archetype oid="886bfa6e-8702-11ef-9c40-6fce51f54b0d">
+    <name>Organization</name>
+    <archetypePolicy>
+        <display>
+            <label>Organization</label>
+            <pluralLabel>Organizations</pluralLabel>
+            <icon>
+                <cssClass>fa fa-building-flag</cssClass>
+                <color>#ffc107</color>
+            </icon>
+            <tooltip>Organization</tooltip>
+        </display>
+    </archetypePolicy>
+    <assignment>
+        <identifier>holderType</identifier>
+        <assignmentRelation>
+            <holderType>OrgType</holderType>
+        </assignmentRelation>
+    </assignment>
+</archetype>
+----
+
+Moreover, while organizations do not change often, when they change the change is usually quite substantial.
+For example, companies are occasionally re-structured, re-branded or merged with other companies.
+In such cases, separate top-level root object comes very handy.
+E.g. in case of merger, it is quite easy to add another top-level `Organization` object for the other company, and then take your time to gradually move people and organizational units around.
+
+.org-example-top.xml
+[source,xml]
+----
+<org oid="4d12c1ac-440c-11ea-80af-2b314d06ba95">
+    <name>F10000</name>
+    <displayName>ExAmPLE, Inc.</displayName>
+    <assignment>
+        <targetRef oid="886bfa6e-8702-11ef-9c40-6fce51f54b0d" type="ArchetypeType"/>
+    </assignment>
+</org>
+----
+
+Having a separate archetype for the top-level root orgs is generally a good idea due to the definition of _assignment relations_, as is explained below.
+However, first we need to talk a bit about the _relation_ itself.
+
+== Managers
+
+Placing people in organizational structures has a significant value on its own.
+However, all the people usually do not have the same _relation_ to the organizational unit.
+Most people are ordinary _members_ of organizational unit.
+Then there are people that are somehow special: departmental managers, team leaders, project managers, supervisors and similar life forms.
+
+How do we designate a manager of an organizational unit?
+You probably guessed it already.
+In a typical midPoint fashion, we are re-using _assignment_, of course.
+There is just one small detail.
+We are specifying `relation` in assignment target reference:
+
+[source,xml]
+----
+<user>
+    <name>aanderson</name>
+    ...
+    <assignment>
+        <!-- Direct Sales Department -->
+        <targetRef oid="832f409a-4726-11ea-b0be-8b8eab99c1ed" type="OrgType" relation="manager"/>
+    </assignment>
+    ...
+</user>
+----
+
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+This assignment makes Alice a _manager_ of Sales and Marketing Division.
+It is as simple as that.
+All the power of assignment is at your disposal.
+Therefore, it is easy to assign a manager for a temporary time period, suspend a manager and so on.
+
+Manager _assignment_ is created in the user interface in almost the same way as normal assignment is created.
+The only difference is selection of _manager relation_ at the bottom of the assignment target dialog:
+
+// TODO: update screenshot
+.Assign organizational unit manager
+image::09-07-assign-org-manager.png[Assign organizational unit manager]
+
+After the assignment is in place, midPoint knows that Alice is a manager of Sales and Marketing Division.
+This is also displayed in the organizational tree:
+
+// TODO: update screenshot
+.Organizational unit with a manager
+image::09-08-org-tree-manager.png[Organizational unit with a manager]
+
+TIP: MidPoint assigns managers to organizational units.
+That is the right way to do it.
+However, we have often seen a different approach.
+In these cases the manager is "assigned" to users.
+I.e. each user has a reference to his or her manager.
+This approach is wrong.
+Organizational structures change.
+People come and go.
+Everything is changing all the time.
+It is very easy to change one assignment in organizational structure in case that a manager is replaced.
+However, it is extremely difficult to replace a manager in the direct user-manager data structure.
+Maybe the former manager was managing several organizational units, and now we are replacing him with two managers.
+Maybe there is a re-organization going on at the same time.
+The result is going to be a mess.
+Avoid the direct user-manager approach whenever possible.
+
+We can congratulate Alice on her new position in management.
+However, she still has the same access rights as ordinary workers.
+That is not right!
+Managers wear suits and ties, which means that they need to have more privileges than mere mortals.
+As managers usually control funding of software development, it is perfectly understandable that midPoint has a way to set up privileges that apply to managers:
+
+[source,xml]
+----
+<org oid="7a1feb50-471f-11ea-8aab-1b2627541f15">
+    <name>F11000</name>
+    <displayName>Sales and Marketing Division</displayName>
+    <identifier>11000</identifier>
+    ...
+    <inducement>
+        <construction>
+            ... Privileges exclusive to managers are specified here ...
+        </construction>
+        <orderConstraint>
+            <order>1</order>
+            <relation>manager</relation>
+        </orderConstraint>
+    </inducement>
+</org>
+----
+
+This inducement grants special privileges to manager of the Sales and Marketing Division.
+The `orderConstraint` makes sure that only the users that have `manager` relation to this organization unit get the privileges.
+
+Wait a minute!
+Clever reader does not like that.
+This approach to manager privileges is not going to be very practical.
+Managers usually do not have special privileges in each organizational unit.
+In most organizations, managers have the same privileges regardless of the unit they manage.
+
+One way to implement this approach is to create a `Manager` role, put the special privileges there, and assign the role to every manager of every organizational unit.
+However, that creates redundancy.
+We have to make sure this role is assigned whenever a person becomes manager, and that it is unassigned when the person is no longer manager.
+This is the "standard" method used to manage privileges in other identity management platforms.
+However, it is quite a fragile mechanism.
+This is not a way how we do things in midPoint, we do not like fragile and tedious things here.
+
+The `orderConstraint` data structure in our example looks suspiciously complex.
+That impression is correct, as it indeed is quite a complex concept.
+What we see here is the first glimpse at high-order "assignment algebra" that is a work-horse of complex midPoint deployments.
+This mechanism is often employed when working with _meta-roles_ and _archetypes_.
+As organizational units are _abstract roles_, and organizational structures are just a trees formed by _assignments_, they technically form meta-role structures.
+
+Therefore, the right way to set up manager privileges is to move privilege definition to a central place.
+It may be top-level root org, or it may be an `Organizational unit` _archetype_.
+In such case our _inducement_ can apply to all the managers, regardless of organizational unit.
+However, the exact configuration is a bit complex, and we still need to learn more about midPoint to be able to use it.
+Therefore, we leave the details for later chapters.
 
 Organizational structure may have almost any form.
 A user can be a member of many organizational units.
 Which also means that a user may _manage_ many organizational units.
 That also applies the other way around: an organizational unit may have many managers.
-MidPoint fully supports all such cases.
-By default, MidPoint is very flexible when it deals with organizational structure.
+As member and manager assignments are independent, users may belong to a different organizational unit that they manage.
+MidPoint can support all kind of bizarre organizational arrangements.
+MidPoint was deliberately designed in this way, because reality has an annoying habit to bring surprises, especially when organizational structures are involved.
 However, you may not like all this liberalism in organizational management.
 _Ordnung muss sein!_
 If you want to constraint organizational management to allow only a single manager for each organizational unit, you can do it.
-But you have to explicitly specify a policy by setting up _policy rules_ and _archetypes_.
-_Policy rules_ provide a very generic and very powerful mechanism how to constraint and control midPoint in many ways, and _archetypes_ provide flexible typing mechanism.
-But that is a topic for its own chapter.
+However, you have to explicitly specify a policy by setting up _assignment relation_, _policy rules_ and _archetypes_.
+_Policy rules_ provide a very generic and very powerful mechanism to constraint and control midPoint in many ways, and _archetypes_ provide flexible typing mechanism.
+
+== Relation
+
+In midPoint, we like to design generic re-usable mechanisms.
+You did not think that we made the concept of _manager_ in a way that would be hardcoded to organizational structure, did you?
+As you have got so far through this book, you would probably suspect there is more to this _relation_ thing that we have seen so far.
+
+The _relation_ parameter specifies the nature of a relation between two objects.
+For example a user may be a member of an organizational unit, manager of a project, owner of a role or approver of role assignment requests.
+In such cases, _member_, _manager_, _owner_ and _approver_ are relations that a user can have to an object.
+
+The most common way to use relation is to specify it in `targetRef` in an assignment.
+The following example illustrates the usual way to assign an _owner_ for a role:
+
+[source,xml]
+----
+<user>
+    <name>aanderson</name>
+    ...
+    <assignment>
+        <!-- Business Analyst role -->
+        <targetRef oid="aaa6cde4-0471-11e9-9b50-c743da469067" type="RoleType" relation="owner"/>
+    </assignment>
+    ...
+</user>
+----
+
+There are several built-in relations in midPoint:
+
+|===
+|Relation |Usually used for |Description
+
+|`default`
+|Everything
+|This is the most ordinary, most common, non-specific relation to an object.
+When used with a role, it simply means that the user _has_ the role.
+Usually interpreted as _member_ when used with organizational units.
+It is the usual, normal relation.
+
+As the name suggests, this is the default relation.
+If no other relation is specified, this relation is used.
+
+|`manager`
+|Orgs
+|Manager of an organizational unit, project manager, teamleader, etc.
+Usually entitles a person (or a group) that have leading position in an org.
+This usually specifies executive or operational privileges (cf. `owner`).
+
+|`owner`
+|Roles, Orgs
+|Person responsible for _governance_ of the object.
+Often used to nominate role owners that are responsible for role definition and maintenance.
+May be used with organizational units to specify project sponsor or business owner.
+Specifies a person responsible for governance and high-level policy decisions rather than day-to-day management (cf. `manager`).
+
+|`approver`
+|Roles, Orgs
+|Person responsible for deciding _membership_ in roles and orgs, a gatekeeper or moderator.
+Approvers usually decide whether someone can have a role, or may be a member of organizational unit.
+Unlike owners, approvers do not create or modify role definition.
+They cannot change the role.
+They can only decide who can have that role and who cannot.
+
+|`meta`
+|Meta-roles
+|Special-purpose relation that is sometimes used with meta-roles.
+Meta-role structures can be complex and confusing.
+However, such structures and especially policies that govern them may sometimes be simplified, if role-metarole relations are marked in a special way.
+This relation is designed specifically for that purpose.
+
+The `meta` relation is not mandatory.
+Meta-role functionality will work just fine without it.
+In fact, almost all the meta-role configuration are not using this relation.
+Yet, it may come handy if the situation becomes too complicated.
+|===
+
+Those are built-in relations.
+There are some pre-configured policies that work with them.
+However, you are free to specify and use your own relations.
+However, that is quite an advanced topic, and the majority of deployments are perfectly fine using just the built-in relations.
+
+As you can see, the built-in relations do not have overly strict specifications.
+There is a lot of _usually_, _often_ and _almost_ in the description of relations.
+The reason is that the relations do not do anything just by themselves.
+They just specify how one object relates to another object.
+There are no strict _policies_ or _behavior_ associated with them.
+
+The policies are specified elsewhere.
+Assignments and inducements may behave differently for different relations, as we have seen in previous section.
+Similarly, _policy rules_ are often sensitive to relations.
+For example, the policy that assignment of some roles has to be approved is implemented by a policy rule that is aware of `approver` relation.
+Authorizations are often sensitive to relations.
+Archetypes influence how the system behaves based on relations.
+User interface may behave differently for some relations.
+And so on.
+Relations do nothing just by themselves.
+However, good part of the system is usually configured to recognize relations and behave accordingly.
+It is a matter of that _configuration_ that determines how exactly will the system behave.
+This is also the reason for such vague definition of relations, even those built-in relations.
+They will do what you make them do.
+
+
+== Assignment Relation Limitations
+
+MidPoint is very flexible platform - which is usually a huge advantage.
+However, there are downsides to flexibility.
+It may be difficult to choose correct option from large number of possibilities.
+This is especially true when it comes to assignments and relations.
+By default, midPoint does not constrain the assignments, which means any object can be assigned to any other object using any _relation_.
+However, this makes it difficult to create a reasonable user interface, as there are just too many options to choose from.
+Users can be confused what relation to choose, which relations make sense.
+Even worse, users may to choose to do the same thing in two different ways.
+As midPoint deployment matures, it is more than desired to constraint the use of assignments and relations only to those combinations that make sense.
+
+_Assignment relation_ mechanism is used for that purpose.
+We have already seen basic usage of assignment relation in archetypes.
+The assignment relation was used to constraint object type that an archetype can be assigned to.
+Following example of `Project` archetype is using `holderType` clause of the `assignmentRelation` to limit application of archetype to orgs.
+
+.archetype-project.xml
+[source,xml]
+----
+<archetype oid="5c2c123e-86ff-11ef-9f50-ab1904c498f6">
+    <name>Project</name>
+    ...
+    <assignment>
+        <identifier>holderType</identifier>
+        <description>This archetype can be applied to orgs (OrgType).</description>
+        <assignmentRelation>
+            <holderType>OrgType</holderType>
+        </assignmentRelation>
+    </assignment>
+</archetype>
+----
+
+The `assignmentRelation` constraints ability to create assignment to the `Project` archetype, in this case the _holder_ of the assignment must be of `OrgType` type.
+However, _assignment relation_ can be used to further constraint use of assignments.
+We probably want to constraint the _relations_ that can be applied to a project.
+It is quite resonable to constraint the relations to members, managers and owners of projects.
+This can simplify things, as we probably do to want approvers and "meta" as a relations to projects.
+Also, we want to put only _users_ in the project.
+In theory, midPoint organizational structure can hold almost any type of object.
+However, it does not make much sense for a project to contain roles or services.
+We can constrain both relations and object types using `assignmentRelation` in the `Project` archetype.
+
+.archetype-project.xml
+[source,xml]
+----
+<archetype oid="5c2c123e-86ff-11ef-9f50-ab1904c498f6">
+    <name>Project</name>
+    ...
+    <inducement>
+        <identifier>membership</identifier>
+        <description>Projects are flat (no sub-teams), have members and manager. May have owner (sponsor).</description>
+        <assignmentRelation>
+            <description>User can be direct member of project, as well as manager and owner.</description>
+            <holderType>UserType</holderType>
+            <relation>org:default</relation>
+            <relation>org:manager</relation>
+            <relation>org:owner</relation>
+        </assignmentRelation>
+    </inducement>
+</archetype>
+----
+
+Unlike the `holderType` case above, in this case the `assignmentRelation` is placed in _inducement_ instead of _assignment_.
+In the previous case, we were constraining assignment of _projects_ to _archetypes_.
+Whereas in this case we are trying to constraint assignments of _users_ to the _projects_.
+This is one degree of indirection farther, therefore _inducement_ is used instead of _assignment_.
+The arechetype acts as a meta-role, the content of the inducement is applied to the _projects_ (archetyped objects), not to the archetype itself.
+
+The _assignment relation_ specification is used by the user interface.
+User interface is going to present only those object types and relation that make sense for the operation that user has initiated.
+
+// TODO: screenshot: assign members to project in GUI, selection of relations
+
+NOTE: Support for _assignment relation_ in midPoint 4.8 user interface is not yet completed.
+Some parts of user interface use _assignment relation_, while others are not using it yet.
+However, it is a good practice to specify _assignment relation_ in archetypes quite early in midPoint deployment.
+The specification is going to be very useful after upgrade to a newer midPoint version.
 
 == Beyond Users
+
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 MidPoint organizational structure can do a lot of crazy stuff.
 Organizational structures are usually build to contain people.
@@ -1684,6 +1859,8 @@ In this case we would use explicit _kind_ and _intent_ in the construction:
 The `System Administrator` role above specifies that a special `admin` account should be created for system administrators.
 When this role is combined by an ordinary `Employee` role, the administrator will get two accounts: the usual employee account (intent=`default`) and a special-purpose administration account (intent=`admin`).
 
+
+// TODO: later? use orgs to model locations?
 
 == Conclusion
 
