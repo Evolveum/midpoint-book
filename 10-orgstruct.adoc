@@ -924,11 +924,10 @@ The specification is going to be very useful after upgrade to a newer midPoint v
 
 == Beyond Users
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
 MidPoint organizational structure can do a lot of crazy stuff.
-Organizational structures are usually build to contain people.
-Whereas midPoint organizational structure can contain a broad range of object types.
+Organizational structures are usually build to contain _people_.
+However, midPoint is quite different.
+MidPoint organizational structure can contain a broad range of object types.
 Users, roles and services are the most common object types, but almost any other midPoint object can be placed in organizational structure.
 
 _Role catalog_ is a common use of organizational structure that does not (directly) involve people.
@@ -936,15 +935,65 @@ Role catalog is used to sort the roles into categories, much like a catalog in e
 The catalog is used to present roles to users in organized form, so users may easily find the roles when request them in self-service interface.
 
 MidPoint role catalog is simply an organizational structure.
-It does not have divisions, sections or projects, but it has categories.
+It does not have divisions, sections or projects, but it has _categories_.
 Categories are (almost) ordinary orgs that form the hierarchy.
 
+.org-role-catalog.xml
+[source,xml]
+----
+<org oid="945315a6-fc23-11ea-832e-1f9945adb481">
+    <name>Role catalog</name>
+    <displayOrder>500</displayOrder>
+</org>
+
+<org oid="b7e4cd0c-fc23-11ea-a79a-079cad42b39b">
+    <name>RC001</name>
+    <displayName>Client acquisition</displayName>
+    <assignment>
+        <targetRef oid="945315a6-fc23-11ea-832e-1f9945adb481" type="OrgType"/>
+    </assignment>
+</org>
+
+<org oid="259625ee-fc24-11ea-8bae-1bfdce011faf">
+    <name>RC002</name>
+    <displayName>Customer support</displayName>
+    <assignment>
+        <targetRef oid="945315a6-fc23-11ea-832e-1f9945adb481" type="OrgType"/>
+    </assignment>
+</org>
+----
+
+TIP: Role catalog configuration with several roles can be found in `org-role-catalog.xml` file in the samples.
+
+Role catalog is displayed in used interface as a new organizational structure.
+However, as most organizational structures are built for people, midPoint user interface displays only users as members of organizational units by default.
+You have to explicitly change the type to _role_ to see content of the catalog.
+
+// TODO: update screenshot
 .Role catalog
 image::09-10-role-catalog.png[Role catalog]
 
-Primary use of the catalog is related to request-and-approval process.
+Primary use of the catalog is related to _access request process_.
 The catalog makes it easier for a user to find appropriate role when requesting its assignment in self-service part of midPoint user interface.
-However, the catalog can also be used to apply policies to a whole group of roles.
+Root org of the role catalog has to be configured in `adminGuiConfig` section of system configuration object:
+
+[source,xml]
+----
+ <systemConfiguration>
+    ...
+    <adminGuiConfiguration>
+        ...
+        <accessRequest>
+            <roleCatalog>
+                <roleCatalogRef oid="945315a6-fc23-11ea-832e-1f9945adb481" type="OrgType"/>
+                ...
+            </roleCatalog>
+        </accessRequest>
+    </adminGuiConfiguration>
+</systemConfiguration>
+----
+
+While the primary use of role catalog is the _access request process_, the catalog can also be used to apply policies to a whole group of roles.
 Owner of the category may be considered to be a default approver for all the roles in the category.
 Category owner may be authorized to modify roles in the category.
 And so on.
@@ -957,45 +1006,44 @@ Nevertheless, the organizational structure is a powerful mechanism to systematic
 
 == Organizational Structure Synchronization
 
-MidPoint can manage organizational structure.
-But where that structure comes from?
-Back in 20^th^ century there were entire teams dedicated to drawing organizational chart on paper.
-It is 21^st^ century now, we do not use paper anymore.
+MidPoint can manage organizational structure, but where that structure comes from?
+Back in 20^th^ century there were entire teams dedicated to drawing organizational charts on paper.
+However, it is 21^st^ century already.
+We do not use paper anymore.
 We are using computers to manage organizational charts now.
 Which means that dedicated teams are drawing organizational charts in Excel and distributing them by e-mail.
 
 Fortunately, there are some organizations that have truly progressed into 21^st^ century.
-Such organizations store their organizational structures in a structured form, usually in database tables.
+Such organizations store their organizational structures in a machine-processable form, usually in database tables.
 When exported to a CSV file, the structure may look like this:
 
 .org.csv
 [source,csv]
 ----
 "orgnum","name","description","parentOrgNum"
-"10000","ExAmPLE","ExAmPLE, Inc.",""
 "11000","Sales and Marketing Division","Expensive people that make money.","10000"
 "11100","Direct Sales Department","Suits that talk to customers directly.","11000"
 "11200","Indirect Sales Department","Suits that talk to other suits that talk to customers.","11000"
 ...
 ----
 
-In this case each organizational unit has a unique identifier, such as `11000`.
+In this case, each organizational unit has a unique identifier, such as `11000`.
 Each organizational unit has a reference to parent organizational unit.
 When all the lines are processed, they form a complete organizational tree.
 
-This is a very good information source.
+This is quite a good information source.
 Of course, we would like to automatically pull the data from this source instead of managing organization tree manually.
 How could we do it?
 Clever reader is smiling, remembering that we like to create generic re-usable mechanisms in midPoint.
-There is a way how to synchronize _user_ records from the HR system.
-Of course, the same mechanisms can be reused to synchronize _organizational unit_ records.
+We already know how to synchronize _user_ records from the HR system.
+As we are using midPoint, it is perhaps no big surprise that the same mechanisms can be easily reused to synchronize _organizational unit_ records as well.
 
-MidPoint synchronization mechanism can work with almost any object.
-It can synchronize HR records to users, organizational unit records to orgs, printer database to services, Active directory groups to roles or pretty much anything to anything.
+MidPoint synchronization mechanism can work with almost any type of object.
+It can synchronize HR records to _users_, organizational unit records to _orgs_, application inventory database to _services_, Active directory groups to _roles_ or pretty much anything to anything.
 This is what we call _generic synchronization_.
 
 Similarly to ordinary synchronization, we need to start with a _resource_.
-However, this resource will not contain accounts, it will contain organizational units.
+However, this resource does not contain accounts, it contains organizational units.
 
 .resource-csv-org.xml
 [source,xml]
@@ -1006,16 +1054,12 @@ However, this resource will not contain accounts, it will contain organizational
 
     <connectorRef type="ConnectorType">
         <filter>
-            <q:equal>
-                <q:path>c:connectorType</q:path>
-                <q:value>com.evolveum.polygon.connector.csv.CsvConnector</q:value>
-            </q:equal>
+            <q:text>connectorType = "com.evolveum.polygon.connector.csv.CsvConnector"</q:text>
         </filter>
     </connectorRef>
 
     <connectorConfiguration>
-        <icfc:configurationProperties
-                xmlns:icfccsvfile="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/bundle/com.evolveum.polygon.connector-csv/com.evolveum.polygon.connector.csv.CsvConnector">
+        <icfc:configurationProperties>
             <icfccsvfile:filePath>/opt/midpoint/var/resources/org.csv</icfccsvfile:filePath>
             <icfccsvfile:encoding>utf-8</icfccsvfile:encoding>
             <icfccsvfile:fieldDelimiter>,</icfccsvfile:fieldDelimiter>
@@ -1029,19 +1073,35 @@ However, this resource will not contain accounts, it will contain organizational
         <objectType>
             <displayName>Organizational unit</displayName>
             <default>true</default>
-            <objectClass>ri:AccountObjectClass</objectClass>
+            <delineation>
+                <objectClass>AccountObjectClass</objectClass>
+            </delineation>
             <kind>generic</kind>
             <intent>orgunit</intent>
+            <focus>
+                <type>OrgType</type>
+                <archetypeRef oid="99fa4b3c-8702-11ef-896e-0b7221540b8b"/>
+            </focus>
             <attribute>
-                <ref>ri:orgnum</ref>
+                <ref>orgnum</ref>
                 <inbound>
                     <target>
                         <path>$focus/identifier</path>
                     </target>
                 </inbound>
+                <inbound>
+                    <expression>
+                        <script>
+                            <code>'F' + input</code>
+                        </script>
+                    </expression>
+                    <target>
+                        <path>$focus/name</path>
+                    </target>
+                </inbound>
             </attribute>
             <attribute>
-                <ref>ri:name</ref>
+                <ref>name</ref>
                 <inbound>
                     <target>
                         <path>$focus/displayName</path>
@@ -1049,13 +1109,64 @@ However, this resource will not contain accounts, it will contain organizational
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:description</ref>
+                <ref>description</ref>
                 <inbound>
                     <target>
                         <path>$focus/description</path>
                     </target>
                 </inbound>
             </attribute>
+            <attribute>
+                <ref>parentOrgNum</ref>
+                <inbound>
+                    <expression>
+                        <assignmentTargetSearch>
+                            <targetType>OrgType</targetType>
+                            <filter>
+                                <q:text>identifier = $input</q:text>
+                            </filter>
+                        </assignmentTargetSearch>
+                    </expression>
+                    <target>
+                        <path>$focus/assignment</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <correlation>
+                <correlators>
+                    <items>
+                        <item>
+                            <ref>identifier</ref>
+                        </item>
+                    </items>
+                </correlators>
+            </correlation>
+            <synchronization>
+                <reaction>
+                    <situation>linked</situation>
+                    <actions>
+                        <synchronize/>
+                    </actions>
+                </reaction>
+                <reaction>
+                    <situation>deleted</situation>
+                    <actions>
+                        <deleteFocus/>
+                    </actions>
+                </reaction>
+                <reaction>
+                    <situation>unlinked</situation>
+                    <actions>
+                        <link/>
+                    </actions>
+                </reaction>
+                <reaction>
+                    <situation>unmatched</situation>
+                    <actions>
+                        <addFocus/>
+                    </actions>
+                </reaction>
+            </synchronization>
         </objectType>
 
     </schemaHandling>
@@ -1064,59 +1175,16 @@ However, this resource will not contain accounts, it will contain organizational
         <assignmentPolicyEnforcement>none</assignmentPolicyEnforcement>
     </projection>
 
-    <synchronization>
-        <objectSynchronization>
-            <enabled>true</enabled>
-            <objectClass>AccountObjectClass</objectClass>
-            <kind>generic</kind>
-            <intent>orgunit</intent>
-            <focusType>OrgType</focusType>
-            <correlation>
-                <q:equal>
-                    <q:path>identifier</q:path>
-                    <expression>
-                        <path>$projection/attributes/orgnum</path>
-                    </expression>
-                </q:equal>
-            </correlation>
-            <reaction>
-                <situation>linked</situation>
-                <synchronize>true</synchronize>
-            </reaction>
-            <reaction>
-                <situation>deleted</situation>
-                <synchronize>true</synchronize>
-                <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#deleteFocus</handlerUri>
-                </action>
-            </reaction>
-            <reaction>
-                <situation>unlinked</situation>
-                <synchronize>true</synchronize>
-                <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#link</handlerUri>
-                </action>
-            </reaction>
-            <reaction>
-                <situation>unmatched</situation>
-                <synchronize>true</synchronize>
-                <action>
-                    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#addFocus</handlerUri>
-                </action>
-            </reaction>
-        </objectSynchronization>
-    </synchronization>
 </resource>
 ----
 
 This should all look very familiar by now.
 It is almost the same resource as we have seen in the synchronization chapter.
-However, there are few differences.
-We will describe them in next sections.
+However, there are few differences, which are described in the following sections.
 
 === Kind and Intent
 
-The definition of "Organizational unit" resource object contains specification of _kind_ and _intent_:
+The definition of `Organizational unit` resource object contains specification of _kind_ and _intent_:
 
 .resource-csv-org.xml
 [source,xml]
@@ -1125,7 +1193,9 @@ The definition of "Organizational unit" resource object contains specification o
         <objectType>
             <displayName>Organizational unit</displayName>
             <default>true</default>
-            <objectClass>ri:AccountObjectClass</objectClass>
+            <delineation>
+                <objectClass>AccountObjectClass</objectClass>
+            </delineation>
             <kind>generic</kind>
             <intent>orgunit</intent>
             ...
@@ -1139,14 +1209,15 @@ There are three possible values for _kind_:
 
 | `account`
 | Resource object that represents identity of a person, either physical such as computer user or virtual such as `administrator`, `root`, `daemon` or similar special-purpose identities.
-Accounts are usually linked to the User objects.
+_Accounts_ are usually linked to the _user_ objects.
 
 
 | `entitlement`
 | Resource object that represents groupings or privileges of an account.
-Entitlement resource objects represent groups, resource-specific roles or access permissions.
-Entitlements are meant to be associated to an account.
+Entitlement resource objects represent groups, resource-specific roles, permissions or privileges.
+Entitlements are meant to be _associated_ to an account.
 For example a `group` entitlement may have accounts as its members.
+_Entitlements_ are usually linked to _role_ objects, creating _application roles_.
 
 
 | `generic`
@@ -1154,15 +1225,15 @@ For example a `group` entitlement may have accounts as its members.
 This is used for resource objects that cannot be classified as _account_ or _entitlement_.
 |===
 
-You can choose any of these accounts for your resource objects.
-Values of _kind_ are pre-defined in midPoint, as midPoint will make some assumptions about them.
-For example, midPoint will expect that accounts can be associated with entitlements, for example accounts may be members of groups.
+You can choose any of these _kinds_ for your resource objects.
+Values of _kind_ are pre-defined in midPoint, as midPoint makes some assumptions about them.
+For example, midPoint expects that _accounts_ can be associated with _entitlements_, for example accounts may be members of groups.
 Therefore, it is recommended to properly categorize your resource objects to kinds.
 This also helps to make the configuration understandable for mere mortals.
 
 Then there is _intent_.
-There are no pre-defined values for _intent_ in midPoint, perhaps except for value `default` that will be used in case there is no explicit definition of _intent_.
-You can choose any value that you like.
+There are no pre-defined values for _intent_ in midPoint, perhaps except for value `default` which is used in case there is no explicit definition of _intent_.
+You can choose any _intent_ value that you like.
 However, it is recommended to choose a value that describes the intended use of the resource object.
 For example:
 
@@ -1230,30 +1301,85 @@ We are not working with accounts here, we work with organizational units.
 So, why `AccountObjectClass`?
 The reason is the CSV connector that we are using.
 The CSV connector is quite simplistic, it considers everything to be an account.
-Object classes are set by the connector, hence we need to use `AccountObjectClass` here.
-However, the _kind_ and _intent_ definition is "overriding" the notion that this is an account, making it more understandable for the users.
+Object classes are determined by the connector, hence we need to use `AccountObjectClass` as the connector specified this object class.
+However, the _kind_ and _intent_ definition is "overriding" the notion that this is an account, making it more understandable for midPoint users.
 
 _Kind_ and _intent_ behave like coordinates when midPoint has to identify resource object that is assigned to a user.
 Given normal circumstances, a user may have at most one _default account_ on a resource (which means kind=`account`, intent=`default`).
 That same user may also have _admin account_ on the same resource (kind=`account`, intent=`admin`).
 A role may be represented by at most one _LDAP group_ on a resource (kind=`entitlement`, intent=`ldapGroup`).
-Such assumptions are heavily used by midPoint logic.
-Whenever there are two _constructions_ that have the same combination of kind+intent, midPoint assumes that they are describing the same resource object.
+MidPoint logic is heavily based on such assumptions.
+Whenever there are two _constructions_ that have the same combination of _kind_ and _intent_, midPoint assumes that they are describing the same resource object.
 MidPoint automatically merges the constructions.
-If the constructions have different combination of kind+intent, midPoint assumes that they are describing different resource objects and the constructions are processed separately.
+If the constructions have different combination of _kind_ and _intent_, midPoint assumes that they are describing different resource objects, therefore the constructions are processed separately.
 Correct configuration of _kind_ and _intent_ is crucial for midPoint to work correctly.
 
 .Tag (a.k.a. "multiaccounts")
-TIP: The requirement that there may be at most one resource object for each kind+intent combination works very well in most cases.
+TIP: The requirement that there may be at most one resource object for each _kind_+_intent_ combination works very well in most cases.
 However, there are also cases when more than one resource object is needed.
 _Kind_ and _intent_ has to be specified in the configuration, therefore this mechanism will not work for resource objects that appear and disappear dynamically.
 Therefore, new concept of _tag_ was introduced in midPoint 4.0.
-The _tag_ can supplement the kind+intent combination with a dynamic value, thus allowing multiple resource objects to exist for any particular kind+intent combination.
+The _tag_ can supplement the _kind_+_intent_ combination with a dynamic value, thus allowing multiple resource objects to exist for any particular _kind_+_intent_ combination.
 This feature is colloquially known as "multiaccounts".
+
+=== Archetype
+
+It would be acceptable to create our _org_ just as plain _org_.
+Most things would work quite right.
+However, it is a very good practice to apply archetype to objects, especially those objects that are created automatically.
+Automation can create many objects very quickly.
+It may be tedious to modify all these objects when you figure out that you need to do something about them differently.
+Re-import of the objects do not always work, as not all the mappings may be _strong_.
+Of course, you can delete all the objects and re-import.
+However, that is going to change the OIDs, and manually created assignments are going to break - not to mention losing all manual changes to descriptions and documentation that you might have done.
+This is all too much inconvenience and manual work.
+We are using midPoint, we can do better.
+
+When archetype is applied to the objects, common parts of object configuration and behavior can be specified in the archetype.
+Therefore update and maintenance of the objects is much easier.
+Really, there is no excuse for not applying the archetype, as it is very easy to do.
+All we need is to mention the archetype in the specification of _object type_ in the _schema handling_.
+
+.resource-csv-org.xml
+[source,xml]
+----
+<resource>
+    ...
+    <schemaHandling>
+        ...
+        <objectType>
+            ...
+            <focus>
+                <type>OrgType</type>
+                <archetypeRef oid="99fa4b3c-8702-11ef-896e-0b7221540b8b"/>
+            </focus>
+----
+
+In this case we are using `Organizational unit` archetype.
+For now, the archetype is almost empty, it just specifies some cosmetics for nicer look and feel of organizational units.
+
+.archetype-organizational-unit.xml
+[source,xml]
+----
+<archetype oid="99fa4b3c-8702-11ef-896e-0b7221540b8b">
+    <name>Organizational unit</name>
+    <archetypePolicy>
+        <display>
+            <label>Organizational unit</label>
+            <pluralLabel>Organizational units</pluralLabel>
+            <icon>
+                <cssClass>fa fa-sitemap</cssClass>
+                <color>#ffc107</color>
+            </icon>
+            <tooltip>Organizational unit</tooltip>
+        </display>
+    </archetypePolicy>
+</archetype>
+----
 
 === Names and Identifiers
 
-Synchronization of organizational structure is the same as synchronization of users.
+Synchronization of _organizational structure_ is the same as synchronization of _users_.
 Theoretically.
 However, there are some subtle differences in practice, mostly caused by the differences of `User` and `Org` schemas.
 
@@ -1263,8 +1389,8 @@ However, this is slightly different for orgs, as there may be several parallel o
 There may be `Security` department, `Security` project and `Security` workgroup at the same time.
 This may be partially solved by using identifiers instead of names.
 However, this still does not solve the problem of department `123` and project `123`.
-The simple solution is to prefix the identifier with a code of the organizational tree that it belongs to, thus creating department `O123` and project `P123`.
-However, users looking for project `123` may have difficulty finding it, as the `P` prefix in `P123` name is usually just a deliberate decision of IDM administrator.
+The simple solution is to prefix the identifier with a code of the organizational tree that it belongs to, thus creating department `F123` and project `P123`.
+However, users looking for project `123` may have difficulty finding it, as the `P` prefix in `P123` name is usually just a deliberate decision of midPoint administrator.
 Therefore, we still want to store the original identifier value (`123`) into the `identifier` property of the org object.
 There is no uniqueness constrain on the `identifier` property, therefore both department `123` and project `123` can co-exist and both can be easily discovered by searching the identifier.
 The result is that we need two inbound mappings for the `orgnum` attribute:
@@ -1273,7 +1399,7 @@ The result is that we need two inbound mappings for the `orgnum` attribute:
 [source,xml]
 ----
             <attribute>
-                <ref>ri:orgnum</ref>
+                <ref>orgnum</ref>
                 <inbound>
                     <target>
                         <path>$focus/identifier</path>
@@ -1282,7 +1408,7 @@ The result is that we need two inbound mappings for the `orgnum` attribute:
                 <inbound>
                     <expression>
                         <script>
-                            <code>'O'+input</code>
+                            <code>'F'+input</code>
                         </script>
                     </expression>
                     <target>
@@ -1293,62 +1419,56 @@ The result is that we need two inbound mappings for the `orgnum` attribute:
 ----
 
 Storing original organizational unit identifier in the `identifier` property makes it easier to correlate organizational units.
-The `idenfier` property can be used in the correlation query.
+The `idenfier` property can be used by the correlators.
 If the identifier is reasonably persistent, this is a huge benefit.
 
 Changes in organizational structure can be quite nasty.
 Organizational units are often renamed or moved in organizational trees.
 Simplistic synchronization configuration may not be able to interpret such events correctly.
-It may look like new organizational unit was created, and the old unit was deleted.
-This is likely to wreak havoc to organizational unit assignments, especially if there were special privileges configured for this organizational unit.
+Rename of an organizational unit may look like new organizational unit was created, and the old unit was deleted.
+This is likely to wreak havoc to organizational unit assignments, especially if there were special privileges configured for renamed organizational unit.
 Even worse, organizational tree data are sometimes acquired from a different source than the user data, which is causing timing problems.
 If organizational tree is updated first, there will be new empty organizational unit, old unit will be deleted, and user assignments will become invalid.
 If user data are updated first, the synchronization routines may not be able to update the assignments as the new organizational unit does not exist yet.
-This is going to cause a whole lot of problems, most of them will need to be fixed by manual intervention of IDM administrator.
+This is going to cause a whole lot of problems, most of them requiring manual intervention of midPoint administrator.
 Additionally, reorganizations usually happen in cycles, each cycle changing a number of units at the same time.
-Which means that every few months the organizational structure is going to break down, everybody will be complaining, and it will take days to fix all the problems manually.
+Which means that every few months the organizational structure is going to break down, everybody is going to complain, and it is likely to take several days to fix all the problems manually.
 
 All of that can be avoided if there are reasonably persistent organizational unit identifiers.
 Which means that every organizational unit has an identifier that does not change when the unit is renamed or moved.
 In that case midPoint can reliably detect the rename, change organizational unit name and keep the assignments intact.
-MidPoint can also detect that the unit was moves, change the parent unit and still keep all the assignments.
+MidPoint can also detect that the unit was moved, change the parent unit and still keep all the assignments.
 Organizational unit identifiers make everything so much easier.
 Therefore, try really hard to use the identifier when setting up synchronization of organizational structure.
 If there is no such identifier, talk to the business people to add it.
 This is usually not an easy discussion, as the solution often involves changes in business processes.
 However, it is absolutely essential to get it right.
-All the effort will be repaid many times over during the course of IAM program.
-
+All the effort will be repaid many times over during the course of identity program.
 
 === Nesting Organizational Units
 
 We can synchronize the organizational units into midPoint.
-We can set up the properties of organizational units.
-However, organizational structures are usually hierarchical.
+We can use mappings to set up the properties of organizational units, such as names and identifiers.
+However, that is still not enough, as organizational structures are usually hierarchical.
 How to do we nest organizational units to create organizational tree?
 
 In midPoint, organizational tree is formed by _assignments_.
 Therefore, the answer is quite simple: create the right assignments.
-Clever reader is not paying attention anymore, being busy re-reading the sections on automatic role assignments in object template.
-However, even a clever reader should be paying attention now, as there is an easier way how to do it.
-The assignments can be set up in the inbound mappings:
+Clever reader is not paying attention anymore, being busy re-reading the sections on automatic role assignments.
+Clever reader is quite right, the same techniques that are used for automatic assignments of roles can be used to form organizational assignments.
+Perhaps the best way to set the assignments for organizational hierarchies is to use inbound mappings:
 
 .resource-csv-org.xml
 [source,xml]
 ----
             <attribute>
-                <ref>ri:parentOrgNum</ref>
+                <ref>parentOrgNum</ref>
                 <inbound>
                     <expression>
                         <assignmentTargetSearch>
                             <targetType>OrgType</targetType>
                             <filter>
-                                <q:equal>
-                                    <q:path>identifier</q:path>
-                                    <expression>
-                                        <path>$input</path>
-                                    </expression>
-                                </q:equal>
+                                <q:text>identifier = $input</q:text>
                             </filter>
                         </assignmentTargetSearch>
                     </expression>
@@ -1360,94 +1480,89 @@ The assignments can be set up in the inbound mappings:
 ----
 
 This mapping automatically sets up an assignment to parent organizational unit.
-We are lucky, we have almost ideal source of organizational data.
+We are lucky as we have almost ideal source of organizational data.
 Our CSV file contains an identifier of a parent organizational unit in the `parentOrgNum` column.
-All we need to do is to look for midPoint org that has that particular value in its `identifier` property.
-This is done by the `assignmentTargetSearch` that we have already used for automatic assignment of roles in object template.
+All we need to do is to look for midPoint _org_ that has that particular value in its `identifier` property.
+This is done by the `assignmentTargetSearch` that we have already used for automatic assignment of roles.
 The same mechanism is reused here.
 
 All that remains is to set up a synchronization task.
 Make sure that you specify _kind_ and _intent_ in the synchronization task.
-This is important, otherwise the tasks will not work.
+This is important, otherwise the tasks are not going work.
 Setting the right _kind_ and _intent_ was not emphasized before when we were synchronizing accounts.
-The `account` _kind_ is the default and midPoint is usually smart enough to use default _intent_.
-However, the defaults will no longer work when we go beyond the accounts.
+The `account` _kind_ is the default, and midPoint is usually smart enough to use default _intent_.
+However, the defaults do not work any longer when we go beyond the accounts.
 
 .Troubleshooting
-TIP: Generic synchronization can be confusing and there may be non-obvious configuration complexities.
+TIP: Generic synchronization can be confusing as there may be non-obvious configuration complexities.
 When mis-configured, the synchronization mechanism often does nothing.
-There is no error or any other obvious indication of an error.
-Logging is your best friend in that case.
-Enable logging of _synchronization service_ (`com.evolveum.midpoint.model.impl.sync`) at debug level.
+There is no error or any other obvious indication as to what exactly went wrong.
+_Logging_ is your best friend in that case.
+Try to enable logging of _synchronization service_ (`com.evolveum.midpoint.model.impl.sync`) at `debug` level.
 MidPoint will log a reasonable amount of information about the synchronization process.
 That information is very likely to lead you to the solution.
 
-The configuration above will work for simple cases, yet there is still a room for improvement.
+The configuration above works for simple cases, yet there is still a room for improvement.
 The search filter in `assignmentTargetSearch` expression is quite simplistic.
-It will match orgs from several trees if they have the same identifier.
-The same problem is in the correlation query.
+It matches _orgs_ from several trees if they have the same identifier.
+Similar problem is in the correlation settings.
 However, clever reader would surely find a way how to improve it.
 
-Also, this method will work only if the data feed is correctly ordered.
-Everything will work as long as parent organizational units are synchronized before child organizational units.
+Also, this method works only if the data feed is correctly ordered.
+Everything works as long as parent organizational units are synchronized before child organizational units.
 However, that is not always the case.
-If ordering is wrong, child organizational units will not be able to find parent units, and the tree will disintegrate.
-We are living in a networked concurrent world, data ordering is usually difficult to guarantee.
+If ordering is wrong, child organizational units will not be able to find parent units, and the tree disintegrates.
+As we are living in a networked concurrent world, data ordering is usually difficult to guarantee.
 
-MidPoint has a mechanism to handle unordered data source.
-There is a way how to create parent organizational units _on demand_.
+MidPoint has a mechanism to handle unordered data sources.
+There is a way to create parent organizational units _on demand_.
 When a child organizational unit looks for a parent that is not there yet, the parent object can be created at that moment.
 Of course, this can only create _stub_ parent, a very minimal object that has only the essential data.
 Yet, even such a _stub_ object is sufficient to create an organizational hierarchy.
-The _stub_ will be updated later, when the details about parent organizational unit are retrieved from the data feed.
-The details of this _create on demand_ mechanism is beyond the scope of this chapter.
+The _stub_ can be updated later, when the details about parent organizational unit are retrieved from the data feed.
+The details of the _create on demand_ mechanism is beyond the scope of this chapter.
 We will get back to it later.
 
-
-=== Adding Users To Units
+=== Adding Users To Organizational Units
 
 We have a nice hierarchical organizational structure now.
 Yet, something is still missing.
 The organizational structure is all about the people, but there are no people in our organizational tree.
 Let's fix this.
 
-The people data are coming from HR resource in our ExAmPLE case.
-We need to modify the HR resource to automatically assign people to the organizational tree.
-To do that, we need to add information about organizational units into our HR feed.
+In our ExAmPLE case, people data are coming from HR resource.
+So far we do not have any data in this data source to automatically assign people to the organizational tree.
+We need to modify the HR resource to add information about organizational units into our HR feed.
+It went quite well.
 After several phone calls, tens of e-mails and a quick 3-hour meeting, the HR department agreed to add a new `orgnum` column to the CSV file:
 
 .hr.csv
 [source,csv]
 ----
 "empno","firstname","lastname","jobcode","orgnum"
-"001","Alice","Anderson","S006","11100"
-"002","Bob","Brown","S007","11210"
-"003","Carol","Cooper","S008","11310"
+"001","Alice","Anderson","B002","11000"
+"002","Bob","Brown","O302","12000"
+"003","Carol","Cooper","S101","11310"
 ...
 ----
 
 The 'orgnum' column contains an identifier of the organizational unit the person belongs to.
 This looks quite familiar, and clever reader is working on the configuration already.
 Of course, we can use the same approach we have used to build up organizational hierarchy.
-We just need to apply it to the users instead of organizational units.
-Therefore we are going to add new inbound mapping to the HR resource:
+We just need to apply it to the _users_ instead of _orgs_.
+Therefore, we are going to add new inbound mapping to the HR resource:
 
 .resource-csv-hr.xml
 [source,xml]
 ----
             <attribute>
-                <ref>ri:orgnum</ref>
+                <ref>orgnum</ref>
                 <inbound>
                     <expression>
                         <assignmentTargetSearch>
                             <targetType>OrgType</targetType>
                             <filter>
-                                <q:equal>
-                                    <q:path>identifier</q:path>
-                                    <expression>
-                                        <path>$input</path>
-                                    </expression>
-                                </q:equal>
+                                <q:text>identifier = $input</q:text>
                             </filter>
                         </assignmentTargetSearch>
                     </expression>
@@ -1460,8 +1575,8 @@ Therefore we are going to add new inbound mapping to the HR resource:
 
 The `assignmentTargetSearch` expression looks for the right organizational unit.
 Then the mapping creates an assignment to that unit.
-And we are done.
-Run the HR synchronization task, and all the users are going to be neatly organized in the tree.
+We are done, as easily as that.
+Run the HR synchronization task, and all the users are going to be neatly organized in the organizational tree.
 
 .Get your data structures right at the beginning.
 [TIP]
@@ -1473,7 +1588,7 @@ Having organizational unit _identifier_ makes everything much more stable.
 
 There is a lesson to be learned.
 Every hour spent designing the data structures will be repaid many times over.
-Getting it wrong will cost you days or months dealing with data inconsistencies.
+Getting it wrong will cost you days or months spent dealing with data inconsistencies.
 It is also very difficult to change data formats in the future, as they effectively become data integration interfaces.
 Take your time and get it right at the beginning.
 ====
@@ -1481,39 +1596,41 @@ Take your time and get it right at the beginning.
 == Organizational Structure Provisioning
 
 We have seen how we can synchronize organizational structure into midPoint.
-We are talking midPoint here.
+We are talking about midPoint here.
 What goes in, can also go out.
 It is very simple to provision organizational structure to an ordinary target system, such as database table.
 However, we have already learned a thing or two, and doing that would be almost boring.
 Therefore, let's do something a bit more challenging.
 Let us synchronize the organizational structure into an LDAP directory tree.
 
-The basic principles of organizational structure provisioning are the same as for users.
+The basic principles of _organizational structure_ provisioning are the same as for _user_ provisioning.
 We need to set up _outbound mappings_ for organizational units.
 We already know how to do that.
 There are just few little differences:
 
 * We will use `organizationalUnit` object class instead of `inetOrgPerson`.
 
-* We will use special kind/intent combination.
+* We will use _kind_/_intent_ combination that describes organizational units.
 
 * We have to be a bit smarter about creating LDAP distinguished names (DNs) for the entries, as we want them to create a hierarchical data structure.
 
 Everything else is essentially the same as for users and accounts.
-However, let us go over all the details, step by step.
+Let us go over all the details, step by step.
 
 First of all, we need to add new `objectType` definition to the LDAP resource:
 
 .resource-ldap.xml
 [source,xml]
 ----
-        <objectType>
+         <objectType>
             <kind>generic</kind>
             <intent>ou</intent>
             <displayName>Organizational Unit</displayName>
-            <objectClass>ri:organizationalUnit</objectClass>
+            <delineation>
+                <objectClass>organizationalUnit</objectClass>
+            </delineation>
             <attribute>
-                <ref>ri:dn</ref>
+                <ref>dn</ref>
                 <displayName>Distinguished Name</displayName>
                 <limitations>
                     <minOccurs>0</minOccurs>
@@ -1555,7 +1672,7 @@ First of all, we need to add new `objectType` definition to the LDAP resource:
                 </outbound>
             </attribute>
             <attribute>
-                <ref>ri:ou</ref>
+                <ref>ou</ref>
                 <limitations>
                     <maxOccurs>1</maxOccurs>
                 </limitations>
@@ -1569,7 +1686,7 @@ First of all, we need to add new `objectType` definition to the LDAP resource:
 ----
 
 Except for that big piece of Groovy code, this configuration is relatively simple.
-The `objectType` definition specifies `organizationalUnit` value for object class.
+The `delineation` definition specifies `organizationalUnit` value for object class.
 This is a standard LDAP object class for "ou" entries.
 There is also specification of kind (`generic`) and intent (`ou`).
 These are midPoint "coordinates" for this object type.
@@ -1589,14 +1706,14 @@ That is exactly the thing that the Groovy expression does.
 Let's skip the `import` statements for now.
 The first thing that the expression has to do is to figure out the "path" from the current organizational unit to the top of the tree.
 The expression gets the current organizational unit in the `focus` variable.
-However, the org object does not contain its complete path in the tree.
+However, the _org_ object does not contain its complete path in the tree.
 All it has is a reference to its parent organizational unit (`parentOrgRef`).
 Therefore, the expression has to iterate over all the levels in the tree until it gets to the top.
 The top organizational unit does not have any parent, that is where the iteration stops.
 Display names of each organizational unit at the "path" is collected in the `orgpath` list.
 As the org contains only a reference to the parent, we need to explicitly read the parent object from midPoint repository.
-We will do that with an explicit call to `midpoint.resolveReference(...)` method.
-This method reads the object from the database and returns it.
+We do that with an explicit call to `midpoint.resolveReference(...)` method.
+This method reads the object from midPoint repository and returns it.
 When the loop stops, `orgpath` contains all the display names that we want in our `dn`.
 Now we need to encode the names in LDAP DN format.
 This can be done by simple string operations.
@@ -1605,8 +1722,8 @@ It would be nice if someone else could do the encoding for us.
 Turns out, there is someone else to do it.
 Java platform comes with Java Naming and Directory Interface (JNDI), which is supposed to be a generic library to access broad range of directory services.
 JNDI is not the best library that the world has ever seen, but it is part of Java platform, and it can do formatting of LDAP DN.
-It will be good enough for us.
-We will take advantage of `LdapName` and `Rdn` classes to encode the DN.
+It is good enough for our purposes.
+We take advantage of JNDI `LdapName` and `Rdn` classes to encode the DN.
 The `import` statements at the beginning made use of these classes quite convenient.
 The last detail is the ordering.
 We want our names in the DN to be in a different order, therefore we just reverse `orgpath` before processing.
@@ -1623,12 +1740,11 @@ The `processing node ...` message is recorded to the log file at debug level.
 This is a very useful tool for diagnosing execution of complex expressions.
 
 Our outbound mappings are ready to go.
-But nothing happens yet.
+However, nothing happens yet.
 MidPoint does not know that it is supposed to create LDAP objects for our organizational units.
 MidPoint does not automatically create accounts for all the users either.
 We need a _construction_ to do that.
-The orgs need to have an assignment with a construction, similar to these that we have used to create accounts.
-However, we will need to use the right _kind_ and _intent_.
+The _orgs_ need to have an _assignment_ with a _construction_ - similar to these that we have used to create accounts, just with different _kind_ and _intent_.
 We want to archive something like this:
 
 [source,xml]
@@ -1648,57 +1764,34 @@ We want to archive something like this:
 </org>
 ----
 
-You can test your configuration by creating this assignment manually in the GUI, or by editing the XML/JSON/YAML version of the org.
-However, we need to create these assignments automatically.
+You can test your configuration by creating this assignment manually in the GUI, or by editing the XML/JSON/YAML version of the _org_.
+However, manual method is not going to work in production.
+We need to create these assignments automatically.
 There are several ways to do it.
 
-Perhaps the most obvious way would be to add a mapping to create this assignment in the object template.
-As there is an object template for users (`UserType`), there may be an object template for any other midPoint object.
-Therefore, you can create object template for orgs (`OrgType`) and configure the mapping there.
+Perhaps the most obvious way would be to add a mapping to create this assignment in the object template for _Organization unit_ objects.
+As there is an object template for users (`UserType`), there may be an object template for any other midPoint object or archetype.
+Therefore, you can create object template for `Organizational unit` archetype and configure the mapping there.
 This would be an acceptable solution.
 
 An alternative way would be to add _inbound_ mapping to create this assignment.
 That would be in fact quite easy, as it would is very similar to the mapping that we have used to create organizational hierarchy.
 However, that would not be an ideal configuration, as we would mix the _concerns_ here.
-The mapping will be an _inbound_ mapping in the `Organizational Chart` resource.
+The mapping would be an _inbound_ mapping in the `Organizational Chart` resource.
 It would not be entirely appropriate for this _inbound_ mapping to control provisioning (i.e. _outbound_ flow) of organizational structure.
-It will work, but such configuration will be difficult to understand and maintain.
+It could work, but such configuration would be difficult to understand and maintain.
+We do not like that.
 
-Clever reader is now thinking about the _metaroles_ that we have already mentioned in the RBAC chapter.
-As usual, cleaver reader is right, or perhaps very close to the right solution.
-Creating a _metarole_ that could be applied to all the orgs would be almost an ideal solution:
+Clever reader is now thinking about the _meta-role_ principle, looking at the `Organizational unit` archetype.
+As usual, cleaver reader is absolutely right.
+All we need is to add the _construction_ into the `Organizational unit` archetype in a form of _inducement_.
 
-.role-meta-orgunit.xml
+.archetype-organizational-unit.xml
 [source,xml]
 ----
-<role oid="b8c3ccba-1dfb-11eb-9031-27e1d26ca36e">
-    <name>Functional Organizational Unit Metarole</name>
-    <inducement>
-        <construction>
-            <!-- LDAP resource -->
-            <resourceRef oid="8a83b1a4-be18-11e6-ae84-7301fdab1d7c"/>
-            <kind>generic</kind>
-            <intent>ou</intent>
-        </construction>
-    </inducement>
-</role>
-----
-
-This metarole can be assigned to every org that we want to provision.
-In such case, it is perfectly good to have the mapping to assign the meta role even in the _inbound_ part of the `Organizational Chart` resource.
-The metarole specifies type of the organizational unit.
-Therefore it is desirable to set the metarole when the org is created for the first time, which happens during organizational structure synchronization.
-
-This would be _almost_ ideal solution.
-However, there is a better way still.
-We can use _archetype_ instead of metarole.
-Archetype will do the same trick as metarole does here.
-
-.archetype-orgunit.xml
-[source,xml]
-----
-<archetype oid="475106e4-1dfe-11eb-8429-534869969212">
-    <name>Functional Organizational Unit</name>
+<archetype oid="99fa4b3c-8702-11ef-896e-0b7221540b8b">
+    <name>Organizational unit</name>
+    ...
     <inducement>
         <construction>
             <!-- LDAP resource -->
@@ -1710,55 +1803,21 @@ Archetype will do the same trick as metarole does here.
 </archetype>
 ----
 
-Archetype can do even more tricks than metarole.
-Archetype can specify an icon and a color for the objects.
-It can control the assignments to these objects.
-Archetypes give a structure to midPoint objects.
-We will get back to archetypes in a dedicated chapter.
-
-For now, just choose any of the methods above to trigger provisioning of organizational structure.
-We will go for the archetype, assigning it automatically in inbound mappings of `Organizational Chart` resource:
-
-.resource-csv-org.xml
-[source,xml]
-----
-        ...
-        <objectType>
-            ...
-            <objectClass>ri:AccountObjectClass</objectClass>
-            <kind>generic</kind>
-            <intent>orgunit</intent>
-            <attribute>
-                <ref>ri:orgnum</ref>
-                ...
-                <inbound>
-                    <expression>
-                        <value>
-                            <targetRef oid="475106e4-1dfe-11eb-8429-534869969212" type="ArchetypeType"/>
-                        </value>
-                    </expression>
-                    <target>
-                        <path>$focus/assignment</path>
-                    </target>
-                </inbound>
-            </attribute>
-            ...
-        </objectType>
-        ...
-----
-
+Back when we were configuring inbound synchronization of organizational units, we have do the right thing and assigned an archetype to the _orgs_ we have created.
+Now it pays back ist dues, archetype makes is very easy to control behavior of all the _organizational units_.
 All we need to do now is to re-run the synchronization task.
 The result is a nice organizational structure in LDAP directory:
 
+// TODO: update screenshot
 .Organizational structure in LDAP
 image::09-11-ldap-org-tree.png[Organizational strucutre in LDAP]
 
 This is a nice result.
 However, there are still several remarks to make.
 
-If you are going to try this scenario with a real LDAP server, you will need to create a root entry for the organizational structure (`ou=org,dc=example,dc=com`).
-You will also need to update access control lists (ACLs).
-However, be warned that this is not a very ideal way how to maintain organizational structure in LDAP directory.
+If you are going to try this scenario with a real LDAP server, you would need to create a root entry for the organizational structure (`ou=org,dc=example,dc=com`), as well as entry for ExAmPLE company (`ou=ExAmPLE,ou=org,dc=example,dc=com`).
+You would also need to update access control lists (ACLs).
+However, be warned that this is not a very ideal method to maintain organizational structure in LDAP directory.
 We are using display names here, which are part of LDAP identifiers (DNs).
 Therefore, even a minor correction in organizational unit name will trigger LDAP rename operation.
 It will change the identifier of the organizational unit, and also all the organizational units below it.
@@ -1766,8 +1825,9 @@ Perhaps the only thing that can make it worse is to place _users_ in that struct
 Which some people actually do.
 The only real reason to put organizational structure in this form is to satisfy the needs of legacy applications.
 Avoid this approach whenever you can.
+We are presenting it here only for demonstration purposes, to explain a method for provisioning hierarchical structures.
 
-The clever reader have surely noticed that the big Groovy expression above is explicitly fetching objects from the database.
+The clever reader have surely noticed that the big Groovy expression above is explicitly fetching objects from midPoint repository database.
 This may cause a performance problem in case that such expression is evaluated often or if the structure is very deep.
 This is usually not the case with ordinary organizational structures, therefore this approach is usually not problematic.
 However, it is always a good thing to keep performance in mind, especially if your user population is bigger than few thousands of users.
@@ -1780,6 +1840,8 @@ However, in that case this little details does not matter that much anyway, as i
 Always use organizational unit identifiers if you can.
 We really mean it.
 You can thank us later.
+
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODOS
 
 
 == Focus and Projection
