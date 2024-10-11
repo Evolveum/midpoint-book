@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2020 Evolveum
+  ~ Copyright (c) 2019 Evolveum
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,15 +14,18 @@
   ~ limitations under the License.
   -->
 
-<org oid="4d12c1ac-440c-11ea-80af-2b314d06ba95"
-     xmlns='http://midpoint.evolveum.com/xml/ns/public/common/common-3'
-     xmlns:org='http://midpoint.evolveum.com/xml/ns/public/common/org-3'>
-    <name>F10000</name>
-    <displayName>ExAmPLE</displayName>
-    <displayOrder>100</displayOrder>
-    <identifier>10000</identifier>
+<role oid="9c55ff88-fc24-11ea-977a-e39adc8e1bd4"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+      xmlns:ri="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3"
+      xmlns:exmpl="http://example.com/xml/ns/midpoint/schema">
+    <name>Call center agent</name>
     <assignment>
         <identifier>archetype</identifier>
-        <targetRef oid="886bfa6e-8702-11ef-9c40-6fce51f54b0d" type="ArchetypeType"/>
+        <targetRef oid="00000000-0000-0000-0000-000000000321" type="ArchetypeType"/>
     </assignment>
-</org>
+    <assignment>
+        <identifier>role-catalog</identifier>
+        <targetRef oid="259625ee-fc24-11ea-8bae-1bfdce011faf" type="OrgType"/>
+    </assignment>
+</role>

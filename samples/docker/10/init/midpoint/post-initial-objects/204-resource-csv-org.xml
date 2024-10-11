@@ -76,7 +76,7 @@
                 <inbound>
                     <expression>
                         <script>
-                            <code>'O' + input</code>
+                            <code>'F' + input</code>
                         </script>
                     </expression>
                     <target>
