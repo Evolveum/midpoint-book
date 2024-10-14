@@ -72,7 +72,6 @@ However, names such as `F1000` are not very friendly.
 Therefore, there is a mechanism to set nicer display name that does not need to be unique.
 The display name is used instead of the ordinary `name` whenever this org is displayed to a user.
 
-// TODO: update screenshot
 .Top-level organizational unit
 image::09-02-org-top.png[Top-level organizational unit]
 
@@ -157,7 +156,6 @@ We use an _assignment_, of course:
 
 Now we have our minimalistic hierarchy:
 
-// TODO: update screenshot
 .Small organizational structure tree
 image::09-05-small-org-tree.png[Small organizational structure tree]
 
@@ -552,7 +550,8 @@ Then we can apply the archetype to objects.
 
 When the archetype is applied, the projects have nice icon and custom color.
 
-// TODO: screenshot: projects - in a list, not in a tree - to show the icons
+.Archetyped projects
+image::09-10-project-list.png[List of archetyped projects]
 
 Archetypes are easy to apply.
 However, it may not be entirely easy to choose _what_ archetypes to apply to orgs.
@@ -911,7 +910,8 @@ The arechetype acts as a meta-role, the content of the inducement is applied to 
 The _assignment relation_ specification is used by the user interface.
 User interface is going to present only those object types and relation that make sense for the operation that user has initiated.
 
-// TODO: screenshot: assign members to project in GUI, selection of relations
+.Assignment relations
+image::09-11-assignment-relation.png[Selection of assignment relations]
 
 NOTE: Support for _assignment relation_ in midPoint 4.8 user interface is not yet completed.
 Some parts of user interface use _assignment relation_, while others are not using it yet.
@@ -966,7 +966,7 @@ However, as most organizational structures are built for people, midPoint user i
 You have to explicitly change the type to _role_ to see content of the catalog.
 
 .Role catalog
-image::09-10-role-catalog.png[Role catalog]
+image::09-12-role-catalog.png[Role catalog]
 
 Primary use of the catalog is related to _access request process_.
 The catalog makes it easier for a user to find appropriate role when requesting its assignment in self-service part of midPoint user interface.
@@ -1806,7 +1806,7 @@ All we need to do now is to re-run the synchronization task.
 The result is a nice organizational structure in LDAP directory:
 
 .Organizational structure in LDAP
-image::09-11-ldap-org-tree.png[Organizational strucutre in LDAP]
+image::09-13-ldap-org-tree.png[Organizational strucutre in LDAP]
 
 This is a nice result.
 However, there are still several remarks to make.
@@ -1853,7 +1853,7 @@ However, there is an _org_ instead of user, and there are various _resource obje
 It may look like this:
 
 .Org and projections
-image::09-12-org-projections.png[Org and projections]
+image::09-14-org-projections.png[Org and projections]
 
 There may be user, org, service, role or similar _midPoint object_ on the midPoint side.
 These may be synchronized with account, group, role, privilege, organizational unit or almost any _resource object_ on resource side.
@@ -1862,7 +1862,7 @@ Saying "similar midPoint object" and "almost any resource object" is not very na
 Therefore, we have decided to use _focus_ and _projection_ terms:
 
 .Focus and projections
-image::09-13-focus-projections.png[Focus and projections]
+image::09-15-focus-projections.png[Focus and projections]
 
 The object that is "in the middle" is called _focus_ or _focal object_.
 It is in the centre of the synchronization, it is its focal point.
