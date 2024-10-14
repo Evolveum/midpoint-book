@@ -157,6 +157,7 @@ We use an _assignment_, of course:
 
 Now we have our minimalistic hierarchy:
 
+// TODO: update screenshot
 .Small organizational structure tree
 image::09-05-small-org-tree.png[Small organizational structure tree]
 
@@ -467,7 +468,6 @@ Just create new root _org_ for projects and place the projects under it:
 
 We have two organizational trees now, each neatly stowed under its own tab:
 
-// TODO: update screenshot
 .Project organizational tree
 image::09-09-org-tree-projects.png[Project organizational tree]
 
@@ -639,8 +639,6 @@ We are specifying `relation` in assignment target reference:
 </user>
 ----
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
 This assignment makes Alice a _manager_ of Sales and Marketing Division.
 It is as simple as that.
 All the power of assignment is at your disposal.
@@ -649,14 +647,12 @@ Therefore, it is easy to assign a manager for a temporary time period, suspend a
 Manager _assignment_ is created in the user interface in almost the same way as normal assignment is created.
 The only difference is selection of _manager relation_ at the bottom of the assignment target dialog:
 
-// TODO: update screenshot
 .Assign organizational unit manager
 image::09-07-assign-org-manager.png[Assign organizational unit manager]
 
 After the assignment is in place, midPoint knows that Alice is a manager of Sales and Marketing Division.
 This is also displayed in the organizational tree:
 
-// TODO: update screenshot
 .Organizational unit with a manager
 image::09-08-org-tree-manager.png[Organizational unit with a manager]
 
@@ -969,7 +965,6 @@ Role catalog is displayed in used interface as a new organizational structure.
 However, as most organizational structures are built for people, midPoint user interface displays only users as members of organizational units by default.
 You have to explicitly change the type to _role_ to see content of the catalog.
 
-// TODO: update screenshot
 .Role catalog
 image::09-10-role-catalog.png[Role catalog]
 
@@ -1593,6 +1588,8 @@ It is also very difficult to change data formats in the future, as they effectiv
 Take your time and get it right at the beginning.
 ====
 
+// TODO: later: automatically assign org managers (need to extend orgchart/HR source)
+
 == Organizational Structure Provisioning
 
 We have seen how we can synchronize organizational structure into midPoint.
@@ -1808,7 +1805,6 @@ Now it pays back ist dues, archetype makes is very easy to control behavior of a
 All we need to do now is to re-run the synchronization task.
 The result is a nice organizational structure in LDAP directory:
 
-// TODO: update screenshot
 .Organizational structure in LDAP
 image::09-11-ldap-org-tree.png[Organizational strucutre in LDAP]
 
@@ -1841,31 +1837,28 @@ Always use organizational unit identifiers if you can.
 We really mean it.
 You can thank us later.
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODOS
-
-
 == Focus and Projection
 
 Synchronization of an organizational structure is an application of a _generic synchronization_ principle.
-Almost any resource object can be synchronized with almost any midPoint object - and vice versa.
-Principle of the synchronization is essentially the same as in user-account case that we have seen in previous chapters.
-In that case the accounts were linked to user, midPoint synchronized the data from account to user and from user to accounts.
-The synchronization follows user-account links.
+Almost any _resource object_ can be synchronized with almost any _midPoint object_ - and vice versa.
+Principle of the synchronization is essentially the same as in user-account case, as we have seen in previous chapters.
+In that case, the _accounts_ were linked to _user_, midPoint synchronized the data from account to user and from user to accounts.
+The synchronization follows user-account _links_.
 
 .User and accounts
 image::04-04-hub-and-spoke.png[User and accounts]
 
 Synchronization of an organizational structure is based on the same principle.
-However, there is an org instead of user, and there are various resource objects instead of accounts.
+However, there is an _org_ instead of user, and there are various _resource objects_ instead of accounts.
 It may look like this:
 
 .Org and projections
 image::09-12-org-projections.png[Org and projections]
 
-There may be user, org, service, role or almost any midPoint object on the midPoint side.
-That may be synchronized with account, group, role, privilege, organizational unit or almost any resource object on resource side.
+There may be user, org, service, role or similar _midPoint object_ on the midPoint side.
+These may be synchronized with account, group, role, privilege, organizational unit or almost any _resource object_ on resource side.
 As you can see, the terminology becomes quite cumbersome.
-Saying "almost any midPoint object" and "almost any resource object" is not very natural or precise.
+Saying "similar midPoint object" and "almost any resource object" is not very natural or precise.
 Therefore, we have decided to use _focus_ and _projection_ terms:
 
 .Focus and projections
@@ -1875,25 +1868,27 @@ The object that is "in the middle" is called _focus_ or _focal object_.
 It is in the centre of the synchronization, it is its focal point.
 Every relevant piece of data is reflected onto the focal object by the synchronization mechanisms.
 
-User is a typical focal object.
-Other midPoint objects can be focal objects as well, most notably org, role and service.
+_User_ is a very typical focal object.
+Other midPoint objects can be focal objects as well, most notably _org_, _role_ and _service_.
 
 The state of focal object is _projected_ back to the resources.
 Therefore, the objects that reside on the resources are called _projections_.
-An account is a typical projection object, but there is wide variety of other object classes such as groups, organizational units, (resource-side) roles, privileges, access control lists, teams and so on.
+An _account_ is a typical projection object, but there is wide variety of other object classes such as groups, organizational units, (resource-side) roles, privileges, access control lists, teams and so on.
 
 .Focus and projection
 TIP: _Focus_ and _projection_ may sound like strange words to use for identity management concepts.
+However, it is very difficult to find the right words.
 Many identity management systems work with just _user_ and _account_.
-However, midPoint is more flexible, more generic.
+However, midPoint is more flexible, much more generic.
 When we designed the generic synchronization mechanism, we needed to find good names for the generalization of _user_ and _account_ concepts.
 We tried hard, but we could not find anything better than _focus_ and _projection_.
+The names may not be ideal, yet we are able to live with them.
 There are only two hard problems in computer science, after all.
 
 There is always one _focus_, one focal object in the center.
 There may be any number of _projections_ linked to the _focus_.
 There may be several _projections_ on one resource.
-However, each _projection_ has to be unique, it needs to have a unique combination of _kind_ and _intent_.
+However, each _projection_ has to be unique, it needs to have a unique combination of _kind_ and _intent_ (or _kind_, _intent_ and _tag_ when "multi-accounts_ are used).
 This is the reason that we consider _kind_ and _intent_ to be coordinates, as they uniquely identify a _projection_ on a particular resource.
 
 This is a very flexible concept that can be used for various purposes.
@@ -1901,7 +1896,7 @@ We have already seen how it can be used for synchronization of organizational st
 Similar principle can be used to synchronize Active Directory groups, automatically creating application role for each Active Directory group.
 This principle provides a mechanism to create multiple accounts for one user on one resource.
 For example, it can be used to create administration accounts for some users.
-In this case we would use explicit _kind_ and _intent_ in the construction:
+In this case, we would use explicit _kind_ and _intent_ in the construction:
 
 [source,xml]
 ----
@@ -1921,6 +1916,9 @@ In this case we would use explicit _kind_ and _intent_ in the construction:
 The `System Administrator` role above specifies that a special `admin` account should be created for system administrators.
 When this role is combined by an ordinary `Employee` role, the administrator will get two accounts: the usual employee account (intent=`default`) and a special-purpose administration account (intent=`admin`).
 
+Overall, the concept of _focus_ and _projections_ is a generic principle that permeates entire midPoint platform.
+It applies to generic synchronization, access control models such as RBAC, provisioning, policy management and to almost any other aspect of midPoint functionality.
+It is one of the basic principles that midPoint is built on.
 
 // TODO: later? use orgs to model locations?
 
@@ -1931,13 +1929,11 @@ It can be used to organize users in units, teams and projects.
 It can be used to group variety of other midPoint objects.
 However, organizational structure becomes incredibly powerful when combined with other midPoint mechanisms.
 Authorizations can take advantage of organizational structures to implement delegated administration schemes.
-Organizational structures are used in recertification campaigns.
+Organizational structures are used in certification campaigns.
 MidPoint multi-tenancy mechanism also relies on organizational structures.
 Organizational structure is a universal mechanism to organize midPoint objects.
 
 There are many universal mechanisms in midPoint, synchronization mechanism being one of the prominent ones.
 Synchronization was designed to work with many types of midPoint objects, including organizational structure.
-Expressions and mappings give bring the power to transform organizational structure data during synchronization, supporting diverse set of use cases.
+Expressions and mappings bring the power to transform organizational structure data during synchronization, supporting diverse set of use cases.
 Similar mechanisms can be used to synchronize roles and services, granting midPoint enormous flexibility in identity management deployment.
-
-Yet, we are just starting to uncover the full power of midPoint.
