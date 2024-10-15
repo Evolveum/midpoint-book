@@ -7,7 +7,7 @@ A conclusion is the place where you get tired of thinking.
 
 This book is not finished yet.
 In fact, it is just a beginning.
-The book is written continually in an incremental and iterative fashion as fast as time and money allow.
+The book is developed in the same fashion as midPoint, it is written continually, in an incremental and iterative fashion, as fast as time and money allow.
 
 Your contributions and donations will surely speed up completion of this book.
 Also consider getting midPoint subscription.
@@ -18,7 +18,7 @@ Evolveum is open-source-only company.
 Everything we do is focused on open source projects.
 Evolveum is not a start-up either.
 We are not funded by venture capital, and we do not have millions to spend.
-Evolveum is a self-funded company.
+Evolveum is a self-funded, sustainable company.
 We can spend only what we earn on subscriptions, sponsored features and services.
 There is no other income.
 MidPoint development can only go as fast as the money allow.

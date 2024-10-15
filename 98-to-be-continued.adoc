@@ -7,12 +7,12 @@ include::chapter-include.adoc[]
 Hanc marginis exiguitas non caperet. +
 (There is not enough space in the margin to write it.)
 
-This is it then.
+This is it, then.
 That was the last real chapter of this book.
 Yet, we have not yet covered all capabilities of midPoint.
 In fact, we are not even close.
 We have only scratched the surface of what midPoint can provide.
-The other chapters are not written yet.
+The other chapters of this book are not written yet.
 There is still so much to write about:
 
 * *Authorizations:* MidPoint works with sensitive data and there is a need to strictly control access to that data.
@@ -25,14 +25,14 @@ There is a special-purpose query language that is used in many places in midPoin
 * *Security:* MidPoint works with quite a sensitive data, therefore it is quite important to keep midPoint secure.
 There are many security-related settings, ranging from the usual network security mechanisms, through authentication to a midPoint-specific settings.
 
-* *Identity management miscellanea:* There are various interesting features that were not mentioned yet: iteration, password policies, notifications, auxiliary object classes, provisioning dependencies, deputies, constants, function libraries, provisioning scripts and so on.
+* *Identity management miscellanea:* There are various interesting features that were not mentioned yet: password policies, notifications, auxiliary object classes, provisioning dependencies, deputies, constants, function libraries, provisioning scripts and so on.
 Those may be little features, but they are essential pieces of the puzzle.
 It is almost impossible to have a complete identity management solution and not to use any of those features.
 
 * *Requests and approvals:* Browse available roles, select role, request role, approve role, assign role, provision accounts.
 That is the basic mantra of many identity management deployments.
 Of course this is easy to do in midPoint.
-But there is much more: multi level approvals, optional approval steps, dynamic approver selection, escalation and so on.
+There is even more: multi level approvals, optional approval steps, dynamic approver selection, escalation and so on.
 MidPoint has most of the features already built-in, you just need to configure them.
 
 * *Entitlements:* Managing accounts if fine.
@@ -43,19 +43,19 @@ In this case we really mean entitlements on the resources, such as Active Direct
 MidPoint is designed to this quite easily.
 
 * *Manual resources:* Obviously, you want most of the resource to be connected to midPoint by a connector so they can be automatically managed.
-But there are always few bothersome resources that just won’t comply.
+However, there are always few bothersome resources that just won’t comply.
 Maybe they are too small to justify the cost of building a connector.
 Maybe there is just no good way for the connector to manage the resource.
-But midPoint one again comes to the rescue.
+MidPoint one again comes to the rescue.
 MidPoint has a concept of _manual resource_ where the work is done by system administrator instead of connector.
 There is even a way how to create semi-manual resource that can read the data, but provisioning is still manual.
-And there is a way how to integrate this with ITSM system.
+There is a way how to integrate this with ITSM system.
 
 * *Auditing and history:* No identity management system can be complete without an auditing facility.
 MidPoint can store every operation to the audit trail: changes in users, accounts, roles - even internal configuration changes.
 This is stored in a format that can be used to integrate midPoint with a data warehouse or a SIEM system.
-Also midPoint user interface has a facility to display the audit trail.
-And it can even look into the past: it can reconstruct the objects as they were at a certain point in time.
+Also, midPoint user interface has a facility to display the audit trail.
+MidPoint can even look into the past: it can reconstruct the objects as they were at a certain point in time.
 
 * *Policy rules:* MidPoint is much more than just an identity management system.
 The identity governance features of midPoint are based on a powerful and universal concept of _policy rules_.
@@ -65,48 +65,54 @@ The rules can control role lifecycle.
 The rules can define compliance policies.
 The rules can do it all.
 The rules are here to _govern_ the identities.
-
 // TODO: policies - PolicyType (4.9+)
 
 * *Access certification:* This is known by many names: certification, re-certification, attestation, ... but whatever the name is it is still the same process.
 Simply speaking, this is a method to review roles assigned to the users to make sure the users still need the roles that they have.
 This is a method how to get a grip on the _principle of least privilege_ even in environments that are naturally inclined to ad-hoc operation.
-But it is very useful mechanism in almost all environments.
-And midPoint provides many flavors of certification mechanisms from a scheduled mass recertification campaigns focused on roles assignments to an ad-hoc recertification of a single used after he is moved to a new organization.
+However, it is very useful mechanism in almost all environments.
+MidPoint provides many flavors of certification mechanisms from a scheduled mass recertification campaigns focused on roles assignments to an ad-hoc recertification of a single used after he is moved to a new organization.
 
-// TODO: regulatory compliance
+* *Regulatory compliance:* midPoint, being an identity governance platform, is an essential component for regulatory compliance of any mid-size or large organization.
+MidPoint can manage identity lifecycle, govern access control policies, maintain oversight of certain aspects of security policies, support information classification, even assist in business continuity and incident response.
 
 * *Data protection:* Identity management is no longer a wild west where anybody can do anything.
 Now there are strict data protection rules, regulations and legislation.
-Being a good identity governance system midPoint can assist in managing the data protection and privacy policies.
+Being a good identity governance system, midPoint can assist in managing the data protection and privacy policies.
 MidPoint can be really helpful in managing compliance to the data protection regulations such as European GDPR legislation.
+
+* *Role mining and outlier detection:* It is very difficult to manually maintain a complex access control model.
+It is almost impossible to deal with thousands upon thousands of roles one-by-one.
+Therefore, midPoint contains AI-based tools to help deal with the complexity.
+_Role mining_ provides ability to discover role definitions from existing access data.
+_Outlier detection_ looks for users and access patterns that are different, and thus suspicious.
+Both mechanisms are making life with midPoint easier and more sustainable.
 
 * *User interface customizations:* MidPoint has a general-purpose user interface that can be used for user self-service, identity administration and system configuration.
 The user interface is designed to be dynamic.
-It will automatically adapt to resource schemas, extension of midPoint schema, authorizations and so on.
+It automatically adapts to resource schemas, extension of midPoint schema, authorizations and so on.
 Therefore, usually there is no need to customize user interface at all.
-But there are cases when the deployment need to deviate from the default behavior.
-And midPoint is prepared to that.
-There are many ways how to customize user interface: colors, stylesheets, localization, custom forms, tabs, whole new custom pages.
+However, there are cases when the deployment need to deviate from the default behavior, and midPoint is prepared to that.
+There are many ways to customize user interface: colors, stylesheets, localization, custom forms, tabs, whole new custom pages.
 In extreme cases midPoint can be customized beyond recognition.
 
-* *Integration with midPoint services:* MidPoint is a great system.
-But even great software does not live in isolation.
+* *Integration with midPoint services:* MidPoint is an excellent platform.
+However, even great software does not live in isolation.
 There is always need to integrate the systems together.
 Integration runs through midPoint veins, because that is what the connectors really do.
-But often there is a need to integrate midPoint with other systems that is beyond the capabilities of a connector.
+Yet, often there is a need to integrate midPoint with other systems in a way that is beyond the capabilities of a connector.
 Maybe there is a password reset application that needs to interact with midPoint.
 Maybe there is an analytic software that needs to get midPoint data.
 MidPoint was designed from the day one to be a service-based application.
-Therefore there are REST and SOAP services packed with features.
+Therefore, there is REST services packed with features.
 Actually almost anything that midPoint does can be controlled by using those services.
 
 * *Advanced concepts:* There are still some features that were not explained in previous chapters: consistency mechanisms, personas, multi-connector resources and so on.
 Some of those features are seldom used, but they may save your project.
 Other features are used all the times, but they are a natural part of midPoint and therefore they are almost invisible.
-But all those features deserve explanation.
-And there is also a need to describe how midPoint itself is developed – as there is a lot of experimental and incomplete features.
-But, as this is midPoint, even those features may be extremely useful.
+All those features deserve explanation.
+There is also a need to describe how midPoint itself is developed – as there is a lot of experimental and incomplete features.
+However, as this is midPoint, even those features may be extremely useful.
 This chapter may also be interesting to people who would like to extended midPoint in an unusual way or those that want to contribute to midPoint development.
 
 * *MidPoint Deployment:* There are many paths from downloading midPoint packages to a working system.
@@ -118,10 +124,10 @@ How to plan the project, what information to gather, how to design the deploymen
 
 * *Management of IAM program:* Identity management is very similar to information security: Identity management has no end.
 Identity management is not a project.
-It is a program.
+It is a _program_.
 It is an endless cycle of gathering data, planning and execution.
 The environment around identity management is always changing, therefore identity management must change as well.
-But midPoint is designed for this kind of longevity.
+MidPoint is designed for this kind of longevity.
 This chapter will describe how to handle this endless cycle.
 How to make midPoint configuration open to extensions.
 How to gather data.
@@ -130,7 +136,7 @@ How to do upgrades.
 How to keep identity management solution sustainable.
 
 * *Deployment examples:* This book uses a lot of examples in all the chapters.
-But those are examples designed to demonstrate one specific aspect of midPoint functionality.
+However, those are examples designed to demonstrate one specific aspect of midPoint functionality.
 This chapter will be different.
 There will be complete examples of practical midPoint solutions.
 After all, the way that copying and pasting is one of the best ways how to learn.
@@ -138,7 +144,7 @@ After all, the way that copying and pasting is one of the best ways how to learn
 Those chapters are still missing.
 They are not written yet.
 Obviously, the best people to write those chapters are the people from the Evolveum team: people that designed and implemented midPoint, people that support midPoint deployments, people that work with midPoint every day, people that eat, breathe and sleep midPoint.
-But those people are just engineers.
+However, those people are just engineers.
 They need to pay their bills.
 They cannot put away their day-to-day responsibilities to work on this book.
 Obviously, funding is needed to finish the book.

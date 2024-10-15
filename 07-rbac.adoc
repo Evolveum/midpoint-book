@@ -578,7 +578,7 @@ NOTE: Indeed, midPoint _entitlement_ mechanism is an ideal tool for building app
 Unfortunately, the _Entitlements_ chapter of this book is not written yet.
 MidPoint reference documentation can provide the necessary information in the meantime.
 Similarly, _generic synchronization_ is an ideal tool to keep _groups_ and _application roles_ consistent.
-There are some information about _generic synchronization_ in the <<10-orgstruct.adoc#09-orgstruct,Organizational Structure>> chapter.
+There are some information about _generic synchronization_ in the <<10-orgstruct.adoc#10-orgstruct,Organizational Structure>> chapter.
 
 Strictly speaking, _application roles_ are not meant to be assigned directly to users.
 They are supposed to be abstract, to be the base "material" used to create higher-level roles.
@@ -620,7 +620,7 @@ We have a look at Harry Harris, who is a clerk.
 Application roles that Harry has are probably the application roles that should be included in `Clerk` business role.
 This is the way we can create our business roles, working from the bottom up.
 
-image::07-07-role-hierarchy-application-business.png[Role hierarchy - application and business roles]
+image::07-09-role-hierarchy-application-business.png[Role hierarchy - application and business roles]
 
 This sounds easy, yet it never really is that simple.
 Harry may have other responsibilities besides being a clerk.
@@ -925,7 +925,7 @@ exampleTeamManager: x-force
 
 This setup is illustrated in the following diagram:
 
-image::07-09-user-parametric-role.png[Parametric role assignment]
+image::07-10-user-parametric-role.png[Parametric role assignment]
 
 This is the basic mechanism of parametric roles.
 It is incredibly powerful mechanism.

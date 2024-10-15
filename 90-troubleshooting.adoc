@@ -1443,8 +1443,6 @@ However, sometimes too much non-relevant information may obscure the tiny proble
 
 == Useful Troubleshooting Tips
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
 Finally, there are some generic troubleshooting tips.
 Those are not specific to midPoint and those tips should be a second nature to any experienced engineer.
 Some of those were already covered.

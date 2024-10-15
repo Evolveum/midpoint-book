@@ -7,11 +7,11 @@ include::chapter-include.adoc[]
 Those who do nothing but observe from the shadows cannot complain about the brightness of the sun.
 
 MidPoint is a _professional open source project_.
-This means that midPoint is developed by using professional methods, but the product is still available under open source license.
+This means that midPoint is developed by using professional methods by professional developers, but the product is still available under open source license.
 
 == Professional Development
 
-MidPoint is developed by a professional developers.
+MidPoint is developed by professional developers.
 The development is lead by senior developers in the midPoint core team that have decades of software engineering experience.
 There are also few younger developers in early stages of their careers.
 MidPoint development team is first of all a community of developers that enjoy working together on a next-generation software.
@@ -21,8 +21,7 @@ All midPoint core developers work for Evolveum.
 Evolveum is the company that created midPoint.
 Evolveum also maintains midPoint.
 Vast majority of work on midPoint is being done by midPoint core team.
-All the core developers are paid for their work on midPoint.
-The developers can pay their bills from the income that midPoint generates.
+All the core developers are paid fair wages for their work on midPoint.
 Evolveum income from midPoint is necessary to make sure that the developers have all their time available for midPoint development.
 This means that midPoint can be properly maintained.
 
@@ -38,11 +37,11 @@ Professional quality assurance is essential for midPoint to work reliably.
 
 == Open Source
 
-MidPoint is an open source project.
+MidPoint is an _open source_ project.
 All of midPoint source code is available under two open source licenses.
-We have chosen Apache License 2.0 as this is one of the most liberal licenses out there.
-We are also based in European Union and therefore midPoint is also under the terms of European Union Public License (EUPL).
-But there is much more to open source than just a license.
+We have chosen _Apache License 2.0_ as this is one of the most liberal licenses out there.
+We are also based in European Union and therefore midPoint is also under the terms of _European Union Public License (EUPL)_.
+However, there is much more to open source than just a license.
 Evolveum is fully committed to the open source approach.
 MidPoint is completely developed in public.
 Entire history of midPoint source code is public.
@@ -69,8 +68,8 @@ And as far as we have something to say about it midPoint will remain open source
 == MidPoint Release Cycle
 
 MidPoint has stable development cycle.
-There are two _feature releases_ every year.
-As the name suggests, those releases are bringing new features and major improvements.
+There is a _feature releases_ every year.
+As the name suggests, such releases are bringing new features and major improvements.
 
 In addition to that, there are several _maintenance releases_.
 Those releases bring bugfixes and minor improvements.
@@ -87,38 +86,35 @@ MidPoint support and subscription is a service provided by Evolveum.
 There are several service offerings with different scope and service level.
 But generally speaking, the most common service is 3^rd^-line support.
 Which basically means that we will fix midPoint bugs.
-Obviously this includes assistance with diagnostics of difficult issues where it is not entirely clear whether it is a bug or configuration issue.
+Obviously, this includes assistance with diagnostics of difficult issues where it is not entirely clear whether it is a bug or configuration issue.
 Simply speaking, midPoint support service is a way how to make sure that your midPoint deployment will run without any problems.
 There are also subscription offerings designed to help you deploy midPoint in the first place.
 Some subscription offerings also contain feature development and improvements (a.k.a. 4^th^-line support).
 Those subscriptions are an ideal way to make sure midPoint will be able to do anything that you need for your project.
 
-MidPoint support and subscription services provide significant funding for midPoint development and maintenance.
+MidPoint support and subscription services provide primary source of funding for midPoint development and maintenance.
 Therefore, it is perfectly natural that midPoint subscribers get high priority for resolution of their issues, feature requests and so on.
 This limits the time that midPoint core team has available for other tasks.
-Therefore there are some rules:
+Therefore, there are some rules:
 
-* Every new midPoint feature must be _sponsored_.
-This means that a customer with an active midPoint subscription has endorsed the feature.
-Of course, this has to be a high-end subscription that includes feature development.
-Or, alternatively, someone have to pay for the development cost of that feature.
-However, direct feature sponsoring is very limited as most of the midPoint development capacity is reserved for subscribers.
+* Evolveum decides midPoint roadmap, the features and improvements that are going to be developed in each version.
+MidPoint subscribers and Evolveum partners have a chance to influence the roadmap.
 
 * MidPoint architecture and quality is the primary responsibility of Evolveum team.
 Part of Evolveum income is reserved to maintain midPoint - to keep the architecture up to date, to make systemic quality improvements, to maintain midPoint in the long run and so on.
-In some cases Evolveum will sponsor feature development.
-Those are usually strategic features that lead midPoint development in the right direction.
-Or those may be experimental features aimed at exploring a particularly interesting functionality.
-However, Evolveum will not sponsor any "customer" features.
-Those need to be covered by subscriptions.
 
-* Evolveum will eventually fix any bugs in midPoint.
+* Evolveum will fix security issues immediately.
+Security issues have absolute priority.
+Those will be fixed immediately regardless of who reported them (subscriber or non-subscriber).
+Fixes for severe security issues will also get automatically backported to all active support branches.
+
+* Evolveum will fix any bugs in midPoint, eventually.
 Those bugfixes will be committed to midPoint primary development branch (_master branch_).
 The fixes that make it into development branch will be part of the next feature release.
-However, as midPoint release cycle is fixed, not all of the bugs will be fixed in each release.
+However, as midPoint release cycle is fixed, not all the bugs will be fixed in each release.
 The bugs that were reported as part of subscription or support service will be fixed first.
 If there is still some time, then other (non-subscriber) bugs will be fixed as well.
-But there are no guarantees for that.
+However, there are no guarantees for that.
 If the time before the release runs out, bugs reported by non-subscribers will not get fixed.
 In fact, such non-subscriber fixes may have to wait for several releases until they finally get fixed.
 
@@ -132,24 +128,19 @@ Any bugfix, improvement or any other update will go to the support branch only i
 
 ** Backport to support branch is explicitly requested by customer with active support or subscription service.
 
-** The target release is still in its active support period (i.e. it is not after "end of life").
-
 ** It is a security issue.
-Security issues have absolute priority.
-Those will be fixed immediately regardless of who reported them (subscriber or non-subscriber).
-Fixes for severe security issues will also get automatically backported to all active support branches.
 
 ** It fixes a severe issue that affect large number of users.
 
 Simply speaking, if you want to make sure that midPoint works for you, then purchase a support or subscription.
 Those services will help you, that is what they are for.
-But the money from support and subscription services also enable long-term midPoint maintenance and new feature development.
+However, the money from support and subscription services also enable long-term midPoint maintenance and new feature development.
 Getting midPoint support or subscription is the right thing to do.
 
 == MidPoint Community
 
 MidPoint is a proper open source project.
-And as all good open source projects midPoint has a vibrant community.
+As all good open source projects, midPoint has a vibrant community.
 This is both engineering community and business community.
 The primary communication channel of the engineering community is midPoint mailing list.
 Mailing list is used to discuss midPoint futures, announce new releases, discuss configuration issues, provide feedback to the development team and so on.
@@ -160,6 +151,6 @@ Evolveum partners deliver midPoint solutions, provide 1^st^-line and 2^nd^-line 
 The possibilities are endless.
 Even the business community is open.
 Entry-level partnership is open to anyone.
-However, there are several partnership levels and it takes some effort for a partner to level up.
+However, there are several partnership levels, and it takes some effort for a partner to level up.
 There is a rich (and growing) network of midPoint partners.
 The partners can deliver solutions based on midPoint almost anywhere on planet Earth.
