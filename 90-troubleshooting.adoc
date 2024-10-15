@@ -255,7 +255,12 @@ Which means that when there is too much data in one log file the file is renamed
 Oldest files are removed.
 Otherwise the log files would fill all available disk space.
 
-// TODO: docker logs and docker commands to show the logs
+.Docker logs
+TIP: Logs are handled in somehow special way in the _docker_ environment.
+Perhaps the easiest way to look at the logs is to simply start the containers in foreground, e.g. by using `docker compose up` without the `-d` switch.
+This can provide nice overview that the container are running, but it is not very practical for log analysis.
+The usual method of locating the log file in _midPoint home directory_ can still be used in docker environment.
+If you prefer using native docker tools, there is `docker compose logs` command to access the logs.
 
 Log messages have a structured format.
 They look like this:
@@ -860,17 +865,14 @@ However, they are there, and we got used to them.
 
 == Troubleshooting Mappings and Expressions
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODOS
-
 Mappings and expressions often contain custom scripting code.
-This means that midPoint is very flexible and can satisfy diverse requirements.
-But it also means that mappings and expressions are often the source of problems.
-Especially some scripting expressions tend to be quite complex.
-Creating, testing and maintaining those expressions would be almost impossible without any debugging and troubleshooting facilities.
+This ability makes midPoint very flexible, satisfying diverse requirements.
+Yet, it also means that mappings and expressions are often the source of problems.
+Creating, testing and maintaining the expressions would be almost impossible without any debugging and troubleshooting facilities.
 
 MidPoint contains code that can be used to trace execution of mappings and expressions on a very detailed level.
 The trace shows inputs and outputs and deltas that are taken into consideration when the expression or mapping is evaluated.
-There are two options how to enable this tracing.
+There are two options to enable this tracing.
 
 First option is to enable the tracing globally for all expressions and mappings by setting one or more of the following loggers to `TRACE` level:
 
@@ -900,10 +902,10 @@ Provides a lot of details.
 |Very high
 |===
 
-Setting logger levels to `TRACE` will log all execution of mappings and expressions.
+Setting logger levels to `TRACE` logs all execution of mappings and expressions.
 However, this may be a huge amount of information, especially in complex deployments with many mappings and expressions.
 Therefore, there is an alternative way that can be used to trace mappings and expressions individually.
-There is a special-purpose trace property in the mapping:
+There is a special-purpose `trace` property in the mapping:
 
 [source,xml]
 ----
@@ -914,7 +916,7 @@ There is a special-purpose trace property in the mapping:
 </mapping>
 ----
 
-And there is a similar property in expression:
+There is a similar property in expression:
 
 [source,xml]
 ----
@@ -930,7 +932,7 @@ And there is a similar property in expression:
 
 This is a nice method to look at one particular troublesome mapping without flooding the log files with traces of all the mappings in the system.
 However, it still may not be entirely easy to locate the dump of the mapping in the log files.
-Therefore it is a good practice to name your mappings:
+Therefore, it is a good practice to name your mappings:
 
 [source,xml]
 ----
@@ -940,15 +942,13 @@ Therefore it is a good practice to name your mappings:
 </mapping>
 ----
 
-Mapping name will be recorded in the mapping and expression dumps, therefore it can be easily located in the log files.
-Mapping names are also used in error messages and they are likely to be used in diagnostic outputs that will be developed in midPoint in the future.
-Therefore it is a very good practice to put names to mappings.
-It is probably an overkill to name all the mappings in the system.
-However, naming complex mappings can make a lot of difference in troubleshooting.
+Mapping name is recorded in the mapping and expression dumps, therefore it can be easily located in the log files.
+Mapping names are also used in error messages, and they are likely to be used in diagnostic outputs that will be developed in midPoint in the future.
+Therefore, it is a very good practice to put names to mappings.
 
-Dumping a mapping or expression will provide overview of inputs and outputs.
-But that alone may not be enough to figure out what is wrong inside the expression.
-Therefore script expressions can explicitly invoke a logging facility.
+Dumping a mapping or expression provides overview of inputs and outputs.
+However, that alone may not be enough to figure out what is wrong inside the expression.
+Therefore, script expressions can explicitly invoke a logging facility.
 MidPoint has script expression functions that can be used to log messages from the scripting code.
 It works like this:
 
@@ -974,7 +974,7 @@ The message itself is composed of several parts using `{}` placeholders.
 
 == Troubleshooting Connectors
 
-MidPoint is using the ConnId connector framework to manage identity connectors.
+MidPoint is using the _ConnId identity connector framework_ to manage identity connectors.
 All ordinary connectors are running under the control of this framework.
 It means that midPoint calls the ConnId framework and the framework calls the connector.
 Therefore, when it comes to troubleshooting connector problems there are several places where a problem can occur and also several places where you can get diagnostic data:
@@ -984,20 +984,21 @@ This may be caused by a misconfiguration or a bug.
 We have already covered most of those cases.
 
 . *ConnId:* the framework may misinterpret the operation.
-The framework also simulates some operations and it may post-process the results.
+The framework also simulates some operations, and it may post-process the results.
 
 . *Connector:* this is the tricky part of the story.
 Each connector is different.
 Very different.
-But there are ways.
+Yet, there are ways.
 More on this below.
 
-. *Resource:* it is possible that the problem is caused by resource misconfiguration. E.g. the connector is not allowed to see all data, there are some limits, etc.
+. *Resource:* it is possible that the problem is caused by resource misconfiguration.
+E.g. the connector is not allowed to see all data, there are some limits, etc.
 We will not go into details here.
 See the documentation that goes with the resource for troubleshooting details.
 
 The ConnId connector framework stands between midPoint and the connectors.
-It knows about every operation that midPoint invokes on every connector and it knows about all the return values.
+It knows about every operation that midPoint invokes on every connector, and it knows about all the return values.
 This can be easily enabled by using the following log configuration:
 
 ----
@@ -1015,11 +1016,11 @@ TRACE (org.identityconnectors.framework.api.operations.SearchApiOp): method: sea
 ----
 
 This is a very useful mechanism.
-It will log every operation of every connector.
-If you suspect that the connector is not executing the right operation this is the right place to check it.
-You can see what is the operation that midPoint is passing to the connector.
-If that operation looks good then the problem is most likely in the connector (see below).
-If the operation does not make sense, then the problem is usually in the provisioning (see above).
+It logs every operation of every connector.
+If you suspect that the connector is not executing the right operation, this is the right place to check it.
+You can see the operation that midPoint is passing to the connector.
+If that operation looks good, then the problem is most likely in the connector (see below).
+If the operation does not make sense, then the problem is usually in the provisioning component of midPoint (see above).
 
 However, the operation is logged by the ConnId framework on relatively high level and the operation is still quite abstract.
 If you need more details about what really gets executed you have to rely on the connector logging.
@@ -1027,17 +1028,16 @@ If you need more details about what really gets executed you have to rely on the
 Please note that the ConnId framework has two "faces": API and SPI. The API is facing midPoint.
 MidPoint invokes ConnId API operations.
 The SPI is facing the connector.
-Connector implements SPI operations and ConnId framework is invoking them.
+Connector implements SPI operations, and ConnId framework is invoking them.
 You can see the distinction in the class names that are written in the logfiles, e.g. `SearchApiOp` vs `SearchOp` (if there is no `Api` or `Spi` in the operation name then it is assumed to be SPI).
 There is also similar distinction in the package name of the logger.
-Most API and SPI operations are direct equivalents.
-But there may be subtle differences. E.g.
-The get API operation is executed as search (`executeQuery`) SPI operation.
+Most API and SPI operations are direct equivalents, but there may be subtle differences.
+E.g. the _get_ API operation is executed as _search_ (`executeQuery`) SPI operation.
 
 Most connector operations are "pure" request-response operations: there is one request and one response.
 These are operations such as create, modify, delete.
 In this case you will see one request in the log files and one response.
-And that is the whole operation.
+That is the whole operation.
 Like this:
 
 [source]
@@ -1060,7 +1060,7 @@ This is what midPoint sends.
 This is what the connector receives.
 
 . Connector executes the operation.
-Logs from the connector will be here (if connector logging is enabled).
+Logs from the connector are here (if connector logging is enabled).
 
 . `...spi.operations.CreateOp Return`: Connector operation is finished.
 The connector returns the result to ConnId.
@@ -1068,9 +1068,9 @@ The connector returns the result to ConnId.
 . `...api.operations.CreateApiOp Return`: Operation is finished and post-processed by the framework.
 Framework returns the result to midPoint.
 
-This is quite straightforward and it applies to the vast majority of connector operations.
+This is quite straightforward, and it applies to the vast majority of connector operations.
 However, there are some peculiarities.
-For example, there are four update operations:
+For example, there are four _update_ operations:
 
 * `update(...)` in `UpdateOp`: This replaces attribute values.
 It is (roughly) an equivalent to midPoint modify/replace deltas.
@@ -1079,28 +1079,28 @@ It is (roughly) an equivalent to midPoint modify/replace deltas.
 This adds or deletes attribute values.
 It is (roughly) an equivalent to midPoint modify/add and modify/delete deltas.
 
-* `updateDelta(...)` in `UpdateDeltaOp`: This operation allows complex combinations of add,delete and replace values.
+* `updateDelta(...)` in `UpdateDeltaOp`: This operation allows complex combinations of add, delete and replace values.
 This is a new operation designed to replace older operations above.
 
 New connectors implement ``updateDelta(...) ``operation only.
 Other update operations are considered to be obsolete.
 However, they are still used by many connectors.
 
-Search operations are also a bit strange.
+_Search_ operations are also a bit strange.
 First of all, the SPI provides only one operation for all search and get operation and that operation is `executeQuery(...)`.
 Then the results of each object found by the search operations is passed back to midPoint by using a callback method: `handle(...)`.
-Therefore interpreting search operations takes a keen eye and a bit of practice.
+Therefore, interpreting search operations takes a keen eye and a bit of practice.
 
 ConnId framework logs should indicate whether the problem is on the "connector-side".
 Which means that the problem is either in the connector or that the resource itself is not behaving according to expectations.
 The next step should be to have a look inside the connector.
-But each connector is different.
-The connectors have to adapt to the resource communication protocol and therefore they are expected to use variety of client and protocol libraries.
+However, each connector is different.
+The connectors have to adapt to the resource communication protocol, and therefore they are expected to use variety of client and protocol libraries.
 Each library may have its own method of troubleshooting.
-Therefore there is no universal way troubleshoot a connector.
+Therefore, there is no universal way to troubleshoot a connector.
 However, there is (almost) always some way.
 Connector documentation should provide some details about troubleshooting.
-But unfortunately, most connectors do not.
+Unfortunately, most connectors do not provide troubleshooting details.
 The best way is to have a look at connector source code.
 Enabling logging by using the connector package name is usually quite a safe bet.
 The logger name is usually the same as the package name of the connector classes.
@@ -1109,7 +1109,7 @@ You may also need to enable logging of the libraries that come with the connecto
 You can examine these if you look in the `lib` directory inside the connector JAR file.
 
 Some connectors have really good logging, such as the connectors in the LDAP connector family.
-The LDAP connector will log all the LDAP operations if you set the `com.evolveum.polygon.connector.ldap.OperationLog` logger to `DEBUG` level.
+The LDAP connector logs all the LDAP operations if you set the `com.evolveum.polygon.connector.ldap.OperationLog` logger to `DEBUG` level.
 
 [source%nowrap]
 ----
@@ -1137,29 +1137,29 @@ This logging is much more natural and easier to understand than the ConnId frame
 Therefore, a look at this log should be the first thing to do when there are problems with LDAP and AD connectors.
 
 However, not all connectors are built with troubleshooting in mind.
-Some connectors will barely log anything.
+Some connectors barely log anything at all.
 This is all connector-dependent.
 If the connector author did a good job you will get what you are looking for.
 If the author did a poor job, you are mostly out of luck.
-But one way or another, this is the best chance to learn what the connector is doing.
+One way or another, this is the best chance to learn what the connector is doing.
 If that fails, you have to resort to packet sniffer and similar tools.
 
 == Troubleshooting Authorizations
 
 MidPoint authorizations provide a very powerful mechanism for a fine-grained access control.
 This mechanism is quite simple in principle.
-But the configuration can get very complex especially if a sophisticated RBAC structure is in place.
+However, the configuration can get very complex especially if a sophisticated RBAC structure is in place.
 Setting the authorization up is not entirely easy task.
 It is often quite difficult to tell why the user is not authorized for a specific action or why the user can access more than he is supposed to.
-Therefore this page describes basic mechanisms how to troubleshoot authorizations.
+Therefore, this page describes basic mechanisms how to troubleshoot authorizations.
 
 The basic troubleshooting steps are simple in theory:
 
 . Enable logging of authorization processing.
 
-. Repeat the operation.
+. Initiate midPoint operation to examine.
 
-. Figure out which authorization is wrong.
+. Look at the logs, figure out which authorization is wrong.
 
 . Fix it.
 
@@ -1168,7 +1168,7 @@ The basic troubleshooting steps are simple in theory:
 Yet, the practice is much more complex.
 As always.
 
-The authorizations are processed in midPoint security component.
+The authorizations are processed in midPoint _security_ component.
 The processing of every authorization is logged.
 Therefore, to see the authorization processing trace simply enable the logging of security component:
 
@@ -1192,7 +1192,7 @@ When the security logging is enabled then you can see following messages in the 
 There is a set of similar messages for every operation that midPoint attempts.
 First message describes the operations and its "context": who has executed it (principal), what was the object and target of the operation (if applicable).
 The last line usually summarizes the decision: allow or deny.
-The lines between describe the processing of each individual authorization.
+The lines between describe the processing of each individual authorization statement.
 If you examine that part carefully, then you can figure out which authorizations were used.
 The result of authorization evaluation can be one of these:
 
@@ -1206,13 +1206,13 @@ That's a green light.
 However, other authorizations are still evaluated to make sure that there is no other authorization that denies the operation.
 
 * Authorization is *not applicable*.
-The authorization does not match the constraint for object or target.
-Or it is not applicable for other reasons.
+The authorization does not match the constraint for object or target, or it is not applicable for other reasons.
 Such authorization is skipped.
 
 If there is a single _deny_ then the evaluation is done.
 The operation is denied.
-Deny is also a default decision. I.e. if there is no decision at the end of the evaluation, then the operation is denied.
+_Deny_ is also a default decision.
+I.e. if there is no decision at the end of the evaluation, then the operation is denied.
 At least one explicit _allow_ is needed to allow the operation.
 
 All authorization processing is recorded in the log.
@@ -1220,25 +1220,25 @@ There is a record of processing of every operation, every authorization, evaluat
 
 Authorization of operations such as _add_ or _delete_ is quite easy.
 The result is simple: the operation is either allowed or denied.
-But it is a bit different for _get_ operations.
-The entire get operation can still be denied if the user does not have any access to the object that he is trying to retrieve.
-But the common case is that the user has some access to the object, but not all the items (properties).
-In such a case the operation must be allowed.
-But the retrieved object needs to be post-processed to remove the fields that are not accessible to the user.
+However, it is a bit different for _get_ operations.
+The entire _get_ operation can still be denied if the user does not have any access to the object that he is trying to retrieve.
+However, the common case is that the user has some access to the object, but not to all the items (properties).
+In such a case the operation must be _allowed_.
+However, the retrieved object needs to be post-processed to remove the fields that are not accessible to the user.
 This is done in two steps.
 
 Firstly, the set of _object security constraints_ is compiled from the authorizations.
 The _object security constraints_ is a data structure that describes which properties of an object are accessible to the user.
 There is a map (`itemConstraintMap`) with an entry for every item (property) which is explicitly mentioned in the authorizations.
 This entry contains explicit decisions given by the authorizations for every basic access operation (read, add, modify, delete).
-And then there are default decisions (`actionDecisionMap`).
+Then there are default decisions (`actionDecisionMap`).
 These decisions are applied if there is no explicit entry for the item.
-This _object security constraints_ data structure is usually logged when it is compiled.
+This _object security constraints_ data structure is logged when it is compiled.
 
 Secondly, the _object security constraints_ are applied to the retrieved object.
 The constraints are used to remove the properties that are not accessible to the user.
 This process is not easy to follow in the logs.
-Therefore it is better to inspect the _object security constraints_ structure.
+Therefore, it is better to inspect the _object security constraints_ structure.
 If it is correct then also the resulting object will be most likely correct.
 
 .Object security constraints and the user interface.
@@ -1248,49 +1248,49 @@ The data from this structure are used to figure out which fields are displayed a
 The _object security constraints_ structure is always produced by the same algorithm in the security component.
 Therefore, the interaction of authorizations and GUI forms can be diagnosed in the same way as the _get_ operations.
 
-Search operations are very different from common operations such as _add_ or _delete_ and they are also different than _get_ operations.
-Search operations will *not* result in an access denied error (except for few special cases).
-If the user that is searching has access only to some objects, then only those objects will be returned.
+Search operations are very different from common operations such as _add_ or _delete_ and they are also different from _get_ operations.
+Search operations does *not* result in an access denied error (except for few special cases).
+If the user that is searching has access only to some objects, then only those objects are returned.
 There is no error, because this is a perfectly normal situation.
 The extreme case is that user has access to no object at all.
-But although this situation is not entirely "normal" it is also not in any way special.
-The search will simply return empty result and there is also no error.
+Even though this situation is not entirely "normal", it is also not in any way special.
+The search simply returns empty result set and no error is indicated.
 You need to keep this in mind when troubleshooting the _read_ authorizations.
-Attempt to _get_ inaccessible objects will result in a security violation error.
-But _searching_ for them will simply return empty result and there is no error.
+Attempt to _get_ inaccessible object results in a security violation error.
+However, _searching_ for them simply returns empty result set and there is no error.
 
 The _search_ operations are interesting for another reason.
 Operations such as _get_, _add_ or _delete_ have precise specification of object: the object that is being retrieved, added or modified.
-But it is entirely different for search operations.
+However, it is entirely different for _search_ operations.
 The _object_ is a result of the search operation, not the parameter.
 We cannot examine the _object_ before the search and decide whether we allow or deny the operation.
 There is no _object_ before search operation.
 Also, we cannot simply search all objects and then filter out those that are denied.
-That would be totally inefficient and it will completely ruin paging mechanisms.
+That would be totally inefficient, and it will completely ruin paging mechanisms.
 A completely different strategy is needed for search operations.
 
-Search authorizations work the other way around: at first, the authorizations statements are compiled to a search filter.
-For example, if the authorization allows access only to active roles the authorization is compiled to a filter `activation/effectiveStatus=enabled`.
+Search authorizations work the other way around: at first, the authorizations statements are compiled to a _search filter_.
+For example, if the authorization allows access only to active roles the authorization is compiled to a filter `activation/effectiveStatus = "enabled"`.
 Then this filter is appended to the normal search filter and the search operation is performed.
 This approach ensures that the search returns only the objects that the user is authorized to see.
 It also makes the search as efficient as possible and maintains page boundaries.
-But that is not all.
-Another round of post processing is needed to filter out only the items that are not visible to the user.
-This is the same filter as is applied to get operations.
+In addition to that, another round of post-processing is needed to filter out the _items_ that are not visible to the user.
+This is the same filter as is applied to _get_ operations.
 
 Finally, there is a couple of things to keep in mind:
 
 * The authorizations are designed to be *additive*.
 Each role should allow the minimum set of operations needed for the users to complete their job.
-MidPoint will "merge" all the authorizations from all the roles.
-Use allow operations, avoid deny operations if possible.
-It is much better not to allow an operation than to deny it.
+MidPoint "merges" all the authorizations from all the roles.
+Use _allow_ operations, avoid _deny_ operations if possible.
+It is much better _not to allow_ an operation than to _deny_ it.
 
-* *Deny always wins.* If there is a single deny in any applicable authorization in any roles, then the operation is denied.
-It does not matter if there are thousands of allow authorizations, deny always wins.
+* *Deny always wins.*
+If there is a single _deny_ in any applicable authorization in any roles, then the operation is denied.
+It does not matter if there are thousands of _allow_ authorizations, _deny_ always wins.
 What was once denied cannot be allowed again.
-We need this approach because we do not have any way how to order the authorization in many roles.
-Do not use deny unless really needed.
+We need this approach because we do not have any way to order the authorization in many roles.
+Do not use _deny_ unless really needed.
 
 * There are two phases: *request and execution*.
 The operation needs to be allowed in both phases to proceed.
@@ -1304,102 +1304,101 @@ Then use that name as a string to find the appropriate trace in the log files.
 
 Authorization traces are quite verbose and there is quite a lot of them.
 Many traces need to be examined to figure out what exactly is going on.
-Troubleshooting is a hard work.
+Troubleshooting is a hard work in general, troubleshooting of authorizations is even harder.
 This mechanism of recording authorization processing in the log is the best way that we have figured out to troubleshoot the authorizations.
-But we know that it is not ideal.
+We know that it is not ideal, yet it is the best we have.
 If you have any better idea we are more than open to suggestions.
 
 == Reporting a Bug
 
 MidPoint is perfect.
 There are no bugs.
-Therefore you can skip this section entirely.
+Therefore, you can skip this section entirely.
 
 No, that is not really the case.
 MidPoint is a real software deployed in a real world.
-And while we spend a huge amount of time and effort to maintain midPoint, test it and fix the bugs, the bugs have a way to always get in.
+While we spend a huge amount of time and effort to maintain midPoint, test it and fix the bugs, the bugs have ways to always get in.
 This is also given by the very nature of midPoint.
 MidPoint is flexible and comprehensive.
 It is nearly impossible to test midPoint for all the conceivable configurations and use cases.
-Whenever you deploy midPoint there is a chance that some parts of your configuration or usage patterns are unique.
+Whenever you deploy midPoint, there is a chance that some parts of your configuration or usage patterns are unique to your deployment.
 Those parts might not be used by anybody else yet.
-Therefore there may be bugs that nobody ever experienced yet.
+Therefore, there may be bugs that nobody ever experienced yet.
 That is the fate of all flexible software products that live in the real world.
 
-In case that you find a bug that needs to be fixed you have several options:
+In case that you find a bug which needs to be fixed you have several options:
 
 . *Fix the bug yourself.* MidPoint is an open source product.
 We will gladly accept bugfixes.
-However, midPoint is also a substantial product and we need to keep it maintainable.
-Therefore all contributions including the bug fixes have to be reviewed.
+However, midPoint is also a substantial product and we need to keep it maintainable and secure.
+Therefore, all contributions including the bug fixes have to be reviewed.
 The fixes need to be good enough to be accepted.
 Writing an automated test for the bug is usually required as part of the bugfix contribution.
 
-. *Report the bug and wait.* The bug will be fixed by someone eventually.
+. *Report the bug and wait.* The bug will be fixed by someone, eventually.
 However, there is no telling how long you will need to wait.
 If it is a security-related bug, then it will be fixed as soon as possible.
-If the bug is severe and it affects a lot of users then it is likely to be fixed soon.
+If the bug is severe and it affects a lot of users, then it is likely to be fixed relatively soon.
 However, such bugs are very rare.
-It is likely that your bug will be quite exotic and it can only be reproduced in your deployment.
+It is likely that your bug is quite exotic, and it can only be reproduced in your deployment.
 In that case, it is almost certain that you will need to wait for a very long time.
 Several years may pass before someone finds the time to have a look at your problem.
-Those issues are known as _community issues_ and they are usually seen at the very tail of developer’s work queues.
+Those issues are known as _community issues_, and they are usually seen at the very tail of developer’s work queues.
 Except for one case: security issues.
 Security issues are always prioritized regardless of who the reporter is.
 
-. *Purchase midPoint support from Evolveum.* This will dramatically increase the priority of your bug report.
+. *Purchase midPoint support from Evolveum.* This dramatically increases the priority of your bug reports.
 Software development cannot be easily predicted, therefore we still cannot guarantee precise time period to fix the bug.
 However, typical fix time will be counted in days, weeks or in very rare and complicated cases in months.
-Those issues are known as _subscriber issues_ and they are always prioritized over community issues.
+Those issues are known as _subscriber issues_, and they are always prioritized over community issues.
 
 In any of those cases, there is a recommended procedure for bug diagnostics and reporting.
 There are bug reporting standards that apply to anybody, even midPoint subscribers.
 Evolveum provides 3^rd^-line support only.
 This means that it is expected that the issues has already passed through 1^st^ and 2^nd^ lines of support.
-The bug report should be really a report of midPoint bug.
-It should not be a configuration issue.
+The bug report should be really a report of midPoint bug, it should not be a configuration issue.
 Proper diagnostics techniques should be employed to investigate the issue before it is reported.
 The rest of this section will describe the recommended procedure.
 
 *Diagnostics* is the first step that is absolutely mandatory.
 Troubleshooting techniques described in this chapter should be used to find out what is going on.
 MidPoint is a very flexible product and the vast majority of midPoint issues are caused by wrong configuration.
-Therefore, please make sure that the problem is not one of those.
+Therefore, please make sure that your problem is not one of those.
 Simple mis-configuration may easily look like a bug.
 Try to go through midPoint documentation and understand how midPoint works.
 Re-read relevant parts of this book.
 MidPoint development team invests a huge amount of time and effort to make the error messages and log entries are understandable.
-Then please make sure you use those facilities.
+Therefore, please make sure you use those facilities.
 Please follow the troubleshooting guides above.
 They are usually very helpful.
 
 *Reproducing the problem* is a second step.
 The easiest way for us to fix a problem is being able to reproduce it.
-In such case, we do not just blindly fix the problem but we can also make sure it is really gone.
+In such case, we do not just blindly fix the problem, but we can also make sure it is really gone.
 In most cases we create a test case in our automated test suite to make sure the problem is gone and it will not appear again.
 Therefore, your best strategy to make sure that the problem is fixed quickly and does not appear again is to show us how to reproduce the problem in our environment.
-Saying that “this and that does not work” usually does not help as the same use case will work perfectly in other configurations.
+Saying that "this and that does not work" usually does not help, as the same use case may work perfectly in other configurations.
 Please describe your configuration in the report.
 
 Try to figure out what is the minimal configuration necessary to reproduce the problem.
 We appreciate if you could reproduce the problem using our sample resources and objects with minimal customization.
-This saves you a lot of time describing your environment to us and it also saves us a lot of time to try to re-create your environment in our lab.
+This saves you a lot of time describing your environment to us, and it also saves us a lot of time to try to re-create your environment in our lab.
 This approach also helps you to check your configuration and to make sure you are not reporting mis-configuration as a bug.
 
 In a very rare cases the problem cannot be easily reproduced using samples or similar simple setup.
 In that case we need to work with what we have.
 Therefore, we either need to know quite a lot about your environment to be able to set it up in our lab.
-Or we need access to your environment or your cooperation with diagnosing the problem.
+If that fails, we may need access to your environment or your cooperation with diagnosing the problem.
 In such case, please use your common sense in what comes into the bug report.
 Please keep in mind that midPoint is open source project and the bug reports are public, therefore please be careful when providing sensitive information in bug reports.
 
 When you are sure that the problem is not caused by mis-configuration, it is time to *report the issue*.
 The best way to submit a bug report is to use Evolveum bug tracking system.
-The registration is open to everybody.
+The registration is open to everyone.
 This is also the only bug reporting method available for community issues.
-Using Evolveum tracker allows you to track the progress of issue resolution, add additional information, etc.
-Just please keep in mind that the tracker is public and open to anyone following the spirit of open source.
-Therefore, be careful about submitting a sensitive information.
+Evolveum tracker allows you to track the progress of issue resolution, add additional information, etc.
+Just please keep in mind that the tracker is public and open to anyone, following the spirit of open source.
+Therefore, be careful about submitting sensitive information.
 
 Please note that security issues revealing a potential security vulnerability should *not* be reported by using the tracker.
 Information in the tracker is public and this may lead to unintentional disclosure of sensitive information.
@@ -1432,7 +1431,7 @@ The exception stack trace is usually a very efficient pointer to likely cause of
 * Relevant part of the log files.
 You may want to have a look at the list of useful loggers above to correctly set up your logging to get the most useful data in the logs.
 
-* Your environment: operating system, Java platform version, target system version.
+* Your environment: operating system, Java platform version, target system type and version.
 You do not need to bother with this if the bug is obviously not environment-specific.
 
 * Indication of midPoint version (release) or git branch/revision that was used.
@@ -1440,9 +1439,11 @@ You do not need to bother with this if the bug is obviously not environment-spec
 Not all of the above is required in a bug report.
 Use your common sense.
 As a rule of the thumb too much information is usually better than too little information.
-But sometimes too much non-relevant information may obscure the tiny problem that would be obvious if just the right amount of information is provided.
+However, sometimes too much non-relevant information may obscure the tiny problem that would be obvious if just the right amount of information is provided.
 
 == Useful Troubleshooting Tips
+
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 Finally, there are some generic troubleshooting tips.
 Those are not specific to midPoint and those tips should be a second nature to any experienced engineer.
@@ -1450,15 +1451,15 @@ Some of those were already covered.
 However, it may still be useful to summarize.
 
 First of all, try to keep your troubleshooting effort methodical and systematic.
-It makes very little sense to just randomly poke around and hope that the bug will show its ugly head.
-Even though such random methods may work occasionally, they will require a lot of effort in the end.
+It makes very little sense to just randomly poke around and hope that the bug shows its ugly head.
+Even though such random methods may work occasionally, they often require a lot of effort in the end.
 Try to follow a divide-and-conquer method.
 Find a boundary in the middle of midPoint, e.g. Clockwork component.
 Examination of clockwork traces will show you whether the problem is in the mappings or it is in the provisioning.
 Is the problem in provisioning?
 Then select another boundary.
 LDAP connector operation traces may be a good bet in that case.
-That will show you whether the problem is in midPoint or it is in the LDAP server.
+That shows you whether the problem is in midPoint or it is in the LDAP server.
 Are operation parameters wrong?
 It means that problem is in midPoint, somewhere between model and the connector.
 Have a look at debug logs of provisioning component.
@@ -1468,9 +1469,9 @@ Maybe connector configuration is wrong?
 The log files will guide you to the problem.
 
 MidPoint log files may look like a maze.
-But it all makes sense.
+However, it all makes sense.
 MidPoint has good component structure and the log files reflect that.
-You just need to understand how midPoint works and you will not get lost.
+You just need to understand how midPoint works, and you will not get lost.
 Just make sure that you never forget to look at the log files.
 Always look at the log files.
 When it comes to troubleshooting logfiles are your best friends.
@@ -1485,7 +1486,7 @@ To make this method work you have to strictly follow those steps:
 Yes, a rubber duck.
 That strange object that usually floats in bubble baths.
 The duck is a good listener.
-Therefore just go ahead and describe you problem to the duck.
+Therefore, just go ahead and describe you problem to the duck.
 Step by step.
 Talk about every detail that you have explored.
 Every possible solution that you have tried.
@@ -1507,8 +1508,7 @@ Rubber duck is a popular choice.
 
 That is it.
 Troubleshooting is not an easy work to do.
-Although it may sometime resemble witchcraft, it is in fact a science.
-And an art.
+Although it may sometime resemble witchcraft, it is in fact a science - and an art.
 It needs some time to find your way.
-But it is a time well spent.
+However, it is a time well spent.
 It will be repaid many times over.
