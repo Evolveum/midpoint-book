@@ -47,12 +47,13 @@ Some smaller snippets are taken from midPoint docs or from the sample files (see
 
 Some chapters contain mostly complete configurations of the midPoint deployment.
 These configurations have a separate folder in the midPoint samples.
-Look for a folder `book` in midPoint samples.
+Look for a `samples` folder in the github repository in which source code of this books is maintained.
 All the important files used in this book are there, sorted by chapter number.
+There are also special-purpose _docker compose_ configurations that simulate configuratin used in this book.
+The _readme_ files in individual directories provide more details.
 
-URL{nbsp}(version{nbsp}{midpointversion}):{nbsp}https://github.com/Evolveum/midpoint-samples/support-{midpointversion}/master/samples/book/ +
-URL{nbsp}(latest{nbsp}development{nbsp}version):{nbsp}https://github.com/Evolveum/midpoint-samples/tree/master/samples/book/
-
+URL{nbsp}(version{nbsp}{midpointversion}):{nbsp}https://github.com/Evolveum/midpoint-book/tree/support-{midpointversion}/samples[https://github.com/Evolveum/midpoint-book/tree/support-{midpointversion}/samples] +
+URL{nbsp}(latest{nbsp}development{nbsp}version):{nbsp}https://github.com/Evolveum/midpoint-book/tree/master/samples[https://github.com/Evolveum/midpoint-book/tree/master/samples]
 
 == Story Tests
 
