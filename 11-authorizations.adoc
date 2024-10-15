@@ -78,7 +78,7 @@ It is the "thing" that is being affected by an operation.
 Authorization allows _action_ to be performed on _object_ by _subject_.
 For example, it allows user `aanderson` (subject) to _modify_ (action) organizational unit `Project Enigma` (object).
 
-image::10-01-subject-action-object.png[Subject\, action and object]
+image::11-01-subject-action-object.png[Subject\, action and object]
 
 The basic idea of this approach is to create authorization statements that allow operations for specific subject-action-object combinations.
 However, it would be quite difficult to maintain large set of authorization statements if they are maintained in a single place.
@@ -87,7 +87,7 @@ Authorization statements are placed inside midPoint roles, which are in turn ass
 A user that has a role with an authorization statement is automatically considered to be a subject of the statements.
 This approach allows very scalable and maintainable authorization configurations.
 
-image::10-02-role-project-maintainer-single.png[Authorization in a role]
+image::11-02-role-project-maintainer-single.png[Authorization in a role]
 
 Authorization placed in a role looks like follows in XML notation.
 The `orgRef` clause refers to `Project Enigma` org.
@@ -116,7 +116,7 @@ That approach does not scale well.
 Therefore, single authorization statement often grants permission to modify many objects.
 For example, we may want to have a `Project Maintainer` role which allows a user to modify any project.
 
-image::10-03-role-project-maintainer.png[Authorization in a role]
+image::11-03-role-project-maintainer.png[Authorization in a role]
 
 While extending the authorization a bit, the result looks like follows in XML notation.
 

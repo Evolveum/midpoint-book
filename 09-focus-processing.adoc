@@ -1379,7 +1379,7 @@ It is time to put all the bits and pieces together.
 So far we have been talking about provisioning, inbound synchronization, schema, RBAC, archetypes and object templates.
 Let’s see how all the parts fit together:
 
-image::08-01-big-picture.png[Big picture]
+image::09-01-big-picture.png[Big picture]
 
 Everything starts with a _synchronization_ process, whether it is reconciliation or live synchronization.
 Synchronization process invokes the _connector_ for the source resource (`Resource A`).
@@ -1768,7 +1768,7 @@ There is no synchronization task running, therefore MidPoint have not seen Alber
 You have to instruct midPoint to explicitly look at the resource.
 Once Albert’s account is imported, a non-conflicting username should be generated for him:
 
-image::08-02-users-andersons.png[Users]
+image::09-02-users-andersons.png[Users]
 
 We need to generate e-mail address next.
 In our case, the mapping for e-mail address is a bit similar to username mapping:
@@ -1817,7 +1817,7 @@ Therefore, the e-mail address for Albert Anderson will be `albert.anderson2@exam
 
 This is what we get when we re-import or reconcile both Andersons:
 
-image::08-03-users-andersons-email.png[Users]
+image::09-03-users-andersons-email.png[Users]
 
 This is not exactly what we want.
 Ideally, we would like to use much simpler versions `albert.anderson@example.com`.
@@ -2095,7 +2095,7 @@ If it works, then it is the time for roll-out.
 Set up a synchronization task for the HR resource, and we are done.
 We have running system:
 
-image::08-04-users-final.png[Users]
+image::09-04-users-final.png[Users]
 
 Users are imported from the HR system.
 Roles are assigned, which can be checked by navigating to user details page and opening the menu:Assignements[] tab.

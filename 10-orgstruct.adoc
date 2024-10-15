@@ -47,7 +47,7 @@ Other orgs can represent departments, these can be put "inside" the division org
 That process can be repeated until complete organizational structure is formed.
 
 .Organizational tree
-image::09-01-org-tree.png[Organizational tree]
+image::10-01-org-tree.png[Organizational tree]
 
 _Org_ is quite a basic thing with a very simple anatomy:
 
@@ -73,7 +73,7 @@ Therefore, there is a mechanism to set nicer display name that does not need to 
 The display name is used instead of the ordinary `name` whenever this org is displayed to a user.
 
 .Top-level organizational unit
-image::09-02-org-top.png[Top-level organizational unit]
+image::10-02-org-top.png[Top-level organizational unit]
 
 We have an organizational unit now, but how do we put users in it?
 Clever reader already knows the answer: _assignment_.
@@ -81,7 +81,7 @@ All we need is to _assign_ the org to a user.
 This is done in almost the same way as you would assign a role, just select the `Org` tab in assignment dialog.
 
 .Assignment of an organizational unit
-image::09-03-top-org-assignment.png[Assignment of an organizational unit]
+image::10-03-top-org-assignment.png[Assignment of an organizational unit]
 
 The assignment looks like this in XML form:
 
@@ -100,7 +100,7 @@ The assignment looks like this in XML form:
 The user is a part of our minimalistic organizational unit now:
 
 .Assigned top-level organizational unit
-image::09-04-top-org-assignment-tree.png[Assigned top-level organizational unit]
+image::10-04-top-org-assignment-tree.png[Assigned top-level organizational unit]
 
 == Organizational Structure Hierarchy
 
@@ -157,7 +157,7 @@ We use an _assignment_, of course:
 Now we have our minimalistic hierarchy:
 
 .Small organizational structure tree
-image::09-05-small-org-tree.png[Small organizational structure tree]
+image::10-05-small-org-tree.png[Small organizational structure tree]
 
 This makes perfect sense, doesn't it?
 Users become part of organizational units when the units are assigned to them.
@@ -234,7 +234,7 @@ It would be no big surprise to find out that laziness was a driving force behind
 Now, let us use this convenient approach to create a nice and rich corporate organizational tree:
 
 .Organizational tree
-image::09-06-org-tree-page.png[Organizational tree]
+image::10-06-org-tree-page.png[Organizational tree]
 
 TIP: Of course, you can create and manage organizational structure in midPoint user interface.
 In fact, people do that quite often.
@@ -467,7 +467,7 @@ Just create new root _org_ for projects and place the projects under it:
 We have two organizational trees now, each neatly stowed under its own tab:
 
 .Project organizational tree
-image::09-09-org-tree-projects.png[Project organizational tree]
+image::10-09-org-tree-projects.png[Project organizational tree]
 
 This is a nice _project_ organizational structure.
 However, our users are members of _functional_ organizational structure already.
@@ -551,7 +551,7 @@ Then we can apply the archetype to objects.
 When the archetype is applied, the projects have nice icon and custom color.
 
 .Archetyped projects
-image::09-10-project-list.png[List of archetyped projects]
+image::10-10-project-list.png[List of archetyped projects]
 
 Archetypes are easy to apply.
 However, it may not be entirely easy to choose _what_ archetypes to apply to orgs.
@@ -647,13 +647,13 @@ Manager _assignment_ is created in the user interface in almost the same way as 
 The only difference is selection of _manager relation_ at the bottom of the assignment target dialog:
 
 .Assign organizational unit manager
-image::09-07-assign-org-manager.png[Assign organizational unit manager]
+image::10-07-assign-org-manager.png[Assign organizational unit manager]
 
 After the assignment is in place, midPoint knows that Alice is a manager of Sales and Marketing Division.
 This is also displayed in the organizational tree:
 
 .Organizational unit with a manager
-image::09-08-org-tree-manager.png[Organizational unit with a manager]
+image::10-08-org-tree-manager.png[Organizational unit with a manager]
 
 TIP: MidPoint assigns managers to organizational units.
 That is the right way to do it.
@@ -911,7 +911,7 @@ The _assignment relation_ specification is used by the user interface.
 User interface is going to present only those object types and relation that make sense for the operation that user has initiated.
 
 .Assignment relations
-image::09-11-assignment-relation.png[Selection of assignment relations]
+image::10-11-assignment-relation.png[Selection of assignment relations]
 
 NOTE: Support for _assignment relation_ in midPoint 4.8 user interface is not yet completed.
 Some parts of user interface use _assignment relation_, while others are not using it yet.
@@ -966,7 +966,7 @@ However, as most organizational structures are built for people, midPoint user i
 You have to explicitly change the type to _role_ to see content of the catalog.
 
 .Role catalog
-image::09-12-role-catalog.png[Role catalog]
+image::10-12-role-catalog.png[Role catalog]
 
 Primary use of the catalog is related to _access request process_.
 The catalog makes it easier for a user to find appropriate role when requesting its assignment in self-service part of midPoint user interface.
@@ -1806,7 +1806,7 @@ All we need to do now is to re-run the synchronization task.
 The result is a nice organizational structure in LDAP directory:
 
 .Organizational structure in LDAP
-image::09-13-ldap-org-tree.png[Organizational strucutre in LDAP]
+image::10-13-ldap-org-tree.png[Organizational strucutre in LDAP]
 
 This is a nice result.
 However, there are still several remarks to make.
@@ -1853,7 +1853,7 @@ However, there is an _org_ instead of user, and there are various _resource obje
 It may look like this:
 
 .Org and projections
-image::09-14-org-projections.png[Org and projections]
+image::10-14-org-projections.png[Org and projections]
 
 There may be user, org, service, role or similar _midPoint object_ on the midPoint side.
 These may be synchronized with account, group, role, privilege, organizational unit or almost any _resource object_ on resource side.
@@ -1862,7 +1862,7 @@ Saying "similar midPoint object" and "almost any resource object" is not very na
 Therefore, we have decided to use _focus_ and _projection_ terms:
 
 .Focus and projections
-image::09-15-focus-projections.png[Focus and projections]
+image::10-15-focus-projections.png[Focus and projections]
 
 The object that is "in the middle" is called _focus_ or _focal object_.
 It is in the centre of the synchronization, it is its focal point.
