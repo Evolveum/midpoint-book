@@ -480,6 +480,11 @@ The role is still active, everything works fine, just the role cannot be request
 Then we can take our time to clean up all existing role assignments, replacing deprecated role with newer equivalents.
 Finally, when all assignments are gone, we can switch role to `archived` state.
 
+Lifecycle state can be applied to many configuration elements in addition to objects.
+When lifecycle state is applied to parts of configuration, it controls whether the respective configuration is applied.
+E.g. setting a mapping to `draft` lifecycle state effectively disables the mapping.
+This approach can be used to temporarily deactivate parts of configuration.
+
 Lifecycle state provides elegant, systematic, unified and controlled mechanisms to control how _active_ an object is.
 It guides an objects from its digital cradle to its eventual binary death.
 As such, it is one of the essential mechanisms of identity management.

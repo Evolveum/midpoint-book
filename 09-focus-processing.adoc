@@ -330,6 +330,46 @@ It can be used to associate value enumeration with an item, e.g. to apply lookup
 Object templates can be used to set up a validation expression for items - and a couple of other things.
 More on that later.
 
+=== Includes
+
+There are many ways to apply an object template to an object.
+The template can be set _globally_ in system configuration, it can be set by an _archetype_ or even by an _organizational unit_.
+However, only one object template can be active for any particular object at one time.
+Yet, there are often mappings that need to apply universally.
+For example, we may want to generate _full name_ using the same algorithm for all users, regardless of their archetype.
+We may also want to automatically assign some roles to all users regardless of their organizational units.
+For that reason there is mechanism to include one object template in another:
+
+[source,xml]
+----
+<objectTemplate oid="22f83022-b76d-11e9-8a30-6ffc11b23016">
+    <name>Default User Template</name>
+    <item>
+        <ref>fullName</ref>
+        <mapping>
+            ...
+        </mapping>
+    </item>
+</objectTemplate>
+----
+
+[source,xml]
+----
+<objectTemplate oid="60eab6a8-ba87-11e9-b9a3-bbb8418de4d5">
+    <name>Special User Template</name>
+    <includeRef oid="22f83022-b76d-11e9-8a30-6ffc11b23016"/>
+    <item>
+        <ref>employeeNumber</ref>
+        <mapping>
+            ...
+        </mapping>
+    </item>
+</objectTemplate>
+----
+
+In this case, the special user template includes all the mappings from default user template.
+Therefore, both mapping for `employeeNumber` and mapping for `fullName` will be processed.
+
 // TODO: later: validation?
 
 == Automatic Role Assignment
@@ -1333,46 +1373,6 @@ Something like employee number, student identifier or partner ID are usually sui
 If that is not acceptable, then the second-best approach is to keep the algorithms simple.
 The simpler it is the less likely it is to fail.
 
-== Includes
-
-There are many ways to apply an object template to an object.
-The template can be set _globally_ in system configuration, it can be set by an _archetype_ or even by an _organizational unit_.
-However, only one object template can be active for any particular object at one time.
-Yet, there are often mappings that need to apply universally.
-For example, we may want to generate _full name_ using the same algorithm for all users, regardless of their archetype.
-We may also want to automatically assign some roles to all users regardless of their organizational units.
-For that reason there is mechanism to include one object template in another:
-
-[source,xml]
-----
-<objectTemplate oid="22f83022-b76d-11e9-8a30-6ffc11b23016">
-    <name>Default User Template</name>
-    <item>
-        <ref>fullName</ref>
-        <mapping>
-            ...
-        </mapping>
-    </item>
-</objectTemplate>
-----
-
-[source,xml]
-----
-<objectTemplate oid="60eab6a8-ba87-11e9-b9a3-bbb8418de4d5">
-    <name>Special User Template</name>
-    <includeRef oid="22f83022-b76d-11e9-8a30-6ffc11b23016"/>
-    <item>
-        <ref>employeeNumber</ref>
-        <mapping>
-            ...
-        </mapping>
-    </item>
-</objectTemplate>
-----
-
-In this case, the special user template includes all the mappings from default user template.
-Therefore, both mapping for `employeeNumber` and mapping for `fullName` will be processed.
-
 == Combining the Ingredients
 
 It is time to put all the bits and pieces together.
@@ -2083,7 +2083,7 @@ MidPoint knows that, and it automatically creates a new CRM account when the rol
 Outbound mappings from the CRM resource definition are used to set basic properties of CRM account, such as account identifiers and password.
 In addition to that, the `Sales Manager` role sets appropriate _access level_ to the CRM system.
 
-// TODO: later: we are combining both business role and application role here, is a single role.
+// TODO: later: we are combining both business role and application role here, in a single role.
 // TODO: we should probably explain that in a note.
 
 Our setup is almost complete now.

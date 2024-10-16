@@ -1,11 +1,15 @@
 
-!!!!!!! MAPPING NAMES
-
-!!!!! lifecycleState = 'draft' - explain
-
 
 AIM Intro chapter:
 * Describe data protection
+* Digital identity
+* Remove first/second generation for IDM.
+The first generation is old history now.
+It is no longer relevant.
+* Data protection introduction
+
+Installation chapter:
+* More on midPoint Studio
 
 Resource/Mapping chapter:
 * Mention support for multiaccounts (tags) in early sections. As a note.
@@ -20,6 +24,7 @@ RBAC chapter:
 * Parametric roles: rework Example, team do not fit here
 * Meta-role discussion is using archetype-like example. this should be reworked.
 * Find a better example for roles with multi-valued attributes (privs), find a resource to simulate multi-val attrs
+* More on application roles, Concept of Application - maybe explain in entitlements chapter?
 
 Object template chapter:
 * Mention pre-defined "Person Object Template"

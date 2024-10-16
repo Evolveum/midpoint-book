@@ -544,7 +544,6 @@ image::02-16-user-projections-2.png[User projections]
 There is an HR account that was used to create the user in the first place.
 Then there is an LDAP account that was created as a reaction to a new assignment.
 
-// TODO
 image::02-17-user-projection-ldap.png[User LDAP projection]
 
 There is _reality_ and there is _policy_.

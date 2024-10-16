@@ -245,7 +245,6 @@ image::07-03-user-assignment-role.png["User, role and resource"]
 
 MidPoint user interface can show a nice summary of the inducements:
 
-// TODO: needs update
 image::07-04-gui-role-inducements.png[Role inducements in user interface]
 
 It is perhaps worth explaining what happens if this `Business analyst` role is assigned to a user.
@@ -728,7 +727,8 @@ As we will explain later, _archetypes_ give character and behavior to objects.
 The two pre-defined role archetypes are ready to use in midPoint.
 Role wizards are prepared to create new _application_ and _business_ roles to match the archetypes.
 
-// TODO: mention certifications?
+// TODO: later: mention certifications?
+
 
 // TODO: assigning business roles to users automatically? Point to object template chapter, and explain details there?
 
