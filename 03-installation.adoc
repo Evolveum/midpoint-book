@@ -8,24 +8,30 @@ The _Guide_ is definitive.
 Reality is frequently inaccurate.
 
 This chapter provides instructions for installation and initial configuration of a midPoint system.
-
-// TODO: more intro
+Installation instructions provided in this chapter focus on small installations, suitable for evaluation, experiments, and development of midPoint configurations.
+Most of us are going to start with an environment like this.
+Deployment of midPoint in a production setting is an entirely different matter, suitable for its own chapter.
 
 == Requirements
 
 MidPoint will run on almost any machine.
-All you need is approximately 4GB RAM.
-That’s perhaps the only real limiting factor.
-Linux is an operating system of choice for midPoint.
-Some midPoint releases are supported on Windows as well, and midPoint runs fine on macOS for non-production use.
-MidPoint is platform-independent, it can run on any environment where Java is running.
-If you look for more formal system requirements definition, then you will find that in midPoint docs (see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter at the end of the book).
+Mid-range laptop is fine for personal use of midPoint.
+MidPoint needs approximately 4GB of RAM, which is perhaps the only real limiting factor.
 
+Theoretically, MidPoint is platform-independent, it can run on any environment where Java is running.
+However, devil is in the detail.
+Individual environments and operating systems have their peculiarities.
+Therefore, only some environments are supported by Evolveum.
+
+Linux is an operating system of choice for production use of midPoint.
+However, midPoint will be happy in Windows or macOS environment on your laptop for non-production use.
+Some midPoint releases have production-grade support for Windows environment as well.
+
+If you look for more formal system requirements definition, then you will find that in midPoint docs (see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter at the end of the book).
 
 == Installation
 
-There is several ways to install midPoint.
-Two methods are the most popular for getting started with midPoint:
+There are several ways to install and use midPoint.
 
 * *Docker*: MidPoint can be installed from docker images published on Docker Hub.
 Docker, being a container platform, simplifies installation to downloading and running the image.
@@ -39,25 +45,30 @@ Kubernetes deployment is recommended for production use of midPoint.
 _Kubernetes platform_ or _cloud environment_ (AWS, Azure, Google cloud) is needed for this method.
 This installation method is not covered in this book.
 
-* *Distribution package* or *source code*: MidPoint is distributed in a form of package, which is built from source code.
+* *Distribution package*: MidPoint is distributed in a form of package, which is built from source code.
 The package contains _binaries_, scripts and other files to run midPoint.
-The binaries can also be obtained by building the _source code_ directly.
-_Java Runtime Environment_ is needed to run the binaries, as well as some knowledge of software development and system administration techniques.
-This method is recommended only for deep experimentation and special scenarios and for people that prefer the traditional approach.
+_Java Runtime Environment_ (JRE) is needed to run the binaries, as well as knowledge of system administration techniques.
+This method is supported for production use of midPoint.
+It is recommended for people that prefer the traditional installation approach.
 
-It is recommended to start with the _Docker_ method.
+* *Source code*: MidPoint is an open source software, complete source code is available.
+The source code can be built to obtain binary packages.
+_Java Development Environment_ (JDK) is needed to build and run the binaries, as well as some knowledge of software development and system administration techniques.
+This approach is recommended for deep experimentation and special scenarios, and for people that need to build their own source code.
+
+It is strongly recommended to start with the _Docker_ method.
 The descriptions and examples in this book assume that _Docker Compose_ installation is used.
 
-// TODO: more recommendations on choosing installation method?
+== Docker Compose Installation
 
-=== Docker Compose Installation
-
-Docker provides a popular method to distribute and run containerized software.
-Evolveum is building and publishing docker images for every midPoint version, as well as _Docker Compose_ definition file that describes how the necessary containers are assembled.
+_Docker_ provides a popular method to distribute and run containerized software.
+Evolveum is building and publishing docker images for every midPoint version.
+In addition to that, _Docker Compose_ definition file is provided for easier start.
+_Docker Compose_ file describes how the necessary containers are assembled, creating a simple environment with all the necessary components.
 
 MidPoint installation described in this chapter is a very basic one.
-It is ideal for initial exploration of midPoint, development of midPoint configurations, some testing, demonstrations and similar purposes.
-It is a very convenient installation, and yet it is more than enough to get you started.
+It is ideal for initial exploration of midPoint, development of midPoint configurations, simple testing, demonstrations, exploration and similar purposes.
+It is a very convenient installation, and it provides all you need to get started.
 
 .Not for production use
 WARNING: MidPoint installation based on _Docker Compose_ is not meant for production use.
@@ -69,6 +80,10 @@ It is available for Linux, Windows and macOS.
 Please follow https://docs.docker.com/engine/install/[Docker installation instructions].
 
 Once the Docker is installed, midPoint can be installed using `docker compose` command-line command:
+
+// TODO: update - script installation
+
+// TODO: explain use of sudo/root: secure by default
 
 . Download midPoint _compose file_ to your machine.
 It can be obtained from github as `docker-compose.yml` file from `https://github.com/Evolveum/midpoint-docker[midpoint-docker]` project.
@@ -106,6 +121,8 @@ The logfile can be accessed using Docker `logs` command:
 
 `docker compose logs midpoint_server`
 
+// TODO: also update troubleshooting chapter (logging)
+
 When not needed, the containers can be shut down:
 
 `docker compose down`
@@ -125,9 +142,41 @@ Then the database is initialized with proper configuration and database schema.
 Finally, midPoint container is started and connected to the database.
 While it may look like a single "midPoint" instance to you, it is in fact several cooperating containers, all orchestrated by _Docker Compose_.
 
+// TODO: components of docker compose installation: midPoint, DB
+
+== Book Containers
+
+Standard _Docker Compose_ definition for midPoint contains just the basic components: midPoint server and PostgreSQL database.
+However, for the purposes of this book, we are going to need a little bit more - to have some fun with midPoint.
+We are going to need an LDAP server, CSV files and some additional database tables to play the role of resources.
+Of course, the stock _docker compose_ definition can be extended to include all that.
+However, our goal is to learn midPoint, messing around with docker may be a distraction.
+Therefore, there are already containers configured to run the environment suitable for trying examples provided in this book.
+The containers are located in the `docker` directory in book samples (see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for details).
+There are two configurations, first one corresponds roughly to the beginning of chapter 5 (Synchronization), the other corresponds to end of chapter 10 (organizational structure).
+There are `README` files in both directories, explaining the details.
+
+The containers have convenient `book-example.sh` script, which can be used to set up, start and re-set container state.
+This script is meant for Linux, as primary author of this book is a hopeless Linux enthusiast.
+There are no Windows or macOS versions only.
+However, this is open source world, contributions are more than welcome.
+
+== On-Line Demo
+
+If you want to have just a quick look at midPoint, there is on-line midPoint demo located at the following URL:
+
+`https://demo.evolveum.com/[https://demo.evolveum.com/]`
+
+The demo has some basic configuration to demonstrate midPoint features.
+There are several resources configured for synchronization, role-based access control (RBAC) is set up, there is organizational structure, some policies, and many other things.
+Link to the demo documentation is provided at the login page.
+
+NOTE: The demo is shared among all the users, therefore it may not be in a pristine state when you log in.
+The demo is re-set to the original state once a day.
+
 == MidPoint User Interface
 
-Use the following URL to access midPoint user interface:
+When local midPoitn instance is started, use the following URL to access midPoint user interface:
 
 `http://localhost:8080/midpoint`
 
@@ -135,6 +184,17 @@ Log in with the following credentials:
 
 Username: `administrator` +
 Password: `Test5ecr3t`
+
+// TODO: update, if script prompts for password
+
+.HTTP
+NOTE: Oh yes, the URL is really using insecure HTTP instead of HTTPS.
+This is certainly not suitable for production use, as we have already mentioned several times.
+However, it is reasonably safe for local, non-production use.
+When using the provided docker configuration, midPoint service is available on _localhost_ only, it is not accessible from the network.
+This setup is reasonably safe for use on personal computers.
+We did not want to complicate the matter by acquiring TLS certificates for HTTPS use.
+However, you will need to do that for production use, in order to secure midPoint.
 
 Now you are logged-in as the `administrator`.
 This user has superuser privileges, therefore you can see everything, and you can do anything in the midPoint user interface.
@@ -274,7 +334,6 @@ The detail pages for common midPoint objects, such as user or role, are very sim
 They have the same layout and controls.
 E.g. user details page looks like this:
 
-// TODO: 4.8 update
 image::03-04-user-details.png[User details]
 
 The screen below the information area is divided into several panels.
@@ -318,14 +377,12 @@ These objects need to be presented in quite a compact form that can be expanded 
 This applies to list of user’s accounts, assignments, role inducements, etc.
 The objects are initially displayed as in a form of a simple list, displaying only the basic data:
 
-// TODO: 4.8 update
 image::03-05-user-projections.png[User projections]
 
 The list above shows user’s _projections_.
 Those are usually accounts that are linked to user object.
 Click on account name shows account details:
 
-// TODO: 4.8 update
 image::03-06-user-projection-details.png[Projection details]
 
 Account details display is shown in place of user details.
@@ -562,15 +619,21 @@ The database is used to store the configuration, users, resource definitions, ac
 Proper relational database is needed for midPoint repository, such as PostgreSQL database.
 _Docker Compose_ deployment makes sure that PostgreSQL is available, properly set up, initialized with database schema and ready to be used as midPoint repository.
 
+MidPoint {midpointversion} supports several database engines.
+However, only PostgreSQL database fully supports all midPoint features.
+Support for database engines other than PostgreSQL is currently deprecated.
+The future of _generic repository_ support (as we call it) is uncertain.
+Choose PostgreSQL directory (a.k.a. _native repository_) to get reliable support for all midPoint features.
+
 .Embedded database
 NOTE: MidPoint had _embedded_ database engine in the past, in a form of H2 database.
 However, proper database engine is needed to support all midPoint features.
 While the embedded H2 engine is still present in midPoint, it is not recommended to use it.
 Many midPoint features will fail unless a proper database engine (PostgreSQL) engine is used.
 
-// TODO TODO  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
 == MidPoint Home Directory
+
+// TODO: update according to the script
 
 While almost all of midPoint configuration is stored in the database, there are few things that cannot be stored there - such as connection parameters to the database itself.
 For that purpose midPoint has a small configuration file called `config.xml`.
@@ -600,6 +663,8 @@ If you modify them later, midPoint will not overwrite them.
 
 == Logging
 
+// TODO: update according to the script
+
 Logging is perhaps the most important mechanism to diagnose any issues with midPoint.
 Logging should be _the_ thing that comes to your mind anytime you cast a puzzled look at midPoint user interface.
 We try to make midPoint user interface convenient to use, and we pay a lot of attention to good error reporting.
@@ -624,3 +689,9 @@ There are complex interactions, there is usually a lot of custom configuration, 
 Diagnostics of midPoint issues is no easy task.
 Therefore, there is a dedicated <<90-troubleshooting.adoc#90-troubleshooting,Troubleshooting>> chapter in this book.
 That chapter is your best friend when things do not go as expected.
+
+== Conclusion
+
+We have small and simple docker-based midPoint installation now.
+It is not much, yet it is more than enough to explore almost all the midPoint concepts and mechanisms.
+Therefore, let us go ahead and have some fun.
