@@ -38,6 +38,7 @@ Docker, being a container platform, simplifies installation to downloading and r
 Even that is further simplified and automated with _Docker Compose_.
 This is ideal method for exploration, experiments, testing and demos.
 _Docker Engine_ is needed to run the images, which can run on almost any computer.
+Evolveum provides convenient script to set up and manage midPoint environment for docker-based installation.
 
 * *Kubernetes*: MidPoint can be installed to Kubernetes platform.
 This is a fully cloud-native method to deploy midPoint.
@@ -70,6 +71,8 @@ MidPoint installation described in this chapter is a very basic one.
 It is ideal for initial exploration of midPoint, development of midPoint configurations, simple testing, demonstrations, exploration and similar purposes.
 It is a very convenient installation, and it provides all you need to get started.
 
+// TODO: Linux and macOS ... what to do with Windows?
+
 .Not for production use
 WARNING: MidPoint installation based on _Docker Compose_ is not meant for production use.
 
@@ -78,79 +81,101 @@ You will need:
 * *Docker Engine* installed on your machine.
 It is available for Linux, Windows and macOS.
 Please follow https://docs.docker.com/engine/install/[Docker installation instructions].
+Make sure that _Docker Compose_ is installed as well.
+Special packages are needed to support _compose_ in some operating systems, e.g. `docker-compose-plugin` or `docker-compose-v2` is necessary in Debian/Ubuntu Linux.
 
-Once the Docker is installed, midPoint can be installed using `docker compose` command-line command:
+* *MidPoint Docker Script* (`midpoint-quickstart.sh`) downloaded to your machine.
+The script takes care of initialization of _Docker Compose_ environment for midPoint.
+The script can be downloaded from link:https://evolveum.com/download/[Evolveum download page].
+Detailed instructions about usage of the script can be found on link:https://docs.evolveum.com/midpoint/quickstart/[Quickstart page] in midPoint documentation.
 
-// TODO: update - script installation
+Once the Docker is installed and the script is downloaded, there is still some preparation to do:
 
-// TODO: explain use of sudo/root: secure by default
-
-. Download midPoint _compose file_ to your machine.
-It can be obtained from github as `docker-compose.yml` file from `https://github.com/Evolveum/midpoint-docker[midpoint-docker]` project.
-Quick method to get the file is to use `curl` or similar command-line utility:
+. Create a new directory for the environment.
+Any directory would do.
 +
-`curl -O https://raw.githubusercontent.com/Evolveum/midpoint-docker/master/docker-compose.yml`
+`mkdir midpoint-demo`
++
+Choosing a relatively unique name for the directory would be a good idea, as _Docker Compose_ is using name of the directory as a prefix for container names.
+Therefore `midpoint-demo` is better name than `midpoint` or `demo`.
 
-. Create and start the containers.
-In the directory where the downloaded `docker-compose.yml` file is located, run the following command:
+. Copy the script to the new directory:
 +
-`docker compose up -d`
-+
-Docker downloads latest stable version of midPoint prepares the containers and starts them.
-Necessary components will be initialized and midPoint will start.
-That can take a minute or two.
-+
-NOTE: On Linux systems that care about security, `sudo` command may be needed to run `docker` commands.
+`cp Downloads/midpoint-quickstart.sh midpoint-demo/`
 
-. Access midPoint user interface as a local service at port `8080`.
+. Enter the newly-created directory:
++
+`cd midpoint-demo`
+
+. Initialize and start midPoint environment by running the `midpoint-quickstart.sh` script:
++
+`./midpoint-quickstart.sh up`
++
+The script needs to be executed from the dedicated directory created in the first step.
+When started, the script initializes the environments.
+It creates _Docker Compose_ definition file (`docker-compose.yml`) and midPoint home directory (`midpoint-home`), setting correct permissions for easy management.
+Then the script starts docker containers.
+
+.Docker and sudo
+NOTE: The `midpoint-quickstart.sh` script may ask for your password, as it is using `sudo` to start Docker containers.
+Using `sudo` is a recommended method to manage Docker containers in a secure way.
+There are configurations that allow users to start the containers without `sudo`, yet these are not considered secure.
+As midPoint is designed with security in mind and it is supposed to be _secure by default_, it uses the `sudo` method.
+
+Once the environment is started, midPoint user interface can be accessed as a `localhost` service at port `8080`.
 +
 `http://localhost:8080/[http://localhost:8080/]`
 +
 You can start working with midPoint now.
+Log in as `administrator`.
+The script has generated a random initial password (remember: _secure by default_), which can be used to log in.
 
 .Localhost only
-NOTE: The `docker-compose.yml` file exposes midPoint as HTTP service on port 8080 of `localhost`.
+NOTE: The Docker exposes midPoint as HTTP service on `localhost` port `8080`.
 To make things simpler and quicker, this midPoint instance is not secured properly.
-It is using HTTP instead of HTTPS, and it has a static pre-configured password.
+It is using HTTP instead of HTTPS.
 However, this deployment is still reasonably secure, as it is exposed only on local network interface (`localhost`).
 It is *not* accessible over network.
 This is a very explicit decision to limit the exposure of new midPoint instance until it is properly secured.
 
-In case that midPoint does not start, the problem will be indicated in the logfile.
-The logfile can be accessed using Docker `logs` command:
+In case that midPoint does not start, the problems are indicated in the _logfile_.
+The logfile (`midpoint.log`) is located in midPoint home directory.
+In our little _Docker Compose_ environment, the logfile can be found at the following path:
 
-`docker compose logs midpoint_server`
+`midpoint-home/log/midpoint.log`
 
-// TODO: also update troubleshooting chapter (logging)
+If there is any problem, it is likely that detailed problem description can be found at the end of the log file.
+When desperate, please refer to the <<90-troubleshooting.adoc#90-troubleshooting,Troubleshooting>> chapter.
 
 When not needed, the containers can be shut down:
 
-`docker compose down`
+`./midpoint-quickstart.sh down`
 
 When shut down, midPoint keeps all the data and state in the repository.
 The data will be available when the container is started again.
 
-In case that there is a need to purge all data and re-start on a clean playing field, persistent database data can be deleted by using the `-v` switch:
+In case that there is a need to purge all data and re-start on a clean playing field, persistent database data can be deleted by using the `clean` command passed to the script:
 
-`docker compose down -v`
+`./midpoint-quickstart.sh clean`
 
 .Behind the scenes
-TIP: _Docker Compose_ does quite a lot of things behind the scenes.
-First of all, it starts up midPoint repository, which is a PostgreSQL database instance.
-The database is using a _persistent volume_ to store its data, otherwise you would loose all your work on every re-start.
+TIP: The script is using _Docker Compose_ to do quite a lot of things behind the scenes.
+First of all, the script creates midPoint home directory (`midpoint-home`), setting correct permissions for both the docker container and you can access it.
+Then the script uses _Docker Compose_ starts up midPoint repository, which is a PostgreSQL database instance.
+The database is using a _persistent volume_ to store its data, otherwise you would lose all your work on every re-start.
 Then the database is initialized with proper configuration and database schema.
 Finally, midPoint container is started and connected to the database.
+The container generates a random administrator password, which is retrieved by the script and displayed to the user.
 While it may look like a single "midPoint" instance to you, it is in fact several cooperating containers, all orchestrated by _Docker Compose_.
 
-// TODO: components of docker compose installation: midPoint, DB
-
-== Book Containers
+== Containerized Book Samples
 
 Standard _Docker Compose_ definition for midPoint contains just the basic components: midPoint server and PostgreSQL database.
 However, for the purposes of this book, we are going to need a little bit more - to have some fun with midPoint.
 We are going to need an LDAP server, CSV files and some additional database tables to play the role of resources.
 Of course, the stock _docker compose_ definition can be extended to include all that.
-However, our goal is to learn midPoint, messing around with docker may be a distraction.
+However, the primary goal of this book is to learn midPoint.
+Messing around with docker may be a distraction.
 Therefore, there are already containers configured to run the environment suitable for trying examples provided in this book.
 The containers are located in the `docker` directory in book samples (see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for details).
 There are two configurations, first one corresponds roughly to the beginning of chapter 5 (Synchronization), the other corresponds to end of chapter 10 (organizational structure).
@@ -158,7 +183,7 @@ There are `README` files in both directories, explaining the details.
 
 The containers have convenient `book-example.sh` script, which can be used to set up, start and re-set container state.
 This script is meant for Linux, as primary author of this book is a hopeless Linux enthusiast.
-There are no Windows or macOS versions only.
+There are no Windows or macOS versions.
 However, this is open source world, contributions are more than welcome.
 
 == On-Line Demo
@@ -176,23 +201,21 @@ The demo is re-set to the original state once a day.
 
 == MidPoint User Interface
 
-When local midPoitn instance is started, use the following URL to access midPoint user interface:
+When local midPoint instance is started, use the following URL to access midPoint user interface:
 
 `http://localhost:8080/midpoint`
 
 Log in with the following credentials:
 
 Username: `administrator` +
-Password: `Test5ecr3t`
-
-// TODO: update, if script prompts for password
+Password: _randomly generated at first start, displayed by the start script_
 
 .HTTP
 NOTE: Oh yes, the URL is really using insecure HTTP instead of HTTPS.
 This is certainly not suitable for production use, as we have already mentioned several times.
 However, it is reasonably safe for local, non-production use.
-When using the provided docker configuration, midPoint service is available on _localhost_ only, it is not accessible from the network.
-This setup is reasonably safe for use on personal computers.
+When using the provided docker configuration, midPoint service is available on `localhost` only, it is not accessible from the network.
+This setup is reasonably secure for use on personal computers.
 We did not want to complicate the matter by acquiring TLS certificates for HTTPS use.
 However, you will need to do that for production use, in order to secure midPoint.
 
@@ -623,7 +646,7 @@ MidPoint {midpointversion} supports several database engines.
 However, only PostgreSQL database fully supports all midPoint features.
 Support for database engines other than PostgreSQL is currently deprecated.
 The future of _generic repository_ support (as we call it) is uncertain.
-Choose PostgreSQL directory (a.k.a. _native repository_) to get reliable support for all midPoint features.
+Choose PostgreSQL directory (a.k.a. _native repository) to get reliable support for all midPoint features.
 
 .Embedded database
 NOTE: MidPoint had _embedded_ database engine in the past, in a form of H2 database.
@@ -633,21 +656,39 @@ Many midPoint features will fail unless a proper database engine (PostgreSQL) en
 
 == MidPoint Home Directory
 
-// TODO: update according to the script
-
 While almost all of midPoint configuration is stored in the database, there are few things that cannot be stored there - such as connection parameters to the database itself.
 For that purpose midPoint has a small configuration file called `config.xml`.
 MidPoint also needs a place where to store other data that cannot be in the database, such as cryptographic keys, connector binaries and so on.
 
 MidPoint needs a special directory on a filesystem for that purpose.
 We call it _midPoint home directory_.
-When a new midPoint instance starts for the first time, new directory with the name `var` is created to act as _home_ directory.
+When a new midPoint instance starts for the first time, new _midPoint home directory_, populated with default configuration.
+Location of _midPoint home directory_ slightly varies, it depends on your deployment method:
+
+* Docker-based installation: MidPoint home directory is named `midpoint-home`.
+It is located in directory where the `midpoint-quickstart.sh` script was started, i.e. at the same level as the `docker-compose.yml` directory.
+
+* Package-based installation: MidPoint home directory is named `var`.
 It is located in directory where midPoint distribution package was installed, i.e. at the same level as the `bin` directory, where midPoint start scripts are located.
 Assuming that midPoint was installed in `/opt/midpoint` directory then default _midPoint home_ will be located in `/opt/midpoint/var` directory.
-
-The location of midPoint home directory can be changed by using the `midpoint.home` Java system property.
++
+If necessary, the location of midPoint home directory can be changed by using the `midpoint.home` Java system property.
 This is done by specifying `-Dmidpoint.home` in the JVM command-line.
-Or in case that the default midPoint start scripts are used, `MIDPOINT_HOME` environment variable can be used to set the location of midPoint home directory.
+In case that the default midPoint start scripts are used, `MIDPOINT_HOME` environment variable can be used to set the location of midPoint home directory.
+
+MidPoint home directory contains several interesting items:
+
+* `config.xml` contains fundamental configuration, such as location and credentials of repository database.
+
+* `log` directory contains midPoint log files, `midpoint.log` file being the most important.
+
+* `connid-connectors` directory is a place where additional identity connectors may be deployed.
+Copying a connector into this directory automatically deploys it to midPoint.
+
+* `resources` directory is used to store data for file-based resources, such as resources based on CSV connector.
+This directory is used in this book.
+The directory does not exist by default, and its name is not hardcoded anywhere in midPoint.
+It is just a convention to store file-based resources in this directory.
 
 When midPoint starts for the first time, it starts with an empty database.
 MidPoint populates the database with a minimal set of configuration objects.
@@ -657,13 +698,7 @@ These objects get imported automatically, because if they are not there, you wil
 These objects are imported only if they are not already present in the database.
 If you modify them later, midPoint will not overwrite them.
 
-// TODO: where to find the directory in Docker compose
-
-// TODO: use for connectors, CSV resources, etc.
-
 == Logging
-
-// TODO: update according to the script
 
 Logging is perhaps the most important mechanism to diagnose any issues with midPoint.
 Logging should be _the_ thing that comes to your mind anytime you cast a puzzled look at midPoint user interface.
@@ -675,14 +710,12 @@ Perhaps there is no error at all, just midPoint does not do what it is supposed 
 That is the point where _logging_ comes to the rescue.
 
 MidPoint is using Java logging facilities to log its messages.
-MidPoint log file name is `midpoint.log`, and it is stored in the `log` subdirectory in midPoint home directory (`/opt/midpoint/var/log/midpoint.log` by default).
+MidPoint log file name is `midpoint.log`, and it is stored in the `log` subdirectory in midPoint home directory (`midpoint-home/log/midpoint.log` for docker-based deployment, `/opt/midpoint/var/log/midpoint.log` for package-based deployment).
 The default logging level is set up more-or-less to suit normal midPoint operation.
 This means that the messages on level `INFO` and above are logged while the finer levels are not logged.
 If you want to diagnose midPoint issues you will need to switch the logging levels to `DEBUG`, or in extreme cases even to `TRACE`.
 The logging levels can be adjusted in midPoint user interface.
 Navigate to menu:Configuration[System > Logging].
-
-// TODO: where to find logs in Docker compose
 
 MidPoint is not a simple system.
 There are complex interactions, there is usually a lot of custom configuration, customizations, expressions and so on.
