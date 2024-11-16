@@ -71,7 +71,9 @@ MidPoint installation described in this chapter is a very basic one.
 It is ideal for initial exploration of midPoint, development of midPoint configurations, simple testing, demonstrations, exploration and similar purposes.
 It is a very convenient installation, and it provides all you need to get started.
 
-// TODO: Linux and macOS ... what to do with Windows?
+Following steps are applicable to Linux and macOS environment.
+Windows users may use _Docker Desktop_ running on _Windows Subsystem for Linux (WSL)_.
+Please refer to link:https://docs.evolveum.com/midpoint/install/containers/docker/[Evolveum documentation regarding Docker Compose] for more details.
 
 .Not for production use
 WARNING: MidPoint installation based on _Docker Compose_ is not meant for production use.
