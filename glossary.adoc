@@ -46,11 +46,11 @@ Alternative terms: Access Re-certification, Re-certification, Attestation, Acces
 +
 See also: <<glossterm-least-privilege,Least Privilege Principle>>, <<glossterm-over-provisioning,Over-provisioning>>, <<glossterm-microcertification,Microcertification>>
 [[glossterm-access-cloning]]Access Cloning::
-Access cloning is a practice of assigning a user the same access rights as another user has. It is often used to provision new users with initial access rights, copying access rights of an existing user.
+Access cloning is a practice of assigning a user the same access rights as another user has. It is often used to provision new users with initial access rights, copying access rights of an existing donor user.
 +
 Access cloning is an undesirable practice (see ISO/IEC 27002 5.18), as it often leads to over-provisioning. Even if the cloned access rights are justified, business role (RBAC) or similar mechanism should be used instead of cloning. Although the practice is generally undesirable, it is often employed due to its simplicity.
 +
-Alternative terms: Access Rights Cloning
+Alternative terms: Access Rights Cloning, Donor user
 +
 See also: <<glossterm-least-privilege,Least Privilege Principle>>, <<glossterm-over-provisioning,Over-provisioning>>, <<glossterm-rbac,Role-Based Access Control>>
 [[glossterm-access-control]]Access Control::
@@ -86,7 +86,7 @@ There is no standardized form or language for access control lists and instructi
 +
 See also: <<glossterm-access-control,Access Control>>
 [[glossterm-active-directory]]Active Directory::
-An identity repository created by Microsoft that stores and arranges identity information. Based on this information, it provides access and permissions to users to enter particular resources and therefore improves organizationâ€™s security.
+An identity repository created by Microsoft that stores and arranges identity information. Based on this information, it provides access and permissions to users to enter particular resources and therefore improves organization's security.
 [[glossterm-agent]]Agent::
 Active entity, usually a software component that plays an active part.
 +
@@ -214,7 +214,7 @@ In midPoint terminology: Archetypes are usually used to manage birthright in mid
 +
 Alternative terms: Birthright provisioning
 +
-See also: <<glossterm-provisioning,>>, <<glossterm-archetype,Archetype>>, <<glossterm-org,Org>>, <<glossterm-inducement,Inducement>>
+See also: <<glossterm-identity-provisioning,Identity Provisioning>>, <<glossterm-archetype,Archetype>>, <<glossterm-org,Org>>, <<glossterm-inducement,Inducement>>
 [[glossterm-blinded-affirmation]]Blinded Affirmation::
 A method to provide strictly limited information to another party, without revealing any unintended information. Blinded affirmation is often used to demonstrate that a certain user is a member of an organization, without revealing any additional information about the user to a third party. Blinded affirmation usually relies on ephemeral identifiers or pseudonyms.
 +
@@ -236,7 +236,7 @@ In midPoint terminology: MidPoint component responsible for evaluation of lifecy
 +
 See also link:https://docs.evolveum.com/midpoint/reference/concepts/clockwork/clockwork-and-projector/[more information at docs.evolveum.com].
 [[glossterm-cloud-computing]]Cloud Computing::
-Internet-based computing when resources like storage, applications or servers are used by organizations or users via Internet. Data could be accessed any time from any place, without any installations and is stored and processed in third-party data centers which could be located anywhere in the world. Cloud computing is considered to lower organizationâ€™s costs by avoiding the need of purchasing servers as well as to speed up the processes with less maintenance needed. Due to data being centralized at one place, it is considered to be secure and easily shared across bigger amount of users.
+Internet-based computing when resources like storage, applications or servers are used by organizations or users via Internet. Data could be accessed any time from any place, without any installations and is stored and processed in third-party data centers which could be located anywhere in the world. Cloud computing is considered to lower organization's costs by avoiding the need of purchasing servers as well as to speed up the processes with less maintenance needed. Due to data being centralized at one place, it is considered to be secure and easily shared across bigger amount of users.
 [[glossterm-coarse-grain-authorization]]Coarse-grain Authorization::
 Authorization concerning big architectural blocks, such as entire applications or systems. E.g. coarse-grain authorization usually decides whether a user can access an application, or access should be denied, without providing any additional details. Coarse-grained authentication is usually being made at the "perimeter" of the system, e.g. by infrastructure components, when a user is accessing an application. Typically, this authorization is based on simple policy rules, such as a role or group assigned to the user.
 +
@@ -650,7 +650,7 @@ Identity-based security is fundamental foundation for zero-trust approach.
 +
 Note: Identity-based security should not be confused with "identity security", which is a vastly overloaded term used mostly for marketing purposes.
 +
-Alternative terms: Identity-first security, Identity-centric security
+Alternative terms: Identity-first security, Identity-centric security, Identity-defined security, Identity defense in depth
 +
 See also: <<glossterm-cybersecurity,Cybersecurity>>, <<glossterm-iga,Identity Governance and Administration>>, <<glossterm-zero-trust,Zero trust>>, <<glossterm-identity-security,Identity Security>>
 [[glossterm-identity-correlation]]Identity Correlation::
@@ -704,7 +704,7 @@ See also: <<glossterm-identity-proofing,Identity Proofing>>, <<glossterm-level-o
 [[glossterm-identity-federation]]Identity Federation::
 Identity federation is an agreement between several domains, specifying the details of exchange and use of shared identity information. The information in identity federation is usually transferred by the means of identity assertions, exchanged between identity providers and relying parties.
 +
-From user's point of view, identity federation is a process of sharing userâ€™s identification and personal data between multiple systems and between organizations, so the user doesnâ€™t have to register for each organization separately and can seamlessly access systems in federated organizations.
+From user's point of view, identity federation is a process of sharing user's identification and personal data between multiple systems and between organizations, so the user doesn't have to register for each organization separately and can seamlessly access systems in federated organizations.
 +
 ISO 24760 term: identity federation
 +
@@ -932,7 +932,7 @@ Principle of information security, stating that each user should have the least 
 +
 Adherence to the principle of least privilege is generally accepted as best practice for information security, as it is minimizing overall risk by keeping the extent of privileges as low as possible. However, due to complexity, maintenance effort and other factors, strict adherence to the principle is surprisingly difficult to achieve.
 +
-Alternative terms: Principle of Least Privilege, Default deny
+Alternative terms: Principle of Least Privilege, PoLP, Default deny
 +
 See also: <<glossterm-over-provisioning,Over-provisioning>>, <<glossterm-information-need,Information need>>
 [[glossterm-linkability]]Linkability::
@@ -1044,7 +1044,7 @@ Organization is an entity, usually representing a group of people, that has its 
 +
 See also: <<glossterm-org,Org>>, <<glossterm-organizational-structure,Organizational Structure>>
 [[glossterm-organizational-structure]]Organizational Structure::
-A hierarchical arrangement of authority, rights or duties in an organization. It determines the assignment, control or coordination of roles, responsibilities and power. A character of the organizational structure is highly dependent on the organizationâ€™s strategy and goals.
+A hierarchical arrangement of authority, rights or duties in an organization. It determines the assignment, control or coordination of roles, responsibilities and power. A character of the organizational structure is highly dependent on the organization's strategy and goals.
 +
 The theme of organizational structure is closely linked to identity management. Organizing the company into this structure, assigning rights to individuals, working groups or project and controlling everything from one place â€“ that are advantages that any high quality IDM solution is supposed to provide.
 +
@@ -1064,7 +1064,7 @@ Situation when an identity has more privileges than are necessary for the tasks 
 +
 Over-provisioning is generally undesirable, as it is a violation of least privilege principle which is introducing unnecessary risk. However, over-provisioning is a common occurrence, mostly due to high complexity of access control models, limited visibility, huge privilege maintenance effort or lack of appropriate security management practices.
 +
-Alternative terms: Over-permissioning, Over-privileged Access
+Alternative terms: Over-permissioning, Over-privileged Access, Excessive Access, Excessive Privilege
 +
 See also: <<glossterm-identity-provisioning,Identity Provisioning>>, <<glossterm-identity-deprovisioning,Identity Deprovisioning>>, <<glossterm-under-provisioning,Under-provisioning>>
 [[glossterm-pap]]Policy Administration Point (PAP)::
@@ -1330,7 +1330,7 @@ In identity management, reconciliation is a process of comparing recorded state 
 +
 Reconciliation is usually quite heavyweight, yet very reliable mechanism of identity data synchronization.
 +
-See also: <<glossterm-account,Account>>, <<glossterm-user,User>>, <<glossterm-orphaned-account,>>
+See also: <<glossterm-account,Account>>, <<glossterm-user,User>>, <<glossterm-orphan-account,Orphan Account>>
 [[glossterm-rebac]]Relationship-Based Access Control (ReBAC)::
 A mechanism for managing of user access to information systems based on a concept of relationship. Relationship-Based Access Control (ReBAC) is defined by presence of relationship between objects, such as "owner" or "editor". The relationships are interpreted by an access control policy to form access control decisions.
 +
@@ -1554,7 +1554,7 @@ Independent review of a system, in order to assess adequacy of security controls
 +
 X.1252 term: security audit
 [[glossterm-security-posture]]Security Posture::
-Security posture is the security status of an enterpriseâ€™s networks, information, and systems based on cybersecurity resources (e.g., people, hardware, software, policies) and capabilities in place to manage the defense of the enterprise and to react as the situation changes. It is a "big picture" of the state of cybersecurity in an organization.
+Security posture is the security status of an enterprise's networks, information, and systems based on cybersecurity resources (e.g., people, hardware, software, policies) and capabilities in place to manage the defense of the enterprise and to react as the situation changes. It is a "big picture" of the state of cybersecurity in an organization.
 +
 Alternative terms: Cybersecurity posture
 +
@@ -1614,7 +1614,7 @@ While static entitlements may be necessary at higher levels (especially identity
 +
 Alternative terms: Standing Privilege, Standing Entitlement, Persistent Privileges
 +
-See also: <<glossterm-entitlement,Entitlement>>, <<glossterm-access-control,Access Control>>, <<glossterm-rbac,Role-Based Access Control>>, <<glossterm-pbrbac,>>, <<glossterm-abac,Attribute-Based Access Control>>, <<glossterm-pbac,Policy-Based Access Control>>
+See also: <<glossterm-entitlement,Entitlement>>, <<glossterm-access-control,Access Control>>, <<glossterm-rbac,Role-Based Access Control>>, <<glossterm-pdrbac,Policy-Driven Role-Based Access Control>>, <<glossterm-abac,Attribute-Based Access Control>>, <<glossterm-pbac,Policy-Based Access Control>>
 [[glossterm-subject]]Subject::
 An entity or identity, which is active in information system, typically a user. It is assumed that subject has an agency, directly or indirectly. Subjects can represent organizations or similar "legal persons" that cannot act on their own, users have to act on their behalf. In this case the organization is the "subject", while the person that acts on organization behalf is the "user".
 +
