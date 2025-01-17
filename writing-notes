@@ -1,4 +1,8 @@
 
+FIX:
+
+The 4.8.5 URLs for the Samples and Book Samples in chapter 13 give a HTTP 404 however. AFAICT after the repo name it should be '/tree/v4.8.5'.
+
 
 AIM Intro chapter:
 * Describe data protection
