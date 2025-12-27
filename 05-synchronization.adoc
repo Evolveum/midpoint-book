@@ -224,10 +224,10 @@ However, midPoint will read data from target system when needed, and it will be 
 == Inbound and Outbound Mappings
 
 MidPoint is firmly based on the principle of reuse.
-Previous chapter explained that behavior of attributes during provisioning is controlled by _mappings_.
+The previous chapter explained that behavior of attributes during provisioning is controlled by _mappings_.
 Therefore, it is perhaps no big surprise that the behavior of attributes during synchronization is also controlled by mappings.
 In fact, provisioning is just a special case of synchronization.
-Following picture explains the combined mechanism.
+The following picture explains the combined mechanism.
 
 image::05-01-sync-source-target.png[Synchronization]
 
@@ -261,7 +261,7 @@ Just the sources and targets are reversed:
 |===
 
 That is it.
-Think about the mappings that were used in previous chapter, just flip the direction.
+Think about the mappings that were used in the previous chapter, just flip the direction.
 Now the mapping will take data from the account and the results will be applied to user object.
 Like this:
 
@@ -736,7 +736,7 @@ E.g. some inbound mappings are evaluated before correlation to provide data for 
 However, generally speaking, the sequence above is what usually happens during inbound synchronization.
 
 When the data are reflected to _user_, the usual midPoint recompute process starts.
-This also includes evaluation of object templates, roles, policies and all the other things that will be covered in following chapters.
+This also includes evaluation of object templates, roles, policies and all the other things that will be covered in the following chapters.
 This is the main part of midPoint processing, internally referred to as "clockwork".
 It is essentially the same processing as if user was modified by an administrator using midPoint user interface.
 
@@ -845,7 +845,7 @@ Reconciliation compares all the data records every time, and it makes any necess
 Even though this method would be perfectly acceptable for a company of this size, we are still going set up a live synchronization task, to make synchronization lighter and faster.
 
 The core of the configuration is contained in a single _resource definition_ file.
-Following paragraphs explain individual parts of the file.
+The following paragraphs explain individual parts of the file.
 There are few additional configuration files for reconciliation and live synchronization _tasks_.
 Simplified XML notation is used for clarity.
 The complete file in a form that is directly usable in midPoint can be found at the same place as all the other samples in this book (see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for details).
@@ -899,7 +899,7 @@ The schema handling section contains inbound mappings for HR account attributes:
 
 The schema handling section starts with the usual definitions of _account_ object type.
 This is a definition of `Default account`, using the only object class that our CSV-based HR connector provides.
-We have seen that before, in previous chapter.
+We have seen that before, in the previous chapter.
 However, there is a new part, definition of _focus_.
 The `delineation` and most other parts of schema handling definition refer to _account_ or other _resource_ objects.
 In midPoint parlance those are seen as _projections_, the "spoke" part of hub-and-spoke synchronization topology.
@@ -1662,7 +1662,7 @@ Look for https://docs.evolveum.com/midpoint/reference/expressions/expressions/sc
 
 Only two libraries were mentioned in this section so far.
 However, this is not a whole story.
-A clever reader has certainly figured out that the logging function described in previous section is also a scripting library - and there may be more libraries in the future.
+A clever reader has certainly figured out that the logging function described in the previous section is also a scripting library - and there may be more libraries in the future.
 
 == Resource Capabilities
 
@@ -1775,7 +1775,7 @@ However, when combined with some access control list (ACL) magic, it can work qu
 
 == Synchronization Example: LDAP Account Correlation
 
-Previous example demonstrated the use of synchronization for HR data feed.
+The previous example demonstrated the use of synchronization for HR data feed.
 That is the most obvious use of synchronization mechanisms.
 However, midPoint synchronization can do more tricks than just feeding data to midPoint.
 Synchronization is frequently used even for target resources.
@@ -2456,7 +2456,7 @@ This delta contains a description of modified properties of an existing object.
 As the object can change in a variety of ways, modify delta is the most complex of the three.
 Modify delta contains a list of _item deltas_.
 Each item delta describes how a particular part of an object changes.
-For example, following delta describes that a new value `pirate` is added to a user property `employeeType`.
+For example, the following delta describes that a new value `pirate` is added to a user property `employeeType`.
 
 // TODO: employeeType is obsolete, change example to use something fresher
 
@@ -2570,7 +2570,7 @@ This is a very efficient and flexible method.
 Yet, it is not simple.
 Not many systems support it, and there are often hidden complexities.
 
-Those mechanisms are called _live synchronization strategies_, and they are further explained in following section.
+Those mechanisms are called _live synchronization strategies_, and they are further explained in the following section.
 
 All live synchronization methods need to keep the track of what changes are "recent", i.e. which changes were already processed by midPoint and which were not processed yet.
 There is usually some value that needs to be remembered by midPoint: timestamp of last scan, last sequence number in the change log, serial number of last processed change and so on.
@@ -2699,7 +2699,7 @@ Indeed, there is no security without identity management.
 This is a good start.
 Even if this is all that you do in the first step of the deployment, it is still a major benefit.
 You can get better _visibility_, and with that comes better _security_.
-You have the data to analyze your environment, and plan next step of the identity management deployment.
+You have the data to analyze your environment, and plan the next step of the identity management deployment.
 You won't be blind any longer.
 That is extremely important.
 It is indeed a capital mistake to theorize before one has data.

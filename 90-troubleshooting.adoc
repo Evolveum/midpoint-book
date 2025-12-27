@@ -389,7 +389,7 @@ However, even non-developers can learn how to use the package names efficiently.
 The first thing to keep in mind is that midPoint is composed of subsystems and components.
 Each subsystem and component has its own package name.
 Those can be used to control logging of individual parts of midPoint.
-Following table provides an overview of those architectural blocks.
+The following table provides an overview of those architectural blocks.
 
 |===
 |Subsystem/component |Package name |Description
@@ -660,7 +660,7 @@ For that reason clockwork and projector work in _waves_.
 Therefore, several steps described above may be repeated in each wave.
 Clockwork and projector exchange control in each wave until the operation is done.
 
-Following picture provides a structural view of this setup.
+The following picture provides a structural view of this setup.
 
 image::90-02-lens-provisioning-structure.png[Model and provisioning structure]
 
@@ -1180,7 +1180,7 @@ However, please keep in mind that this is quite intense logging.
 It can easily impact the system performance and flood the logs on a busy system with a lot of authorization.
 It is better to troubleshoot the configuration in a development or testing environment.
 
-When the security logging is enabled then you can see following messages in the logs:
+When the security logging is enabled then you can see the following messages in the logs:
 
 ----
 2017-01-23 14:32:37,824 [main] TRACE (c.e.m.security.impl.SecurityEnforcerImpl): AUTZ: evaluating security constraints principal=MidPointPrincipal(user:c0c010c0-d34d-b33f-f00d-111111111111(jack), autz=[[http://midpoint.evolveum.com/xml/ns/public/security/authorization-model-3#read])]), object=user:c0c010c0-d34d-b33f-f00d-111111111111(jack)
@@ -1408,7 +1408,7 @@ Special e-mail address is provided for responsible disclosure of security-relate
 security@evolveum.com
 ----
 
-Typical bug report contains following information:
+Typical bug report contains the following information:
 
 * What operation have you tried or what do you want to achieve.
 Some "bugs" may be caused by trying to achieve something using the wrong mechanism.

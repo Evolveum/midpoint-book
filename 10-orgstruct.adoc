@@ -422,7 +422,7 @@ There are many trees that make a forrest of organizational structures.
 Fortunately, midPoint is not very picky when it comes to organizational structures.
 MidPoint is not limited to a single organizational tree.
 You can have as many organizational trees as you like.
-You can have functional organizational tree, as we have seen in previous sections.
+You can have functional organizational tree, as we have seen in the previous sections.
 Then you can have independent project organizational structure.
 Just create new root _org_ for projects and place the projects under it:
 
@@ -824,7 +824,7 @@ They just specify how one object relates to another object.
 There are no strict _policies_ or _behavior_ associated with them.
 
 The policies are specified elsewhere.
-Assignments and inducements may behave differently for different relations, as we have seen in previous section.
+Assignments and inducements may behave differently for different relations, as we have seen in the previous section.
 Similarly, _policy rules_ are often sensitive to relations.
 For example, the policy that assignment of some roles has to be approved is implemented by a policy rule that is aware of `approver` relation.
 Authorizations are often sensitive to relations.
@@ -853,7 +853,7 @@ As midPoint deployment matures, it is more than desired to constraint the use of
 _Assignment relation_ mechanism is used for that purpose.
 We have already seen basic usage of assignment relation in archetypes.
 The assignment relation was used to constraint object type that an archetype can be assigned to.
-Following example of `Project` archetype is using `holderType` clause of the `assignmentRelation` to limit application of archetype to orgs.
+The following example of `Project` archetype is using `holderType` clause of the `assignmentRelation` to limit application of archetype to orgs.
 
 .archetype-project.xml
 [source,xml]
@@ -1841,7 +1841,7 @@ You can thank us later.
 
 Synchronization of an organizational structure is an application of a _generic synchronization_ principle.
 Almost any _resource object_ can be synchronized with almost any _midPoint object_ - and vice versa.
-Principle of the synchronization is essentially the same as in user-account case, as we have seen in previous chapters.
+Principle of the synchronization is essentially the same as in user-account case, as we have seen in the previous chapters.
 In that case, the _accounts_ were linked to _user_, midPoint synchronized the data from account to user and from user to accounts.
 The synchronization follows user-account _links_.
 

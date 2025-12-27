@@ -293,7 +293,7 @@ In such cases the authorization is usually applied to _services_ rather than _ap
 
 However, even applying the authorization to service front-ends does not solve the problem entirely.
 Sophisticated applications often need to make authorization decisions based on context, which is simply not available in the request or user profile at all.
-E.g. an e-banking application may allow or deny a transaction based on the sum of previous transactions that were made earlier that day.
+E.g. an e-banking application may allow or deny a transaction based on the sum of transactions made earlier that day.
 While it may be possible to synchronize all the authorization information into the user profile, it is usually not desirable.
 It would be a major burden to keep such information updated and consistent, not to mention security and privacy concerns.
 Many authorization schemes rely on a specific business logic, which is very difficult to centralize in an authorization server.
@@ -389,7 +389,7 @@ One way or another, the target site now has claims about user identity.
 A local session with the user is usually established at this point to skip the authentication redirects on the next request.
 The target site finally provides the content.
 
-Following table compares the terminology and technologies used in SAML and OIDC worlds.
+The following table compares the terminology and technologies used in SAML and OIDC worlds.
 
 [cols="h,1,1"]
 |===

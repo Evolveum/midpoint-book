@@ -800,7 +800,7 @@ Direct access to audit database table is usually used to transfer event informat
 
 === Summary of Boundaries
 
-Following table provides summary and clarification of border cases, specifying functionality provided by IGA plarform _vis-à-vis_ functionality of other systems.
+The following table provides summary and clarification of border cases, specifying functionality provided by IGA plarform _vis-à-vis_ functionality of other systems.
 
 |===
 | MidPoint functionality | Functionality of other systems

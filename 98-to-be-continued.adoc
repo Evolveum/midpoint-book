@@ -107,7 +107,7 @@ MidPoint was designed from the day one to be a service-based application.
 Therefore, there is REST services packed with features.
 Actually almost anything that midPoint does can be controlled by using those services.
 
-* *Advanced concepts:* There are still some features that were not explained in previous chapters: consistency mechanisms, personas, multi-connector resources and so on.
+* *Advanced concepts:* There are still some features that were not explained in the previous chapters: consistency mechanisms, personas, multi-connector resources and so on.
 Some of those features are seldom used, but they may save your project.
 Other features are used all the times, but they are a natural part of midPoint and therefore they are almost invisible.
 All those features deserve explanation.
@@ -148,7 +148,7 @@ However, those people are just engineers.
 They need to pay their bills.
 They cannot put away their day-to-day responsibilities to work on this book.
 Obviously, funding is needed to finish the book.
-As this book is available for free there is no direct income that could provide the funding for next chapters.
+As this book is available for free there is no direct income that could provide the funding for additional chapters.
 There is only one way: sponsoring.
 
 If you like this book, then please consider sponsoring some of the next chapters.

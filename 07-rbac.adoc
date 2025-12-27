@@ -39,7 +39,7 @@ However, we will start small.
 We begin with simple scenarios, building our way up.
 This chapter describes basic midPoint RBAC mechanism.
 It provides enough information to start with the usual role-based approach.
-Following chapters will build on that, describing more and more advanced use of the RBAC mechanism.
+The following chapters will build on that, describing more and more advanced use of the RBAC mechanism.
 
 .Terminology
 NOTE: The term _RBAC_ is many things to many people.
@@ -51,7 +51,7 @@ As you will see later, such deviation is really necessary.
 
 == Reality vs Policy
 
-Previous chapters were focused on account provisioning and synchronization.
+The previous chapters were focused on account provisioning and synchronization.
 Their primary focus was an _account_ (or a similar resource object).
 This is what we call _reality_ in midPoint way of thinking.
 Accounts are objects that exist in the databases and files on the resources.
@@ -141,7 +141,7 @@ This may look like a very complicated method to do something simple.
 However, this kind of thinking is really necessary to handle complex cases.
 There may be several assignments that mandate the same account.
 There may be assignments for the same accounts, but each assignment mandates different attributes or values.
-The account that the assignments mandate may exist already, e.g. it may be linked by previous reconciliation with the resource.
+The account that the assignments mandate may exist already, e.g. it may be linked by the previous reconciliation with the resource.
 There may be several accounts for the same user on the same resource (e.g. "ordinary" account and "testing" account).
 And so on.
 We will deal with various cases in this book.

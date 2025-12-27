@@ -291,7 +291,7 @@ _Deprecated_ items are not shown at all.
 Only some _operational_ properties are shown.
 Some items are simplified or entirely omitted for clarity.
 
-Following example illustrates the use of midPoint `UserType` schema:
+The following example illustrates the use of midPoint `UserType` schema:
 
 [source,xml]
 ----
@@ -377,13 +377,13 @@ Employees do not work for ever, they may resign, may be laid off, or retired.
 Even then, a record of a former employee may be kept for some time.
 
 While the details of the lifecycle may be subtly different for various organizations and types of objects, the basic outline is almost always the same.
-For that reason the basic lifecycle states are pre-configured in midPoint, as illustrated in following diagram.
+For that reason the basic lifecycle states are pre-configured in midPoint, as illustrated in the following diagram.
 
 image::06-01-lifecycle-statechart.png[Lifecycle states]
 
 Objects have their lifecycle state specified in `lifecycleState` property.
 If no explicit value is specified, the default value is `active`.
-Pre-defined lifecycle states are described in following table.
+Pre-defined lifecycle states are described in the following table.
 
 [%autowidth]
 |===
@@ -499,7 +499,7 @@ _Activation_ also provides ability for manual overrides by administrator in case
 
 The _activation_ in itself is multi-dimensional and a bit complex data structure.
 It is composed of several properties that may change in somehow independent and somehow inter-dependent way.
-Following list provides a quick summary of activation properties:
+The following list provides a quick summary of activation properties:
 
 * *Administrative status* defines administrative state of the object, usually manually set by system administrator.
 
@@ -1273,7 +1273,7 @@ MidPoint type hierarchy was evolving during midPoint development, and now it for
 
 image::06-02-type-hierarchy.png[Type hierarchy]
 
-Following table is summarizing midPoint data types and their purpose.
+The following table is summarizing midPoint data types and their purpose.
 
 |===
 |Data type |Description

@@ -168,7 +168,7 @@ Overall, archetypes are to the core of every midPoint deployment.
 
 == Structural vs Auxiliary
 
-An object can have more than one archetype, as long as following rules are followed:
+An object can have more than one archetype, as long as the following rules are followed:
 
 * At most one *structural archetype* can be applied to object.
 Structural archetype provides _structure_ to the object, it specifies icon, color, and presentation of the object.
@@ -197,7 +197,7 @@ Definition of _auxiliary_ archetypes is almost the same as definition of _struct
 NOTE: User interface support for auxiliary archetypes is quite limited in midPoint 4.8.
 This is the reason auxiliary archetypes are not used often in midPoint 4.8.
 In fact, use of birthright _roles_ is still recommended in midPoint 4.8, instead of using auxiliary archetypes such as `Employee`.
-More on that in next chapter.
+More on that in the next chapter.
 
 // TODO: later: how are structural/auxiliary icons and colors combined?
 
@@ -205,7 +205,7 @@ More on that in next chapter.
 
 Archetypes are very useful mechanism for setting up presentation of behaviour of objects.
 Therefore, midPoint contains a set of pre-defined archetypes, ready to be used.
-Following table describes the most interesting pre-configured archetypes:
+The following table describes the most interesting pre-configured archetypes:
 
 |===
 |Archetype |Holder type |Description
@@ -247,7 +247,7 @@ Archetypes influence many aspects of "life" for midPoint objects.
 Therefore, it is a best practice to set proper archetype for object as soon as the object is created.
 This approach makes it easier to customize behavior of objects later on.
 For this reason, we have set `Person` archetype for all users created by synchronization from HR system.
-This is going to be very useful, as we will see in next chapter dealing with object templates.
+This is going to be very useful, as we will see in the chapter dealing with object templates.
 Similarly, it is recommended to properly set archetypes for new roles, services, orgs and other objects.
 
 Choosing the right archetypes is quite important, as change of (structural) archetypes is a serious matter.

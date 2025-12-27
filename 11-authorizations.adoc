@@ -18,7 +18,7 @@ We do not want any user to see a list of all the data of all the other users,
 and we definitely do not want any user to modify the data.
 As pretty much any other information system, midPoint needs an ability to deliberately limit access to data stored in its repository.
 However, as midPoint is an identity management platform, the requirements for access control to data are quite demanding.
-For example, following scenarios are quite common in identity and access management world:
+For example, the following scenarios are quite common in identity and access management world:
 
 * Allow any user to see its own user profile, allow editing selected set of properties.
 A user can see significant part of _own_ user profile.
