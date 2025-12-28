@@ -28,7 +28,7 @@ Simply speaking, metaroles are roles applied to other roles.
 Ordinary role applies its characteristics to a user.
 Metarole applies its characteristics to another role.
 This is perfectly possible in midPoint, as role can be applied to almost any midPoint object.
-Then why not apply a role to a another role?
+Then why not apply a role to another role?
 This may seem like a pretty useless exercise, but the truth is that metaroles are tremendously useful.
 
 History is repeating, they say.

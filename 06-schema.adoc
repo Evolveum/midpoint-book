@@ -188,7 +188,7 @@ The specific meaning and form of this property is deployment-specific.
 |property
 |Indicates user's preferred language, usually for the purpose of localizing user interfaces.
 The format is IETF language tag defined in BCP 47, where underscore is used as a subtag separator.
-This is usually a ISO 639-1 two-letter language code optionally followed by ISO 3166-1 two-letter country code separated by underscore. +
+This is usually an ISO 639-1 two-letter language code optionally followed by an ISO 3166-1 two-letter country code separated by underscore. +
 Example: `en_US`
 
 |`locale`
