@@ -610,7 +610,7 @@ However, we do not want draft objects to be active yet.
 Such object may need a review and approval to transition to `active` lifecycle state.
 Only then it will really become active.
 
-If lifecycle state indicates object as _active_, the the _activation_ part is considered.
+If lifecycle state indicates object as _active_, the _activation_ part is considered.
 Administrative status, validity dates and lockout status are computed, which determines state of the object.
 
 This may look complicated.
