@@ -170,7 +170,7 @@ Yet, as all midPoint objects, role has a very familiar structure:
 <role oid="aaa6cde4-0471-11e9-9b50-c743da469067">
     <name>Business analyst</name>
     ...
-</user>
+</role>
 ----
 
 Role object has its _object identifier (OID)_ and _name_.
@@ -219,7 +219,7 @@ Therefore, a `Business Analyst` role may look like this:
              <kind>account</kind>
         </construction>
     </inducement>
-</user>
+</role>
 ----
 
 The usual case is that every employee need to have basic access to company functionality.
@@ -798,7 +798,7 @@ As _assignment_ and _inducement_ are in fact the same data structure, similar ap
             <administrativeStatus>disabled</administrativeStatus>
         </activation>
     </inducement>
-</user>
+</role>
 ----
 
 Many types and variants of assignments can be combined in a single user.
@@ -909,7 +909,7 @@ The roles need to be a bit smarter to use the `teamName` parameter:
              </attribute>
         </construction>
     </inducement>
-</user>
+</role>
 ----
 
 Resulting LDAP account looks like this:

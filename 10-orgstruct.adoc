@@ -378,7 +378,7 @@ For example, this is how we can "inherit" the CRM privileges in _Indirect Sales 
     <inducement>
         <!-- Inducement to parent organizational unit. This creates "inheritance" of privileges. -->
         <targetRef oid="7a1feb50-471f-11ea-8aab-1b2627541f15" type="OrgType"/>
-    </assignment>
+    </inducement>
 </org>
 ----
 
@@ -1910,7 +1910,7 @@ In this case, we would use explicit _kind_ and _intent_ in the construction:
             <intent>admin</intent>
         </construction>
     </inducement>
-</user>
+</role>
 ----
 
 The `System Administrator` role above specifies that a special `admin` account should be created for system administrators.

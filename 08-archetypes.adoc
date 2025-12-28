@@ -364,7 +364,7 @@ Archetypes are a prime example of meta-roles.
             that should be applied to all business roles.
         -->
     </inducement>
-</role>
+</archetype>
 ----
 
 Statements in the _inducement_ above are applied to business _roles_, as opposed to ordinary role where inducements are applied to _users_.
