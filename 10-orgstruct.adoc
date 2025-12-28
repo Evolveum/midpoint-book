@@ -1865,7 +1865,7 @@ Therefore, we have decided to use _focus_ and _projection_ terms:
 image::10-15-focus-projections.png[Focus and projections]
 
 The object that is "in the middle" is called _focus_ or _focal object_.
-It is in the centre of the synchronization, it is its focal point.
+It is in the center of the synchronization, it is its focal point.
 Every relevant piece of data is reflected onto the focal object by the synchronization mechanisms.
 
 _User_ is a very typical focal object.

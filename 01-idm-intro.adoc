@@ -1537,7 +1537,7 @@ They are triggered automatically, for example as a reaction of re-assigning user
 Similarly to approval processes, some identity governance systems offer "artificial intelligence" support for certification processes.
 Such assistance can be very attractive, as certification campaigns are often quite intimidating due to a large number of decisions that have to be made in each campaign.
 However, the risks of such "automation" is even more pronounced than it is in the approval case.
-Certification is often the last defence against dangerous privilege accumulation.
+Certification is often the last defense against dangerous privilege accumulation.
 Poorly-trained artificial intelligence may cause a systematic build-up of risk in the organization.
 Artificial inteligence support for certification decisions may be very useful.
 However, it is essential to understand how the mechanism works before committing to roll it out for all certifications.
@@ -1635,7 +1635,7 @@ Most techniques seems to be based on recognition of anomalies and patters in the
 _Outlier detection_ mechanisms look for users with privileges that are significantly different from the privileges of their colleagues.
 On the other hand, _role mining_ is used to detect similar privileges assigned to similar users, suggesting new roles.
 Many of the identity analytics and intelligence techniques are based on risk modeling.
-There are mechanisms to _identify over-privileged users_ by analysing risk scores of individual users.
+There are mechanisms to _identify over-privileged users_ by analyzing risk scores of individual users.
 Similar mechanisms can be used to identify high-privilege entitlements assigned to a low-privilege user or similar risk anomalies.
 
 * *Workflow orchestration* is provided by some IGA platforms.
@@ -1965,7 +1965,7 @@ The model is evaluated by the machine, quickly and efficiently.
 The efficiency opens up a whole range of possibilities, that form the essence of a risk-based approach to identity governance.
 
 As we can evaluate a risk posed by any individual user, we can easily identify dangerous accumulation of privileges in the hands of a single user.
-Then we can focus on addressing this risk, analysing why have the privileges accumulated, whether they are all necessary, removing excess privileges to lower the risk.
+Then we can focus on addressing this risk, analyzing why have the privileges accumulated, whether they are all necessary, removing excess privileges to lower the risk.
 Perhaps we can consider changing business processes to divide the responsibilities among several users, lowering the risk even further.
 We can evaluate the risk model after each step, checking whether we have reached acceptable risk levels already.
 
@@ -2061,7 +2061,7 @@ The basic idea is that a system should not implicitly trust any other system, no
 Simply speaking, zero-trust approach is mostly about removing _security perimeter_.
 
 For many decades, corporate networks were designed using _hard exterior, soft interior_ approach.
-Corporate network was protected from the Internet by an army of specialized security systems and techniques, such as firewalls, de-militarized zones, network traffic analysers, intrusion detection systems, network anti-virus scanners and everything else a booming network security market could provide.
+Corporate network was protected from the Internet by an army of specialized security systems and techniques, such as firewalls, de-militarized zones, network traffic analyzers, intrusion detection systems, network anti-virus scanners and everything else a booming network security market could provide.
 While the castle gates were heavily protected, the interior of corporate network was very _soft_.
 Originally, there were no security measures inside corporate networks at all.
 Anyone that got inside could connect to any system.
@@ -2091,7 +2091,7 @@ The concept of zero trust is not new at all.
 It was here pretty much since the very beginnings of information security.
 Security practitioners are trained not to trust anything or anyone, set up policies, require authentication, deny access by default, encrypt all network traffic, minimize privileges, manage risks, and so on.
 Therefore, "zero trust" approach is essentially just a thorough application of proper information security principles.
-This approach is here for decades, it just had different names: defence in depth, perimeterless security, network hardening and so on.
+This approach is here for decades, it just had different names: defense in depth, perimeterless security, network hardening and so on.
 
 Even though zero trust approach is not new, it dramatically gained on importance in the era of cloud services and remote access.
 Many functions provided by traditional corporate applications are provided by cloud services now.

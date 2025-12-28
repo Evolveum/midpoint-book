@@ -19,7 +19,7 @@ It will take years. Plan ahead.
 Just the intro. More details about the entire cycle in the next chapter.
 
 TODO: IDM projects take a long time, split to iterations
-TODO: Analyse, plan, prototype, execute, learn, repeat.
+TODO: Analyze, plan, prototype, execute, learn, repeat.
 
 TODO: midPoint is built to support this approach, including open source (zero up-front license cost, subscriptions)
 

@@ -60,7 +60,7 @@ X.1252 term: access control
 +
 See also: <<glossterm-rbac,Role-Based Access Control>>, <<glossterm-abac,Attribute-Based Access Control>>, <<glossterm-pbac,Policy-Based Access Control>>
 [[glossterm-access-management]]Access Management (AM)::
-Access Management (AM) is a security discipline that provides access to authorised users to enter particular resources. It also prevents non-authorised users from accessing the resources. Thus the goal of Access Management is to unify the security mechanisms that take place when a user is accessing specific system or functionality. Single Sign-On (SSO) is sometimes considered to be a part of Access Management.
+Access Management (AM) is a security discipline that provides access to authorized users to enter particular resources. It also prevents non-authorized users from accessing the resources. Thus the goal of Access Management is to unify the security mechanisms that take place when a user is accessing specific system or functionality. Single Sign-On (SSO) is sometimes considered to be a part of Access Management.
 [[glossterm-access-request]]Access Request Process::
 Access request process is a business process used to request additional access or privileges for information systems and applications. It is usually a semi-manual process. It starts with a user requesting access or privileges for applications. The request is usually routed through approval steps. When approved, the access is provisioned.
 +
@@ -850,7 +850,7 @@ See also: <<glossterm-assignment,Assignment>>, <<glossterm-role,Role>>
 [[glossterm-information-classification]]Information classification::
 
 +
-In midPoint terminology: Information classification is a process in which organisations assess their data and systems, with regard to the necessary level of protection. The information is classified by assigning information _labels_ or _classifications_ to individual assets, such as databases, filesystems, applications or even individual files.
+In midPoint terminology: Information classification is a process in which organizations assess their data and systems, with regard to the necessary level of protection. The information is classified by assigning information _labels_ or _classifications_ to individual assets, such as databases, filesystems, applications or even individual files.
 +
 See also link:https://docs.evolveum.com/midpoint/reference/classification/[more information at docs.evolveum.com].
 +
@@ -990,7 +990,7 @@ X.1252 term: mutual authentication
 +
 See also: <<glossterm-mutual-authentication,Mutual Authentication>>
 [[glossterm-near-miss]]Near miss::
-An event that could have compromised the security of systems, data or services that did not materialise.
+An event that could have compromised the security of systems, data or services that did not materialize.
 +
 See also: <<glossterm-cyberattack,Cyberattack>>, <<glossterm-cybersecurity-incident,Cybersecurity incident>>
 [[glossterm-ngac]]Next Generation Access Control (NGAC)::
@@ -1176,7 +1176,7 @@ Functional component with a responsibility to interpret policy and make decision
 +
 See also: <<glossterm-authorization,Authorization>>, <<glossterm-access-control,Access Control>>, <<glossterm-authorization-service,Authorization Service>>, <<glossterm-pep,Policy Enforcement Point>>, <<glossterm-pap,Policy Administration Point>>, <<glossterm-pip,Policy Information Point>>
 [[glossterm-pdrbac]]Policy-Driven Role-Based Access Control::
-A mechanism for managing of user access to information systems based on a concept of dynamic roles and policies. It is an extension of traditional Role-Based Access Control (RBAC), applying dynamic policies to govern behaviour and assignment of roles. In policy-driven RBAC, roles are no longer static, they contain logic that determines set of privileges given by the role. The user-role assignments are also dynamic, controlled by automatic role assignment policies.
+A mechanism for managing of user access to information systems based on a concept of dynamic roles and policies. It is an extension of traditional Role-Based Access Control (RBAC), applying dynamic policies to govern behavior and assignment of roles. In policy-driven RBAC, roles are no longer static, they contain logic that determines set of privileges given by the role. The user-role assignments are also dynamic, controlled by automatic role assignment policies.
 +
 See also link:https://docs.evolveum.com/midpoint/reference/roles-policies/pdrbac/[more information at docs.evolveum.com].
 +
@@ -1600,7 +1600,7 @@ Alternative terms: Single Log-On
 +
 See also: <<glossterm-authentication,Authentication>>, <<glossterm-identity-provider,Identity Provider>>, <<glossterm-identity-federation,Identity Federation>>
 [[glossterm-standard]]Standard::
-Technical specification, adopted by a recognised standardisation body, for repeated or continuous application, with which compliance is not compulsory.
+Technical specification, adopted by a recognized standardization body, for repeated or continuous application, with which compliance is not compulsory.
 +
 Alternative terms: Technical standard, Technology standard, Official standard
 +

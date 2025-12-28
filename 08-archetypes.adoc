@@ -203,7 +203,7 @@ More on that in the next chapter.
 
 == Pre-configured Archetypes
 
-Archetypes are very useful mechanism for setting up presentation of behaviour of objects.
+Archetypes are very useful mechanism for setting up presentation of behavior of objects.
 Therefore, midPoint contains a set of pre-defined archetypes, ready to be used.
 The following table describes the most interesting pre-configured archetypes:
 
