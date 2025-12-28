@@ -1039,7 +1039,7 @@ However, it is still a major consideration whether it is worth the trouble of ma
 
 === Identity Provisioning
 
-_Provisioning_, also called _fulfilment_, is perhaps the most frequently used feature in any IDM system.
+_Provisioning_, also called _fulfillment_, is perhaps the most frequently used feature in any IDM system.
 In the generic sense, _provisioning_ means maintenance of user accounts in applications, databases and other target systems.
 This includes creation of the account, various modifications during the account lifetime, and permanent disable or delete at the end of the lifetime.
 The IDM system is using _connectors_ to manipulate the accounts.
@@ -1444,7 +1444,7 @@ Then there are end users that can do almost nothing.
 While this concept may work in small and simple deployments, it is not sufficient for larger systems.
 Large organizations usually need to delegate some administration privileges to other users.
 There may be HR personnel, people that are responsible for management of their organizational units, administrator responsible for a particular group of systems, application administrators, and so on.
-_Delegated administration_ allow delagation of parts of system administration tasks to other users.
+_Delegated administration_ allow delegation of parts of system administration tasks to other users.
 Such delegated privileges are limited in scope.
 For example, HR staff can edit selected attributes on all employees, or project managers can add/remove users in their projects.
 
@@ -2157,7 +2157,7 @@ How is identity management system supposed to even start management of applicati
 Therefore, the effort should start with building such a source, which may be a manually-maintained information in the identity management system.
 Then, application accounts and entitlements (groups) need to be associated with the application.
 Applications much have owners, which can be maintained in IDM system.
-As application accounts and entitlements are associated with an application, they can be automatically de-provissioned when application is decommissioned.
+As application accounts and entitlements are associated with an application, they can be automatically de-provisioned when application is decommissioned.
 However, perhaps the most challenging part is credential management.
 The credentials should be changed periodically.
 However, this change has to be synchronized on both sides of the communication channel (both client and server part), otherwise there will be an outage.

@@ -330,7 +330,7 @@ Users, roles and other object types have their specific color and icon.
 This indicates the object type, and it is used whenever possible: menu, information boxes, lists, box title accents and so on.
 The primary colors and icons are shown in the dashboard:
 
-image::03-03-dashboard-object-types.png[Dashboarad object types]
+image::03-03-dashboard-object-types.png[Dashboard object types]
 
 All user-related controls are red, all controls that deal with organizational structure are yellow.
 Roles are green.

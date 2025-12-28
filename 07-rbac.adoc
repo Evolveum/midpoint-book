@@ -784,10 +784,10 @@ As _assignment_ and _inducement_ are in fact the same data structure, similar ap
 <role>
     <name>Marketing Research Undersecretary</name>
     ...
-    <indudement>...</indudement>
-    <indudement>...</indudement>
+    <inducement>...</inducement>
+    <inducement>...</inducement>
     ...
-    <indudement>
+    <inducement>
         <description>
             Employee access to the lab is disabled because the lab burned down
             during an ugly accident. Will be re-enabled when the lab is rebuilt.

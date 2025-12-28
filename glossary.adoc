@@ -30,7 +30,7 @@ See also: <<glossterm-access-control,Access Control>>
 [[glossterm-abstract-role]]Abstract Role::
 
 +
-In midPoint terminology: Abstract role means any type of object that acts as a role. This means that abstract tole can be used to hold inducements, which give privileges to other objects. Role, org, service, archetype are abstract roles in midPoint.
+In midPoint terminology: Abstract role means any type of object that acts as a role. This means that abstract role can be used to hold inducements, which give privileges to other objects. Role, org, service, archetype are abstract roles in midPoint.
 +
 See also link:https://docs.evolveum.com/midpoint/architecture/concepts/abstract-role/[more information at docs.evolveum.com].
 +
@@ -128,7 +128,7 @@ See also: <<glossterm-inducement,Inducement>>, <<glossterm-assignment-holder,Ass
 [[glossterm-assignment-holder]]Assignment Holder::
 
 +
-In midPoint terminology: An object that can hold assignments. Assignment holder can be considered a "source" of an assignment, a source of a relation that an assignmnt represents. Almost all object types in midPoint are assignment holder, capable of containing an assignment.
+In midPoint terminology: An object that can hold assignments. Assignment holder can be considered a "source" of an assignment, a source of a relation that an assignment represents. Almost all object types in midPoint are assignment holder, capable of containing an assignment.
 +
 See also: <<glossterm-assignment,Assignment>>, <<glossterm-focus,Focus>>
 [[glossterm-audit]]Audit::
@@ -346,7 +346,7 @@ Alternative terms: Information security governance
 +
 See also: <<glossterm-cybersecurity,Cybersecurity>>, <<glossterm-isms,Information security management system>>, <<glossterm-cybersecurity-resilience,Cybersecurity resilience>>, <<glossterm-risk-management,Risk management>>
 [[glossterm-cybersecurity-incident]]Cybersecurity incident::
-Cybersecurity incident is unwanted or unexpected cybersecurity event, impacting cybersecurity of an organization. Cyberattack is the usual type of cybersecurity incidents. Cybersecurity incidents include situations, where security breach cannot be proven, however there is a siginificant probability that security of information and systems might have been affected.
+Cybersecurity incident is unwanted or unexpected cybersecurity event, impacting cybersecurity of an organization. Cyberattack is the usual type of cybersecurity incidents. Cybersecurity incidents include situations, where security breach cannot be proven, however there is a significant probability that security of information and systems might have been affected.
 +
 Alternative terms: Information security incident, Incident
 +
@@ -668,7 +668,7 @@ Alternative terms: Connector
 +
 See also: <<glossterm-identity-connector-framework,Identity Connector Framework>>, <<glossterm-connid,ConnId>>
 [[glossterm-identity-connector-framework]]Identity Connector Framework::
-Generally speaking, a programing framework (library) for creating and managing identity connectors. However, this rather generic term often refers to the Identity Connector Framework (ICF), originally developed by Sun Microsystem in 2000s. The ICF was releases as an open source project by Sun, only to be later abandoned after Sun-Oracle merger. The ICF was a base for several forks, including ConnId and OpenICF.
+Generally speaking, a programming framework (library) for creating and managing identity connectors. However, this rather generic term often refers to the Identity Connector Framework (ICF), originally developed by Sun Microsystems in 2000s. The ICF was releases as an open source project by Sun, only to be later abandoned after Sun-Oracle merger. The ICF was a base for several forks, including ConnId and OpenICF.
 +
 Alternative terms: Connector Framework, ICF
 +
@@ -948,7 +948,7 @@ Alternative terms: Management system
 +
 See also: <<glossterm-isms,Information security management system>>, <<glossterm-identity-management,Identity Management>>, <<glossterm-cybersecurity-governance,Cybersecurity governance>>
 [[glossterm-manual-fulfillment]]Manual Fulfillment::
-Manual process of creating, updating and deleting accounts, entitlements and similar objects, driven by identity management system, but exexcuted by human operator. Manual fulfillment is initiated by an identity management system, usually as a consequence of change in user privileges or policies. Identity management system creates a ticket for system administrators, containing instructions to create/modify/delete an acccount or entitlement in a specific information system. Actual action is executed manually, by the system administrator. Manual fulfillment is used for systems, for which automatic identity connector is not available.
+Manual process of creating, updating and deleting accounts, entitlements and similar objects, driven by identity management system, but executed by human operator. Manual fulfillment is initiated by an identity management system, usually as a consequence of change in user privileges or policies. Identity management system creates a ticket for system administrators, containing instructions to create/modify/delete an account or entitlement in a specific information system. Actual action is executed manually, by the system administrator. Manual fulfillment is used for systems, for which automatic identity connector is not available.
 +
 Alternative terms: Manual Provisioning/deprovisioning, Manual resource, Manual connector
 +
@@ -998,7 +998,7 @@ A graph-based mechanism for managing of user access to information systems. NGAC
 +
 See also: <<glossterm-access-control,Access Control>>, <<glossterm-rebac,Relationship-Based Access Control>>
 [[glossterm-non-compliance]]Non-compliance::
-State of non-fulfilment of a requirement, such as violation of a requirement stated in a policy, regulation or standard.
+State of non-fulfillment of a requirement, such as violation of a requirement stated in a policy, regulation or standard.
 +
 Alternative terms: Noncompliance, Nonconformity, Violation
 [[glossterm-non-repudiation]]Non-repudiation::
@@ -1080,7 +1080,7 @@ Passkey is a type of strong digital credential. They are used to authenticate a 
 +
 See also: <<glossterm-credential,Credential>>, <<glossterm-pin,Personal identification number>>
 [[glossterm-password]]Password::
-Password is a type of (usualy weak) digital credential, meant to be secret, known only to a single user. Passwords are memorized secret authenticators, usually selected by users, meant to be remembered. Therefore, they are often short strings in a human-friendly form, such as simple words or names. Simplicity of passwords makes them vulnerable to dictionary attacks. Recently, passwords are randomly generated, managed by password management applications. However, even randomly-generated passwords may still be vulnerable to phishing attacks. Therefore organizations are moving towards authentication methods that do not depend on passwords (e.g. passkeys), or enroll multi-factor authentication schemes.
+Password is a type of (usually weak) digital credential, meant to be secret, known only to a single user. Passwords are memorized secret authenticators, usually selected by users, meant to be remembered. Therefore, they are often short strings in a human-friendly form, such as simple words or names. Simplicity of passwords makes them vulnerable to dictionary attacks. Recently, passwords are randomly generated, managed by password management applications. However, even randomly-generated passwords may still be vulnerable to phishing attacks. Therefore organizations are moving towards authentication methods that do not depend on passwords (e.g. passkeys), or enroll multi-factor authentication schemes.
 +
 Alternative terms: Passcode
 +
@@ -1092,7 +1092,7 @@ Alternative terms: Passwordless
 +
 See also: <<glossterm-authentication,Authentication>>, <<glossterm-password,Password>>, <<glossterm-passkey,Passkey>>, <<glossterm-mfa,Multi-factor authentication>>
 [[glossterm-password-policy]]Password policy::
-Password policy constraints the selection and use of passwords with an aim to make them more secure. It almost always sets requirements for password complexity, such as minimal length of passwords and characted classes used in the password (e.g. letters, numbers, punctuation). Password policies often specify constraints on password lifetime, such as password expiration intervals.
+Password policy constraints the selection and use of passwords with an aim to make them more secure. It almost always sets requirements for password complexity, such as minimal length of passwords and character classes used in the password (e.g. letters, numbers, punctuation). Password policies often specify constraints on password lifetime, such as password expiration intervals.
 +
 Alternative terms: Password complexity policy
 +

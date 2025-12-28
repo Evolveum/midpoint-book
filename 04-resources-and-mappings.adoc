@@ -7,7 +7,7 @@ include::chapter-include.adoc[]
 The pessimist complains about the wind; the optimist expects it to change; the realist adjusts the sails.
 
 Reading and modifying accounts, account attribute synchronization, mapping of attribute values, their transformation using scripts – these are the very basic midPoint features.
-These are _provisioning_ features (or rather _fulfilment_ features as analysts like to have it).
+These are _provisioning_ features (or rather _fulfillment_ features as analysts like to have it).
 These features are absolutely essential for any self-respecting identity management deployment.
 Explaining the very basic mechanisms of identity management deployment is the primary purpose of this chapter.
 It covers the necessary configuration to use midPoint as a _provisioning engine_.
@@ -1150,7 +1150,7 @@ There is a special place in the resource _schema handling_ section for that:
 ----
 
 It is as simple as that.
-Just an empty mapping represented by empty `outbount` element.
+Just an empty mapping represented by empty `outbound` element.
 User has `administrativeStatus` property, account has `administrativeStatus` property, therefore midPoint knows what is the _source_ and _target_ of the mapping.
 We do not need to specify these.
 The values of the `administrativeStatus` property has the same type and meaning on both sides.

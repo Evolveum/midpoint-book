@@ -519,7 +519,7 @@ NOTE: MidPoint versions before 4.6 used _correlation expressions_, which were ba
 This was simple and elegant mechanisms for many years, but it was also quite limited.
 MidPoint 4.6 introduced _smart correlation_ mechanisms, and the old correlation expressions were deprecated.
 
-Corrlators are efficient method to automatically link large number of accounts and users.
+Correlators are efficient method to automatically link large number of accounts and users.
 However, correlators rely on reliable and clean data.
 If employee numbers were consistently recorded for every account, correlators can do all the work.
 If usernames were applied consistently across all systems, correlators are going to be a great tool.
@@ -1025,7 +1025,7 @@ However, the mappings do not specify whether the accounts should be created or d
 Mappings control the data, but they do not control the _lifecycle_.
 It is the next configuration section that makes this resource really authoritative:
 
-.ressource-csv-hr.xml
+.resource-csv-hr.xml
 [source,xml]
 ----
             ...
@@ -2028,7 +2028,7 @@ We want midPoint to link the account in this case, therefore we define appropria
                 ...
 ----
 
-_Unliked_ accounts get _linked_.
+_Unlinked_ accounts get _linked_.
 This takes care of accounts for whose we can automatically find an owner by using correlation mechanism.
 What we should do with other accounts?
 We will do nothing about them just yet.
@@ -2112,7 +2112,7 @@ We really want to react to orphaned accounts as soon as possible to reduce any s
 However, it is much better to just _disable_ the account instead of deleting it.
 Some orphaned accounts may have benign reasons.
 The account might have been created by LDAP administrator, because the HR system is temporarily broken and business must go on.
-Detection of orphaned account may also be a false positive, caused by miscofiguration of midPoint correlation mechanism, or simple caused by wrong HR data.
+Detection of orphaned account may also be a false positive, caused by misconfiguration of midPoint correlation mechanism, or simple caused by wrong HR data.
 Re-enabling the account is much less work than re-creating the account, especially if there were already some data stored in the account.
 Even if orphaned account is detected correctly, we still may want to keep it for a while.
 It may provide good material (and evidence) for investigation of possible security incident.

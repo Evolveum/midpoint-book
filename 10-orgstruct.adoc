@@ -780,7 +780,7 @@ If no other relation is specified, this relation is used.
 
 |`manager`
 |Orgs
-|Manager of an organizational unit, project manager, teamleader, etc.
+|Manager of an organizational unit, project manager, team leader, etc.
 Usually entitles a person (or a group) that have leading position in an org.
 This usually specifies executive or operational privileges (cf. `owner`).
 
@@ -874,7 +874,7 @@ The following example of `Project` archetype is using `holderType` clause of the
 The `assignmentRelation` constraints ability to create assignment to the `Project` archetype, in this case the _holder_ of the assignment must be of `OrgType` type.
 However, _assignment relation_ can be used to further constraint use of assignments.
 We probably want to constraint the _relations_ that can be applied to a project.
-It is quite resonable to constraint the relations to members, managers and owners of projects.
+It is quite reasonable to constraint the relations to members, managers and owners of projects.
 This can simplify things, as we probably do to want approvers and "meta" as a relations to projects.
 Also, we want to put only _users_ in the project.
 In theory, midPoint organizational structure can hold almost any type of object.
@@ -905,7 +905,7 @@ Unlike the `holderType` case above, in this case the `assignmentRelation` is pla
 In the previous case, we were constraining assignment of _projects_ to _archetypes_.
 Whereas in this case we are trying to constraint assignments of _users_ to the _projects_.
 This is one degree of indirection farther, therefore _inducement_ is used instead of _assignment_.
-The arechetype acts as a meta-role, the content of the inducement is applied to the _projects_ (archetyped objects), not to the archetype itself.
+The archetype acts as a meta-role, the content of the inducement is applied to the _projects_ (archetyped objects), not to the archetype itself.
 
 The _assignment relation_ specification is used by the user interface.
 User interface is going to present only those object types and relation that make sense for the operation that user has initiated.
@@ -1414,7 +1414,7 @@ The result is that we need two inbound mappings for the `orgnum` attribute:
 ----
 
 Storing original organizational unit identifier in the `identifier` property makes it easier to correlate organizational units.
-The `idenfier` property can be used by the correlators.
+The `identifier` property can be used by the correlators.
 If the identifier is reasonably persistent, this is a huge benefit.
 
 Changes in organizational structure can be quite nasty.
@@ -1806,7 +1806,7 @@ All we need to do now is to re-run the synchronization task.
 The result is a nice organizational structure in LDAP directory:
 
 .Organizational structure in LDAP
-image::10-13-ldap-org-tree.png[Organizational strucutre in LDAP]
+image::10-13-ldap-org-tree.png[Organizational structure in LDAP]
 
 This is a nice result.
 However, there are still several remarks to make.
