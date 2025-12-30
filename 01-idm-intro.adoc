@@ -571,7 +571,7 @@ Nobody is going to log in when the AM server fails.
 This obviously means major impact on functionality of all applications.
 Therefore, AM servers need to be highly available and scalable.
 Which is not always an easy task.
-The AM servers need a very careful sizing, as they may easily become a performance bottlenecks.
+The AM servers need a very careful sizing, as they may easily become a performance bottleneck.
 
 However, perhaps the most severe drawback is the total cost of access management solution.
 The cost of the AM server itself is usually not a major issue.
@@ -1270,7 +1270,7 @@ Authorization processing needs to be fast.
 Really fast.
 Even a round-trip across a local network may be a performance killer.
 Due to complexity and performance reasons the authorization mechanisms are often tightly integrated into the fabric of each individual application.
-E.g. it is a common practice that authorization policies are translated to SQL, and they are used as an additional clauses in application-level SQL queries.
+E.g. it is a common practice that authorization policies are translated to SQL, and they are used as additional clauses in application-level SQL queries.
 This technique is taking advantage of the database engine to quickly filter out the data that the user is not authorized to access.
 This method is very efficient, and it is perhaps the only practical option when dealing with large-scale data sets.
 However, this approach is tightly bound to the application data model, and it is usually almost impossible to externalize.
@@ -1580,7 +1580,7 @@ The models are reviewed, versioned and applied in their entirety.
 IDM deployments tend to be complex.
 There are many relations, interactions and policies.
 It is no easy task to predict the effects of a change in a role, policy or organizational structure.
-Therefore, some IDM systems provide a simulation features that provide predictions and impact analyses of planed changes.
+Therefore, some IDM systems provide simulation features that provide predictions and impact analyses of planed changes.
 
 * *Compliance policies*, reporting and management.
 Policies in the identity management world are usually designed to be strictly enforced.
@@ -1681,7 +1681,7 @@ Therefore, there are many overlapping, overloaded and similar terms in use.
 _Identity management_ (IDM) is usually used to describe the low-level parts (technology), while _identity governance_ is used to describe the high-level parts (business).
 Yet the boundary is very fuzzy and many IDM systems provide governance capabilities, and many governance systems provide low-level functions.
 _Identity governance and administration_ (IGA) is a term supposed to describe both parts together.
-_Governance, risk management and compliance (GRC)_ is a terms that was mostly used in the past to represent the high-level identity governance functionality, later known simply as _identity governance_.
+_Governance, risk management and compliance (GRC)_ is a term that was mostly used in the past to represent the high-level identity governance functionality, later known simply as _identity governance_.
 _Identity security_ is a marketing term that roughly covers IGA functionality.
 
 Overall, the terminology is very fluid.
@@ -1973,7 +1973,7 @@ The risk model can evaluate risk of each role.
 This allows detection of anomalies, such as assignment of a powerful high-risk role to an ordinary user that is supposed to be low-risk.
 Such role is likely to be assigned by mistake, or perhaps it was a role assigned during an emergency that was never removed.
 Unassignment of such role may be a quick way to reduce the risk.
-Smart system could suggest several types of such _outliers_, where privileges of an individual users stand out from the surrounding.
+Smart system could suggest several types of such _outliers_, where privileges of individual users stand out from the surrounding.
 
 Once we have the concept of risk established in our system, we can use it in security policies.
 For example, it makes sense to require stronger password for high-risk users, or even better, automatically set up a multi-factor authentication for them.
@@ -2185,7 +2185,7 @@ Therefore, it is crucial to choose and IDM platform that can evolve.
 //Academics and identity experts would probably be happy with the dictionary definition of digital identity.
 //However, the term have got a slightly different meaning when dealing with a broader audience.
 //
-//Generally speaking, the term _digital identity_ is understood as a data records on a person's identity, together with appropriate tools to manage it.
+//Generally speaking, the term _digital identity_ is understood as data records on a person's identity, together with appropriate tools to manage it.
 //This is usually an application that allows to control and manage the identity data by the user.
 //It is the _user-centric_ approach which is usually considered a distinguishing factor between _digital identity_ and other IAM technologies.
 //The basic idea is to keep user in control.

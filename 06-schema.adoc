@@ -630,7 +630,7 @@ _Administrative status_ should remain as a "last resort" mechanisms when user ne
 The concepts of lifecycle and activation are not limited to users.
 Many midPoint objects have lifecycle state and activation.
 Roles can expire, organizational units can be disabled and so on.
-Lifecycle and activation are a concepts that have a very broad application in midPoint.
+Lifecycle and activation are concepts that have a very broad application in midPoint.
 Even assignments have activation, which is a crucial element in some configuration (e.g. multi-affiliation).
 Assignments are often used to model employment contracts, student affiliations, service contracts and similar concepts that have time boundaries.
 This is usually achieved by a clever use of assignment activation.

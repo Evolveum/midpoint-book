@@ -525,7 +525,7 @@ There are many ways how a role hierarchy can be structured.
 One way is to create all roles as "end user" roles that are supposed to be directly assigned to user.
 The clerk-supervisor example above is that case.
 The low-level roles (e.g. `Clerk`) should contain all the privileges necessary for that role to function in an organization, such as all the necessary access to all the applications, networks, services and devices.
-Then combine the elemental roles into a bigger roles, combining business responsibilities as needed.
+Then combine the elemental roles into bigger roles, combining business responsibilities as needed.
 Repeat the process until the entire access control landscape is covered with beautiful roles.
 
 That is the theory.
@@ -1001,7 +1001,7 @@ Such automated approach never really works in practice.
 
 First problem is at the very start: HR data are almost never correct.
 There is very little motivation for the HR data to be completely correct.
-It is not a big issues if someone has a wrong job code or organizational unit code in the HR system.
+It is not a big issue if someone has a wrong job code or organizational unit code in the HR system.
 The business goes on, the salary is paid, everybody is happy.
 There is no efficient feedback loop that would force corrections in HR data - until the identity management system is deployed, that is.
 It takes years or even decades for a typical company to deploy an identity management system.
@@ -1099,10 +1099,10 @@ There can be any complex algorithm in the expression, even a complete ABAC/PBAC 
 At least in theory.
 MidPoint expressions do not make access control decisions, because it is not the job of an identity management system to make such decisions.
 Identity management system should set up the account.
-It provides the "material" for an authorization system to make a correct decisions.
+It provides the "material" for an authorization system to make a correct decision.
 Therefore, midPoint goes as close to ABAC/PBAC as a provisioning system can go.
 In an extreme case the entire ABAC/PBAC policy can be implemented in outbound expressions in resource definition.
-Yet, there are a good reasons nobody does that.
+Yet, there are some good reasons nobody does that.
 
 Dividing the policy into smaller parts brings substantial advantage.
 Therefore, many midPoint deployments are very RBAC-like.

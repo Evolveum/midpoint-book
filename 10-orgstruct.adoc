@@ -391,7 +391,7 @@ This has to come later when the basic principles have enough time to sink in.
 
 .Org and role hierarchies
 NOTE: Both orgs are roles are _hierarchical_ in a way.
-However, they form a separate hierarchies.
+However, they form separate hierarchies.
 Org hierarchy is used to model organizational trees.
 Role hierarchy is used to build access control structures.
 Those hierarchies have completely different purpose.
@@ -484,7 +484,7 @@ Which is usually done by using _archetypes_.
 There are two organizational structures now.
 You can have three organizational structures if you want to, or five of them.
 Any number you like - as long as all the tabs for organizational structures fit on the screen.
-The structures can be a deep trees with many branches, or they can be completely flat, with just a single level.
+The structures can be deep trees with many branches, or they can be completely flat, with just a single level.
 The structure may not even be a tree.
 As long as it is an _acyclic directed graph_ it will work just fine.
 It can have multiple roots, it may have alternate paths, it can do all the crazy stuff.
@@ -716,7 +716,7 @@ The `orderConstraint` data structure in our example looks suspiciously complex.
 That impression is correct, as it indeed is quite a complex concept.
 What we see here is the first glimpse at high-order "assignment algebra" that is a work-horse of complex midPoint deployments.
 This mechanism is often employed when working with _meta-roles_ and _archetypes_.
-As organizational units are _abstract roles_, and organizational structures are just a trees formed by _assignments_, they technically form meta-role structures.
+As organizational units are _abstract roles_, and organizational structures are just trees formed by _assignments_, they technically form meta-role structures.
 
 Therefore, the right way to set up manager privileges is to move privilege definition to a central place.
 It may be top-level root org, or it may be an `Organizational unit` _archetype_.

@@ -691,7 +691,7 @@ Evaluation of the expression with _old_ value `S007` produces assignment for `Sa
 MidPoint knows that value `S007` was _removed_, therefore it also removes assignment of `Sales Agent` role from the user.
 
 When it comes to security, automatic _unassignment_ of roles is even more important than automatic _assignment_.
-Principle of least privilege dictates that a users should have minimal access rights necessary for conducting their duties.
+Principle of least privilege dictates that users should have minimal access rights necessary for conducting their duties.
 MidPoint _autoassignment_ mechanism take care of that, applying a rule to _assign_ a role when it is necessary, while also using the same rule to _unassign_ the role when it is no longer necessary.
 This mechanism is one of the building block of policy-driven RBAC mechanism, a dynamic role-based access control model which is a native part of midPoint.
 

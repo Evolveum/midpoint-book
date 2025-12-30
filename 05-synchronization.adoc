@@ -515,7 +515,7 @@ Looking for each individual user one-by-one is not a scalable method, we have to
 Therefore, when choosing a correlation property, make sure it is a searchable (indexed) property.
 
 .Correlation before midPoint 4.6
-NOTE: MidPoint versions before 4.6 used _correlation expressions_, which were basically a search filters parametrized by expressions.
+NOTE: MidPoint versions before 4.6 used _correlation expressions_, which were basically search filters parametrized by expressions.
 This was simple and elegant mechanisms for many years, but it was also quite limited.
 MidPoint 4.6 introduced _smart correlation_ mechanisms, and the old correlation expressions were deprecated.
 
@@ -2144,7 +2144,7 @@ Now we need to tell midPoint to synchronize the values:
                 ...
 ----
 
-A clever readers is now surely wondering whether we have forgotten something.
+A clever reader is now surely wondering whether we have forgotten something.
 We have, indeed.
 Attribute values are synchronized by running reconciliation process.
 However, our outbound mappings will not work in reconciliation.

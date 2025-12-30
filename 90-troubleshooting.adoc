@@ -767,7 +767,7 @@ The process usually goes like this:
 There are several ways to do that.
 You can use "preview" operation of user interface to see the input.
 You can examine the operation result in the user interface to see the outcome of the operation, or you may have a look at the audit trail.
-Enabling auditing to a log files may also help.
+Enabling auditing to a log file may also help.
 
 . Have a look at clockwork.
 Clockwork can provide a summary of the operation when `DEBUG` log level on `com.evolveum.midpoint.model.impl.lens.Clockwork` package is enabled.

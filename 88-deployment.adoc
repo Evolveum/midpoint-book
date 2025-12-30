@@ -660,7 +660,7 @@ Anyone can provide midPoint-related services, and Evolveum has no power to do an
 Yes, Evolveum maintains a partner network, there are partner levels, marketing channels and all that usual commercial stuff.
 However, those are more-or-less just recommendations.
 We recommend that you engage one of Evolveum partners, companies that demonstrated ability to deliver midPoint-based solutions.
-However, if you choose to employ your local open source enthusiast to work on your midPoint deployment there is nothing to stop you - as long as an appropriate levels of professionally and expertise are maintained.
+However, if you choose to employ your local open source enthusiast to work on your midPoint deployment there is nothing to stop you - as long as appropriate levels of professionally and expertise are maintained.
 There is no warranty to void, because in fact, there are no warranties in the software world anyway.
 There are no contracts to break, as the support contracts do not mandate exclusivity.
 There are no copyrights to violate, as all midPoint source code is out there, as is all the documentation.
@@ -764,7 +764,7 @@ However, it is likely that a more sophisticated approach may be needed to feed s
 
 For example, midPoint identity analytic functionality is designed to analyze usage and structure of roles, or point out roles without owners.
 Future functionality might be used to locate users with risky or unusual access rights.
-However, midPoint should not be used to compute average number of persons in an organizational units, or estimate typical fluctuation of organization unit managers.
+However, midPoint should not be used to compute average number of persons in organizational units, or estimate typical fluctuation of organization unit managers.
 That is a responsibility of business intelligence system, even though such reports may be based on data provided by midPoint.
 
 

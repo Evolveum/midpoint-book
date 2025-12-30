@@ -1404,7 +1404,7 @@ Requirement is a need or expectation that is stated or implied. Requirements are
 +
 See also: <<glossterm-compliance,Compliance>>
 [[glossterm-residual-risk]]Residual risk::
-Residual risk is a risk that remains after risk treatment. It is a risk that was not eliminated during a cybersecurity activities. As it is practically impossible to eliminate risk completely, some residual risk has to be accepted, as part of the usual cybersecurity program.
+Residual risk is a risk that remains after risk treatment. It is a risk that was not eliminated during cybersecurity activities. As it is practically impossible to eliminate risk completely, some residual risk has to be accepted, as part of the usual cybersecurity program.
 +
 Alternative terms: Retained risk
 +
@@ -1482,7 +1482,7 @@ Risk identification is a process of discovering and describing risks. It involve
 +
 See also: <<glossterm-risk,Risk>>, <<glossterm-risk-assessment,Risk assessment>>
 [[glossterm-risk-level]]Risk level::
-Magnitude or measure of risk. Expression of risk level is heavily influenced by context. Risk levels can be quantitative, expressing risk level in a measurable and generally comparable quantities, such as perceptual probability or weighted monetary cost. Risk levels can also be qualitative, expressing risk level in a relative terms, such as "low", "medium" and "high". Risk levels may consider impact (consequence) or a risk, or it may be concerned solely with probability of a risk occurrence.
+Magnitude or measure of risk. Expression of risk level is heavily influenced by context. Risk levels can be quantitative, expressing risk level in a measurable and generally comparable quantities, such as perceptual probability or weighted monetary cost. Risk levels can also be qualitative, expressing risk level in relative terms, such as "low", "medium" and "high". Risk levels may consider impact (consequence) or a risk, or it may be concerned solely with probability of a risk occurrence.
 +
 Alternative terms: Level of risk
 +
@@ -1580,7 +1580,7 @@ See also: <<glossterm-self-asserted,Self-Asserted>>, <<glossterm-decentralized-i
 [[glossterm-shadow]]Shadow::
 
 +
-In midPoint terminology: Shadow objects are objects in midPoint repository representing objects in identity resources, such as accounts or groups. Shadow objects are used by midPoint as a proxy objects, or data adapters for real accounts, groups or organizational units in identity resources. MidPoint stores identifiers of resource objects in shadow objects, together with meta-data, policy-related information and operational data that relate to the resource object that the shadows represent. The identifiers stored in shadow objects are used to locate the correct resource object even in cases that is renamed or it moves. Shadow objects may contain copies of the data of real resource objects. However, in default configuration, only identifiers are stored in shadow objects.
+In midPoint terminology: Shadow objects are objects in midPoint repository representing objects in identity resources, such as accounts or groups. Shadow objects are used by midPoint as proxy objects, or data adapters for real accounts, groups or organizational units in identity resources. MidPoint stores identifiers of resource objects in shadow objects, together with meta-data, policy-related information and operational data that relate to the resource object that the shadows represent. The identifiers stored in shadow objects are used to locate the correct resource object even in cases that is renamed or it moves. Shadow objects may contain copies of the data of real resource objects. However, in default configuration, only identifiers are stored in shadow objects.
 +
 See also link:https://docs.evolveum.com/midpoint/reference/resources/shadow/[more information at docs.evolveum.com].
 +
@@ -1660,11 +1660,11 @@ X.1252 term: trust
 +
 See also: <<glossterm-triangle-of-trust,Triangle Of Trust>>, <<glossterm-trusted-third-party,Trusted Third Party>>
 [[glossterm-trust-service]]Trust service::
-Electronic service that issues a digital credentials, acting as a trusted third party.
+Electronic service that issues digital credentials, acting as a trusted third party.
 +
 See also: <<glossterm-trusted-third-party,Trusted Third Party>>, <<glossterm-certificate-authority,Certificate Authority>>
 [[glossterm-trusted-third-party]]Trusted Third Party::
-An entity which makes a claims, claims that are trusted by other parties. Usually a central entity in a system that is trusted by many entities. In scenarios involving Triangle of Trust, the issuer is considered to be trusted third party.
+An entity which makes claims, claims that are trusted by other parties. Usually a central entity in a system that is trusted by many entities. In scenarios involving Triangle of Trust, the issuer is considered to be trusted third party.
 +
 X.1252 term: trusted third party
 +
