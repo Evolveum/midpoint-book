@@ -7,7 +7,7 @@ include::chapter-include.adoc[]
 The pessimist complains about the wind; the optimist expects it to change; the realist adjusts the sails.
 
 Reading and modifying accounts, account attribute synchronization, mapping of attribute values, their transformation using scripts – these are the very basic midPoint features.
-These are _provisioning_ features (or rather _fulfilment_ features as analysts like to have it).
+These are _provisioning_ features (or rather _fulfillment_ features as analysts like to have it).
 These features are absolutely essential for any self-respecting identity management deployment.
 Explaining the very basic mechanisms of identity management deployment is the primary purpose of this chapter.
 It covers the necessary configuration to use midPoint as a _provisioning engine_.
@@ -594,7 +594,7 @@ The _kind_ definition tells just that.
 There is also optional _intent_ setting that can be used to define subtypes - but more on that later.
 
 The schema handling section can also be used to augment (or even override) some parts of the resource schema.
-E.g. following example sets a display name for this object type.
+E.g. the following example sets a display name for this object type.
 The display name will be used by the user interface when it displays the account.
 
 [source,xml]
@@ -616,7 +616,7 @@ The display name will be used by the user interface when it displays the account
 ----
 
 However, the most powerful feature that is used in the schema handling is the ability to deal with attributes.
-Following sections are all about that.
+The following sections are all about that.
 
 
 == Attribute Handling
@@ -690,7 +690,7 @@ The mapping specifies that the value of the `cn` attribute will be taken from th
 This a very simple mapping, there is no value transformation, no condition – nothing complicated at all.
 This is how a lot of mappings look like.
 However, mappings can also be very powerful and complex.
-That will be described in next section.
+That will be described in the next section.
 
 .Namespace prefixes `ri` and `icfs`
 TIP: You may have noticed that `ri` and `icfs` namespace prefixes are used in some sample files when referring to object classes or attributes.
@@ -815,7 +815,7 @@ Those examples are still very simple.
 Mappings can do much more – as you will learn in a while.
 However, there is one more thing that we need to explain before going on.
 Mappings are designed to work with more than just a single source.
-Following diagram illustrates a mapping that takes two arguments: _given name_ and _family name_.
+The following diagram illustrates a mapping that takes two arguments: _given name_ and _family name_.
 The mapping produces _full name_ by concatenating these value with a space in between.
 This is the kind of mapping that is frequently used to construct user’s full name from its components.
 While the mapping may seem simple, there are some sophisticated mechanisms hidden inside.
@@ -867,7 +867,7 @@ Sometimes a mapping needs to be really authoritative.
 It has to enforce the value to the target.
 Yet sometimes, we want to provide a default value, and the mapping should never change the target value once it is set.
 Therefore, mapping can be set to various levels of _strength_: from _weak_ to _strong_.
-Following table describes how that works:
+The following table describes how that works:
 
 |===
 |Strength |Description
@@ -978,7 +978,7 @@ As `asIs` is the default expression evaluator, we can save some typing and short
 _Literal_ expression evaluator is used to place a constant value in the target.
 This expression does not need any source at all.
 It always produces the same value.
-Following code sets the attribute `o` to fixed value `ExAmPLE, Inc.`:
+The following code sets the attribute `o` to fixed value `ExAmPLE, Inc.`:
 
 [source,xml]
 ----
@@ -1150,7 +1150,7 @@ There is a special place in the resource _schema handling_ section for that:
 ----
 
 It is as simple as that.
-Just an empty mapping represented by empty `outbount` element.
+Just an empty mapping represented by empty `outbound` element.
 User has `administrativeStatus` property, account has `administrativeStatus` property, therefore midPoint knows what is the _source_ and _target_ of the mapping.
 We do not need to specify these.
 The values of the `administrativeStatus` property has the same type and meaning on both sides.
@@ -1231,7 +1231,7 @@ See <<92-additional-information.adoc#92-additional-information,Additional Inform
 This section describes a complete working example of connection to the LDAP directory.
 The configuration below is used to automatically create accounts in OpenLDAP server.
 Entire configuration is contained in a single resource definition file.
-Following paragraphs explain individual parts of the file.
+The following paragraphs explain individual parts of the file.
 Simplified XML notation is used for clarity.
 Complete file in a form directly usable in midPoint can be found at the same place as all the other samples in this book
 (see <<92-additional-information.adoc#92-additional-information,Additional Information>> chapter for details).
@@ -1617,7 +1617,7 @@ Shadows record meta-data about resource objects.
 They are used to hold cached values of the attributes (this functionality is still experimental in midPoint {midpointversion}).
 Shadows can be used to hold the state of the resource objects for which midPoint does not have on-line communication channel and the operations are executed manually (a.k.a. "manual resources").
 Therefore, shadows are quite complex objects.
-Following picture provides more substantial example of a shadow.
+The following picture provides more substantial example of a shadow.
 
 image::04-11-user-shadow-resource.png[User-shadow-resource]
 

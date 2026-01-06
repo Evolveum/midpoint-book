@@ -39,7 +39,7 @@ However, we will start small.
 We begin with simple scenarios, building our way up.
 This chapter describes basic midPoint RBAC mechanism.
 It provides enough information to start with the usual role-based approach.
-Following chapters will build on that, describing more and more advanced use of the RBAC mechanism.
+The following chapters will build on that, describing more and more advanced use of the RBAC mechanism.
 
 .Terminology
 NOTE: The term _RBAC_ is many things to many people.
@@ -51,7 +51,7 @@ As you will see later, such deviation is really necessary.
 
 == Reality vs Policy
 
-Previous chapters were focused on account provisioning and synchronization.
+The previous chapters were focused on account provisioning and synchronization.
 Their primary focus was an _account_ (or a similar resource object).
 This is what we call _reality_ in midPoint way of thinking.
 Accounts are objects that exist in the databases and files on the resources.
@@ -141,7 +141,7 @@ This may look like a very complicated method to do something simple.
 However, this kind of thinking is really necessary to handle complex cases.
 There may be several assignments that mandate the same account.
 There may be assignments for the same accounts, but each assignment mandates different attributes or values.
-The account that the assignments mandate may exist already, e.g. it may be linked by previous reconciliation with the resource.
+The account that the assignments mandate may exist already, e.g. it may be linked by the previous reconciliation with the resource.
 There may be several accounts for the same user on the same resource (e.g. "ordinary" account and "testing" account).
 And so on.
 We will deal with various cases in this book.
@@ -170,7 +170,7 @@ Yet, as all midPoint objects, role has a very familiar structure:
 <role oid="aaa6cde4-0471-11e9-9b50-c743da469067">
     <name>Business analyst</name>
     ...
-</user>
+</role>
 ----
 
 Role object has its _object identifier (OID)_ and _name_.
@@ -219,7 +219,7 @@ Therefore, a `Business Analyst` role may look like this:
              <kind>account</kind>
         </construction>
     </inducement>
-</user>
+</role>
 ----
 
 The usual case is that every employee need to have basic access to company functionality.
@@ -525,7 +525,7 @@ There are many ways how a role hierarchy can be structured.
 One way is to create all roles as "end user" roles that are supposed to be directly assigned to user.
 The clerk-supervisor example above is that case.
 The low-level roles (e.g. `Clerk`) should contain all the privileges necessary for that role to function in an organization, such as all the necessary access to all the applications, networks, services and devices.
-Then combine the elemental roles into a bigger roles, combining business responsibilities as needed.
+Then combine the elemental roles into bigger roles, combining business responsibilities as needed.
 Repeat the process until the entire access control landscape is covered with beautiful roles.
 
 That is the theory.
@@ -784,10 +784,10 @@ As _assignment_ and _inducement_ are in fact the same data structure, similar ap
 <role>
     <name>Marketing Research Undersecretary</name>
     ...
-    <indudement>...</indudement>
-    <indudement>...</indudement>
+    <inducement>...</inducement>
+    <inducement>...</inducement>
     ...
-    <indudement>
+    <inducement>
         <description>
             Employee access to the lab is disabled because the lab burned down
             during an ugly accident. Will be re-enabled when the lab is rebuilt.
@@ -798,7 +798,7 @@ As _assignment_ and _inducement_ are in fact the same data structure, similar ap
             <administrativeStatus>disabled</administrativeStatus>
         </activation>
     </inducement>
-</user>
+</role>
 ----
 
 Many types and variants of assignments can be combined in a single user.
@@ -909,7 +909,7 @@ The roles need to be a bit smarter to use the `teamName` parameter:
              </attribute>
         </construction>
     </inducement>
-</user>
+</role>
 ----
 
 Resulting LDAP account looks like this:
@@ -1001,7 +1001,7 @@ Such automated approach never really works in practice.
 
 First problem is at the very start: HR data are almost never correct.
 There is very little motivation for the HR data to be completely correct.
-It is not a big issues if someone has a wrong job code or organizational unit code in the HR system.
+It is not a big issue if someone has a wrong job code or organizational unit code in the HR system.
 The business goes on, the salary is paid, everybody is happy.
 There is no efficient feedback loop that would force corrections in HR data - until the identity management system is deployed, that is.
 It takes years or even decades for a typical company to deploy an identity management system.
@@ -1099,10 +1099,10 @@ There can be any complex algorithm in the expression, even a complete ABAC/PBAC 
 At least in theory.
 MidPoint expressions do not make access control decisions, because it is not the job of an identity management system to make such decisions.
 Identity management system should set up the account.
-It provides the "material" for an authorization system to make a correct decisions.
+It provides the "material" for an authorization system to make a correct decision.
 Therefore, midPoint goes as close to ABAC/PBAC as a provisioning system can go.
 In an extreme case the entire ABAC/PBAC policy can be implemented in outbound expressions in resource definition.
-Yet, there are a good reasons nobody does that.
+Yet, there are some good reasons nobody does that.
 
 Dividing the policy into smaller parts brings substantial advantage.
 Therefore, many midPoint deployments are very RBAC-like.

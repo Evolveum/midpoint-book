@@ -18,7 +18,7 @@ We do not want any user to see a list of all the data of all the other users,
 and we definitely do not want any user to modify the data.
 As pretty much any other information system, midPoint needs an ability to deliberately limit access to data stored in its repository.
 However, as midPoint is an identity management platform, the requirements for access control to data are quite demanding.
-For example, following scenarios are quite common in identity and access management world:
+For example, the following scenarios are quite common in identity and access management world:
 
 * Allow any user to see its own user profile, allow editing selected set of properties.
 A user can see significant part of _own_ user profile.
@@ -139,7 +139,7 @@ While extending the authorization a bit, the result looks like follows in XML no
 
 TODO: many subjects, using a filter -> maintainer of all projects (all subnodes of Projects top node (832e37e4-edfd-11ea-9f8c-ef736d6646a2))
 
-TODO: giving abiliy to add and delete projects as well.
+TODO: giving ability to add and delete projects as well.
 
 TODO: NOTE: orgRef may be too powerful. It grants transitive rights. Use with care. Good for simple delegated administration, but not for fine-grain control. Use filters instead.
 

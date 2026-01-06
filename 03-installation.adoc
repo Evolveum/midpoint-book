@@ -71,7 +71,7 @@ MidPoint installation described in this chapter is a very basic one.
 It is ideal for initial exploration of midPoint, development of midPoint configurations, simple testing, demonstrations, exploration and similar purposes.
 It is a very convenient installation, and it provides all you need to get started.
 
-Following steps are applicable to Linux and macOS environment.
+The following steps are applicable to Linux and macOS environment.
 Windows users may use _Docker Desktop_ running on _Windows Subsystem for Linux (WSL)_.
 Please refer to link:https://docs.evolveum.com/midpoint/install/containers/docker/[Evolveum documentation regarding Docker Compose] for more details.
 
@@ -256,7 +256,7 @@ Please use the btn:[Back] buttons that are present in midPoint user interface, o
 == User Interface Areas
 
 MidPoint user interface is quite rich.
-Following list provides short description of the most important parts of the user interface.
+The following list provides short description of the most important parts of the user interface.
 
 * *Home* page gives a brief status about users own accounts, requests, work items and so on.
 This is a page designed to be the first page that will be displayed to the end user after log in to midPoint.
@@ -330,7 +330,7 @@ Users, roles and other object types have their specific color and icon.
 This indicates the object type, and it is used whenever possible: menu, information boxes, lists, box title accents and so on.
 The primary colors and icons are shown in the dashboard:
 
-image::03-03-dashboard-object-types.png[Dashboarad object types]
+image::03-03-dashboard-object-types.png[Dashboard object types]
 
 All user-related controls are red, all controls that deal with organizational structure are yellow.
 Roles are green.

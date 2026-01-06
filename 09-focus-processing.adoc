@@ -691,7 +691,7 @@ Evaluation of the expression with _old_ value `S007` produces assignment for `Sa
 MidPoint knows that value `S007` was _removed_, therefore it also removes assignment of `Sales Agent` role from the user.
 
 When it comes to security, automatic _unassignment_ of roles is even more important than automatic _assignment_.
-Principle of least privilege dictates that a users should have minimal access rights necessary for conducting their duties.
+Principle of least privilege dictates that users should have minimal access rights necessary for conducting their duties.
 MidPoint _autoassignment_ mechanism take care of that, applying a rule to _assign_ a role when it is necessary, while also using the same rule to _unassign_ the role when it is no longer necessary.
 This mechanism is one of the building block of policy-driven RBAC mechanism, a dynamic role-based access control model which is a native part of midPoint.
 
@@ -779,7 +779,7 @@ The reason is that different data types are being compared.
 The `locality` property is polystring, while `‘kitchen’` is a string literal.
 Polystring and string are never equal regardless for their content.
 Therefore, this form of the expression is wrong.
-Following forms may be used instead:
+The following forms may be used instead:
 
 [source,groovy]
 ----
@@ -837,7 +837,7 @@ It has to be explicitly enabled in system configuration:
 </systemConfiguration>
 ----
 
-There is one more significant drawback of role autoassingment, which is quite obvious.
+There is one more significant drawback of role autoassignment, which is quite obvious.
 The autoassignment mapping needs to be in every role.
 There is no way to use this mechanism to handle autoassignment of many roles with just one mapping.
 However, object template mappings can do that easily.
@@ -1132,7 +1132,7 @@ Iteration one happens after the first conflict.
 * `iterationToken` variable contains a string that is derived from the iteration number.
 
 There is default algorithm that derives iteration tokens from iteration number.
-The algorithm is illustrated in following table.
+The algorithm is illustrated in the following table.
 
 |===
 |Iteration |The value of `iteration` variable |The value of `iterationToken` variable
@@ -1760,7 +1760,7 @@ Similarly to the mappings, iteration specification is already part of default `P
 
 As soon as the above configuration is in place, we can start testing our little deployment.
 Go ahead and import the HR resource, import object template, set the object template in the configuration and do not forget to replace the HR CSV file.
-If you did any experiments with previous configuration, it can be helpful to clean up midPoint by using the "delete all identities" process (that little dropdown button in menu:Repository objects[] page).
+If you did any experiments with the previous configuration, it can be helpful to clean up midPoint by using the "delete all identities" process (that little dropdown button in menu:Repository objects[] page).
 When everything is set up, you can try to manually import a single account from the HR resource by using the btn:import[] button, located on the page where you can list resource accounts.
 Once the basic configuration works, you can test username generator by adding Albert Anderson to the HR CSV file and importing the account.
 Do not forget to explicitly fetch the accounts from the resource by clicking on the btn:Reload[] button on the bottom of the page.
@@ -1980,7 +1980,7 @@ So far we have tackled the inbound phase and focus policy phase.
 However, we have not talked about the outbound (provisioning) phase much.
 Now it is the right time to have a look at that.
 
-We are going to reuse the LDAP and CRM resources from previous chapters.
+We are going to reuse the LDAP and CRM resources from the previous chapters.
 Those resources are used here in a pretty much unchanged form.
 There is no need to change them.
 Outbound mappings in the resource definitions specify the basic framework of the account.
@@ -2098,7 +2098,7 @@ We have running system:
 image::09-04-users-final.png[Users]
 
 Users are imported from the HR system.
-Roles are assigned, which can be checked by navigating to user details page and opening the menu:Assignements[] tab.
+Roles are assigned, which can be checked by navigating to user details page and opening the menu:Assignments[] tab.
 Accounts are provisioned according to the roles, which is the reason for variations in number of accounts for individual users.
 The basic stuff works now.
 Go ahead and try it out, add more roles and mappings, modify the configuration.
@@ -2128,4 +2128,4 @@ If you get to dead end, just scrap everything and start over, or maybe rework ev
 MidPoint is designed for this.
 Evolutionary approach is deeply embedded in midPoint philosophy and design.
 Just go ahead, have fun, conduct experiments and explore.
-Such experience will help a lot when you get back and read through following chapters.
+Such experience will help a lot when you get back and read through the following chapters.

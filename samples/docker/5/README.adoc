@@ -15,7 +15,7 @@ All data will be lost.
 The initial state corresponds roughly to the beginning of chapter 5 (Synchronization) of the book.
 However, the resources are pre-configured for later chapters (e.g. job codes, org units)
 
-Following steps can be used to proceed to state for later chapters:
+The following steps can be used to proceed to state for later chapters:
 
 . Start/resume `LDAP Reconciliation` task.
 

@@ -30,7 +30,7 @@ See also: <<glossterm-access-control,Access Control>>
 [[glossterm-abstract-role]]Abstract Role::
 
 +
-In midPoint terminology: Abstract role means any type of object that acts as a role. This means that abstract tole can be used to hold inducements, which give privileges to other objects. Role, org, service, archetype are abstract roles in midPoint.
+In midPoint terminology: Abstract role means any type of object that acts as a role. This means that abstract role can be used to hold inducements, which give privileges to other objects. Role, org, service, archetype are abstract roles in midPoint.
 +
 See also link:https://docs.evolveum.com/midpoint/architecture/concepts/abstract-role/[more information at docs.evolveum.com].
 +
@@ -40,7 +40,7 @@ Access certification helps with management of access rights. These rights also c
 +
 Certifications are often conducted in a form of certification campaigns, certifying access of many users in each campaign, distributing the work among many reviewers to keep amount of work per person reasonable. Despite that, the overall effort necessary for completion of certification campaign can be huge. Therefore, certification campaigns are being replaced by microcertifications, certifying specific users or privileges on as-needed basis.
 +
-Access certification is often used to address over-provisioning of privileges, in a attempt to maintain the principle of least privilege.
+Access certification is often used to address over-provisioning of privileges, in an attempt to maintain the principle of least privilege.
 +
 Alternative terms: Access Re-certification, Re-certification, Attestation, Access Review
 +
@@ -60,7 +60,7 @@ X.1252 term: access control
 +
 See also: <<glossterm-rbac,Role-Based Access Control>>, <<glossterm-abac,Attribute-Based Access Control>>, <<glossterm-pbac,Policy-Based Access Control>>
 [[glossterm-access-management]]Access Management (AM)::
-Access Management (AM) is a security discipline that provides access to authorised users to enter particular resources. It also prevents non-authorised users from accessing the resources. Thus the goal of Access Management is to unify the security mechanisms that take place when a user is accessing specific system or functionality. Single Sign-On (SSO) is sometimes considered to be a part of Access Management.
+Access Management (AM) is a security discipline that provides access to authorized users to enter particular resources. It also prevents non-authorized users from accessing the resources. Thus the goal of Access Management is to unify the security mechanisms that take place when a user is accessing specific system or functionality. Single Sign-On (SSO) is sometimes considered to be a part of Access Management.
 [[glossterm-access-request]]Access Request Process::
 Access request process is a business process used to request additional access or privileges for information systems and applications. It is usually a semi-manual process. It starts with a user requesting access or privileges for applications. The request is usually routed through approval steps. When approved, the access is provisioned.
 +
@@ -128,11 +128,11 @@ See also: <<glossterm-inducement,Inducement>>, <<glossterm-assignment-holder,Ass
 [[glossterm-assignment-holder]]Assignment Holder::
 
 +
-In midPoint terminology: An object that can hold assignments. Assignment holder can be considered a "source" of an assignment, a source of a relation that an assignmnt represents. Almost all object types in midPoint are assignment holder, capable of containing an assignment.
+In midPoint terminology: An object that can hold assignments. Assignment holder can be considered a "source" of an assignment, a source of a relation that an assignment represents. Almost all object types in midPoint are assignment holder, capable of containing an assignment.
 +
 See also: <<glossterm-assignment,Assignment>>, <<glossterm-focus,Focus>>
 [[glossterm-audit]]Audit::
-Audit is an systematic and documented process for reviewing specific processes, organizations or regulatory compliance. It involves obtaining and objective processing of evidence, including evidence stored in special-purpose audit trails. Audit can be internal, conducted by an organization, reviewing its own processes or compliance. It can also be external, conducted by an independent trusted party.
+Audit is a systematic and documented process for reviewing specific processes, organizations or regulatory compliance. It involves obtaining and objective processing of evidence, including evidence stored in special-purpose audit trails. Audit can be internal, conducted by an organization, reviewing its own processes or compliance. It can also be external, conducted by an independent trusted party.
 +
 See also: <<glossterm-audit-trail,Audit trail>>
 [[glossterm-audit-scope]]Audit scope::
@@ -284,7 +284,7 @@ Control is a measure that affects risk. Controls are used in security management
 +
 Alternative terms: Countermeasure, Cybersecurity measure, Measure
 [[glossterm-control-objective]]Control objective::
-Control objective is an intended effect of an control. It is a description of the effect that a control should have when implemented.
+Control objective is an intended effect of a control. It is a description of the effect that a control should have when implemented.
 +
 See also: <<glossterm-control,Control>>
 [[glossterm-corrective-action]]Corrective action::
@@ -322,7 +322,7 @@ Cross-domain techniques employ special mechanism to protect the information, or 
 +
 See also: <<glossterm-domain,Domain>>, <<glossterm-identity-provider,Identity Provider>>, <<glossterm-relying-party,Relying Party>>, <<glossterm-identity-federation,Identity Federation>>
 [[glossterm-cyberattack]]Cyberattack::
-Cyberattack is a an intentional effort to steal, destroy, expose, alter, disable or gain unauthorized access to information systems and data (information asset). Cyberattack is a cybersecurity breach.
+Cyberattack is an intentional effort to steal, destroy, expose, alter, disable or gain unauthorized access to information systems and data (information asset). Cyberattack is a cybersecurity breach.
 +
 Alternative terms: Cyber attack
 +
@@ -334,7 +334,7 @@ Alternative terms: Information security
 +
 See also: <<glossterm-cybersecurity-governance,Cybersecurity governance>>, <<glossterm-cyberattack,Cyberattack>>, <<glossterm-risk-based-approach,Risk-based approach>>
 [[glossterm-cybersecurity-event]]Cybersecurity event::
-Cybersecurity event is a event affecting cybersecurity of an organization. It is an occurrence of system, service or network state, indicating possible breach of information security.
+Cybersecurity event is an event affecting cybersecurity of an organization. It is an occurrence of system, service or network state, indicating possible breach of information security.
 +
 Alternative terms: Information security event
 +
@@ -346,7 +346,7 @@ Alternative terms: Information security governance
 +
 See also: <<glossterm-cybersecurity,Cybersecurity>>, <<glossterm-isms,Information security management system>>, <<glossterm-cybersecurity-resilience,Cybersecurity resilience>>, <<glossterm-risk-management,Risk management>>
 [[glossterm-cybersecurity-incident]]Cybersecurity incident::
-Cybersecurity incident is unwanted or unexpected cybersecurity event, impacting cybersecurity of an organization. Cyberattack is the usual type of cybersecurity incidents. Cybersecurity incidents include situations, where security breach cannot be proven, however there is a siginificant probability that security of information and systems might have been affected.
+Cybersecurity incident is unwanted or unexpected cybersecurity event, impacting cybersecurity of an organization. Cyberattack is the usual type of cybersecurity incidents. Cybersecurity incidents include situations, where security breach cannot be proven, however there is a significant probability that security of information and systems might have been affected.
 +
 Alternative terms: Information security incident, Incident
 +
@@ -642,7 +642,7 @@ X.1252 term: claim
 +
 See also: <<glossterm-digital-identity-attribute,Digital Identity Attribute>>, <<glossterm-identity-provider,Identity Provider>>, <<glossterm-relying-party,Relying Party>>
 [[glossterm-identity-based-security]]Identity-based Security::
-Identity-based security is a approach to cybersecurity, focused on concept of identity. It places identities in the center of cybersecurity mind-set, adjusting cybersecurity design and practices around identities. Identity-based security is concerned with the identity that initiates an action, or identity that is responsible for an action, object or configuration. Simply speaking, identity-based security tries to make sure that access to service or information is provided to a specific identity, and only to the identity that is entitled for such access. Identity-based security is not limited to identity of persons. Identities of machines, services, devices, networks and similar technological and virtual concepts (non-human identities, NHI) are included as well.
+Identity-based security is an approach to cybersecurity, focused on concept of identity. It places identities in the center of cybersecurity mind-set, adjusting cybersecurity design and practices around identities. Identity-based security is concerned with the identity that initiates an action, or identity that is responsible for an action, object or configuration. Simply speaking, identity-based security tries to make sure that access to service or information is provided to a specific identity, and only to the identity that is entitled for such access. Identity-based security is not limited to identity of persons. Identities of machines, services, devices, networks and similar technological and virtual concepts (non-human identities, NHI) are included as well.
 +
 Identity-based security relies on dynamic policies based on the identity of the actor, as well as context of the operation or situation. Unlike traditional approaches, identity-based security is not fixed, it does not assume static world where an operation is allowed once and for all, and stays allowed for ever. Policies in identity-based security are dynamic, they are meant to be continuously applied, maintained, reviewed and improved, dynamically adapting to the environment and requirements.
 +
@@ -668,7 +668,7 @@ Alternative terms: Connector
 +
 See also: <<glossterm-identity-connector-framework,Identity Connector Framework>>, <<glossterm-connid,ConnId>>
 [[glossterm-identity-connector-framework]]Identity Connector Framework::
-Generally speaking, a programing framework (library) for creating and managing identity connectors. However, this rather generic term often refers to the Identity Connector Framework (ICF), originally developed by Sun Microsystem in 2000s. The ICF was releases as an open source project by Sun, only to be later abandoned after Sun-Oracle merger. The ICF was a base for several forks, including ConnId and OpenICF.
+Generally speaking, a programming framework (library) for creating and managing identity connectors. However, this rather generic term often refers to the Identity Connector Framework (ICF), originally developed by Sun Microsystems in 2000s. The ICF was releases as an open source project by Sun, only to be later abandoned after Sun-Oracle merger. The ICF was a base for several forks, including ConnId and OpenICF.
 +
 Alternative terms: Connector Framework, ICF
 +
@@ -816,7 +816,7 @@ See also: <<glossterm-enrollment,Enrollment>>, <<glossterm-onboarding,Onboarding
 [[glossterm-identity-resource]]Identity Resource::
 In IAM field, a Resource is usually a network-accessible asset capable of managing identity information.
 +
-In midPoint terminology: An Resource is a system that is either identity data source or provisioning target. IDM system (midPoint) is managing accounts in that system, feeding data from that system or doing any other combination of identity management operations. Identity resource should not be confused with "web resource" that is used by RESTful APIs.
+In midPoint terminology: A Resource is a system that is either identity data source or provisioning target. IDM system (midPoint) is managing accounts in that system, feeding data from that system or doing any other combination of identity management operations. Identity resource should not be confused with "web resource" that is used by RESTful APIs.
 +
 Alternative terms: Provisioning Resource, Resource
 +
@@ -850,7 +850,7 @@ See also: <<glossterm-assignment,Assignment>>, <<glossterm-role,Role>>
 [[glossterm-information-classification]]Information classification::
 
 +
-In midPoint terminology: Information classification is a process in which organisations assess their data and systems, with regard to the necessary level of protection. The information is classified by assigning information _labels_ or _classifications_ to individual assets, such as databases, filesystems, applications or even individual files.
+In midPoint terminology: Information classification is a process in which organizations assess their data and systems, with regard to the necessary level of protection. The information is classified by assigning information _labels_ or _classifications_ to individual assets, such as databases, filesystems, applications or even individual files.
 +
 See also link:https://docs.evolveum.com/midpoint/reference/classification/[more information at docs.evolveum.com].
 +
@@ -948,7 +948,7 @@ Alternative terms: Management system
 +
 See also: <<glossterm-isms,Information security management system>>, <<glossterm-identity-management,Identity Management>>, <<glossterm-cybersecurity-governance,Cybersecurity governance>>
 [[glossterm-manual-fulfillment]]Manual Fulfillment::
-Manual process of creating, updating and deleting accounts, entitlements and similar objects, driven by identity management system, but exexcuted by human operator. Manual fulfillment is initiated by an identity management system, usually as a consequence of change in user privileges or policies. Identity management system creates a ticket for system administrators, containing instructions to create/modify/delete an acccount or entitlement in a specific information system. Actual action is executed manually, by the system administrator. Manual fulfillment is used for systems, for which automatic identity connector is not available.
+Manual process of creating, updating and deleting accounts, entitlements and similar objects, driven by identity management system, but executed by human operator. Manual fulfillment is initiated by an identity management system, usually as a consequence of change in user privileges or policies. Identity management system creates a ticket for system administrators, containing instructions to create/modify/delete an account or entitlement in a specific information system. Actual action is executed manually, by the system administrator. Manual fulfillment is used for systems, for which automatic identity connector is not available.
 +
 Alternative terms: Manual Provisioning/deprovisioning, Manual resource, Manual connector
 +
@@ -990,15 +990,15 @@ X.1252 term: mutual authentication
 +
 See also: <<glossterm-mutual-authentication,Mutual Authentication>>
 [[glossterm-near-miss]]Near miss::
-An event that could have compromised the security of systems, data or services that did not materialise.
+An event that could have compromised the security of systems, data or services that did not materialize.
 +
 See also: <<glossterm-cyberattack,Cyberattack>>, <<glossterm-cybersecurity-incident,Cybersecurity incident>>
 [[glossterm-ngac]]Next Generation Access Control (NGAC)::
-A graph-based mechanism for managing of user access to information systems. NGAC specifies directed acyclic graph for user and concepts related to them (e.g. organizational units), and a separate directed acyclic graph for objects and and concepts related to them (e.g. folders). Access control decisions are reached by evaluating the two directed acyclic graphs with respect to policy classes, and operations specified as relations between the graphs. NGAC is specified in NIST publications (e.g. INCITS 499: Information technology - Next Generation Access Control - Functional Architecture)
+A graph-based mechanism for managing of user access to information systems. NGAC specifies directed acyclic graph for user and concepts related to them (e.g. organizational units), and a separate directed acyclic graph for objects and concepts related to them (e.g. folders). Access control decisions are reached by evaluating the two directed acyclic graphs with respect to policy classes, and operations specified as relations between the graphs. NGAC is specified in NIST publications (e.g. INCITS 499: Information technology - Next Generation Access Control - Functional Architecture)
 +
 See also: <<glossterm-access-control,Access Control>>, <<glossterm-rebac,Relationship-Based Access Control>>
 [[glossterm-non-compliance]]Non-compliance::
-State of non-fulfilment of a requirement, such as violation of a requirement stated in a policy, regulation or standard.
+State of non-fulfillment of a requirement, such as violation of a requirement stated in a policy, regulation or standard.
 +
 Alternative terms: Noncompliance, Nonconformity, Violation
 [[glossterm-non-repudiation]]Non-repudiation::
@@ -1080,7 +1080,7 @@ Passkey is a type of strong digital credential. They are used to authenticate a 
 +
 See also: <<glossterm-credential,Credential>>, <<glossterm-pin,Personal identification number>>
 [[glossterm-password]]Password::
-Password is a type of (usualy weak) digital credential, meant to be secret, known only to a single user. Passwords are memorized secret authenticators, usually selected by users, meant to be remembered. Therefore, they are often short strings in a human-friendly form, such as simple words or names. Simplicity of passwords makes them vulnerable to dictionary attacks. Recently, passwords are randomly generated, managed by password management applications. However, even randomly-generated passwords may still be vulnerable to phishing attacks. Therefore organizations are moving towards authentication methods that do not depend on passwords (e.g. passkeys), or enroll multi-factor authentication schemes.
+Password is a type of (usually weak) digital credential, meant to be secret, known only to a single user. Passwords are memorized secret authenticators, usually selected by users, meant to be remembered. Therefore, they are often short strings in a human-friendly form, such as simple words or names. Simplicity of passwords makes them vulnerable to dictionary attacks. Recently, passwords are randomly generated, managed by password management applications. However, even randomly-generated passwords may still be vulnerable to phishing attacks. Therefore organizations are moving towards authentication methods that do not depend on passwords (e.g. passkeys), or enroll multi-factor authentication schemes.
 +
 Alternative terms: Passcode
 +
@@ -1092,7 +1092,7 @@ Alternative terms: Passwordless
 +
 See also: <<glossterm-authentication,Authentication>>, <<glossterm-password,Password>>, <<glossterm-passkey,Passkey>>, <<glossterm-mfa,Multi-factor authentication>>
 [[glossterm-password-policy]]Password policy::
-Password policy constraints the selection and use of passwords with an aim to make them more secure. It almost always sets requirements for password complexity, such as minimal length of passwords and characted classes used in the password (e.g. letters, numbers, punctuation). Password policies often specify constraints on password lifetime, such as password expiration intervals.
+Password policy constraints the selection and use of passwords with an aim to make them more secure. It almost always sets requirements for password complexity, such as minimal length of passwords and character classes used in the password (e.g. letters, numbers, punctuation). Password policies often specify constraints on password lifetime, such as password expiration intervals.
 +
 Alternative terms: Password complexity policy
 +
@@ -1110,7 +1110,7 @@ A mechanism for managing of user access to information systems based on policy. 
 +
 PBAC seems to be technically equivalent to ABAC. However, in contrast to ABAC, PBAC is supposed to contain "policy management" layer, which is not clearly defined either.
 +
-Overall, PBAC is an conceptual idea rather than a concrete access control model. It is still in early stages of development.
+Overall, PBAC is a conceptual idea rather than a concrete access control model. It is still in early stages of development.
 +
 Alternative terms: Dynamic Authorization Management, Policy as Code
 +
@@ -1176,7 +1176,7 @@ Functional component with a responsibility to interpret policy and make decision
 +
 See also: <<glossterm-authorization,Authorization>>, <<glossterm-access-control,Access Control>>, <<glossterm-authorization-service,Authorization Service>>, <<glossterm-pep,Policy Enforcement Point>>, <<glossterm-pap,Policy Administration Point>>, <<glossterm-pip,Policy Information Point>>
 [[glossterm-pdrbac]]Policy-Driven Role-Based Access Control::
-A mechanism for managing of user access to information systems based on a concept of dynamic roles and policies. It is an extension of traditional Role-Based Access Control (RBAC), applying dynamic policies to govern behaviour and assignment of roles. In policy-driven RBAC, roles are no longer static, they contain logic that determines set of privileges given by the role. The user-role assignments are also dynamic, controlled by automatic role assignment policies.
+A mechanism for managing of user access to information systems based on a concept of dynamic roles and policies. It is an extension of traditional Role-Based Access Control (RBAC), applying dynamic policies to govern behavior and assignment of roles. In policy-driven RBAC, roles are no longer static, they contain logic that determines set of privileges given by the role. The user-role assignments are also dynamic, controlled by automatic role assignment policies.
 +
 See also link:https://docs.evolveum.com/midpoint/reference/roles-policies/pdrbac/[more information at docs.evolveum.com].
 +
@@ -1288,7 +1288,7 @@ See also link:https://docs.evolveum.com/midpoint/reference/schema/focus-and-proj
 +
 See also: <<glossterm-shadow,Shadow>>, <<glossterm-focus,Focus>>, <<glossterm-assignment,Assignment>>
 [[glossterm-prp]]Policy Retrieval Point (PRP)::
-Functional component with a responsibility to store and distribute policies for use by policy decision points (PDP). PRP acts as an repository for policy. The policy is usually stored persistently at PRP, e.g. in a form of a file or database. Primary responsibility of PRP is to make policy available to policy decision points (PDP), either by "pull" (PDP retrieving the policy from PRP) or by "push" (PRP sending the policy to PDP). PRP is instrumental in enabling distributed architecture with several PDPs.
+Functional component with a responsibility to store and distribute policies for use by policy decision points (PDP). PRP acts as a repository for policy. The policy is usually stored persistently at PRP, e.g. in a form of a file or database. Primary responsibility of PRP is to make policy available to policy decision points (PDP), either by "pull" (PDP retrieving the policy from PRP) or by "push" (PRP sending the policy to PDP). PRP is instrumental in enabling distributed architecture with several PDPs.
 +
 Note: PRP is only storing and distributing the policy, it is not responsible for policy creation or management. Policy management is responsibility of policy administration point (PAP).
 +
@@ -1404,7 +1404,7 @@ Requirement is a need or expectation that is stated or implied. Requirements are
 +
 See also: <<glossterm-compliance,Compliance>>
 [[glossterm-residual-risk]]Residual risk::
-Residual risk is a risk that remains after risk treatment. It is a risk that was not eliminated during a cybersecurity activities. As it is practically impossible to eliminate risk completely, some residual risk has to be accepted, as part of the usual cybersecurity program.
+Residual risk is a risk that remains after risk treatment. It is a risk that was not eliminated during cybersecurity activities. As it is practically impossible to eliminate risk completely, some residual risk has to be accepted, as part of the usual cybersecurity program.
 +
 Alternative terms: Retained risk
 +
@@ -1482,7 +1482,7 @@ Risk identification is a process of discovering and describing risks. It involve
 +
 See also: <<glossterm-risk,Risk>>, <<glossterm-risk-assessment,Risk assessment>>
 [[glossterm-risk-level]]Risk level::
-Magnitude or measure of risk. Expression of risk level is heavily influenced by context. Risk levels can be quantitative, expressing risk level in a measurable and generally comparable quantities, such as perceptual probability or weighted monetary cost. Risk levels can also be qualitative, expressing risk level in a relative terms, such as "low", "medium" and "high". Risk levels may consider impact (consequence) or a risk, or it may be concerned solely with probability of a risk occurrence.
+Magnitude or measure of risk. Expression of risk level is heavily influenced by context. Risk levels can be quantitative, expressing risk level in a measurable and generally comparable quantities, such as perceptual probability or weighted monetary cost. Risk levels can also be qualitative, expressing risk level in relative terms, such as "low", "medium" and "high". Risk levels may consider impact (consequence) or a risk, or it may be concerned solely with probability of a risk occurrence.
 +
 Alternative terms: Level of risk
 +
@@ -1580,7 +1580,7 @@ See also: <<glossterm-self-asserted,Self-Asserted>>, <<glossterm-decentralized-i
 [[glossterm-shadow]]Shadow::
 
 +
-In midPoint terminology: Shadow objects are objects in midPoint repository representing objects in identity resources, such as accounts or groups. Shadow objects are used by midPoint as a proxy objects, or data adapters for real accounts, groups or organizational units in identity resources. MidPoint stores identifiers of resource objects in shadow objects, together with meta-data, policy-related information and operational data that relate to the resource object that the shadows represent. The identifiers stored in shadow objects are used to locate the correct resource object even in cases that is renamed or it moves. Shadow objects may contain copies of the data of real resource objects. However, in default configuration, only identifiers are stored in shadow objects.
+In midPoint terminology: Shadow objects are objects in midPoint repository representing objects in identity resources, such as accounts or groups. Shadow objects are used by midPoint as proxy objects, or data adapters for real accounts, groups or organizational units in identity resources. MidPoint stores identifiers of resource objects in shadow objects, together with meta-data, policy-related information and operational data that relate to the resource object that the shadows represent. The identifiers stored in shadow objects are used to locate the correct resource object even in cases that is renamed or it moves. Shadow objects may contain copies of the data of real resource objects. However, in default configuration, only identifiers are stored in shadow objects.
 +
 See also link:https://docs.evolveum.com/midpoint/reference/resources/shadow/[more information at docs.evolveum.com].
 +
@@ -1600,7 +1600,7 @@ Alternative terms: Single Log-On
 +
 See also: <<glossterm-authentication,Authentication>>, <<glossterm-identity-provider,Identity Provider>>, <<glossterm-identity-federation,Identity Federation>>
 [[glossterm-standard]]Standard::
-Technical specification, adopted by a recognised standardisation body, for repeated or continuous application, with which compliance is not compulsory.
+Technical specification, adopted by a recognized standardization body, for repeated or continuous application, with which compliance is not compulsory.
 +
 Alternative terms: Technical standard, Technology standard, Official standard
 +
@@ -1660,11 +1660,11 @@ X.1252 term: trust
 +
 See also: <<glossterm-triangle-of-trust,Triangle Of Trust>>, <<glossterm-trusted-third-party,Trusted Third Party>>
 [[glossterm-trust-service]]Trust service::
-Electronic service that issues a digital credentials, acting as a trusted third party.
+Electronic service that issues digital credentials, acting as a trusted third party.
 +
 See also: <<glossterm-trusted-third-party,Trusted Third Party>>, <<glossterm-certificate-authority,Certificate Authority>>
 [[glossterm-trusted-third-party]]Trusted Third Party::
-An entity which makes a claims, claims that are trusted by other parties. Usually a central entity in a system that is trusted by many entities. In scenarios involving Triangle of Trust, the issuer is considered to be trusted third party.
+An entity which makes claims, claims that are trusted by other parties. Usually a central entity in a system that is trusted by many entities. In scenarios involving Triangle of Trust, the issuer is considered to be trusted third party.
 +
 X.1252 term: trusted third party
 +
@@ -1706,7 +1706,7 @@ X.1252 term: verification
 +
 See also: <<glossterm-verifier,Verifier>>, <<glossterm-digital-identity-attribute,Digital Identity Attribute>>, <<glossterm-schema,Schema>>, <<glossterm-referential-integrity,Referential Integrity>>
 [[glossterm-verifier]]Verifier::
-Entity that performs verification, usually a verification of an credential or a claim. In Triangle of Trust scenarios, the verifier verifies credentials/claims provided by the holder. Verifier may need information provided by the issuer of credential/claim to be able to complete the verification process.
+Entity that performs verification, usually a verification of a credential or a claim. In Triangle of Trust scenarios, the verifier verifies credentials/claims provided by the holder. Verifier may need information provided by the issuer of credential/claim to be able to complete the verification process.
 +
 ISO 24760 term: verifier
 +

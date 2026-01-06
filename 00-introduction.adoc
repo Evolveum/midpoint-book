@@ -174,7 +174,7 @@ However, even open source projects such as midPoint need funding.
 If you use midPoint in a commercial project that is a source of profit we think it is only fair if you share part of that profit with midPoint authors.
 You know as well as we do that this is needed.
 
-Following people have worked on the words and images that make up this book:
+The following people have worked on the words and images that make up this book:
 
 * Radovan Semančík (author and maintainer)
 * Veronika Kolpaščiková (illustrations, corrections)

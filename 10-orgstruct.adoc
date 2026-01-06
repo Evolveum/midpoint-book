@@ -378,7 +378,7 @@ For example, this is how we can "inherit" the CRM privileges in _Indirect Sales 
     <inducement>
         <!-- Inducement to parent organizational unit. This creates "inheritance" of privileges. -->
         <targetRef oid="7a1feb50-471f-11ea-8aab-1b2627541f15" type="OrgType"/>
-    </assignment>
+    </inducement>
 </org>
 ----
 
@@ -391,7 +391,7 @@ This has to come later when the basic principles have enough time to sink in.
 
 .Org and role hierarchies
 NOTE: Both orgs are roles are _hierarchical_ in a way.
-However, they form a separate hierarchies.
+However, they form separate hierarchies.
 Org hierarchy is used to model organizational trees.
 Role hierarchy is used to build access control structures.
 Those hierarchies have completely different purpose.
@@ -422,7 +422,7 @@ There are many trees that make a forrest of organizational structures.
 Fortunately, midPoint is not very picky when it comes to organizational structures.
 MidPoint is not limited to a single organizational tree.
 You can have as many organizational trees as you like.
-You can have functional organizational tree, as we have seen in previous sections.
+You can have functional organizational tree, as we have seen in the previous sections.
 Then you can have independent project organizational structure.
 Just create new root _org_ for projects and place the projects under it:
 
@@ -484,7 +484,7 @@ Which is usually done by using _archetypes_.
 There are two organizational structures now.
 You can have three organizational structures if you want to, or five of them.
 Any number you like - as long as all the tabs for organizational structures fit on the screen.
-The structures can be a deep trees with many branches, or they can be completely flat, with just a single level.
+The structures can be deep trees with many branches, or they can be completely flat, with just a single level.
 The structure may not even be a tree.
 As long as it is an _acyclic directed graph_ it will work just fine.
 It can have multiple roots, it may have alternate paths, it can do all the crazy stuff.
@@ -716,7 +716,7 @@ The `orderConstraint` data structure in our example looks suspiciously complex.
 That impression is correct, as it indeed is quite a complex concept.
 What we see here is the first glimpse at high-order "assignment algebra" that is a work-horse of complex midPoint deployments.
 This mechanism is often employed when working with _meta-roles_ and _archetypes_.
-As organizational units are _abstract roles_, and organizational structures are just a trees formed by _assignments_, they technically form meta-role structures.
+As organizational units are _abstract roles_, and organizational structures are just trees formed by _assignments_, they technically form meta-role structures.
 
 Therefore, the right way to set up manager privileges is to move privilege definition to a central place.
 It may be top-level root org, or it may be an `Organizational unit` _archetype_.
@@ -780,7 +780,7 @@ If no other relation is specified, this relation is used.
 
 |`manager`
 |Orgs
-|Manager of an organizational unit, project manager, teamleader, etc.
+|Manager of an organizational unit, project manager, team leader, etc.
 Usually entitles a person (or a group) that have leading position in an org.
 This usually specifies executive or operational privileges (cf. `owner`).
 
@@ -824,7 +824,7 @@ They just specify how one object relates to another object.
 There are no strict _policies_ or _behavior_ associated with them.
 
 The policies are specified elsewhere.
-Assignments and inducements may behave differently for different relations, as we have seen in previous section.
+Assignments and inducements may behave differently for different relations, as we have seen in the previous section.
 Similarly, _policy rules_ are often sensitive to relations.
 For example, the policy that assignment of some roles has to be approved is implemented by a policy rule that is aware of `approver` relation.
 Authorizations are often sensitive to relations.
@@ -853,7 +853,7 @@ As midPoint deployment matures, it is more than desired to constraint the use of
 _Assignment relation_ mechanism is used for that purpose.
 We have already seen basic usage of assignment relation in archetypes.
 The assignment relation was used to constraint object type that an archetype can be assigned to.
-Following example of `Project` archetype is using `holderType` clause of the `assignmentRelation` to limit application of archetype to orgs.
+The following example of `Project` archetype is using `holderType` clause of the `assignmentRelation` to limit application of archetype to orgs.
 
 .archetype-project.xml
 [source,xml]
@@ -874,7 +874,7 @@ Following example of `Project` archetype is using `holderType` clause of the `as
 The `assignmentRelation` constraints ability to create assignment to the `Project` archetype, in this case the _holder_ of the assignment must be of `OrgType` type.
 However, _assignment relation_ can be used to further constraint use of assignments.
 We probably want to constraint the _relations_ that can be applied to a project.
-It is quite resonable to constraint the relations to members, managers and owners of projects.
+It is quite reasonable to constraint the relations to members, managers and owners of projects.
 This can simplify things, as we probably do to want approvers and "meta" as a relations to projects.
 Also, we want to put only _users_ in the project.
 In theory, midPoint organizational structure can hold almost any type of object.
@@ -905,7 +905,7 @@ Unlike the `holderType` case above, in this case the `assignmentRelation` is pla
 In the previous case, we were constraining assignment of _projects_ to _archetypes_.
 Whereas in this case we are trying to constraint assignments of _users_ to the _projects_.
 This is one degree of indirection farther, therefore _inducement_ is used instead of _assignment_.
-The arechetype acts as a meta-role, the content of the inducement is applied to the _projects_ (archetyped objects), not to the archetype itself.
+The archetype acts as a meta-role, the content of the inducement is applied to the _projects_ (archetyped objects), not to the archetype itself.
 
 The _assignment relation_ specification is used by the user interface.
 User interface is going to present only those object types and relation that make sense for the operation that user has initiated.
@@ -1414,7 +1414,7 @@ The result is that we need two inbound mappings for the `orgnum` attribute:
 ----
 
 Storing original organizational unit identifier in the `identifier` property makes it easier to correlate organizational units.
-The `idenfier` property can be used by the correlators.
+The `identifier` property can be used by the correlators.
 If the identifier is reasonably persistent, this is a huge benefit.
 
 Changes in organizational structure can be quite nasty.
@@ -1806,7 +1806,7 @@ All we need to do now is to re-run the synchronization task.
 The result is a nice organizational structure in LDAP directory:
 
 .Organizational structure in LDAP
-image::10-13-ldap-org-tree.png[Organizational strucutre in LDAP]
+image::10-13-ldap-org-tree.png[Organizational structure in LDAP]
 
 This is a nice result.
 However, there are still several remarks to make.
@@ -1841,7 +1841,7 @@ You can thank us later.
 
 Synchronization of an organizational structure is an application of a _generic synchronization_ principle.
 Almost any _resource object_ can be synchronized with almost any _midPoint object_ - and vice versa.
-Principle of the synchronization is essentially the same as in user-account case, as we have seen in previous chapters.
+Principle of the synchronization is essentially the same as in user-account case, as we have seen in the previous chapters.
 In that case, the _accounts_ were linked to _user_, midPoint synchronized the data from account to user and from user to accounts.
 The synchronization follows user-account _links_.
 
@@ -1865,7 +1865,7 @@ Therefore, we have decided to use _focus_ and _projection_ terms:
 image::10-15-focus-projections.png[Focus and projections]
 
 The object that is "in the middle" is called _focus_ or _focal object_.
-It is in the centre of the synchronization, it is its focal point.
+It is in the center of the synchronization, it is its focal point.
 Every relevant piece of data is reflected onto the focal object by the synchronization mechanisms.
 
 _User_ is a very typical focal object.
@@ -1910,7 +1910,7 @@ In this case, we would use explicit _kind_ and _intent_ in the construction:
             <intent>admin</intent>
         </construction>
     </inducement>
-</user>
+</role>
 ----
 
 The `System Administrator` role above specifies that a special `admin` account should be created for system administrators.

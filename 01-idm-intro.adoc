@@ -293,7 +293,7 @@ In such cases the authorization is usually applied to _services_ rather than _ap
 
 However, even applying the authorization to service front-ends does not solve the problem entirely.
 Sophisticated applications often need to make authorization decisions based on context, which is simply not available in the request or user profile at all.
-E.g. an e-banking application may allow or deny a transaction based on the sum of previous transactions that were made earlier that day.
+E.g. an e-banking application may allow or deny a transaction based on the sum of transactions made earlier that day.
 While it may be possible to synchronize all the authorization information into the user profile, it is usually not desirable.
 It would be a major burden to keep such information updated and consistent, not to mention security and privacy concerns.
 Many authorization schemes rely on a specific business logic, which is very difficult to centralize in an authorization server.
@@ -389,7 +389,7 @@ One way or another, the target site now has claims about user identity.
 A local session with the user is usually established at this point to skip the authentication redirects on the next request.
 The target site finally provides the content.
 
-Following table compares the terminology and technologies used in SAML and OIDC worlds.
+The following table compares the terminology and technologies used in SAML and OIDC worlds.
 
 [cols="h,1,1"]
 |===
@@ -571,7 +571,7 @@ Nobody is going to log in when the AM server fails.
 This obviously means major impact on functionality of all applications.
 Therefore, AM servers need to be highly available and scalable.
 Which is not always an easy task.
-The AM servers need a very careful sizing, as they may easily become a performance bottlenecks.
+The AM servers need a very careful sizing, as they may easily become a performance bottleneck.
 
 However, perhaps the most severe drawback is the total cost of access management solution.
 The cost of the AM server itself is usually not a major issue.
@@ -1039,7 +1039,7 @@ However, it is still a major consideration whether it is worth the trouble of ma
 
 === Identity Provisioning
 
-_Provisioning_, also called _fulfilment_, is perhaps the most frequently used feature in any IDM system.
+_Provisioning_, also called _fulfillment_, is perhaps the most frequently used feature in any IDM system.
 In the generic sense, _provisioning_ means maintenance of user accounts in applications, databases and other target systems.
 This includes creation of the account, various modifications during the account lifetime, and permanent disable or delete at the end of the lifetime.
 The IDM system is using _connectors_ to manipulate the accounts.
@@ -1270,7 +1270,7 @@ Authorization processing needs to be fast.
 Really fast.
 Even a round-trip across a local network may be a performance killer.
 Due to complexity and performance reasons the authorization mechanisms are often tightly integrated into the fabric of each individual application.
-E.g. it is a common practice that authorization policies are translated to SQL, and they are used as an additional clauses in application-level SQL queries.
+E.g. it is a common practice that authorization policies are translated to SQL, and they are used as additional clauses in application-level SQL queries.
 This technique is taking advantage of the database engine to quickly filter out the data that the user is not authorized to access.
 This method is very efficient, and it is perhaps the only practical option when dealing with large-scale data sets.
 However, this approach is tightly bound to the application data model, and it is usually almost impossible to externalize.
@@ -1444,7 +1444,7 @@ Then there are end users that can do almost nothing.
 While this concept may work in small and simple deployments, it is not sufficient for larger systems.
 Large organizations usually need to delegate some administration privileges to other users.
 There may be HR personnel, people that are responsible for management of their organizational units, administrator responsible for a particular group of systems, application administrators, and so on.
-_Delegated administration_ allow delagation of parts of system administration tasks to other users.
+_Delegated administration_ allow delegation of parts of system administration tasks to other users.
 Such delegated privileges are limited in scope.
 For example, HR staff can edit selected attributes on all employees, or project managers can add/remove users in their projects.
 
@@ -1537,7 +1537,7 @@ They are triggered automatically, for example as a reaction of re-assigning user
 Similarly to approval processes, some identity governance systems offer "artificial intelligence" support for certification processes.
 Such assistance can be very attractive, as certification campaigns are often quite intimidating due to a large number of decisions that have to be made in each campaign.
 However, the risks of such "automation" is even more pronounced than it is in the approval case.
-Certification is often the last defence against dangerous privilege accumulation.
+Certification is often the last defense against dangerous privilege accumulation.
 Poorly-trained artificial intelligence may cause a systematic build-up of risk in the organization.
 Artificial inteligence support for certification decisions may be very useful.
 However, it is essential to understand how the mechanism works before committing to roll it out for all certifications.
@@ -1580,7 +1580,7 @@ The models are reviewed, versioned and applied in their entirety.
 IDM deployments tend to be complex.
 There are many relations, interactions and policies.
 It is no easy task to predict the effects of a change in a role, policy or organizational structure.
-Therefore, some IDM systems provide a simulation features that provide predictions and impact analyses of planed changes.
+Therefore, some IDM systems provide simulation features that provide predictions and impact analyses of planed changes.
 
 * *Compliance policies*, reporting and management.
 Policies in the identity management world are usually designed to be strictly enforced.
@@ -1635,7 +1635,7 @@ Most techniques seems to be based on recognition of anomalies and patters in the
 _Outlier detection_ mechanisms look for users with privileges that are significantly different from the privileges of their colleagues.
 On the other hand, _role mining_ is used to detect similar privileges assigned to similar users, suggesting new roles.
 Many of the identity analytics and intelligence techniques are based on risk modeling.
-There are mechanisms to _identify over-privileged users_ by analysing risk scores of individual users.
+There are mechanisms to _identify over-privileged users_ by analyzing risk scores of individual users.
 Similar mechanisms can be used to identify high-privilege entitlements assigned to a low-privilege user or similar risk anomalies.
 
 * *Workflow orchestration* is provided by some IGA platforms.
@@ -1681,7 +1681,7 @@ Therefore, there are many overlapping, overloaded and similar terms in use.
 _Identity management_ (IDM) is usually used to describe the low-level parts (technology), while _identity governance_ is used to describe the high-level parts (business).
 Yet the boundary is very fuzzy and many IDM systems provide governance capabilities, and many governance systems provide low-level functions.
 _Identity governance and administration_ (IGA) is a term supposed to describe both parts together.
-_Governance, risk management and compliance (GRC)_ is a terms that was mostly used in the past to represent the high-level identity governance functionality, later known simply as _identity governance_.
+_Governance, risk management and compliance (GRC)_ is a term that was mostly used in the past to represent the high-level identity governance functionality, later known simply as _identity governance_.
 _Identity security_ is a marketing term that roughly covers IGA functionality.
 
 Overall, the terminology is very fluid.
@@ -1965,7 +1965,7 @@ The model is evaluated by the machine, quickly and efficiently.
 The efficiency opens up a whole range of possibilities, that form the essence of a risk-based approach to identity governance.
 
 As we can evaluate a risk posed by any individual user, we can easily identify dangerous accumulation of privileges in the hands of a single user.
-Then we can focus on addressing this risk, analysing why have the privileges accumulated, whether they are all necessary, removing excess privileges to lower the risk.
+Then we can focus on addressing this risk, analyzing why have the privileges accumulated, whether they are all necessary, removing excess privileges to lower the risk.
 Perhaps we can consider changing business processes to divide the responsibilities among several users, lowering the risk even further.
 We can evaluate the risk model after each step, checking whether we have reached acceptable risk levels already.
 
@@ -1973,7 +1973,7 @@ The risk model can evaluate risk of each role.
 This allows detection of anomalies, such as assignment of a powerful high-risk role to an ordinary user that is supposed to be low-risk.
 Such role is likely to be assigned by mistake, or perhaps it was a role assigned during an emergency that was never removed.
 Unassignment of such role may be a quick way to reduce the risk.
-Smart system could suggest several types of such _outliers_, where privileges of an individual users stand out from the surrounding.
+Smart system could suggest several types of such _outliers_, where privileges of individual users stand out from the surrounding.
 
 Once we have the concept of risk established in our system, we can use it in security policies.
 For example, it makes sense to require stronger password for high-risk users, or even better, automatically set up a multi-factor authentication for them.
@@ -2061,7 +2061,7 @@ The basic idea is that a system should not implicitly trust any other system, no
 Simply speaking, zero-trust approach is mostly about removing _security perimeter_.
 
 For many decades, corporate networks were designed using _hard exterior, soft interior_ approach.
-Corporate network was protected from the Internet by an army of specialized security systems and techniques, such as firewalls, de-militarized zones, network traffic analysers, intrusion detection systems, network anti-virus scanners and everything else a booming network security market could provide.
+Corporate network was protected from the Internet by an army of specialized security systems and techniques, such as firewalls, de-militarized zones, network traffic analyzers, intrusion detection systems, network anti-virus scanners and everything else a booming network security market could provide.
 While the castle gates were heavily protected, the interior of corporate network was very _soft_.
 Originally, there were no security measures inside corporate networks at all.
 Anyone that got inside could connect to any system.
@@ -2091,7 +2091,7 @@ The concept of zero trust is not new at all.
 It was here pretty much since the very beginnings of information security.
 Security practitioners are trained not to trust anything or anyone, set up policies, require authentication, deny access by default, encrypt all network traffic, minimize privileges, manage risks, and so on.
 Therefore, "zero trust" approach is essentially just a thorough application of proper information security principles.
-This approach is here for decades, it just had different names: defence in depth, perimeterless security, network hardening and so on.
+This approach is here for decades, it just had different names: defense in depth, perimeterless security, network hardening and so on.
 
 Even though zero trust approach is not new, it dramatically gained on importance in the era of cloud services and remote access.
 Many functions provided by traditional corporate applications are provided by cloud services now.
@@ -2157,7 +2157,7 @@ How is identity management system supposed to even start management of applicati
 Therefore, the effort should start with building such a source, which may be a manually-maintained information in the identity management system.
 Then, application accounts and entitlements (groups) need to be associated with the application.
 Applications much have owners, which can be maintained in IDM system.
-As application accounts and entitlements are associated with an application, they can be automatically de-provissioned when application is decommissioned.
+As application accounts and entitlements are associated with an application, they can be automatically de-provisioned when application is decommissioned.
 However, perhaps the most challenging part is credential management.
 The credentials should be changed periodically.
 However, this change has to be synchronized on both sides of the communication channel (both client and server part), otherwise there will be an outage.
@@ -2185,7 +2185,7 @@ Therefore, it is crucial to choose and IDM platform that can evolve.
 //Academics and identity experts would probably be happy with the dictionary definition of digital identity.
 //However, the term have got a slightly different meaning when dealing with a broader audience.
 //
-//Generally speaking, the term _digital identity_ is understood as a data records on a person's identity, together with appropriate tools to manage it.
+//Generally speaking, the term _digital identity_ is understood as data records on a person's identity, together with appropriate tools to manage it.
 //This is usually an application that allows to control and manage the identity data by the user.
 //It is the _user-centric_ approach which is usually considered a distinguishing factor between _digital identity_ and other IAM technologies.
 //The basic idea is to keep user in control.
