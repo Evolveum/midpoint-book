@@ -2295,7 +2295,7 @@ If a _user_ is changed, then such change may propagate to other _accounts_ on ot
 MidPoint does not like procrastination, therefore it will try to apply all the changes immediately.
 It means that reconciliation of one _account_ may cause changes to other _accounts_.
 Which makes a lot of sense, yet it may be quite surprising.
-Secondly, reconciliation skips all _normal-strength_ mappings.
+Secondly, reconciliation skips all _normal-strength_ outbound mappings in which no input change is detected (i.e., mappings that either have no sources, or mappings that have sources but no changes in values).
 We have already explained the reasons for that, but this is something that can surprise even an experienced midPoint engineer from time to time.
 If we are sure that we want the mapped value to be present in the account all the time, then _strong_ mappings are the way to go.
 
