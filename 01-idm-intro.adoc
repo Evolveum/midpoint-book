@@ -12,15 +12,15 @@ The easy part is: identity and access management (IAM) is a set of information t
 The complex part of the answer takes the rest of this book.
 
 The story of identity and access management starts with information security.
-The security requirements dictate the need for authentication and authorization of the users.
-Authentication is a mechanism by which the computer checks that the user is really the one they pretend to be.
-Authorization is a related mechanism by which the computer determines whether to allow or deny the user a specific action.
+The security requirements dictate the need for authentication and authorization of users.
+Authentication is a mechanism by which the computer checks that a user is really who they pretend to be.
+Authorization is a related mechanism by which the computer determines whether to allow or deny the user to perform a specific action.
 Almost every computer system has some means of authentication and authorization.
 
 Perhaps the most widespread form of authentication is a password-based "log in" procedure.
-The user presents an identifier and a password.
+A user presents an identifier and a password.
 The computer checks whether the password is valid.
-For this procedure to work the computer needs access to the database of all valid users and passwords.
+For this procedure to work, the computer needs access to the database of all valid users and passwords.
 Early stand-alone information systems had their own databases that were isolated from the rest of the cyberspace.
 The data in the database were maintained manually.
 However, the advent of computer networking changed everything.
@@ -32,7 +32,7 @@ That's where the real story of digital identity begins.
 NOTE: This book deals mostly with _Enterprise Identity and Access Management_.
 That is identity and access management applied to larger organizations such as enterprises, financial institutions, government agencies, universities, health care organizations, etc.
 The focus is on managing employees, contractors, customers, partners, students and other people that cooperate with the organization.
-However, many of the mechanisms and principles described in this book can be applied to non-enterprise environments.
+However, many of the mechanisms and principles described in this book can also be applied to non-enterprise environments.
 
 
 == Directory Services and Other User Databases
@@ -40,9 +40,9 @@ However, many of the mechanisms and principles described in this book can be app
 The central concept of identity management is a data record which contains information about a person.
 This concept has many names: _user profile_, _persona_, _user record_, _digital identity_ and many more.
 The most common name in the context of identity management is _user account_.
-Accounts usually hold information that describes the real-world person using a set of attributes such as given name and family name.
+Accounts usually hold information that describes the real-world person, represented by attributes such as given name and family name.
 However, probably the most important part of the _account_ is the technical information that relates to the operation of an information system for which the account is created.
-This includes operational parameters such as location of user's home directory, wide variety of permission information such as group and role membership, system resource limits and so on.
+This includes operational parameters such as location of the user's home directory, wide variety of permission information such as group and role membership, system resource limits and so on.
 User accounts are represented in a wide variety of forms, ranging from relational database records through structured data files to semi-structured text files.
 Regardless of the specific method used to store and process the records, the _account_ is undoubtedly one of the most important concepts of IAM field - and so are the databases where the _accounts_ are stored.
 
@@ -67,10 +67,10 @@ That makes directory servers almost ideal candidates for a shared account databa
 
 image::01-02-directory-server.png[Directory server]
 
-Shared identity store is making user management easier.
-An account needs to be created and managed in one place only.
+A shared identity store is making user management easier.
+An account needs to be created and managed only in one place.
 Authentication still happens in each application separately.
-Yet, as the applications use the same credentials from the shared store, the user may use the same password for all the connected applications.
+Yet, as applications use the same credentials from a shared store, users may use the same passwords for all the connected applications.
 This is an improvement over setting the password for each application separately.
 
 Identity management solutions based on shared directory servers are simple and quite cost-efficient.
@@ -97,14 +97,14 @@ However, it is far from being perfect.
 LDAP was created in 1990s, with roots going back to 1980s.
 There are some problems in original LDAP design, that were never fully addressed.
 Also, LDAP schema has a distinctive feel of 80s and 90s.
-LDAP would deserve a major review, to correct the problems and bring the protocol to 21^st^ century.
+LDAP would deserve a major review, to correct the problems and bring the protocol to the 21^st^ century.
 Sadly, there hasn't been a major update to LDAP specifications for decades.
 
 Even though LDAP has its problems, it still remains a useful tool.
 Most LDAP server vendors provide proprietary solutions to LDAP problems.
 Many organizations store identities in LDAP-enabled data stores.
 There are many applications that support LDAP, mostly for centralization of password-based authentication.
-LDAP still remains a major protocol in Identity and Access Management field.
+LDAP still remains a major protocol in the Identity and Access Management field.
 Therefore, we will be getting back to the LDAP protocol many times in this book.
 
 
@@ -112,14 +112,14 @@ Therefore, we will be getting back to the LDAP protocol many times in this book.
 
 Directory servers are just databases that store information.
 Nothing more.
-The protocols and interfaces (APIs) used to access directory servers are designed as database interfaces.
+The protocols and interfaces (APIs) that are used to access directory servers are designed as database interfaces.
 They are good for _storing, searching and retrieving_ data.
 While the _user account_ data often contain entitlement information (permissions, groups, roles, etc.), directory servers are not well-suited to _evaluate_ them.
-I.e. directory server can provide information what permissions an account has, but it is not designed to make a _decision_ whether to allow or deny a specific operation.
+This means that a directory server can provide information about what permissions an account has, but it is not designed to make a _decision_ whether to allow or deny a specific operation.
 Also, directory servers do not contain data about user _sessions_.
 Directory servers do not know whether the user is currently logged in or not.
 Many directory servers are used for basic authentication and even authorization.
-Yet, the directory servers were not designed to do this.
+Yet, directory servers were not designed to do this.
 Directory servers provide only the very basic capabilities.
 There are plug-ins and extensions that provide partial capabilities to support authentication and authorization.
 However, that does not change the fundamental design principles.
@@ -127,10 +127,10 @@ Directory servers are databases, not authentication or authorization servers.
 Being databases, they should be used as such.
 
 However, many applications use directory servers to centralize password authentication.
-In fact, this is somehow good and cost-efficient way to centralize password-based authentication, especially if you are just starting with identity and access management.
-Nevertheless, you should be aware that this a temporary solution.
+In fact, this is a good and cost-efficient way to centralize password-based authentication, especially if you are just starting with identity and access management.
+Nevertheless, you should be aware that this is a temporary solution.
 It has many limitations.
-The right way to do it is to use an _authentication server_ instead of directory server.
+The right way to do it is to use an _authentication server_ instead of a directory server.
 Access Management (AM) technologies can provide that.
 
 === Single Directory Server Myth
@@ -141,41 +141,41 @@ We even have this "LDAP" thing, standardized protocol to access the database.
 Here, all identity management problems are solved!
 
 Unfortunately, they are not.
-Shared directory server makes user management easier.
+A shared directory server makes user management easier.
 However, this is not a complete solution, and there are serious limitations to this approach.
 The heterogeneity of information systems makes it nearly impossible to put all required data into a single directory system.
 
 The obvious problem is the lack of a single, coherent source of information.
 There are usually several sources of information for a single user.
 For example, a human resources (HR) system is authoritative for the existence of an employee in the enterprise.
-However, the HR system is usually not authoritative for assignment of employee identifier such as _username_.
+However, the HR system is usually not authoritative for assignments of employee identifiers such as _username_.
 There needs to be an algorithm that ensures uniqueness of the username, ensuring uniqueness across all the current and past employees, contractors and partners.
 Moreover, there may be additional sources of information.
-For example Management information system may be responsible for determination of user's roles (e.g. in project-oriented organizational structure).
-Inventory management system may be responsible for assigning telephone number to the user.
-The groupware system may be an authoritative source of the user's e-mail address and other electronic contact data.
+For example, a management information system may be responsible for determining user roles (e.g., in a project-oriented organizational structure).
+An inventory management system may be responsible for assigning telephone numbers to users.
+A groupware system may be an authoritative source of user e-mail addresses and other electronic contact data.
 There are usually 2 to 20 systems that provide authoritative information for a single user.
-Therefore, there is no simple way how to feed and maintain the data in the directory system.
+Therefore, there is no simple way to feed and maintain the data in the directory system.
 
 Then there are spacial and technological barriers.
-Many complex applications need local user database.
-They must store the copies of user records in their own databases to operate efficiently.
-For example, large billing systems cannot work efficiently with external data (e.g. because of a need to make relational database _join_).
-Therefore, even if directory server is deployed, these applications still need to maintain a local copy of identity data.
+Many complex applications need local user databases.
+They must store copies of user records in their own databases to operate efficiently.
+For example, large billing systems cannot work efficiently with external data (e.g., because of a need to make a relational database _join_).
+Therefore, even if a directory server is deployed, these applications still need to maintain a local copy of identity data.
 Keeping the copy synchronized with the directory data may seem like a simple task.
 But it is not.
-Additionally, there are legacy systems which usually cannot access the external data at all (e.g. they do not support LDAP protocol at all).
+Additionally, there are legacy systems which usually cannot access the external data at all (e.g., they do not support the LDAP protocol at all).
 
 Some services need to keep even more state than just a simple database record.
-For example file servers usually create home directories for users.
-While the account creation can be usually done in on-demand fashion (e.g. create user directory at first user log-on), the modification and deletion of the account is much more difficult.
-Directory server will not do that.
+For example, file servers usually create home directories for users.
+While the account creation can be usually done in an on-demand fashion (e.g., create a user directory at first user log-on), the modification and deletion of accounts is much more difficult.
+Directory servers will not do that.
 
 Perhaps the most painful problem is the complexity of access control policies.
 Role names and access control attributes may not have the same meaning in all systems.
 Different systems usually have different authorization algorithms that are not mutually compatible.
 While this issue can be solved with per-application access control attributes, the maintenance of these attributes is seldom trivial.
-If every application has its own set of attributes to control access control policies, then the centralized directory provides only a negligible advantage.
+If every application has its own set of attributes to control access control policies, then a centralized directory provides only a negligible advantage.
 The attributes may as well reside in the applications themselves.
 That's exactly how most directory deployments end up.
 Directory servers contain only the groups, groups that usually roughly approximate low-level RBAC roles.
@@ -188,8 +188,8 @@ Therefore, many directory servers provide their own non-standard improvements, w
 Yet even these server-specific improvements usually cannot support complex access control policies.
 Therefore, access control policies and fine-grained authorizations are usually not centralized in directory servers, they are maintained directly in the application databases.
 
-The _single directory approach_ is feasible only in very simple environments or in almost entirely homogeneous environments.
-In all other cases there is a need to supplement the solution by other identity management technologies.
+A _single directory approach_ is feasible only in very simple environments or in almost entirely homogeneous environments.
+In all other cases, there is a need to supplement the solution by other identity management technologies.
 
 This does not mean that the directory servers or other shared databases are useless.
 Quite the contrary.
@@ -200,22 +200,22 @@ More components are needed to build a complete solution.
 == Access Management
 
 While directory systems are not designed to handle complex authentication, _access management_ (AM) systems are built to handle just that.
-Access management systems handle all the flavors of authentication, and even some authorization aspects.
+Access management (AM) systems handle all the flavors of authentication, and even some authorization aspects.
 The principle of all access management systems is basically the same:
 
-. Access management system gets between the user and the target application.
-This can be done by a variety of mechanisms, the most common method is that the applications themselves redirect the user to the AM system if they do not have existing session.
+. The access management system gets between the user and the target application.
+This can be done by a variety of mechanisms, the most common method is that the applications themselves redirect the user to the AM system if they do not have an existing session.
 
-. Access management system prompts user for the username and password, interacts with user's mobile device or in any other way initiates the authentication procedure.
+. The access management system prompts users for the username and password, interacts with users' mobile devices, or otherwise initiates the authentication procedure.
 
-. User enters the credentials.
+. Users enter credentials.
 
-. Access management system checks the validity of credentials and evaluates access policies.
+. The access management system checks the validity of credentials and evaluates access policies.
 
-. If access is allowed then the AM system redirects user back to the application.
+. If access is allowed, the AM system redirects users back to the application.
 The redirection usually contains an access token: a small piece of information that tells the application that the user is authenticated.
 
-. Application validates the token, creates a local session and allows the access.
+. Application validates the token, creates a local session and allows access.
 
 image::01-03-am-flow.png[Access management flow]
 
@@ -230,7 +230,7 @@ This is a fundamental difference when compared to LDAP-based authentication mech
 In the LDAP case, it is the application that prompts for the password.
 In the AM case, the Access Management server does everything.
 Many applications do not even care how the user was authenticated.
-All they need to know is that he _was_ authenticated and that the authentication was strong enough.
+All they need to know is that the user _was_ authenticated, and that the authentication was strong enough.
 This feature brings a very desirable flexibility to the entire application infrastructure.
 The authentication mechanism can be changed at any time without disrupting the applications.
 We live in an era when passwords are frowned upon and replaced by stronger authentication mechanisms.
@@ -239,7 +239,7 @@ The flexibility that the AM-based approach brings may play a key part in that mi
 
 === Web Single Sign-On
 
-Single Sign-On (SSO) systems allow user to authenticate once, and access number of different systems re-using that authentication.
+Single Sign-On (SSO) systems allow users to authenticate once, and access a number of different systems re-using that authentication.
 There are many SSO systems for web applications, however it looks like these systems are all using the same basic principle of operation.
 The general access management flow is described below:
 
@@ -247,61 +247,62 @@ The general access management flow is described below:
 
 . The access management server authenticates the user.
 
-. The access management server establishes session (SSO session) with the user browser.
-This is crucial part of SSO mechanism.
+. The access management server establishes a session (SSO session) with the user browser.
+This is a crucial part of the SSO mechanism.
 
-. User is redirected back to application `A`.
+. The user is redirected back to application `A`.
 Application `A` usually establishes a local session with the user.
 
-. User interacts with application `A`.
+. The user interacts with application `A`.
 
-. When user tries to access application `B`, it redirects user to the access management server.
+. When the user tries to access application `B`, it redirects them to the access management server.
 
-. The access management server checks for existence of SSO session.
+. The access management server checks for the existence of an SSO session.
 As the user authenticated with the access management server before, there is a valid SSO session.
 
-. Access management server does not need to authenticate the user again, it immediately redirects user back to application `B`.
+. The access management server does not need to authenticate the user again.
+It immediately redirects the user back to application `B`.
 
 . Application `B` establishes a local session with the user and proceeds normally.
 
-The user usually does not even realize that there were any redirects when accessing application `B`.
+The user does not usually even realize that there were any redirects when accessing application `B`.
 There is no interaction between the redirects, and the processing on the access management server is usually very fast.
-It looks like the user was logged into the application `B` all the time.
+It looks like the user was logged into application `B` all the time.
 
 image::01-04-web-sso-flow.png[Web SSO flow]
 
 
 === Authorization in Access Management
 
-The request of a user accessing an application is directly or indirectly passed through the access management server.
+The request of a user accessing an application is directly or indirectly passed through an access management server.
 Therefore, the access management server can analyze the request and evaluate whether the user request is authorized or not.
-That is a theory.
+At least in theory.
 Unfortunately, the situation is much more complicated in practice.
 
-The AM server usually intercepts only the first request to access the application, because it would be a performance impact to intercept all the requests.
+The AM server usually intercepts only the first request to access the application, because there would be a performance impact if all requests were intercepted.
 After the first request, the application established a local session and proceeds with the operation without any communication with the AM server.
 Therefore, the AM server can only enforce authorization during the first request.
 This means it can only enforce a very _coarse-grained_ authorization decisions.
-In practice, it usually means that the AM server can make only all-or-nothing authorization decisions: whether a particular user can access all parts of a particular application or that he cannot access the application at all.
-The AM server usually cannot make any finer-grain decisions just by itself.
+In practice, this usually means that the AM server can make only all-or-nothing authorization decisions: whether a particular user can access all parts of a particular application, or whether they cannot access the application at all.
+The AM server usually cannot make any fine-grained decisions just by itself.
 
-Some AM systems provide agents that can be deployed to applications, agents that enforce a finer-grain authorization decisions.
+Some AM systems provide agents that can be deployed to applications, agents that enforce fine-grained authorization decisions.
 Such agents often rely on HTTP communication.
 They are making decisions based on the URLs that the user is accessing.
-This approach might have worked well in the 1990s, but it has only very limited applicability in the age of single-page web applications and mobile applications.
-In such cases the authorization is usually applied to _services_ rather than _applications_.
+This approach might have worked well in the 1990s but it has only very limited applicability in the age of single-page web and mobile applications.
+In such cases, the authorization is usually applied to _services_ rather than _applications_.
 
 However, even applying the authorization to service front-ends does not solve the problem entirely.
 Sophisticated applications often need to make authorization decisions based on context, which is simply not available in the request or user profile at all.
-E.g. an e-banking application may allow or deny a transaction based on the sum of previous transactions that were made earlier that day.
+For example, an e-banking application may allow or deny a transaction based on the sum of previous transactions made earlier that day.
 While it may be possible to synchronize all the authorization information into the user profile, it is usually not desirable.
-It would be a major burden to keep such information updated and consistent, not to mention security and privacy concerns.
+It would be a major burden to keep such information updated and consistent, not to mention the security and privacy concerns.
 Many authorization schemes rely on a specific business logic, which is very difficult to centralize in an authorization server.
 
 Then there are implementation constraints.
-In theory, the authorization system should make only allow/deny decisions.
+In theory, the authorization system should only make allow/deny decisions.
 However, this is not enough to implement an efficient application.
-The application cannot afford to list all the objects in the database, pass them to authorization server, and then realize that the authorization server denied access to almost all of them.
+The application cannot afford to list all the objects in the database, pass them to an authorization server, and then realize that the authorization server denied access to almost all of them.
 Authorization has to be processed _before_ the search operation, and additional search filters have to be applied.
 Which means that authorization mechanisms need to be integrated deep into the application logic.
 This significantly limits the applicability of centralized authorization mechanisms.
@@ -316,40 +317,40 @@ The vast majority of the authorization decisions is carried out by each individu
 
 === SAML and OpenID Connect
 
-Some access management systems use proprietary protocols to communicate with the applications and agents.
-This is obviously an interoperability issue – especially when the AM principles are used in the Internet environment.
+Some access management systems use proprietary protocols to communicate with applications and agents.
+This is obviously an interoperability issue – especially when AM principles are used in the Internet environment.
 Indeed, it is the Internet that motivated standardization in this field.
 
-The first widespread standardized protocol in this field was Security Assertion Markup Language (SAML).
+The first widespread standardized protocol in this field was the Security Assertion Markup Language (SAML).
 The original intent of SAML was to allow cross-domain sign-on and identity data sharing across organizations on the Internet.
 SAML is both an access management protocol and a security token format.
 SAML is quite complex, heavily based on XML standards.
 Its specifications are long, divided into several profiles, there are many optional elements and features.
 Overall, SAML is not just a protocol, it is a set of very rich and flexible mechanisms.
 
-Primary purpose of SAML is transfer of identity information between organizations.
+The primary purpose of SAML is the transfer of identity information between organizations.
 There are big SAML-based federations with hundreds of participating organizations.
 Many e-government solutions are based on SAML, there are big partner networks running on SAML, and overall it looks like SAML is a success.
 Yet, SAML was a victim of its own flexibility and complexity.
 The latest fashion trends are not very favorable to SAML.
-XML and SOAP-based web service mechanisms are hopelessly out of fashion, which impacts popularity of SAML.
+XML and SOAP-based web service mechanisms are hopelessly out of fashion, which impacts the popularity of SAML.
 That has probably motivated the inception of other access management protocols.
 
 The latest fashion still favors RESTful services and simpler architectural approaches.
-That probably contributed to the development of OpenID Connect protocol (OIDC).
-OpenID Connect is based on much simpler mechanisms than SAML, but it is reusing the same basic principles.
+That probably contributed to the development of the OpenID Connect protocol (OIDC).
+OpenID Connect is based on much simpler mechanisms than SAML, but it reuses the same basic principles.
 OpenID connect has a very eventful history.
-It all started with a bunch of homebrew protocols such as LID or SXIP, that are mostly forgotten today.
-That was followed by the development of OpenID protocol, which was still very simple.
+It all started with a bunch of homebrew protocols such as LID or SXIP that are mostly forgotten today.
+That was followed by the development of the OpenID protocol, which was still very simple.
 OpenID gained some attention especially with providers of Internet services.
 Despite its simplicity, OpenID was not very well engineered, and it quickly reached its technological limits.
 It was obvious that OpenID needs to be significantly improved.
-At that time, there was almost unrelated protocol called OAuth, which was designed for management of cross-domain authorizations.
+At that time, there was an almost unrelated protocol called OAuth, which was designed for management of cross-domain authorizations.
 That protocol was developed into something that was almost, but not quite, entirely unlike the original OAuth protocol.
 As the new protocol had almost nothing to do with the original OAuth protocol, it is perfectly understandable that it was dubbed OAuth2.
 In fact, OAuth2 is not really a protocol at all.
 It is rather a vaguely-defined framework to build other protocols.
-OAuth2 framework was used to build a cross-domain authentication and user profile protocol.
+The OAuth2 framework was used to build a cross-domain authentication and a user profile protocol.
 This new protocol is much more similar to SAML than to the original OpenID, therefore it was an obvious choice to call it _OpenID Connect_.
 Some traditions are just worth maintaining.
 
@@ -360,36 +361,36 @@ image::01-05-saml-oidc-flow.png[SAML/OIDC flow]
 
 The interaction goes like this:
 
-. User is accessing a resource.
-This can be web page or web application running on the target site.
+. A user accesses a resource.
+This can be a web page or web application running on the target site.
 
-. Target site does not have a valid session for the user.
-Therefore, it redirects user browser to the source site.
-It adds authentication _request_ into that redirect.
+. The target site does not have a valid session for the user.
+Therefore, it redirects the user browser to the source site.
+It adds an authentication _request_ into that redirect.
 
-. Browser follows the redirect to the source site.
+. The browser follows the redirect to the source site.
 The source site gets the authentication _request_ and parses it.
 
-. If the user is not already authenticated with the source site then the authentication happens now.
-The source site prompts for the username, password, certificate, one-time password or whatever credential that is required by the policy.
-With a bit of luck the authentication succeeds.
+. If the user is not already authenticated with the source site, the authentication happens now.
+The source site prompts for the username, password, certificate, one-time password, or another credential required by the policy.
+With a bit of luck, the authentication succeeds.
 
 . The source site redirects the browser back to the target site.
-The source site adds authentication _response_ to the redirect.
+The source site adds an authentication _response_ to the redirect.
 The most important part of the response is a _token_.
-The token directly or indirectly asserts user's identity.
+The token directly or indirectly asserts the user's identity.
 
 . The target site parses the authentication _response_ and processes the token.
-The token may be just a reference (e.g. SAML artifact) pointing to real data, or it may be access key to another service that provides the data (OIDC UserInfo).
-In that case the target site makes another request (6a).
-This request is usually a direct one and does not use browser redirects.
-One way or another, the target site now has claims about user identity.
+The token may be just a reference (e.g., a SAML artifact) pointing to real data, or it may be an access key to another service that provides the data (OIDC UserInfo).
+In such a case, the target site makes another request (6a).
+This request is usually a direct one, and it does not use browser redirects.
+One way or another, the target site now has claims about the user identity.
 
-. Target site evaluates the identity, processes authorizations and so on.
+. The target site evaluates the identity, processes authorizations, and so on.
 A local session with the user is usually established at this point to skip the authentication redirects on the next request.
-The target site finally provides the content.
+The target site finally provides content.
 
-Following table compares the terminology and technologies used in SAML and OIDC worlds.
+The following table compares the terminology and technologies used in the SAML and OIDC worlds.
 
 [cols="h,1,1"]
 |===
@@ -429,36 +430,36 @@ Following table compares the terminology and technologies used in SAML and OIDC 
 
 |===
 
-Careful reader surely noticed the similarity with the web-based access management mechanisms.
+A attentive reader has surely noticed some similarity with web-based access management mechanisms.
 That's right.
 This is the same wheel, reinvented over and over again.
-However, to be completely honest, we have limited our description to cover flows intended for web browser only.
-Both SAML and OIDC has broader applicability that just web browser flows.
+However, to be completely honest, we have limited our description to cover only flows intended for web browsers.
+Both SAML and OIDC have broader applicability than web browser flows alone.
 The differences between the two protocols are much more obvious in these extended use cases.
-However, the web browser case nicely illustrates the principles and similarities of SAML, OpenID Connect and also the simple web-SSO systems.
+However, the web browser case nicely illustrates the principles and similarities of SAML, OpenID Connect, and also the simple web-SSO systems.
 
 Maybe the most important differences between SAML, OIDC and web-SSO (also known as _Web Access Management_ or WAM) systems is the intended use:
 
-* SAML was designed for the web applications and SOAP web services world.
-It will handle centralized (single-IDP) scenarios very well, but it can also work in decentralized federations.
-Go for SAML if you are using SOAP and WS-Security or if you plan to build big decentralized federation.
+* SAML was designed for the web applications and SOAP for the web services world.
+SAML will handle centralized (single-IDP) scenarios very well, but it can also work in decentralized federations.
+Go for SAML if you are using SOAP and WS-Security, or if you plan to build an extensive decentralized federation.
 On second thought, you should probably forget about SAML anyway.
 It is not very fashionable these days.
 
 * OpenID Connect was designed mostly for use with social networks and similar Internet services.
 Its philosophy is still somehow centralized.
 It will work well if there is one strong identity provider and many relying parties.
-Technologically it will fit into RESTful world much better than SAML.
-Current fashion trends are favorable to OIDC.
+Technologically, it will fit into the RESTful world much better than SAML.
+The current fashion trends are favorable to OIDC.
 
 * Web-SSO/WAM systems are designed to be used inside a single organization.
-This is ideal to implement SSO between several customer-facing applications so the customers will have no idea that they interact with many applications and not just one.
+It is ideal to implement SSO between several customer-facing applications so that customers have no idea that they interact with multiple applications, not just one.
 The web-SSO/WAM systems are not designed to work across organizational boundaries.
-Which is quite unfortunate in the current "cloudy" IT environment.
+This is quite unfortunate in the current "cloudy" IT environment.
 
 Although SAML and OIDC are designed primarily for cross-domain use, it is no big surprise to see them inside a single organization.
 There is a clear benefit in using an open standardized protocol instead of a proprietary mechanism.
-However, it has to be expected that the SSO system based on SAML or OIDC will have slightly more complicated setup than a simple Web-SSO/WAM system.
+However, it has to be expected that an SSO system based on SAML or OIDC will have slightly more complicated setup than a simple Web-SSO/WAM system.
 
 
 === Kerberos, Enterprise SSO and Friends
@@ -789,7 +790,7 @@ Open source brings new and revolutionary approach, both to technology and busine
 
 New products appeared since early 2010s, in many areas in identity and access management.
 However, it is still a humble identity management platform that forms the core of the solution.
-The products have evolved to the point, that the entire field is not called _identity governance and administration_ (IGA).
+The products have evolved to the point, that the entire field is now called _identity governance and administration_ (IGA).
 New functionality was added to the products: identity governance, analytics, policy management, advanced reporting, and many more.
 New IGA platforms are much more powerful than ever, yet they are still the heart of IAM solutions.
 
@@ -1248,8 +1249,8 @@ While that description sounds a bit scary, the actual implemented is not very co
 In most cases there is just a couple of policy statements that govern authentication.
 Also, authentication is typically quite uniform: most users are authenticating using the same mechanism.
 Authentication is not that difficult to centralize (although it may be expensive).
-Most applications do not care about authentication at all, they just need to know that the user was authenticated somehow, and know user's identifier.
-Applications do don care about authentication details.
+Most applications do not care about authentication at all, they just need to know that the user was authenticated somehow, and know the user's identifier.
+Applications do not care about authentication details.
 Which makes _authentication_ relatively easy to manage.
 
 However, it is quite a different story for _authorization_.
@@ -1960,7 +1961,7 @@ Any identity practitioner can certainly see where this leads: identity managemen
 Identity management system is an ideal place for evaluation of risks related to identity and access data.
 Essential data are already in the database of identity management system: users, roles, role assignments, role composition, entitlements, everything is there.
 Entitlements can be assessed to assign a risk score to them.
-Then the data can be fed into a risk model, evaluating how are the entitlements combined in roles, how are teh roles assigned to users, identifying high-risk roles and users.
+Then the data can be fed into a risk model, evaluating how are the entitlements combined in roles, how are the roles assigned to users, identifying high-risk roles and users.
 The model is evaluated by the machine, quickly and efficiently.
 The efficiency opens up a whole range of possibilities, that form the essence of a risk-based approach to identity governance.
 
